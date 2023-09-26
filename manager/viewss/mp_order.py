@@ -123,7 +123,11 @@ class MpOrderView(APIView):
         response = mp_order_service.add_order(data=request.data,user_id=request.user.id)
         order_data = get_order_data(response)
         if request.data.get('file'):
-            post_data,attachment = mp_order_service.order_file_upload_by_order_id(order_data.get('id'),request.data.get('file').get("file_name"),request.data.get('file').get("file_size"),request.data.get('file').get("file_type"))
+            post_data,attachment = mp_order_service.order_file_upload_by_order_id(
+                order_data.get('id'),
+                request.data.get('file').get("file_name"),
+                request.data.get('file').get("file_size"),
+                request.data.get('file').get("file_type"))
         return JsonResponse(order_data)
 
 class MpOrderIdView(APIView):
@@ -523,17 +527,12 @@ class OrderReportsView(APIView):
         except Client.DoesNotExist:
             return JsonResponse({'error': 'Client not found for this user.'}, status=404)
 
-        status_param = request.query_params.get('status')
-        status_mapping = {
-            'DRAFT': 'DRAFT',
-            'COMPLETE': 'COMPLETE',
-            'ACTIVE': 'ACTIVE',
-        }
+        status = request.query_params.get('status')
+        status_param = request.query_params.get('status_param')
+        valid_statuses = ['COMPLETE', 'ACTIVE']
         
-        if status_param and status_param in status_mapping:
-            status_value = status_mapping[status_param]
-            if status_value == 'DRAFT':
-                mp_order = MPOrder.objects.filter(user=request.user, status=status_value)
+        if status and status == 'DRAFT':
+                mp_order = MPOrder.objects.filter(user=request.user, status=status)
                 if mp_order:
                     mp_order = mp_order.order_by('-id')[:3] 
                     mp_order_data = []
@@ -544,11 +543,17 @@ class OrderReportsView(APIView):
                     return Response({'mp_order_data': mp_order_data})
                 else:
                     return Response({'message': 'No DRAFT status MPOrder found for this client.'})
-            else:
-                audit_cycles = AuditCycle.objects.filter(client=client.id, status=status_value)
+        elif status and status in valid_statuses:
+            audit_cycles = AuditCycle.objects.filter(client=client.id, status=status)
+
+        elif status_param and status_param in valid_statuses:
+            audit_cycles = AuditCycle.objects.filter(client=client.id, status=status_param).order_by('-id')[:3]
+
+        elif status and status == 'ALL':
+            audit_cycles = AuditCycle.objects.filter(client=client.id, status__in=valid_statuses)
+       
         else:
-            default_statuses = ['COMPLETE', 'ACTIVE']
-            audit_cycles = AuditCycle.objects.filter(client=client.id, status__in=default_statuses)
+            return Response({'message': 'Invalid status parameter. Valid values are DRAFT, COMPLETE, ACTIVE, or ALL.'}, status=400)
 
         audit_cycle_data = []
 
@@ -822,8 +827,18 @@ class OrderInvoicesIdView(APIView):
             return JsonResponse({'error': 'Order not found.'}, status=404)
         
         transaction = Transaction.objects.get(order_id=order_id)
+
+        year_of_payment = transaction.payment_success_date.year
+        month_of_payment = transaction.payment_success_date.month
+        if month_of_payment >= 4:
+            financial_year = year_of_payment  # Financial year starts from April
+        else:
+            financial_year = year_of_payment - 1 
+        last_two_digits = financial_year % 100
+        Invoice_number = "# {}/{}-{}0{}".format("INV",financial_year,last_two_digits,transaction.id)
         
         invoice_data = {
+                'Invoice_number' : Invoice_number,
                 'client_profile_data': ClientProfileSerializer(client_profile).data,
                 'order_data': MPOrderRepotsSerializer(order).data,
                 'transaction': TransactionSerializer(transaction).data,
@@ -940,7 +955,7 @@ class MPOrderList(APIView):
 
         valid_statuses = ['DRAFT', 'COMPLETE', 'ACTIVE']
         status = request.query_params.get('status')
-        if status == 'ALL':
+        if status and status == 'ALL':
             mp_order = MPOrder.objects.filter(user=request.user, status__in=valid_statuses)
         elif status and status in valid_statuses:
             mp_order = MPOrder.objects.filter(user=request.user, status=status)

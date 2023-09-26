@@ -103,9 +103,7 @@ class AuditCycle(Model):
     support_page_link = CharField(db_column='support_page_link', max_length=200, blank=True)
     audit_alignment_factors = JSONField(db_column='audit_alignment_factors', default=list, blank=False)
     created_by_client = BooleanField(db_column="created_by_client", default=False)
-    order = ForeignKey('client.MPOrder', db_column='order_id',on_delete=SET_NULL,null=True)
-    # order = models.ForeignKey('Order', on_delete=models.SET_NULL, null=True)
-
+    order = ForeignKey('client.MPOrder', db_column="order_id", on_delete=SET_NULL, null=True)
     class Meta:
         permissions = (
             ('moderator_manage', 'Moderator can manage this Audit Cycle'),
