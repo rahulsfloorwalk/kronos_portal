@@ -186,11 +186,6 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			return false;
 		}
 		if (this.isAgeRangeValid(this.state.audit_alignment_factors.auditor_age_range) == false) {
-			alert("Please enter valid auditor age range");
-			return false;
-		}
-		this.setSubmitting(true);
-		if (this.isAgeRangeValid(this.state.audit_alignment_factors.auditor_age_range) == false) {
 			this.setSubmitting(false);
 			alert("Please enter valid auditor age range");
 			return false;
