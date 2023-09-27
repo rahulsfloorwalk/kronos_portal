@@ -46,6 +46,8 @@ class AuditStoreTableForAudit extends Component{
 			auditStores: [],
 			loading: false,
 			moderators: [],
+			isEmailNotificationDisabled:false,
+			isWhatsappNotificationDisabled:false,
 		};
 	}
 
@@ -222,18 +224,23 @@ export class __AuditRow extends Component{
 										<HandRight/> Fiat Assign
 									</Link>
 								</li>
-								<li>
-									<a onClick={()=>this.sendEmailNotification(this.props.auditCycleId,this.props.audit.id)}>
-										<Envelope/> Email Notification
-									</a>
-								</li>
-								<li>
-									<a onClick={()=>this.sendWhatsappNotification(this.props.auditCycleId,this.props.audit.id)}>
-										<Phone/> Whatsapp Notification
-									</a>
-
-								</li>
-								{ this.props.audit.hidden ?
+								{
+									(!this.props.audit.hidden && (this.props.audit.audit_cycle.status==="ACTIVE" || this.props.audit.audit_cycle.status==="UPCOMING" ) ) ?
+									<>
+										<li>
+											<a onClick={()=>this.sendEmailNotification(this.props.auditCycleId,this.props.audit.id)}>
+												<Envelope/> Email Notification
+											</a>
+										</li>
+										<li>
+											<a onClick={()=>this.sendWhatsappNotification(this.props.auditCycleId,this.props.audit.id)}>
+												<Phone/> Whatsapp Notification
+											</a>
+										</li>
+									</>
+										: null
+								}
+								{this.props.audit.hidden ?
 									<li>
 										<a style={pointerStyle} onClick={this.unhideAuditClicked}>
 											<EyeOpen/> Unhide
@@ -388,19 +395,33 @@ export class AuditList extends Component{
 
 
 	sendAllEmailNotification=(auditCycleId)=>{
+		this.setState({ isEmailNotificationDisabled:true});
 		notificationAllEmailSendForPincode(auditCycleId).done(() => {
 			Alert.success("NOTIFICATION SCHEDULED");
 		}).fail((err)=>{
 			let error=err.responseJSON.non_field_errors;
 			Alert.error(error);
+		}).always(()=>{
+			setTimeout(()=>{
+				this.setState({
+					isEmailNotificationDisabled:false
+				});
+			}, 10*60*1000);
 		});
 	};
 	sendAllWhatsappNotification=(auditCycleId)=>{
+		this.setState({ isWhatsappNotificationDisabled:true});
 		notificationAllWhatsappSendForPincode(auditCycleId).done(() => {
 			Alert.success("NOTIFICATION SCHEDULED");
 		}).fail((err)=>{
 			let error=err.responseJSON.non_field_errors;
 			Alert.error(error);
+		}).always(()=>{
+			setTimeout(()=>{
+				this.setState({
+					isWhatsappNotificationDisabled:false
+				});
+			},10*60*1000);
 		});
 	};
 
@@ -510,10 +531,17 @@ export class AuditList extends Component{
 
 				</div>
 				<Inbox/> Audits
-				<div className="pull-right">
-					<button type="button" className="btn btn-success" onClick={()=>this.sendAllWhatsappNotification(this.props.params.auditCycleId)} >All Whatsapp Notification</button>&nbsp;&nbsp;
-					<button type="button" className="btn btn-primary" onClick={()=>this.sendAllEmailNotification(this.props.params.auditCycleId)}>All Email Notification</button>&nbsp;&nbsp;
-				</div>
+				{this.props.audits.length > 0 && (
+					this.props.audits[0].audit_cycle.status === "UPCOMING" ||
+					this.props.audits[0].audit_cycle.status === "ACTIVE"
+				)
+					?
+					<div className="pull-right">
+						<button type="button" className="btn btn-success" disabled={this.state.isWhatsappNotificationDisabled} onClick={()=>this.sendAllWhatsappNotification(this.props.params.auditCycleId)} >All Whatsapp Notification</button>&nbsp;&nbsp;
+						<button type="button" className="btn btn-primary" disabled={this.state.isEmailNotificationDisabled} onClick={()=>this.sendAllEmailNotification(this.props.params.auditCycleId)}>All Email Notification</button>&nbsp;&nbsp;
+					</div>
+					: null
+				}
 			</h3>
 			<ApplicationStatusSummary auditCycleId={this.props.params.auditCycleId}/>
 			<div className="table-responsive">

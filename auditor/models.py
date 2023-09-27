@@ -424,6 +424,7 @@ class AuditApplication(Model):
     report_exists_data = JSONField(db_column='report_exists_data', default=dict)
     comment = CharField(db_column='comment', max_length=1000, blank=True, null=True)
 
+    auto_approve = BooleanField(db_column='auto_approve', default=False)
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
 
