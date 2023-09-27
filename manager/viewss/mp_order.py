@@ -47,7 +47,8 @@ from manager.viewss.client_profile import ClientProfileSerializer
 from audit_store import service as audit_store_service
 from manager.serializers import AuditStoreSerializerWithoutAudit
 from questionnaire.models import SectionProofTag
-
+from manager.serializers import CategorySerializer,AttachmentSerializer
+from rest_framework.exceptions import ValidationError
 
 
 
@@ -137,9 +138,9 @@ class MpOrderIdView(APIView):
         'POST':[GROUP_NAME_CLIENT]
     }
     def extract_data(self,file):
-        file_name = file.name
-        file_size = file.size
-        mime_type = file.content_type
+        file_name = file.file_name
+        file_size = file.file_size
+        mime_type = file.file_type
         return file_name, file_size, mime_type
     
     def get_object(self,order_id):
@@ -164,6 +165,47 @@ class MpOrderIdView(APIView):
             file_name,file_size,mime_type = self.extract_data(request.data.get('file'))
             post_data,attachment = mp_order_service.order_file_upload_by_order_id(order_id,file_name,file_size,mime_type)
         return JsonResponse(order_data)
+    
+class MpOrderAttachmentView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups ={
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
+    def get(self,request,order_id):
+        attachment = mp_order_service.find_attachment_id_by_order_id(order_id)
+        return Response(AttachmentSerializer(attachment,many=True).data)
+    def post(self,request,order_id):
+        try:
+            post_data, attachment = mp_order_service.order_file_upload_by_order_id(
+                order_id,
+                request.data.get('file').get("file_name"),
+                request.data.get('file').get("file_size"),
+                request.data.get('file').get("file_type"))
+            post_data["attachment"] = AttachmentSerializer(attachment).data
+            return Response(post_data)
+        except KeyError as e:
+            raise ValidationError({
+                'file_name': "file name is required"
+            })
+        
+class MpOrderDeleteView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups = {
+        'DELETE': [GROUP_NAME_MANAGER],
+    }
+    def delete(self,request,attachment_id):
+        mp_order_service.delete_order_file_by_attachment_id(attachment_id,request.data)
+        return Response()
+    
+class MpOrderAttachmentCompleteView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, attachment_id):
+        attachment = mp_order_service.complete_for_order(attachment_id, request.data)
+        return Response(AttachmentSerializer(attachment).data)
 
 class MpOrderStatusView(APIView):
     permission_classes=[HasGroupPermission]
@@ -964,5 +1006,37 @@ class MPOrderList(APIView):
 
         mp_order_data = [{'mp_order': MPOrderSerializer(mp_order_item).data} for mp_order_item in mp_order]
         return Response({'mp_order_data': mp_order_data})
+    
+class AuditCycleDetailView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT]
+    }
 
- 
+    def get(self,request,audit_cycle_id):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        
+        audit_cycle = AuditCycle.objects.get(client=client.id,id=audit_cycle_id)
+        
+        if audit_cycle.order is not None:
+                order = MPOrder.objects.get(id=audit_cycle.order.id)
+                store_info = order.store
+                store_count = len(store_info) if store_info else 0
+                audit_cycle_data = ({
+                    'id': audit_cycle.id,
+                    'audit_cycle': AuditCycleSerializer(audit_cycle).data,
+                    'order': MPOrderSerializer(order).data,
+                    # 'audit_score': audit_score_response,
+                    'store_info': store_info,
+                    'store_count': store_count,
+                })
+        if audit_cycle_data:
+            return Response({'audit_cycle_data': audit_cycle_data})
+        else:
+            return JsonResponse({'error': 'No audit cycles found for this client.'})
+            
+

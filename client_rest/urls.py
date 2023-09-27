@@ -110,6 +110,10 @@ urlpatterns = ([
     url(r'order_mp$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
     url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
+    url(r'mp_order/(?P<order_id>[0-9]+)/attachment$',mp_order_views.MpOrderAttachmentView.as_view(),name='mp_order_attachment_view'),
+    url(r'mp_order_attachment/(?P<attachment_id>[0-9]+)/delete$',mp_order_views.MpOrderDeleteView.as_view(),name='order_delete_view'),
+    url(r'mp_order_attachment/(?P<attachment_id>[0-9]+)/complete$',mp_order_views.MpOrderAttachmentCompleteView.as_view(),name='order_attachment_complete_view'),
+
     
     url(r'mp/store_mp$', store_views.StoreAddClientView.as_view(), name='store_add_client_view'),
     url(r'mp/store_mp_get$', store_views.StoreGetClientView.as_view(), name='store_get_client_view'),
@@ -122,6 +126,8 @@ urlpatterns = ([
     url(r'mp/reportlistdetail/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.MPOrderReportListDetailView.as_view(), name='Order_reportlistdetail_view'),
     url(r'mp/invoice$', mp_order_views.OrderInvoicesView.as_view(), name='Order_invoices_view'),
     url(r'mp/invoice/(?P<order_id>[0-9]+)$', mp_order_views.OrderInvoicesIdView.as_view(), name='Order_invoices_id_view'),
+    url(r'mp/audit_cycle_detail/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.AuditCycleDetailView.as_view(), name='audit_cycle_detail_view'),
+
 
     url(r'mp/audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', mp_order_views.AuditByAuditCycle.as_view(), name='audit_by_audit_cycle_view'),
     url(r'mp/audit/(?P<audit_id>[0-9]+)/audit_stores$', mp_order_views.AuditStoreByAuditClient.as_view(), name='audit_store_by_audit_id_view_client'),

@@ -19,6 +19,18 @@ def delete_order_file_by_attachment_id(attachment_id,order_id):
 
     return attachment_service.delete(attachment_id)
 
+def complete_for_order(attachment_id,order_id):
+    attachment = attachment_service.find_by_id(attachment_id) 
+
+    if attachment.content_type.model_class() == MPOrder:
+        order = attachment_service.get_order_for_attachment(attachment_id)
+        if int(order.id) != int(order_id):
+            raise ObjectNotFound
+    else:
+        raise AppLogicError("Invalid Attachment Content Type detected")
+    return attachment_service.complete(attachment_id)
+
+
 def find_attachment_id_by_order_id(order_id):
     order= find_order_by_id(order_id)
     attachment = Attachment.objects.get(orders__id=order.id,status=Attachment.ATTACHED)
