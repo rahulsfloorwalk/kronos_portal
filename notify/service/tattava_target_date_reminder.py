@@ -32,8 +32,7 @@ def auto_tattava_report_action_target_date_to_admin():
                     action_list.append({
                         'person':j.person_responsible,
                         'description':j.action_plan_description,
-                        'target_date':j.target_date,
-                        'cycle_name':j.audit_store.audit.audit_cycle.name
+                        'report_id':i
                     })
         _logger.info("sending email for action plan with %s Action Plans",len(action_list))
         mail_count+=1
@@ -46,11 +45,11 @@ def auto_tattava_report_action_target_date_to_admin():
 @shared_task()
 def send_target_date_reminder(action_list,client_id):
     client_users = ClientUser.objects.filter(client_id=client_id,receive_email_notification=True)
-    admin_client_users = [user.user.email for user in client_users if  user.user.has_perm('client.clientuser_admin')]
+    admin_client_users = [user.user.email for user in client_users if  user.user.has_perm('client.clientuser_admin') and user.user.is_active==True]
     params={
         **registration_context(),
     }
-    subject = "Targeted Date of Action Plan for Store Manager Assignments Reminder"
+    subject = "Today Targeted Date of Action Plan for Store Manager Assignments Reminder"
     params['subject_text'] = subject
     params['action_list'] = action_list
     html_message = get_template("notify/tattava_target_date_email.html").render(params)

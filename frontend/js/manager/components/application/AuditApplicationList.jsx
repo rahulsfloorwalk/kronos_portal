@@ -114,6 +114,7 @@ export class AuditApplicationRow extends Component{
 		} else {
 			statusLabel = <ApplicationStatusLabel status={application.status}/>;
 		}
+		let auto_approved=application.is_automation_approve ? <i>(Auto Assigned)</i> : null;
 		let reports = [];
 		for(let report of this.state.recent_audit_reports){
 			reports.push(<tr key={report.id}>
@@ -135,7 +136,9 @@ export class AuditApplicationRow extends Component{
 				<td>{application.profileinfo.certification_score ? application.profileinfo.certification_score : "--" }</td>
 				<td>
 					{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
-					{statusLabel}
+					{statusLabel}&nbsp;
+					{auto_approved}
+					{/* {application.is_automation_approved}  */}
 				</td>
 				<td>
 					{this.state.comment_editable ? <textarea className="form-control" placeholder="Enter a comment" value={this.state.comment ? this.state.comment : ""} onChange={this.commentChanged} onBlur={this.onBlur} /> : this.state.comment}
