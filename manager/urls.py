@@ -185,6 +185,7 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store_stats$', audit_cycle_views.AuditCycleAuditStoreStats.as_view(), name='audit_cycle_audit_store_stats'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/export_questionnaire', audit_cycle_views.ExportQuestionnaire.as_view(), name='export_questionnaire'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/post_approval_description$', audit_cycle_views.AuditCycleIdPostApprovalDescriptionView.as_view(), name='audit_cycle_id_post_approval_description_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/eligibility_auditors$', audit_cycle_views.AuditCycleIdEligibilityAuditorView.as_view(), name='audit_cycle_id_eligibility_auditor_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/checkpoints$', audit_cycle_views.AuditCycleIdCheckPointsView.as_view(), name='audit_cycle_id_checkpoints'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/charge_per_audit$', audit_cycle_views.AuditCycleIdChargePerAuditView.as_view(), name='audit_cycle_id_charge_per_audit'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/system_cost$', audit_cycle_views.AuditCycleIdSystemCostView.as_view(), name='audit_cycle_id_system_cost'),

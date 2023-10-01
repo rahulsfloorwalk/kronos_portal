@@ -1183,24 +1183,6 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                 className="form-group"
               >
                 <label>
-                  Eligibilty For Auditor
-                </label>
-                <textarea
-                  className="form-control"
-                  name="eligibility"
-                  onChange={[Function]}
-                  value=""
-                />
-                <ul />
-              </div>
-            </div>
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-group"
-              >
-                <label>
                   Audit auto approve
                 </label>
                 <input
@@ -2430,24 +2412,6 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                   name="planned_audit"
                   onChange={[Function]}
                   type="number"
-                  value=""
-                />
-                <ul />
-              </div>
-            </div>
-            <div
-              className="col-md-6"
-            >
-              <div
-                className="form-group"
-              >
-                <label>
-                  Eligibilty For Auditor
-                </label>
-                <textarea
-                  className="form-control"
-                  name="eligibility"
-                  onChange={[Function]}
                   value=""
                 />
                 <ul />

@@ -424,6 +424,7 @@ class AuditApplication(Model):
     report_exists_data = JSONField(db_column='report_exists_data', default=dict)
     comment = CharField(db_column='comment', max_length=1000, blank=True, null=True)
 
+    is_automation_approve = BooleanField(db_column='is_automation_approve', default=False)
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
 
@@ -454,7 +455,6 @@ class AuditApplication(Model):
         match_percent = 100
         blank_values = ['', None, []]
         null_blank_factor_keys = ['auditor_rating']
-
         if not factors:
             return total_factors_count, valid_factors_count, match_percent
 
@@ -521,6 +521,7 @@ class AuditApplication(Model):
             pass
         else:
             match_percent = round((valid_factors_count / total_factors_count) * 100)
+        
         return total_factors_count, valid_factors_count, match_percent
 
     def distance(self):

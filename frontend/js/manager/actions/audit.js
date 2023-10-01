@@ -173,6 +173,27 @@ export function setPostApprovalDescription(auditCycleId, postApprovalDescription
 	};
 }
 
+export function setEligibilityForAuditors(auditCycleId, eligibility){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/eligibility_auditors`,
+			data: JSON.stringify({
+				eligibility: eligibility
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(savedAuditCycle){
+			dispatch({
+				type: types.AUDIT_CYCLE_ID_POST,
+				status: "success",
+				auditCycle: savedAuditCycle
+			});
+		});
+		return req;
+	};
+}
+
 export function setCheckPoints(auditCycleId, checkpoints){
 	return function(dispatch){
 		let req = $.ajax({

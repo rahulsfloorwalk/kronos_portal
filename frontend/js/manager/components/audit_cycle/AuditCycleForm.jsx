@@ -37,7 +37,6 @@ export class AuditCycleForm extends Component{
 			earnings_per_audit: PropTypes.number,
 			reimbursement: PropTypes.number,
 			description: PropTypes.string,
-			eligibility: PropTypes.string,
 			audit_auto_approve: PropTypes.bool,
 			client: PropTypes.shape({
 				id: PropTypes.number.isRequired,
@@ -60,7 +59,6 @@ export class AuditCycleForm extends Component{
 			reimbursement: FieldErrors,
 			earnings_per_audit: FieldErrors,
 			description: FieldErrors,
-			eligibility:FieldErrors,
 			audit_auto_approve: FieldErrors,
 			questionnaire_type: FieldErrors,
 		}).isRequired,
@@ -217,9 +215,6 @@ export class AuditCycleForm extends Component{
 						</div>
 						<div className="col-md-6">
 							<FormInput label="Planned audit" type="number" value={this.state.planned_audit} name="planned_audit" onChange={this.fieldChanged} errors={this.props.errors.planned_audit}/>
-						</div>
-						<div className="col-md-6">
-							<FormTextarea label="Eligibilty For Auditor" type="text" value={this.state.eligibility} name="eligibility" onChange={this.fieldChanged} errors={this.props.errors.eligibility}/>
 						</div>
 						<div className="col-md-6">
 							<FormInput label="Audit auto approve" type="checkbox" checked={this.state.audit_auto_approve} name="audit_auto_approve" onChange={this.fieldChanged} errors={this.props.errors.audit_auto_approve}/>

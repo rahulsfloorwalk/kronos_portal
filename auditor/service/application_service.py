@@ -340,15 +340,27 @@ def find_audit_applications_for_auto_approve():
             audit_application_filtered = audit_application.filter(audit=audit.id)
 
             for application in audit_application_filtered:
-                rating=profile_info_service.get_avg_auditor_rating_by_user(application.profileinfo.user)
+                # rating=profile_info_service.get_avg_auditor_rating_by_user(application.profileinfo.user)
                 distance=application.distance()
                 total_factors_count, valid_factors_count, match_percent = application.validate_alignment_factors()
-
                 # required minimum 3 alignment factors in audit cycle
-                if (match_percent <= 100 and match_percent >= 80) and distance<=20 and (rating is None) and total_factors_count>2:
-                    application_id_list.append(application.id)
-                    valid_audit_count += 1
-                    if valid_audit_count == range:
-                        break
-
+                if distance is not None:
+                    if (match_percent <= 100 and match_percent >= 85) and int(distance)<=10 :
+                        if application.audit_date == today_ist()+timedelta(days=1):
+                            application_id_list.append(application.id)
+                            valid_audit_count += 1
+                        if valid_audit_count == range:
+                            break
+                    elif (match_percent<=84 and match_percent >=70) and int(distance)<=20 :
+                        if application.audit_date == today_ist()+timedelta(days=1):
+                            application_id_list.append(application.id)
+                            valid_audit_count += 1
+                        if valid_audit_count == range:
+                            break
+                    elif (match_percent<=69 and match_percent >=55) and int(distance)<=30 :
+                        if application.audit_date == today_ist()+timedelta(days=1):
+                            application_id_list.append(application.id)
+                            valid_audit_count += 1
+                        if valid_audit_count == range:
+                            break
     return audit_application.filter(id__in = application_id_list)

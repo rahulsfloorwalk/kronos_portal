@@ -125,16 +125,13 @@ class AuditFiatAssignForm extends React.Component {
 		if (this.state.loading){
 			saveButton = <Loading/>;
 		}
-		const currentDate = new Date();
-		const endDate = new Date(currentDate);
-		endDate.setDate(currentDate.getDate() + 7);
 		const momentDateFormat = "YYYY-MM-DD";
 		return (
 			<Modal modalTitle="Assign Application" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.state.errors.non_field_errors}/>
 					<p>Store: <b>{this.props.audit.store.name}, {this.props.audit.store.city.name}</b></p>
-					<p>Audit Cycle Dates: <b>{moment(currentDate).format(momentDateFormat)}</b> to <b>{moment(endDate).format(momentDateFormat)}</b></p>
+					<p>Audit Cycle Dates: <b>{moment(this.props.auditCycle.start_date).format(momentDateFormat)}</b> to <b>{moment(this.props.auditCycle.end_date).format(momentDateFormat)}</b></p>
 					<FormInput label="User Email" value={this.state.email} name="email" onChange={this.inputChanged} errors={this.state.errors.email}/>
 					<FormDateInput label="Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.state.errors.audit_date}/>
 					<p>

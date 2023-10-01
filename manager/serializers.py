@@ -212,6 +212,7 @@ class AuditApplicationSerializer(ModelSerializer):
             'status',
             'audit_date',
             'audit',
+            'is_automation_approve',
             'profileinfo',
             'avg_qa_rating',
             'report_exists',

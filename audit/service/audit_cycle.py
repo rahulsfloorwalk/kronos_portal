@@ -217,7 +217,11 @@ def set_post_approval_description(audit_cycle_id, post_approval_description):
 
     audit_cycle.post_approval_description = post_approval_description
     return save(audit_cycle)
+def set_eligibility_for_auditor(audit_cycle_id,eligibility):
+    audit_cycle = find_by_id(audit_cycle_id)
 
+    audit_cycle.eligibility = eligibility
+    return save(audit_cycle)
 
 def set_checkpoints(audit_cycle_id, checkpoints):
     if AuditCycle.objects.filter(id=audit_cycle_id, status__in=[AuditCycle.CLEARING, AuditCycle.ARCHIVED]).exists():

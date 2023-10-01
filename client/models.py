@@ -406,7 +406,7 @@ class MPClientProfileInfo(Model):
     first_name = CharField(db_column='first_name', max_length=150, blank=False)
     last_name = CharField(db_column='last_name', max_length=150, blank=True,default='')
     mobile_number = CharField(db_column='mobile_number', max_length=15, blank=False)
-    company_name = CharField(db_column='company_name', max_length=15, blank=False)
+    brand = CharField(db_column='brand', max_length=15, blank=False)
     gst = CharField(db_column='gst', max_length=150, blank=True,default='')
     address = CharField(db_column='address', max_length=150, blank=True,default='')
 

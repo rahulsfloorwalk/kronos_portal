@@ -17,9 +17,7 @@ import Modal from "../../components/Modal.jsx";
 
 import { auditPropType } from "../prop_types";
 
-const dateObj=new Date();
-const startDate=dateObj.setDate(dateObj.getDate() - 1);
-const endDate = dateObj.setDate(dateObj.getDate() + 8);
+
 class AuditApplyForm extends React.Component {
 	static propTypes = {
 		dispatch: PropTypes.func.isRequired,
@@ -63,13 +61,32 @@ class AuditApplyForm extends React.Component {
 	};
 
 	isValidDate = (currentDate) => {
-		return currentDate.isBetween(startDate, endDate, null, "[]"); //inclusive
+		const sDate= new Date();
+		sDate.setDate(sDate.getDate() -1);
+		const SevenDaysLaterDate=new Date();
+		SevenDaysLaterDate.setDate(sDate.getDate() + 7);
+		let eDate;
+		if (SevenDaysLaterDate>new Date(this.props.audit.audit_cycle.end_date)){
+			eDate=new Date(this.props.audit.audit_cycle.end_date);
+		}
+		else{
+			eDate=SevenDaysLaterDate;
+		}
+		return currentDate.isBetween(sDate, eDate, null, "[]"); //inclusive
 	};
 
 	render() {
 		const sDate= new Date();
-		const eDate = new Date(sDate);
-		eDate.setDate(sDate.getDate() + 7);
+		sDate.setDate(sDate.getDate()-1);
+		const SevenDaysLaterDate=new Date();
+		SevenDaysLaterDate.setDate(sDate.getDate() + 7);
+		let eDate;
+		if (SevenDaysLaterDate>new Date(this.props.audit.audit_cycle.end_date)){
+			eDate=new Date(this.props.audit.audit_cycle.end_date);
+		}
+		else{
+			eDate=SevenDaysLaterDate;
+		}
 		return (
 			<Modal modalTitle={`Apply for Audit at ${this.props.audit.store.city.name}`} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>

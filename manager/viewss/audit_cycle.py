@@ -118,6 +118,21 @@ class AuditCycleIdPostApprovalDescriptionView(APIView):
         saved_audit_cycle = audit_cycle_service.set_post_approval_description(audit_cycle_id, ds.validated_data["post_approval_description"])
         return Response(AuditCycleSerializer(saved_audit_cycle).data)
 
+class AuditCycleIdEligibilityAuditorView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_MANAGER]
+    }
+    class DeSerializer(Serializer):
+        eligibility = CharField(allow_blank=True, max_length=16384)
+
+    def post(self, request, audit_cycle_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        saved_audit_cycle = audit_cycle_service.set_eligibility_for_auditor(audit_cycle_id, ds.validated_data["eligibility"])
+        return Response(AuditCycleSerializer(saved_audit_cycle).data)
 class AuditCycleIdCheckPointsView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

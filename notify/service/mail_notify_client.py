@@ -11,6 +11,9 @@ from client.service.client_service import find_client_by_id
 from client.service.client_user import find_client_admin_users_by_client_id
 _logger = logging.getLogger(__name__)
 
+# from notify.service import mail_notify_client
+# obj=mail_notify_client
+# obj.send_mail_to_client()
 
 @app.task(ignore_result=True)
 def send_mail_to_client():
@@ -42,11 +45,11 @@ def send_live_report_mail(client_id, report_list):
     params = {
         **registration_context(),
     }
-    client_obj = find_client_by_id(client_id)
+    # client_obj = find_client_by_id(client_id)
     client_users_email = find_client_admin_users_by_client_id(client_id).filter(receive_email_notification=True).values_list('user__email', flat=True)
-    to_email = list(client_users_email)
-    to_email.append(client_obj.email)
-
+    to_email = list()
+    for i in client_users_email:
+        to_email.append(i)
     subject = "{} report is live today".format(str(len(report_list)))
     if len(report_list) > 1:
         subject = "{} reports are live today".format(str(len(report_list)))

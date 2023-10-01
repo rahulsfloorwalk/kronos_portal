@@ -53,6 +53,7 @@ import DetailsFromClient from "./audit_cycle/DetailsFromClient.jsx";
 import AuditCyclePaymentList from "./AuditCyclePaymentList.jsx";
 import AuditCycleModeratorSummary from "./audit_cycle/AuditCycleModeratorSummary.jsx";
 import PostApprovalDescriptionForm from "./PostApprovalDescriptionForm.jsx";
+import EligibilityForAuditors from "./EligibilityForAuditors.jsx";
 import CheckPoints from "./CheckPoints.jsx";
 import ProofsTag from "./ProofsTag.jsx";
 import OpportunityRecordList from "./OpportunityRecordList.jsx";
@@ -221,6 +222,7 @@ const Routes = () => (
 				<Route path="edit" component={AuditCycleForm} />
 				<Route path="copy" component={AuditCycleCopyForm} />
 				<Route path="post_approval_description" component={PostApprovalDescriptionForm} />
+				<Route path="eligibility" component={EligibilityForAuditors} />
 				<Route path="checkpoints" component={CheckPoints} />
 				<Route path="proofs_tag" component={ProofsTag} />
 				<Route path="audit_charge" component={ChargePerAuditForm} />

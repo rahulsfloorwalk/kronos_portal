@@ -64,12 +64,14 @@ class Audit(Model):
 
     def get_pincode_audit(self):
         address = self.store.get_store_address()
-        regex = "\d{6}"
-        match = re.findall(regex, address)
-        if match:
-            pincode = match[0]
-        else:
-            pincode = None
+        pincode = self.store.pincode
+        if not pincode:
+            regex = "\d{6}"
+            match = re.findall(regex, address)
+            if match:
+                pincode = match[0]
+            else:
+                pincode = None
         return pincode
 
     def __str__(self):

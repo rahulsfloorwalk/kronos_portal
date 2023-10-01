@@ -43,9 +43,6 @@ class AuditRow extends React.Component{
 		let button, auditDate, textLabel,redirectButton;
 		if( typeof this.props.application === "undefined" || this.props.application.status === "NOT_APPLIED"){
 			button = <button type="button" className="btn btn-primary" onClick={this.applyButtonClicked}><ShareAlt/> Apply</button>;
-			//<Link to={applyLink} className="btn btn-primary"><ShareAlt/> Apply</Link>;
-			//button = applyButton;
-			//textLabel = <ApplicationStatusLabel status="NOT_APPLIED"/>;
 		}
 		else if( this.props.application.status === "APPLIED" || this.props.application.status === "WAITLISTED"){
 			let cancelLink = `/audit/cycle/${this.props.audit.audit_cycle.id}/audit/${this.props.audit.id}/cancel`;
@@ -75,7 +72,7 @@ class AuditRow extends React.Component{
 		}
 		let fees = this.props.audit.earnings_per_audit ? <span>Flat: <big><b>₹ {this.props.audit.earnings_per_audit}</b></big>, </span> : "";
 		let reimb = this.props.audit.reimbursement ? <span>Reimbursement upto: <big><b>₹ {this.props.audit.reimbursement}</b></big></span> : "";
-		let eligible= this.props.audit.audit_cycle.eligibility ? <b>{this.props.audit.audit_cycle.eligibility}</b>:"";
+		let eligible= this.props.audit.audit_cycle.eligibility ? <MarkdownViewer markdown={this.props.audit.audit_cycle.eligibility || ""}/>:"";
 		return (
 			<div className="row">
 				<div className="col-sm-3">
@@ -88,7 +85,7 @@ class AuditRow extends React.Component{
 					<p>{fees}{reimb}</p>
 				</div>
 				<div className="col-sm-3">
-					<label className="hidden-sm hidden-md hidden-lg">Eligibilty</label>
+					<label className="hidden-sm hidden-md hidden-lg">Eligibiltiy</label>
 					<p>{eligible}</p>
 				</div>
 				<div className="col-sm-3">
@@ -251,7 +248,7 @@ class AuditList extends Component{
 				<div className="row hidden-xs">
 					<div className="col-sm-3"><big><b>Store Location</b></big></div>
 					<div className="col-sm-3"><big><b>Earnings</b></big></div>
-					<div className="col-sm-3"><big><b>Eligibilty</b></big></div>
+					<div className="col-sm-3"><big><b>Eligibility</b></big></div>
 					<div className="col-sm-3"><big><b>Status</b></big></div>
 					<div className="col-xs-12"><hr/></div>
 				</div>

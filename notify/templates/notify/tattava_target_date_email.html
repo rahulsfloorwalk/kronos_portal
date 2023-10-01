@@ -7,18 +7,14 @@
         <br>
             <table border="1" cellpadding="8" cellspacing="0" width="700">
                 <tr>
-                    <th style="font-size: 14px;">Audit Cycle Name</th>
+                    <th style="font-size: 14px;">Report ID</th>
                     <th style="font-size: 14px;">Responsible Person</th>
-                    <th style="font-size: 14px;">Target Date</th>
                     <th style="font-size: 14px;">Action Plan</th>
-                    
-                    <th style="font-size: 14px;"></th>
                 </tr>
                 {% for i in action_list %}
                     <tr>
-                        <td style="font-size: 13px;">{{i.cycle_name}}</td>
+                        <td style="font-size: 13px;">{{i.report_id}}</td>
                         <td style="font-size: 13px;">{{i.person}}</td>
-                        <td style="font-size: 13px;">{{i.target_date}}</td>
                         <td style="font-size: 13px;">{{i.description}}</td>
                         
                     </tr>
