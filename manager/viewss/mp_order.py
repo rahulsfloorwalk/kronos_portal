@@ -97,12 +97,14 @@ class ClientOrderStatusDeatil(APIView):
     def get(self,request):
         user=request.user
         client = Client.objects.get(email=user.email)
-        status = request.GET.get('status')
-        if status == 'ALL':
-            orders = MPOrder.objects.filter(user=user).all()
-        else:
-            orders = MPOrder.objects.filter(user=user,status=status)
-        return Response(OrderSerializer(orders,many=True).data)
+        draft_count = MPOrder.objects.filter(user=user,status=MPOrder.DRAFT).all().count()
+        active_count = MPOrder.objects.filter(user=user,status=MPOrder.ACTIVE).all().count()
+        complete_count = MPOrder.objects.filter(user=user,status=MPOrder.COMPLETE).all().count()
+        result={}
+        result['complete_order_count']=complete_count
+        result['active_order_count']=active_count
+        result['draft_order_count']=draft_count
+        return Response(result)
 
 class MpOrderView(APIView):
     permission_classes=[HasGroupPermission]
@@ -602,6 +604,31 @@ class OrderReportsView(APIView):
             return Response({'audit_cycle_data': audit_cycle_data})
         else:
             return JsonResponse({'error': 'No audit cycles found for this client.'})
+
+
+class MPReportsAuditCycleSerializer(ModelSerializer):
+    class Meta:
+        model = AuditCycle
+        fields = (
+            'id',
+            'name',
+            'type',
+            'status',
+            'start_date',
+            'end_date',
+            'planned_audit',
+            'audit_count',
+        )
+        read_only_fields = fields
+
+    
+class MPReportsOrderSerializer(ModelSerializer):
+    solution = SolutionSerializer()
+    category_name = serializers.CharField(source='category.name', read_only=True)
+    class Meta:
+        model=MPOrder
+        # exclude = ('attachments',) 
+        fields=('id','solution','category','category_name','no_of_response','status','store','created_at','modified_at')
             
 
 class OrderReportListView(APIView):
@@ -1009,6 +1036,7 @@ class AuditCycleDetailView(APIView):
         else:
             return JsonResponse({'error': 'No audit cycles found for this client.'})
 
+
 class StoreSearchView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -1036,10 +1064,11 @@ class StoreSearchView(APIView):
             queryset = queryset.filter(city__name__icontains=city)
         if state:
             queryset = queryset.filter(city__state__icontains=state)
-        if status and status.upper() == 'ALL':
-            queryset = Store.objects.filter(client=client)
-        else:
-            return Response({'error': 'Invalid value for the "status" parameter. It should be "ALL" to retrieve all data.'}, status=404)
+        if status :
+            if status.upper() == 'ALL':
+                queryset = Store.objects.filter(client=client)
+            else:
+                return Response({'error': 'Invalid value for the "status" parameter. It should be "ALL" to retrieve all data.'}, status=404)
             
         if not queryset.exists():
             return Response({'error': 'No records found for the given query parameters.'}, status=404)
