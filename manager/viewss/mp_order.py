@@ -148,8 +148,13 @@ class MpOrderAttachmentView(APIView):
         'POST': [GROUP_NAME_CLIENT]
     }
     def get(self,request,order_id):
-        attachment = mp_order_service.find_attachment_id_by_order_id(order_id)
-        return Response(AttachmentSerializer(attachment).data)
+        attachments = mp_order_service.find_attachment_id_by_order_id(order_id)
+        # return Response(AttachmentSerializer(attachment).data)
+        if attachments.exists():
+            attachment = attachments.first()
+            return Response(AttachmentSerializer(attachment).data)
+        else:
+            return Response([])
     
     def post(self,request,order_id):
         try:
