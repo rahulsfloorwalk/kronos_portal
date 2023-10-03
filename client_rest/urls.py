@@ -118,7 +118,9 @@ urlpatterns = ([
     url(r'mp/store_mp$', store_views.StoreAddClientView.as_view(), name='store_add_client_view'),
     url(r'mp/store_mp_get$', store_views.StoreGetClientView.as_view(), name='store_get_client_view'),
     url(r'mp/store_mp/(?P<store_id>[0-9]+)$', store_views.StoreIdClientIdView.as_view(), name='store_id_client_id_view'),
-    
+    url(r'mp/storesearch$', mp_order_views.StoreSearchView.as_view(), name='store_search_view'),
+
+
     url(r'mp/orderstatus$', mp_order_views.ClientOrderStatusDeatil.as_view(), name='client_order_detail'),
     url(r'mp/amdminorderstatus$', mp_order_views.AdminOrderView.as_view(), name='admin_order_detail'),
     url(r'mp/reports$', mp_order_views.OrderReportsView.as_view(), name='Order_reports_view'),

@@ -22,18 +22,15 @@ from manager.models import MPSolutionOtherDetails,MPSolutionQuestion,MPSolutionP
 from django.utils import timezone
 from audit.models import AuditCycle
 from rest_framework.serializers import Serializer, CharField, ModelSerializer, IntegerField
-from manager.viewss.section import SectionDeSerializer,SectionSerializer
+from manager.viewss.section import SectionDeSerializer
 from questionnaire.service import section as section_service
 from manager.viewss.question import QuestionDeSerializer
 from questionnaire.service import question as question_service
-from manager.models import ProofTag
-from audit.models.proof_tag import AuditCycleProofTagList
 from audit.service import audit_service
 from ..serializers import AuditSerializer
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from rest_framework import serializers
-from manager.serializers import AuditCycleSerializer,StoreSerializer,CitySerializer
-from client.service import store as store_service
+from manager.serializers import AuditCycleSerializer,StoreSerializer,CitySerializer,ClientSerializer
 from questionnaire.models import QuestionnaireType
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 from client_report.service import audit_section
@@ -44,10 +41,8 @@ from questionnaire.models.section import Section
 from answer.service import answer as answer_service
 from manager.viewss.answer import AnswerSerializer
 from manager.viewss.client_profile import ClientProfileSerializer
-from audit_store import service as audit_store_service
 from manager.serializers import AuditStoreSerializerWithoutAudit
-from questionnaire.models import SectionProofTag
-from manager.serializers import CategorySerializer,AttachmentSerializer
+from manager.serializers import AttachmentSerializer
 from rest_framework.exceptions import ValidationError
 
 
@@ -123,12 +118,6 @@ class MpOrderView(APIView):
     def post(self,request):
         response = mp_order_service.add_order(data=request.data,user_id=request.user.id)
         order_data = get_order_data(response)
-        if request.data.get('file'):
-            post_data,attachment = mp_order_service.order_file_upload_by_order_id(
-                order_data.get('id'),
-                request.data.get('file').get("file_name"),
-                request.data.get('file').get("file_size"),
-                request.data.get('file').get("file_type"))
         return JsonResponse(order_data)
 
 class MpOrderIdView(APIView):
@@ -136,13 +125,7 @@ class MpOrderIdView(APIView):
     required_groups={
         'GET':[GROUP_NAME_CLIENT],
         'POST':[GROUP_NAME_CLIENT]
-    }
-    def extract_data(self,file):
-        file_name = file.file_name
-        file_size = file.file_size
-        mime_type = file.file_type
-        return file_name, file_size, mime_type
-    
+    }   
     def get_object(self,order_id):
         try:
             return MPOrder.objects.get(pk=order_id)
@@ -154,34 +137,27 @@ class MpOrderIdView(APIView):
     def post(self,request,order_id):
         
         order=self.get_object(order_id)
-        
         response = mp_order_service.update_order(request.data,order)
-        
         order_data = get_order_data(response)
-        
-        if request.data.get('file'):
-            attachment_id = mp_order_service.find_attachment_id_by_order_id(order_id)
-            mp_order_service.delete_order_file_by_attachment_id(attachment_id,order_id)            
-            file_name,file_size,mime_type = self.extract_data(request.data.get('file'))
-            post_data,attachment = mp_order_service.order_file_upload_by_order_id(order_id,file_name,file_size,mime_type)
         return JsonResponse(order_data)
     
 class MpOrderAttachmentView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups ={
-        'GET': [GROUP_NAME_MANAGER],
-        'POST': [GROUP_NAME_MANAGER]
+        'GET': [GROUP_NAME_CLIENT],
+        'POST': [GROUP_NAME_CLIENT]
     }
     def get(self,request,order_id):
         attachment = mp_order_service.find_attachment_id_by_order_id(order_id)
-        return Response(AttachmentSerializer(attachment,many=True).data)
+        return Response(AttachmentSerializer(attachment).data)
+    
     def post(self,request,order_id):
         try:
-            post_data, attachment = mp_order_service.order_file_upload_by_order_id(
+            post_data, attachment = mp_order_service.order_file_upload_by_order_id(               
                 order_id,
-                request.data.get('file').get("file_name"),
-                request.data.get('file').get("file_size"),
-                request.data.get('file').get("file_type"))
+                request.data["file_name"],
+                request.data["file_size"],
+                request.data["file_type"])
             post_data["attachment"] = AttachmentSerializer(attachment).data
             return Response(post_data)
         except KeyError as e:
@@ -192,7 +168,7 @@ class MpOrderAttachmentView(APIView):
 class MpOrderDeleteView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups = {
-        'DELETE': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_CLIENT],
     }
     def delete(self,request,attachment_id):
         mp_order_service.delete_order_file_by_attachment_id(attachment_id,request.data)
@@ -201,7 +177,7 @@ class MpOrderDeleteView(APIView):
 class MpOrderAttachmentCompleteView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'POST': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_CLIENT],
     }
     def post(self, request, attachment_id):
         attachment = mp_order_service.complete_for_order(attachment_id, request.data)
@@ -317,13 +293,7 @@ class MpPaymentCompleteView(APIView):
             else:
                 return JsonResponse({'error': 'Order exists but status is not DRAFT'})
         except MPOrder.DoesNotExist:
-            order = MPOrder.objects.create(
-                id=razor_order_id,
-                razorpay_payment_id=payment_id,
-                razorpay_signature=signature,
-                status='ACTIVE',
-                payment_status=MPOrder.PAYMENT_SUCCESS
-            )
+            return JsonResponse({'error': 'Order exists but status is not DRAFT.'}, status=404)
 
         transaction = Transaction(order=order, payment_id=payment_id, signature=signature)
         transaction.payment_success_date = timezone.now()
@@ -342,8 +312,6 @@ class MpPaymentCompleteView(APIView):
         add_questionnaire_type_id = create_questionnaire_type(questionnaire_data)
 
         audit_cycle_response = create_audit_cycle(client, order, solution_details,transaction,add_questionnaire_type_id)
-
-
         add_section = Add_Section(audit_cycle_response)
 
         mpsolutionquestions = MPSolutionQuestion.objects.filter(solution=order.solution)
@@ -732,7 +700,7 @@ class MPOrderRepotsSerializer(ModelSerializer):
     solution = SolutionSerializer()
     class Meta:
         model=MPOrder
-        fields=('id','solution','user','price','no_of_response','describe','status','created_at','modified_at')
+        fields=('id','solution','user','price','no_of_response','describe','status','created_at','modified_at','payment_status')
     
 class CustomAuditCycleSerializer(ModelSerializer):
     questionnaire_type = QuestionnaireTypeSerializer()
@@ -896,7 +864,6 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields=('id','payment_success_date')
 
-
 class AuditByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -962,7 +929,6 @@ def find_by_audit_with_status(audit_id, status_list):
         'user__profileinfo',
     )
 
-
 class AuditStoreSerializerWithoutAudit(ModelSerializer):
     user = UserSerializer()
     # assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
@@ -980,7 +946,6 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
             # 'report_revert_count'
         )
         read_only_fields = fields
-
 
 class MPOrderList(APIView):
     permission_classes = [HasGroupPermission]
@@ -1038,5 +1003,41 @@ class AuditCycleDetailView(APIView):
             return Response({'audit_cycle_data': audit_cycle_data})
         else:
             return JsonResponse({'error': 'No audit cycles found for this client.'})
-            
 
+class StoreSearchView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+           
+        name = request.query_params.get('name')
+        city = request.query_params.get('city')
+        state = request.query_params.get('state')
+        status = request.query_params.get('status')
+
+        if not (name or city or state or status):
+            return Response({'error': 'At least one of the parameters (name, city, state, status) is required.'}, status=404)
+        queryset = Store.objects.filter(client=client)
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+        if city:
+            queryset = queryset.filter(city__name__icontains=city)
+        if state:
+            queryset = queryset.filter(city__state__icontains=state)
+        if status and status.upper() == 'ALL':
+            queryset = Store.objects.filter(client=client)
+        else:
+            return Response({'error': 'Invalid value for the "status" parameter. It should be "ALL" to retrieve all data.'}, status=404)
+            
+        if not queryset.exists():
+            return Response({'error': 'No records found for the given query parameters.'}, status=404)
+
+        serializer = StoreSerializer(queryset, many=True)
+        return Response(serializer.data, status=200)
