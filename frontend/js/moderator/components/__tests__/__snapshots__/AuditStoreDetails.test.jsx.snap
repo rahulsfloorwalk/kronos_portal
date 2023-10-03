@@ -180,6 +180,8 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
                 <AuditStoreStatusLabel
                   status="ASSIGNED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -702,6 +704,8 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
                 <AuditStoreStatusLabel
                   status="ASSIGNED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -1224,6 +1228,8 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
                 <AuditStoreStatusLabel
                   status="ASSIGNED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -1746,6 +1752,8 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 <AuditStoreStatusLabel
                   status="ASSIGNED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -2268,6 +2276,8 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 <AuditStoreStatusLabel
                   status="ASSIGNED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -2798,6 +2808,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <AuditStoreStatusLabel
                   status="ACCEPTED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -3320,6 +3332,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <AuditStoreStatusLabel
                   status="ACKNOWLEDGED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -3849,6 +3863,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <AuditStoreStatusLabel
                   status="ASSIGNED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -4364,6 +4380,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <AuditStoreStatusLabel
                   status="COMPLETED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -4879,6 +4897,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <AuditStoreStatusLabel
                   status="FAILED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -5394,6 +5414,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <AuditStoreStatusLabel
                   status="PM_REVIEW"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -5909,6 +5931,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <AuditStoreStatusLabel
                   status="REJECTED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -6462,6 +6486,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <AuditStoreStatusLabel
                   status="SUBMITTED"
                 />
+                  
+                  
               </th>
             </tr>
             <tr
@@ -6995,6 +7021,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <AuditStoreStatusLabel
                   status="WITHDRAWN"
                 />
+                  
+                  
               </th>
             </tr>
             <tr

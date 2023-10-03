@@ -103,17 +103,19 @@ def sign_up_market_place(request):
     except:
         user=User()
         user.email = request.data.get("username")
-        if request.data.get("phone"):
-            user.phone = request.data.get("phone")
+        user.first_name = request.data.get("first_name")
+        user.brand = request.data.get("brand")
+        # if request.data.get("phone"):
+        #     user.mobile = request.data.get("phone")
         user.username = str.lower(request.data.get("username"))
         user.set_password(request.data.get("password"))
         user.is_active = False
         user.save()
         user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
         user.save()
-        
-        if request.data.get("phone"):
-            client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone)
+       
+        if request.data.get("phone") or request.data.get("last_name"):
+            client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=request.data.get("phone"),first_name=user.first_name,last_name=request.data.get("last_name"),brand=user.brand)
         else:
             client_profile = MPClientProfileInfo(user_id=user.id)
         client_profile.save()

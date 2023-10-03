@@ -57,7 +57,7 @@ class AuditStoreQuerySet(QuerySet):
         query_set = self.filter(audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES)
         return get_objects_for_user(user, 'moderator_manage', klass=query_set)
 
-    def assign_audit_store(self, audit, audit_date, auditor, reimbursement, earnings_per_audit, checkpoints, by, auto_assigned = False):
+    def assign_audit_store(self, audit, audit_date, auditor, reimbursement, earnings_per_audit, checkpoints, by, auto_assigned = False,instant_assigned=False):
         audit_store = AuditStore()
         audit_store.audit = audit
         audit_store.audit_date = audit_date
@@ -67,6 +67,7 @@ class AuditStoreQuerySet(QuerySet):
         audit_store.earnings_per_audit = earnings_per_audit
         audit_store.check_points = checkpoints
         audit_store.auto_assigned = auto_assigned
+        audit_store.instant_assigned = instant_assigned
         audit_store.save()
         audit_store_status_change.send(
             sender=self.__class__,
@@ -174,6 +175,7 @@ class AuditStore(Model):
 
     audit_store_percentage = IntegerField(db_column='percentage', null=True, blank=True)
     auto_assigned = BooleanField(db_column='auto_assigned', default=False)
+    instant_assigned = BooleanField(db_column='instant_assigned', default=False)
     report_revert_count = IntegerField(db_column='report_revert_count',default=0 , blank=True,null=True)
     objects = AuditStoreQuerySet.as_manager()
 

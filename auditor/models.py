@@ -425,6 +425,8 @@ class AuditApplication(Model):
     comment = CharField(db_column='comment', max_length=1000, blank=True, null=True)
 
     is_automation_approve = BooleanField(db_column='is_automation_approve', default=False)
+    is_instant_approve = BooleanField(db_column='is_instant_approve', default=False)
+    
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
 
@@ -441,7 +443,7 @@ class AuditApplication(Model):
     def profile_match_percentage(self):
         total_factors_count, valid_factors_count, match_percent = self.validate_alignment_factors()
         return match_percent
-
+    
     def auditor_audit_count(self):
         from audit_store.service_auditor import find_completed_audit_store_count_by_user_id
         return find_completed_audit_store_count_by_user_id(self.profileinfo.user.id)
@@ -532,6 +534,9 @@ class AuditApplication(Model):
     def is_super_auditor(self):
         return self.profileinfo.is_super_auditor
 
+    def certification_score(self):
+        return self.profileinfo.certification_score
+    
     def __str__(self):
         return 'AuditApplication({}): {}, {}'.format(self.id, self.audit, self.profileinfo)
 

@@ -27,7 +27,7 @@ def auto_approve_audit_application_task(application_id):
         if application.status == AuditApplication.APPLIED and application.audit.valid_report_count() < application.audit.count:
             audit_count = 1
             auto_approve = True
-            application = application_service.approve(application.id, application.audit_date, application.audit.reimbursement, application.audit.earnings_per_audit, audit_count, application.profileinfo.user, auto_approve)
+            application = application_service.approve(application.id, application.audit_date, application.audit.reimbursement, application.audit.earnings_per_audit, audit_count, application.profileinfo.user, auto_approve,instant_approve=False)
             application.is_auto_approved = True
             application.is_automation_approve=True
             application.save()

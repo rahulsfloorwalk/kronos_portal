@@ -18,6 +18,8 @@ class AuditStoreRow extends React.Component {
 		auditStore: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			status: PropTypes.string.isRequired,
+			auto_assigned: PropTypes.boolean.isRequired,
+			instant_assigned: PropTypes.boolean.isRequired,
 			audit_date: PropTypes.string.isRequired,
 			user: PropTypes.shape({
 				profileinfo: PropTypes.shape({
@@ -64,7 +66,6 @@ export default class AuditStoreList extends React.Component {
 	state = {
 		auditStores: []
 	};
-
 	componentDidMount() {
 		findByAuditCycleId(this.props.params.auditCycleId).then((auditStores) => {
 			this.setState({
@@ -72,7 +73,6 @@ export default class AuditStoreList extends React.Component {
 			});
 		});
 	}
-
 	render() {
 		let reps = [];
 		for(let as of this.state.auditStores){

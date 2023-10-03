@@ -32,9 +32,10 @@ def complete_for_order(attachment_id,order_id):
 
 
 def find_attachment_id_by_order_id(order_id):
-    order= find_order_by_id(order_id)
-    attachment = Attachment.objects.get(orders__id=order.id,status=Attachment.ATTACHED)
-    return attachment.id
+    return attachment_service.find_by_order(order_id)
+    # order = find_category_by_id(order_id)
+    # attachment = Attachment.objects.get(orders__id=order.id, status=Attachment.ATTACHED)
+    # return attachment 
 
 def find_order_by_id(order_id):
     try:

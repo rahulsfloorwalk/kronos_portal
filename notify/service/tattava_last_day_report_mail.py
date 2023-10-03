@@ -1,25 +1,11 @@
 import logging
-from django.conf import settings
 from django.template.loader import get_template
 from .mail import send_email
-from django.contrib.auth.models import User
 from kronos.celery import app
-from kronos.utils import today_ist
-from celery.result import ResultSet
-from audit_store.models import ReportActionPlan
 from registration.context import registration_context
-from client.models import ClientUser
-from auditor.service import stats
-from audit_store.models import AuditStore
 from celery import shared_task
-from datetime import timedelta
-from django.utils import timezone
 from audit_store.service_client import find_yesterday_client_review_status_reports,find_audit_store_completed_yesterday
 _logger = logging.getLogger(__name__)
-
-# from notify.service import tattava_last_day_report_mail
-# obj=tattava_last_day_report_mail
-# obj.auto_tattava_mail_for_last_day_completed_report()
 
 @app.task(iqnore_result=True)
 def auto_tattava_mail_for_last_day_completed_report():
@@ -61,10 +47,7 @@ def tattava_send_live_report_mail(report_list):
     #     'naman@tattvaspa.org',
     #     'shipra@tattvaspa.com'
     #     ]
-    to_email=[
-        'arpan.patidar@floorwalk.in',
-        'pooja.satafale@floorwalk.in'
-        ]
+    to_email=['arpan.patidar@floorwalk.in']
     subject = "{} report is live".format(str(len(report_list)))
     if len(report_list) > 1:
         subject = "{} reports are live".format(str(len(report_list)))

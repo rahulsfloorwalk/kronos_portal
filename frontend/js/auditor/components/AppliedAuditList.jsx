@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
-import { hashHistory } from "react-router";
 import { findAppliedAudits} from "../service/applied_audits.js";
 
 class AppliedAuditRow extends React.Component{
@@ -17,9 +16,6 @@ class AppliedAuditRow extends React.Component{
 			}),
 			status:PropTypes.string
 		})
-	};
-	FillReportClicked=()=>{
-		hashHistory.push("/audit_store");
 	};
 	render(){
 		return (
@@ -39,7 +35,7 @@ class AppliedAuditRow extends React.Component{
 						<b > <ApplicationStatusLabel status={this.props.appliedAudit.status} /></b>
 						: this.props.appliedAudit.status == "APPROVED"
 							?
-							<b ><ApplicationStatusLabel status= {this.props.appliedAudit.status}/>&nbsp;&nbsp; <button type="button" className=" btn-sm btn-primary" onClick={this.FillReportClicked} >Fill Report</button> </b>
+							<b ><ApplicationStatusLabel status= {this.props.appliedAudit.status}/></b>
 							: this.props.appliedAudit.status == "WAITLISTED"
 								?
 								<b ><ApplicationStatusLabel status= {this.props.appliedAudit.status}/></b>

@@ -41,10 +41,16 @@ from auditor.service import profile_info_service
 from auditor.service import additional_info_service
 from auditor.service import bank_info_service
 from audit.service import audit_cycle_proof_tag
+from manager.service import instance_approved_application
 # from .serializers import AuditCycleProoftagListSerializer
 from audit_store.models import AuditStore
 from answer.models import ReportSection
+from datetime import datetime, timedelta
 
+# Get the current date
+current_date = datetime.now().date()
+# Calculate tomorrow's date
+tomorrow_date = current_date + timedelta(days=1)
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
     authentication_classes = [TokenAuthentication, SessionAuthentication]
@@ -283,6 +289,8 @@ class AuditApplicationApplyView(APIView):
             request.user.id,
             application_apply_ds.validated_data["audit_date"]
         )
+        if str(request.data['audit_date']) == str(tomorrow_date):
+            instance_approved_application.approved(application.id)
         return Response(AuditApplicationSerializer(application).data)
 
 class AuditApplicationCancelView(APIView):

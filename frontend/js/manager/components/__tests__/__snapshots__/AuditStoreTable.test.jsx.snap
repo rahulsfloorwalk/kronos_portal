@@ -62,17 +62,34 @@ exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
         className="text-right"
       />
       <td>
-        <span
-          className="label label-primary"
-          style={
-            Object {
-              "fontSize": "100%",
+        <tr>
+          <span
+            className="label label-primary"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
             }
-          }
-        >
-          PM Review
-        </span>
-         
+          >
+            PM Review
+          </span>
+           
+        </tr>
+        <tr>
+          <td
+            colSpan="10"
+          >
+            <div
+              style={
+                Object {
+                  "marginTop": "4px",
+                }
+              }
+            >
+              <i />
+            </div>
+          </td>
+        </tr>
       </td>
       <td>
         <select
@@ -139,17 +156,34 @@ exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
         className="text-right"
       />
       <td>
-        <span
-          className="label label-primary1"
-          style={
-            Object {
-              "fontSize": "100%",
+        <tr>
+          <span
+            className="label label-primary1"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
             }
-          }
-        >
-          QA Review
-        </span>
-         
+          >
+            QA Review
+          </span>
+           
+        </tr>
+        <tr>
+          <td
+            colSpan="10"
+          >
+            <div
+              style={
+                Object {
+                  "marginTop": "4px",
+                }
+              }
+            >
+              <i />
+            </div>
+          </td>
+        </tr>
       </td>
       <td>
         <select

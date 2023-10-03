@@ -98,10 +98,10 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, star
 
     if start_date !="" and end_date !="":
         audit_store_obj = AuditStore.objects.filter(audit__id__in=audit_id_list, audit_date__range=[start_date, end_date]) \
-            .values('id', 'status', 'audit_date','report_revert_count', 'audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number','user__profileinfo__certification_score', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
+            .values('id', 'status', 'auto_assigned','instant_assigned','audit_date','report_revert_count', 'audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number','user__profileinfo__certification_score', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
     else:
         audit_store_obj = AuditStore.objects.filter(audit__id__in=audit_id_list) \
-            .values('id', 'status', 'audit_date','report_revert_count','audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number','user__profileinfo__certification_score', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
+            .values('id', 'status','auto_assigned','instant_assigned', 'audit_date','report_revert_count','audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number','user__profileinfo__certification_score', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
     if user_id != "":
         audit_store_obj = audit_store_obj.filter(user = user_id)
     if status != "":
@@ -120,6 +120,8 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, star
                 audit_report_dict = {}
                 audit_report_dict['id'] = audit_report['id']
                 audit_report_dict['status'] = audit_report['status']
+                audit_report_dict['auto_assigned'] = audit_report['auto_assigned']
+                audit_report_dict['instant_assigned'] = audit_report['instant_assigned']
                 audit_report_dict['audit_date'] = audit_report['audit_date']
                 audit_report_dict['report_revert_count'] = audit_report['report_revert_count']
                 audit_report_obj = AuditStore.objects.get(pk=audit_report['id'])

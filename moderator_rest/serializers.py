@@ -167,6 +167,8 @@ class AuditStoreSerializer(ModelSerializer):
             'status',
             'audit_date',
             'audit',
+            'auto_assigned',
+            'instant_assigned',
             'user',
             'qa_rating',
             'earnings_per_audit',
@@ -189,6 +191,8 @@ class AuditStoreSerializerForList(ModelSerializer):
         fields = (
             'id',
             'status',
+            'auto_assigned',
+            'instant_assigned',
             'report_revert_count',
             'audit_date',
             'audit',

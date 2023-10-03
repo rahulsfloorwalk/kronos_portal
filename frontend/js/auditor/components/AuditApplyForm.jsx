@@ -57,7 +57,10 @@ class AuditApplyForm extends React.Component {
 		this.props.dispatch(submitAuditApplyForm({
 			audit_id: this.props.audit.id,
 			audit_date: this.state.audit_date ? this.state.audit_date.format("YYYY-MM-DD") : "",
-		})).done(() => hashHistory.push(`/audit/cycle/${this.props.audit.audit_cycle.id}`)).always(() => this.setSubmitting(false));
+		})).done(() => {
+			hashHistory.push(`/audit/cycle/${this.props.audit.audit_cycle.id}`);
+			window.location.reload();
+		}).always(() => this.setSubmitting(false));
 	};
 
 	isValidDate = (currentDate) => {
@@ -77,9 +80,9 @@ class AuditApplyForm extends React.Component {
 
 	render() {
 		const sDate= new Date();
-		sDate.setDate(sDate.getDate()-1);
+		sDate.setDate(sDate.getDate());
 		const SevenDaysLaterDate=new Date();
-		SevenDaysLaterDate.setDate(sDate.getDate() + 7);
+		SevenDaysLaterDate.setDate(sDate.getDate() + 6);
 		let eDate;
 		if (SevenDaysLaterDate>new Date(this.props.audit.audit_cycle.end_date)){
 			eDate=new Date(this.props.audit.audit_cycle.end_date);

@@ -37,7 +37,7 @@ def get_client_dashboard_data(user_id):
                 'first_name': client_profile.first_name,
                 'mobile_number': client_profile.mobile_number,
                 'email': client_profile.user.email,
-                'company_name': client_profile.company_name,
+                'brand': client_profile.brand,
                 'user_id': user_id
             }
     }

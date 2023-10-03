@@ -114,7 +114,8 @@ export class AuditApplicationRow extends Component{
 		} else {
 			statusLabel = <ApplicationStatusLabel status={application.status}/>;
 		}
-		let auto_approved=application.is_automation_approve ? <i>(Auto Assigned)</i> : null;
+		let auto_approved=application.is_automation_approve ? "(Auto Assigned)" : null;
+		let instant_approved=application.is_instant_approve ? "(Instant Assigned)" : null;
 		let reports = [];
 		for(let report of this.state.recent_audit_reports){
 			reports.push(<tr key={report.id}>
@@ -135,10 +136,17 @@ export class AuditApplicationRow extends Component{
 				<td>{application.auditor_audit_count > 0 ? <button className="btn btn-sm btn-primary" onClick={this.showRecentAudits}>View {application.auditor_audit_count} reports</button> : 0}</td>
 				<td>{application.profileinfo.certification_score ? application.profileinfo.certification_score : "--" }</td>
 				<td>
-					{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
-					{statusLabel}&nbsp;
-					{auto_approved}
-					{/* {application.is_automation_approved}  */}
+					<tr >
+						{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
+						{statusLabel}&nbsp;
+					</tr>
+					<tr>
+						<td colSpan="10">
+							<div style={{ marginTop: "4px" }}>
+								<i>{auto_approved}{instant_approved}</i>
+							</div>
+						</td>
+					</tr>
 				</td>
 				<td>
 					{this.state.comment_editable ? <textarea className="form-control" placeholder="Enter a comment" value={this.state.comment ? this.state.comment : ""} onChange={this.commentChanged} onBlur={this.onBlur} /> : this.state.comment}
