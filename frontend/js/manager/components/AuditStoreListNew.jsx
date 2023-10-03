@@ -59,13 +59,26 @@ class AuditStoreRow extends React.Component {
 		// 		acceptButton = (<Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit/audit_store/${this.props.auditStore.id}/accept`} className="btn btn-default">Accept</Link>);
 		// 	}
 		// }
+		let auto_approved=this.props.auditStore.auto_assigned ? "(Auto Assigned)" : null;
+		let instant_approved=this.props.auditStore.instant_assigned ? "(Instant Assigned)" : null;
 		return(
 			<tr>
 				<td className="text-right">{this.props.auditStore.id}</td>
 				<td><AuditorNameDisplay user={this.props.auditStore.user}/></td>
 				<td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
 				{/* <td className="text-right">{acceptButton}</td> */}
-				<td><AuditStoreStatusLabel status={this.props.auditStore.status}/> {this.props.auditStore.report_revert_count>0 ? <span><i>Reverted({this.props.auditStore.report_revert_count})</i></span>:null} </td>
+				<td>
+					<tr>
+						<AuditStoreStatusLabel status={this.props.auditStore.status}/> {this.props.auditStore.report_revert_count>0 ? <span><i>Reverted({this.props.auditStore.report_revert_count})</i></span>:null}
+					</tr>
+					<tr>
+						<td colSpan="10">
+							<div style={{marginTop:"4px"}}>
+								<i>{auto_approved}{instant_approved}</i>
+							</div>
+						</td>
+					</tr>
+				</td>
 				<td><ModeratorAssignDropdown moderators={this.props.moderators} selectedModeratorId={this.props.auditStore.assigned_to_moderator} auditStoreId={this.props.auditStore.id} onUpdate={this.props.onUpdate}/></td>
 				<td>
 					<Link to={`/audit_store/${this.props.auditStore.id}/report`} className="btn btn-default" target="_blank">View</Link>

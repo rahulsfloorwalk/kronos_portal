@@ -14,9 +14,6 @@ from celery import shared_task
 
 _logger = logging.getLogger(__name__)
 
-# from notify.service import tattava_target_date_reminder
-# obj=tattava_target_date_reminder
-# obj.auto_tattava_report_action_target_date_to_admin()
 
 @app.task(iqnore_result=True)
 def auto_tattava_report_action_target_date_to_admin():
@@ -37,8 +34,6 @@ def auto_tattava_report_action_target_date_to_admin():
         _logger.info("sending email for action plan with %s Action Plans",len(action_list))
         mail_count+=1
         send_target_date_reminder.delay(action_list,client_id)
-    else:
-        return mail_count
     return mail_count                
                 
     

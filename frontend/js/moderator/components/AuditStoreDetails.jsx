@@ -407,7 +407,7 @@ export default class AuditStoreDetails extends React.Component{
 									</tr>
 									<tr>
 										<td className="text-right">Status:</td>
-										<th><AuditStoreStatusLabel status={this.state.auditStore.status}/></th>
+										<th><AuditStoreStatusLabel status={this.state.auditStore.status}/>&nbsp;&nbsp;{this.state.auditStore.instant_assigned ? <span><i>(Instant Assigned)</i></span>:null}&nbsp;&nbsp;{this.state.auditStore.auto_assigned ? <span><i>(Auto Assigned)</i></span>:null}</th>
 									</tr>
 									<tr style={this.state.auditStore.report_revert_count>0 ? {color: "red"}: null}>
 										<td className="text-right">Report Revert Count:</td>

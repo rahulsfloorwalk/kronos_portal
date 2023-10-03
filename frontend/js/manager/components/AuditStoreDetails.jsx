@@ -399,6 +399,8 @@ export class AuditStoreDetails extends React.Component{
 				</th>
 			</tr>);
 		}
+		let auto_approved=this.props.auditStore.auto_assigned ? "(Auto Assigned)" : null;
+		let instant_approved=this.props.auditStore.instant_assigned ? "(Instant Assigned)" : null;
 		return (
 			<div className="main">
 				<ol className="breadcrumb">
@@ -478,7 +480,16 @@ export class AuditStoreDetails extends React.Component{
 										: null }
 									<tr>
 										<td className="text-right">Status:</td>
-										<th><AuditStoreStatusLabel status={this.props.auditStore.status}/></th>
+										<th>
+											<tr><AuditStoreStatusLabel status={this.props.auditStore.status}/></tr>
+											<tr>
+												<td colSpan="10">
+													<div style={{marginTop:"4px"}}>
+														<i>{auto_approved}{instant_approved}</i>
+													</div>
+												</td>
+											</tr>
+										</th>
 									</tr>
 									<tr style={this.props.auditStore.report_revert_count>0 ? {color:"red"}: null}>
 										<td className="text-right">Report Revert Count:</td>

@@ -138,7 +138,7 @@ def cancel(audit_id, user_id):
     return application
 
 
-def approve(application_id, audit_date, reimbursement, earnings_per_audit, audit_count, user_actor, auto_approve=False):
+def approve(application_id, audit_date, reimbursement, earnings_per_audit, audit_count, user_actor, auto_approve=False,instant_approve=False):
     with atomic():
         try:
             application = AuditApplication.objects.get(id=application_id)
@@ -184,7 +184,7 @@ def approve(application_id, audit_date, reimbursement, earnings_per_audit, audit
             else:
                 checkpoints_dict = {}
 
-            AuditStore.objects.assign_audit_store(audit, application.audit_date, application.profileinfo.user, reimbursement, earnings_per_audit, checkpoints_dict, user_actor, auto_assigned=auto_approve)
+            AuditStore.objects.assign_audit_store(audit, application.audit_date, application.profileinfo.user, reimbursement, earnings_per_audit, checkpoints_dict, user_actor, auto_assigned=auto_approve,instant_assigned=instant_approve)
     return application
 
 def reject(application_id, user_actor):

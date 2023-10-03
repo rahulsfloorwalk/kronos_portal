@@ -275,9 +275,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 Status:
               </td>
               <th>
-                <AuditStoreStatusLabel
-                  status="ASSIGNED"
-                />
+                <tr>
+                  <AuditStoreStatusLabel
+                    status="ASSIGNED"
+                  />
+                </tr>
+                <tr>
+                  <td
+                    colSpan="10"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "marginTop": "4px",
+                        }
+                      }
+                    >
+                      <i />
+                    </div>
+                  </td>
+                </tr>
               </th>
             </tr>
             <tr
@@ -841,9 +858,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 Status:
               </td>
               <th>
-                <AuditStoreStatusLabel
-                  status="ASSIGNED"
-                />
+                <tr>
+                  <AuditStoreStatusLabel
+                    status="ASSIGNED"
+                  />
+                </tr>
+                <tr>
+                  <td
+                    colSpan="10"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "marginTop": "4px",
+                        }
+                      }
+                    >
+                      <i />
+                    </div>
+                  </td>
+                </tr>
               </th>
             </tr>
             <tr
@@ -1346,9 +1380,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
                 Status:
               </td>
               <th>
-                <AuditStoreStatusLabel
-                  status="ACCEPTED"
-                />
+                <tr>
+                  <AuditStoreStatusLabel
+                    status="ACCEPTED"
+                  />
+                </tr>
+                <tr>
+                  <td
+                    colSpan="10"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "marginTop": "4px",
+                        }
+                      }
+                    >
+                      <i />
+                    </div>
+                  </td>
+                </tr>
               </th>
             </tr>
             <tr
@@ -1912,9 +1963,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                 Status:
               </td>
               <th>
-                <AuditStoreStatusLabel
-                  status="ACKNOWLEDGED"
-                />
+                <tr>
+                  <AuditStoreStatusLabel
+                    status="ACKNOWLEDGED"
+                  />
+                </tr>
+                <tr>
+                  <td
+                    colSpan="10"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "marginTop": "4px",
+                        }
+                      }
+                    >
+                      <i />
+                    </div>
+                  </td>
+                </tr>
               </th>
             </tr>
             <tr
@@ -2485,9 +2553,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                 Status:
               </td>
               <th>
-                <AuditStoreStatusLabel
-                  status="ASSIGNED"
-                />
+                <tr>
+                  <AuditStoreStatusLabel
+                    status="ASSIGNED"
+                  />
+                </tr>
+                <tr>
+                  <td
+                    colSpan="10"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "marginTop": "4px",
+                        }
+                      }
+                    >
+                      <i />
+                    </div>
+                  </td>
+                </tr>
               </th>
             </tr>
             <tr
@@ -2990,9 +3075,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
                 Status:
               </td>
               <th>
-                <AuditStoreStatusLabel
-                  status="COMPLETED"
-                />
+                <tr>
+                  <AuditStoreStatusLabel
+                    status="COMPLETED"
+                  />
+                </tr>
+                <tr>
+                  <td
+                    colSpan="10"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "marginTop": "4px",
+                        }
+                      }
+                    >
+                      <i />
+                    </div>
+                  </td>
+                </tr>
               </th>
             </tr>
             <tr
@@ -3536,9 +3638,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
                 Status:
               </td>
               <th>
-                <AuditStoreStatusLabel
-                  status="FAILED"
-                />
+                <tr>
+                  <AuditStoreStatusLabel
+                    status="FAILED"
+                  />
+                </tr>
+                <tr>
+                  <td
+                    colSpan="10"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "marginTop": "4px",
+                        }
+                      }
+                    >
+                      <i />
+                    </div>
+                  </td>
+                </tr>
               </th>
             </tr>
             <tr
@@ -4102,9 +4221,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                 Status:
               </td>
               <th>
-                <AuditStoreStatusLabel
-                  status="PM_REVIEW"
-                />
+                <tr>
+                  <AuditStoreStatusLabel
+                    status="PM_REVIEW"
+                  />
+                </tr>
+                <tr>
+                  <td
+                    colSpan="10"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "marginTop": "4px",
+                        }
+                      }
+                    >
+                      <i />
+                    </div>
+                  </td>
+                </tr>
               </th>
             </tr>
             <tr
@@ -4625,9 +4761,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
                 Status:
               </td>
               <th>
-                <AuditStoreStatusLabel
-                  status="REJECTED"
-                />
+                <tr>
+                  <AuditStoreStatusLabel
+                    status="REJECTED"
+                  />
+                </tr>
+                <tr>
+                  <td
+                    colSpan="10"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "marginTop": "4px",
+                        }
+                      }
+                    >
+                      <i />
+                    </div>
+                  </td>
+                </tr>
               </th>
             </tr>
             <tr
@@ -5191,9 +5344,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                 Status:
               </td>
               <th>
-                <AuditStoreStatusLabel
-                  status="SUBMITTED"
-                />
+                <tr>
+                  <AuditStoreStatusLabel
+                    status="SUBMITTED"
+                  />
+                </tr>
+                <tr>
+                  <td
+                    colSpan="10"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "marginTop": "4px",
+                        }
+                      }
+                    >
+                      <i />
+                    </div>
+                  </td>
+                </tr>
               </th>
             </tr>
             <tr
@@ -5734,9 +5904,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
                 Status:
               </td>
               <th>
-                <AuditStoreStatusLabel
-                  status="WITHDRAWN"
-                />
+                <tr>
+                  <AuditStoreStatusLabel
+                    status="WITHDRAWN"
+                  />
+                </tr>
+                <tr>
+                  <td
+                    colSpan="10"
+                  >
+                    <div
+                      style={
+                        Object {
+                          "marginTop": "4px",
+                        }
+                      }
+                    >
+                      <i />
+                    </div>
+                  </td>
+                </tr>
               </th>
             </tr>
             <tr
