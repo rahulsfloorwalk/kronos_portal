@@ -13,6 +13,7 @@ from .viewss import answer as answer_views
 from .viewss import client_user as client_user_views
 from .viewss import client_manager as client_manager_views
 from .viewss import client_trainer as client_trainer_views
+from .viewss import client_requirements as client_requirements_views
 from .viewss import report_section as report_section_views
 from .viewss import attachment as attachment_views
 from .viewss import notifications as notification_views
@@ -286,7 +287,7 @@ urlpatterns = ([
     url(r'client_manager/(?P<client_manager_id>[0-9]+)$', client_manager_views.ClientManagerIdView.as_view(), name='client_manager_id_view'),
 
     url(r'client/(?P<client_id>[0-9]+)/client_trainer$', client_trainer_views.ClientTrainerByClientView.as_view(), name='client_trainer_view_by_client'),
-    # url(r'client/(?P<client_id>[0-9]+)/client_requirements',client_requirements_views.ClientRequirementsView.as_view(), name='client_requirements_view')
+    url(r'client/(?P<client_id>[0-9]+)/client_requirements',client_requirements_views.ClientRequirementsView.as_view(), name='client_requirements_view'),
     url(r'client_trainer$', client_trainer_views.ClientTrainerView.as_view(), name='client_trainer_view'),
     url(r'client_trainer/(?P<client_trainer_id>[0-9]+)$', client_trainer_views.ClientTrainerIdView.as_view(), name='client_trainer_id_view'),
 

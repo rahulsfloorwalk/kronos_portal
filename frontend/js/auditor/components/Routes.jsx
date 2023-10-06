@@ -12,6 +12,7 @@ import DetailsPage from "./DetailsPage.jsx";
 import ClientList from "./ClientList.jsx";
 import AuditList from "./AuditList.jsx";
 import AuditApplyForm from "./AuditApplyForm.jsx";
+import AuditReapplyForm from "./AuditReapplyForm.jsx";
 import AuditCancelForm from "./AuditCancelForm.jsx";
 
 import AppliedAuditList from "./AppliedAuditList.jsx";
@@ -71,6 +72,7 @@ const Routes = ({store}) => (
 				<Route path="audit/cycle/:auditCycleId" component={AuditList}>
 					<Route path="audit/:auditId">
 						<Route path="apply" component={AuditApplyForm}/>
+						<Route path="reapply" component={AuditReapplyForm}/>
 						<Route path="cancel" component={AuditCancelForm}/>
 					</Route>
 				</Route>

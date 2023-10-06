@@ -41,6 +41,8 @@ urlpatterns = ([
     url(r'audit_by_city$', views.AvailableAuditsByCityView.as_view(), name="available_audits_by_city"),
     url(r'audit/(?P<audit_id>[0-9]+)/application/cancel$', views.AuditApplicationCancelView.as_view(), name="audit_application_cancel_view"),
     url(r'audit/(?P<audit_id>[0-9]+)/application/apply$', views.AuditApplicationApplyView.as_view(), name="audit_application_apply_view"),
+    url(r'audit/(?P<audit_id>[0-9]+)/application/reapply$', views.AuditApplicationApplyView.as_view(), name="audit_application_apply_view"),
+    
     url(r'audit/(?P<audit_id>[0-9]+)/application$', views.AuditApplicationView.as_view(), name="audit_application_view"),
     url(r'audit/(?P<audit_id>[0-9]+)$', views.AuditView.as_view(), name="audit_view"),
     url(r'application$', views.AuditApplicationsView.as_view(), name="audit_applications_view"),

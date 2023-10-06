@@ -322,16 +322,6 @@ class StoreSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-class AppliedAuditSerializer(ModelSerializer):
-    class Meta:
-        model= AuditApplication
-        fields=(
-            'id',
-            'audit_date',
-            'status',
-            'get_brand_name'
-        )
-        read_only_fields = fields
 
 class AuditSerializer(ModelSerializer):
     store = StoreSerializer()
@@ -348,6 +338,18 @@ class AuditSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class AppliedAuditSerializer(ModelSerializer):
+    audit = AuditSerializer()
+    class Meta:
+        model= AuditApplication
+        fields=(
+            'id',
+            'audit_date',
+            'status',
+            'get_brand_name',
+            'audit'
+        )
+        read_only_fields = fields
 
 class AuditorSerializer(ModelSerializer):
     profileinfo = ProfileInfoSerializer()

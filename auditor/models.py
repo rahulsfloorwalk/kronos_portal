@@ -424,6 +424,7 @@ class AuditApplication(Model):
     report_exists_data = JSONField(db_column='report_exists_data', default=dict)
     comment = CharField(db_column='comment', max_length=1000, blank=True, null=True)
 
+    apply_count = PositiveSmallIntegerField(db_column='apply_count',default=0,blank=False)
     is_automation_approve = BooleanField(db_column='is_automation_approve', default=False)
     is_instant_approve = BooleanField(db_column='is_instant_approve', default=False)
     

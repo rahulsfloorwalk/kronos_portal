@@ -27,7 +27,6 @@ class ClientQuerySet(QuerySet):
         obj.save()
         return obj
 
-
 class Client(Model):
     objects = ClientQuerySet.as_manager()
 
@@ -61,6 +60,68 @@ class Client(Model):
     class Meta:
         ordering = ['name']
 
+
+class ClientRequirements(Model):
+    MYSTERY_AUDIT_PURCHASE_AND_OR_NON_PURCHASE='MYSTERY_AUDIT_PURCHASE_AND_OR_NON_PURCHASE'
+    REVEALED_AUDITS='REVEALED_AUDITS'
+    MYSTERY_REVEALED_AUDIT_PURCHASE_AND_OR_NON_PURCHASE='MYSTERY_REVEALED_AUDIT_PURCHASE_AND_OR_NON_PURCHASE'
+    
+    TYPES=(
+        (MYSTERY_AUDIT_PURCHASE_AND_OR_NON_PURCHASE, 'Mystery Audit (Purchase and/or Non-Purchase)'),
+        (REVEALED_AUDITS, 'Revealed Audits'),
+        (MYSTERY_REVEALED_AUDIT_PURCHASE_AND_OR_NON_PURCHASE, 'Mystery Revealed Audit (Purchase and/or Non-Purchase)'),
+    )
+    
+    CONSUMER_EXPERIENCE_AND_JOURNEY = 'CONSUMER_EXPERIENCE_AND_JOURNEY'
+    SALES_PROCESS = 'SALES_PROCESS'
+    VISUAL_MERCHANDISING = 'VISUAL_MERCHANDISING'
+    COMPETITION_BENCHMARKING = 'COMPETITION_BENCHMARKING'
+    PROCESS_COMPLIANCE_AUDITS = 'PROCESS_COMPLIANCE_AUDITS'
+    RETAILER_RECOMMENDATION_PROGRAM = 'RETAILER_RECOMMENDATION_PROGRAM'
+    INVENTORY_AUDITS = 'INVENTORY_AUDITS'
+
+    
+    CATEGORY=(
+        (CONSUMER_EXPERIENCE_AND_JOURNEY, 'Consumer Experience and Journey'),
+        (SALES_PROCESS, 'Sales Process'),
+        (VISUAL_MERCHANDISING, 'Visual Mechandising'),
+        (COMPETITION_BENCHMARKING,'Competition Benchmarking'),
+        (PROCESS_COMPLIANCE_AUDITS,'Process Compliance Audits'),
+        (RETAILER_RECOMMENDATION_PROGRAM,'Retailer Recommendation Program'),
+        (INVENTORY_AUDITS,'Inventory Audits')
+    )
+    
+    WEB='WED'
+    TELEPHONIC='TELEPHONIC'
+    VISIT='VISIT'
+
+    QTYPE=(
+        (WEB,'Web'),
+        (TELEPHONIC,'Telephonic'),
+        (VISIT,'Visit')
+    )
+    id = AutoField(db_column = 'id', primary_key=True)
+    name= CharField(db_column='name', max_length=25, blank=False)
+    client = ForeignKey(Client, related_name='client_requirements', db_column='client_id', blank=False, on_delete=PROTECT)
+    start_date = DateField(db_column='start_date')
+    end_date = DateField(db_column='end_date')
+    problem_statement = CharField(db_column='problem_statement', max_length=16384, blank=False)
+    type = CharField(db_column='type', max_length=100, choices=TYPES, blank=False)
+    audit_count_with_type =JSONField(db_column='audit_count_with_type', default=dict) 
+    category = CharField(db_column='category', max_length=100, choices=CATEGORY, blank=False) 
+    questionnaire_type = CharField(db_column='questionnaire_type', max_length=100, choices=QTYPE, blank=False)
+    setup_fee = IntegerField(db_column='setup_fee', blank=True, null=True)
+    price_per_audit = IntegerField(db_column='price_per_audit', blank=True, null=True)
+    execution_budget = IntegerField(db_column='execution_budget', blank=True, null=True)
+    scope_of_work = CharField(db_column='scope_of_work', max_length=16384, blank=False)
+    audit_flow = CharField(db_column='audit_flow', max_length=16384, blank=False)
+    project_manager_email = EmailField(db_column='project_manager_email', max_length=50, blank=False)
+    sales_representative_email = EmailField(db_column='sales_representative_email', max_length=50, blank=False)
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+    def __str__(self):
+        return 'ClientRequirements({}): {}'.format(self.id, self.name)
+    
 
 class ClientUserQuerySet(QuerySet):
     def find_by_user_id(self, user_id):

@@ -103,6 +103,9 @@ import TrainerList from "./trainer/TrainerList.jsx";
 import ClientTrainerList from "./client_trainer/ClientTrainerList.jsx";
 import ClientTrainerForm from "./client_trainer/ClientTrainerForm.jsx";
 
+import ClientRequirementsList from "./client_requirement/ClientRequirementsList.jsx";
+import ClientRequirementsForm from "./client_requirement/ClientRequirementsForm.jsx";
+
 import ProofTagList from "./proof_tag/ProofTagList.jsx";
 import ProofTagForm from "./proof_tag/ProofTagForm.jsx";
 import ProofClientList from "./proof_tag/ProofClientList.jsx";
@@ -206,10 +209,10 @@ const Routes = () => (
 					<Route path="add" component={ClientTrainerForm} />
 					<Route path=":clientTrainerId/edit" component={ClientTrainerForm} />
 				</Route>
-				{/* <Route path="client_requirements" component={ClientRequirementsList}>
+				<Route path="client_requirements" component={ClientRequirementsList}>
 					<Route path="add" component={ClientRequirementsForm}/>
 					<Route path=":clientRequirementId/edit" component={ClientRequirementsForm}/>
-				</Route> */}
+				</Route>
 				<Route path="questionnaire_type" component={QuestionnaireTypeList}>
 					<Route path="add" component={QuestionnaireTypeForm} />
 					<Route path=":questionnaireTypeId/edit" component={QuestionnaireTypeEditForm} />
