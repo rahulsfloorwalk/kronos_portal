@@ -234,4 +234,3 @@ class StoreSampleXlsxView(APIView):
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response
 
-

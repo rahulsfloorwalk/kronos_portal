@@ -57,6 +57,7 @@ urlpatterns = ([
     url(r'client/(?P<client_id>[0-9]+)/store$', store_views.StoreViewByClient.as_view(), name='store_view_by_client'),
     url(r'client/(?P<client_id>[0-9]+)/store/import$', store_views.ImportStoreView.as_view(), name='import_store_view'),
     url(r'client/(?P<client_id>[0-9]+)/store/import/sample$', store_views.StoreSampleXlsxView.as_view(), name='sample_import_store_view'),
+    # url(r'client/(?P<client_id>[0-9]+)/store/import/sampleclient$', store_views.StoreSampleClientXlsxView.as_view(), name='sampleclient_import_store_view'),
     url(r'client/(?P<client_id>[0-9]+)$', client_views.ClientIdView.as_view(), name='client_id_view'),
     url(r'client/(?P<client_id>[0-9]+)/audit_store/(?P<audit_store_id>[0-9]+)/xlsx_report$', audit_store_views.AuditStoreXlsxReport.as_view(), name='audit_store_xlsx_report'),
     url(r'client/dashboard_cycle_status$', client_views.ClientViewByDashboardCyleStatus.as_view(), name='client_view_by_dashboard_cycle_status'),

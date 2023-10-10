@@ -119,8 +119,6 @@ urlpatterns = ([
     url(r'mp/store_mp_get$', store_views.StoreGetClientView.as_view(), name='store_get_client_view'),
     url(r'mp/store_mp/(?P<store_id>[0-9]+)$', store_views.StoreIdClientIdView.as_view(), name='store_id_client_id_view'),
     url(r'mp/storesearch$', mp_order_views.StoreSearchView.as_view(), name='store_search_view'),
-
-
     url(r'mp/orderstatus$', mp_order_views.ClientOrderStatusDeatil.as_view(), name='client_order_detail'),
     url(r'mp/amdminorderstatus$', mp_order_views.AdminOrderView.as_view(), name='admin_order_detail'),
     url(r'mp/reports$', mp_order_views.OrderReportsView.as_view(), name='Order_reports_view'),
@@ -131,15 +129,18 @@ urlpatterns = ([
     url(r'mp/audit_cycle_detail/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.AuditCycleDetailView.as_view(), name='audit_cycle_detail_view'),
 
 
+    url(r'mp/audit_cycle_detail/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.AuditCycleDetailView.as_view(), name='audit_cycle_detail_view'),
     url(r'mp/audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', mp_order_views.AuditByAuditCycle.as_view(), name='audit_by_audit_cycle_view'),
     url(r'mp/audit/(?P<audit_id>[0-9]+)/audit_stores$', mp_order_views.AuditStoreByAuditClient.as_view(), name='audit_store_by_audit_id_view_client'),
-
     url(r'mp/store/import/client_sample$', views.StoreSampleClientXlsxView.as_view(), name='sample_client_import_store_view'),
     url(r'mp/(?P<client_id>[0-9]+)/store/import_list$', views.ImportClientStoreView.as_view(), name='import_client_store_view'),
 
 
+
     url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
     url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
-
+    # url(r'mp/store/import/client_sample$', mp_order_views.StoreSampleClientXlsxView.as_view(), name='sample_client_import_store_view'),
+    # url(r'mp/(?P<client_id>[0-9]+)/store/import_list$', mp_order_views.ImportClientStoreView.as_view(), name='import_client_store_view'),
+    
     
 ], 'client_rest')

@@ -855,3 +855,4 @@ class ImportClientStoreView(APIView):
         if form.is_valid():
             import_store_by_xlsx_sheet(client_id, request.FILES['file_uploaded'])
         return Response(status=200)
+    

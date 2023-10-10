@@ -46,7 +46,6 @@ from manager.serializers import AttachmentSerializer
 from rest_framework.exceptions import ValidationError
 
 
-
 def get_order_data(data):
     order_dict = model_to_dict(data)
     return order_dict
@@ -128,6 +127,8 @@ class MpOrderIdView(APIView):
         'GET':[GROUP_NAME_CLIENT],
         'POST':[GROUP_NAME_CLIENT]
     }   
+
+   
     def get_object(self,order_id):
         try:
             return MPOrder.objects.get(pk=order_id)
@@ -135,7 +136,10 @@ class MpOrderIdView(APIView):
             raise ObjectNotFound
     def get(self,request,order_id):
         result = mp_order_service.find_order_detail_by_order_id(order_id)
-        return Response(result) 
+        order_instance = self.get_object(order_id)
+        mp_order_data = MPOrderSerializer(order_instance).data
+        # mp_order_data =  MPOrderSerializer().data
+        return Response(mp_order_data)
     def post(self,request,order_id):
         
         order=self.get_object(order_id)
@@ -772,14 +776,12 @@ class MPOrderReportListDetailView(APIView):
         audit_cycle = AuditCycle.objects.get(id=audit_cycle_id) 
         order = MPOrder.objects.get(id=audit_cycle.order.id)
 
-        audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
-        
+        audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)  
         report_data = []
-
         for audit_store in audit_stores:
             answers = answer_service.find_by_audit_store(audit_store['audit_store_id'])
             answer_data = AnswerSerializer(answers, many=True).data
-            report_data.append({
+            report_data=({
                 'audit_cycle_name': audit_cycle.name,
                 'order': MPOrderRepotsSerializer(order).data,
                 'audit_stores': audit_store,
@@ -1056,6 +1058,7 @@ class StoreSearchView(APIView):
 
         if not (name or city or state or status):
             return Response({'error': 'At least one of the parameters (name, city, state, status) is required.'}, status=404)
+
         queryset = Store.objects.filter(client=client)
 
         if name:
@@ -1069,7 +1072,6 @@ class StoreSearchView(APIView):
                 queryset = Store.objects.filter(client=client)
             else:
                 return Response({'error': 'Invalid value for the "status" parameter. It should be "ALL" to retrieve all data.'}, status=404)
-            
         if not queryset.exists():
             return Response({'error': 'No records found for the given query parameters.'}, status=404)
 
