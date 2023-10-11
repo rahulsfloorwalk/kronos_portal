@@ -117,10 +117,18 @@ class ClientRequirements(Model):
     audit_flow = CharField(db_column='audit_flow', max_length=16384, blank=False)
     project_manager_email = EmailField(db_column='project_manager_email', max_length=50, blank=False)
     sales_representative_email = EmailField(db_column='sales_representative_email', max_length=50, blank=False)
+    attachments = GenericRelation('attachment.Attachment', related_query_name='clientrequirements')
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
+
     def __str__(self):
         return 'ClientRequirements({}): {}'.format(self.id, self.name)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        super(ClientRequirements, self).save(*args, **kwargs)
     
 
 class ClientUserQuerySet(QuerySet):

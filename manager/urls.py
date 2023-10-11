@@ -288,7 +288,16 @@ urlpatterns = ([
     url(r'client_manager/(?P<client_manager_id>[0-9]+)$', client_manager_views.ClientManagerIdView.as_view(), name='client_manager_id_view'),
 
     url(r'client/(?P<client_id>[0-9]+)/client_trainer$', client_trainer_views.ClientTrainerByClientView.as_view(), name='client_trainer_view_by_client'),
+
     url(r'client/(?P<client_id>[0-9]+)/client_requirements',client_requirements_views.ClientRequirementsView.as_view(), name='client_requirements_view'),
+    url(r'client/client_requirements/(?P<client_requirements_id>[0-9]+)',client_requirements_views.ClientRequirementsIdView.as_view(), name='client_requirements_id_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/client_requirements',client_requirements_views.ClientReqAuditView.as_view(), name='client_requirements_audit_view'),
+
+    url(r'client_requirements/(?P<client_requirements_id>[0-9]+)/attachment$',client_requirements_views.ClientRequirementAttachmentView.as_view(),name='client_requirements_attachment_view'),
+    url(r'client_requirement_attachment/(?P<attachment_id>[0-9]+)/deletes$',client_requirements_views.ClientRequirementDeleteView.as_view(),name='client_requirement_delete_view'),
+    url(r'client_requirements_attachment/(?P<attachment_id>[0-9]+)/complete$',client_requirements_views.ClientRequirementAttachmentCompleteView.as_view(),name='client_requirements_attachment_complete_view'),
+
+
     url(r'client_trainer$', client_trainer_views.ClientTrainerView.as_view(), name='client_trainer_view'),
     url(r'client_trainer/(?P<client_trainer_id>[0-9]+)$', client_trainer_views.ClientTrainerIdView.as_view(), name='client_trainer_id_view'),
 

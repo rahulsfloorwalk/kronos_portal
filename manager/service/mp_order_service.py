@@ -99,7 +99,10 @@ def find_order_detail_by_order_id(order_id):
             'status':order.status,
             'alignment_factors':'',
             'store':'',
-            'attachment':attachments_data
+            'attachment':attachments_data,
+            'price':order.price,
+            'created_at':order.created_at,
+            'modified_at':order.modified_at
             
         })
     except:
@@ -112,7 +115,11 @@ def find_order_detail_by_order_id(order_id):
             'status':order.status,
             'alignment_factors':'',
             'store':'',
-            'attachment':''
+            'attachment':'',
+            'price':order.price,
+            'created_at':order.created_at,
+            'modified_at':order.modified_at
+
         })
 
     return result

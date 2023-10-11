@@ -14,6 +14,7 @@ from client.models import Store,Client
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from manager.serializers import StoreSerializer, StoreImportDeSerializer
 from django.contrib.auth.models import User
+from manager.viewss.mp_order import CustomPagination
 class MPStoreDeSerializer(ModelSerializer):
     class Meta:
         model = Store
@@ -144,6 +145,7 @@ class StoreGetClientView(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
+    pagination_class = CustomPagination
     def get(self, request, format=None):
         user = request.user
         try:
@@ -151,7 +153,23 @@ class StoreGetClientView(APIView):
         except Client.DoesNotExist:
             return JsonResponse({'error': 'Client not found for this user.'}, status=404)
         stores = store_service.find_stores_by_client(client.id)
-        return Response(StoreSerializer(stores, many=True).data)    
+        stores = StoreSerializer(stores, many=True).data
+
+        paginator = self.pagination_class()
+        stores = paginator.paginate_queryset(stores,request)
+        response_data = {
+            'pagination' : {
+                'page' : paginator.page.number,
+                'total_pages' : paginator.page.paginator.num_pages,
+                'count' : paginator.get_next_link(),
+                'previous' : paginator.get_previous_link(), 
+            },
+            'stores' : stores
+        }
+        # return Response(response_data)
+
+        return Response(stores)    
+        # return Response(StoreSerializer(stores, many=True).data)    
 
 def find_stores_by_client_and_store_id(store_id):
     return Store.objects.filter(id=store_id).order_by('city__name').select_related('client','city')
