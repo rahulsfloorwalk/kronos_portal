@@ -9,6 +9,7 @@ from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
 from client.models import Store
 from manager.models import City
+import re
 from manager.service import geo
 from registration.service import auditor as auditor_service
 from auditor.models import AuditApplication
@@ -121,6 +122,79 @@ def delete(audit_id):
     except IntegrityError as e:
         raise AppLogicError("audit cannot be delete now") from e
 
+def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
+    try:
+        city = City.objects.get(pk=city_id)
+    except City.DoesNotExist as e:
+        raise ObjectNotFound from e
+    
+    if pincode is not None:
+        lat1=geo.get_lat_lon_from_pincode(pincode).get('lat')
+        lon1=geo.get_lat_lon_from_pincode(pincode).get('lon')
+    else:
+        lat1=city.lat
+        lon1=city.lon
+    
+    active_audits = Audit.objects.filter(
+        count__gt = 0,
+        hidden = False,
+        audit_cycle__status__in=[
+            AuditCycle.UPCOMING,
+            AuditCycle.ACTIVE
+        ]
+    )
+    # get the bounding box
+    lon_max, lon_min, lat_max, lat_min = geo.bounding_box(lat1, lon1, kms)
+
+    available_audits = active_audits.filter(
+        # Q(audit_cycle__type__in=[AuditCycle.WEB, AuditCycle.PHONE]) |
+        Q(audit_cycle__type=AuditCycle.GENERAL) |
+        Q(
+            store__city__lat__lte=lat_max,
+            store__city__lat__gte=lat_min,
+            store__city__lon__lte=lon_max,
+            store__city__lon__gte=lon_min
+        )
+    )
+    available_audit_list = []
+    nearDis=[]
+    for i in available_audits:
+        if i.store.pincode:
+            if geo.get_lat_lon_from_pincode(i.store.pincode).get('lat') and geo.get_lat_lon_from_pincode(i.store.pincode).get('lon'):
+                lat2=geo.get_lat_lon_from_pincode(i.store.pincode).get('lat')
+                lon2=geo.get_lat_lon_from_pincode(i.store.pincode).get('lon')
+        elif i.store.address and re.findall("\d{6}", i.store.address):
+            if geo.get_lat_lon_from_pincode(pincode).get('lat') and geo.get_lat_lon_from_pincode(pincode).get('lon'):
+                lat2=geo.get_lat_lon_from_pincode(pincode).get('lat')
+                lon2=geo.get_lat_lon_from_pincode(pincode).get('lon')
+        elif i.store.city_id:
+            city = City.objects.get(pk=i.store.city_id)
+            if city:
+                lat2 = city.lat
+                lon2 = city.lon
+        distance=geo.get_distance_from_lat1_lon1_and_lat2_lon2(lat1,lon1,lat2,lon2)
+        nearDis.append({'distance':distance,'id':i.id})
+    sorted_data = sorted(nearDis, key=lambda x: x["distance"])
+    nearest_three = sorted_data[:5]
+    for i in nearest_three:
+        audit_count = Audit.objects.get(id=i.get('id')).count
+        if audit_count > 1:
+            if not AuditStore.objects \
+                    .filter(audit__id=i.get('id'), status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]) \
+                    .count() == audit_count:
+                available_audit_list.append(i.get('id'))
+        else:
+            if AuditStore.objects.filter(audit__id=i.get('id')).exists():
+                if not AuditStore.objects.filter(audit__id=i.get('id'), status__in=[AuditStore.COMPLETED,
+                                                                             AuditStore.ACCEPTED]) \
+                        .exists():
+                    available_audit_list.append(i.get('id'))
+            else:
+                available_audit_list.append(i.get('id'))
+    available_audits = Audit.objects.filter(id__in=available_audit_list)
+    return available_audits  
+
+        
 
 def find_audits_around_city(city_id:int, kms:int=None):
 
@@ -181,6 +255,20 @@ def find_applied_audits_by_auditor_id(user_id):
         status__in=(AuditApplication.APPLIED,AuditApplication.REJECTED,AuditApplication.WAITLISTED,AuditApplication.WAITLISTED,AuditApplication.APPROVED),
         audit__audit_cycle__status=AuditCycle.ACTIVE)
     return applied_audits
+
+def find_audits_for_auditor_limit(user_id,kms):
+    auditor = auditor_service.find_auditor_by_id(user_id)
+    if not auditor.profileinfo.is_complete():
+        raise AppLogicError("please complete your personal information to view audits")
+
+    if kms and int(kms) in [1,5,10,20,50,100]:
+        pass
+    elif kms is None and hasattr(auditor, 'additionalinfo') and auditor.additionalinfo.distance:
+        kms = auditor.additionalinfo.distance
+    else:
+        kms = 50
+
+    return find_audits_around_pincode_and_city(auditor.profileinfo.city_id, int(kms),auditor.profileinfo.pincode)
     
 def find_audits_for_auditor(user_id, kms):
     auditor = auditor_service.find_auditor_by_id(user_id)

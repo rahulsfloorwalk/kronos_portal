@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator
 from django.contrib.postgres.fields import JSONField
 from client.models import MPOrder
 from client.models import ClientRequirements
-
+from django.contrib.contenttypes.fields import GenericRelation
 import audit_store
 
 
@@ -106,6 +106,7 @@ class AuditCycle(Model):
     created_by_client = BooleanField(db_column="created_by_client", default=False)
     order = ForeignKey('client.MPOrder', db_column="order_id", on_delete=SET_NULL, null=True)
     clientrequirement = ForeignKey(ClientRequirements, db_column='client_requirement_id',null=True,blank=True, on_delete=PROTECT)
+    attachments = GenericRelation('attachment.Attachment', related_query_name='audit_cycles')
     class Meta:
         permissions = (
             ('moderator_manage', 'Moderator can manage this Audit Cycle'),

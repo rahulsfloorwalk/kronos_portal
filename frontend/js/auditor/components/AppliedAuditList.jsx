@@ -32,7 +32,7 @@ class AppliedAuditRow extends React.Component{
 					{this.props.seq}
 				</td>
 				<td >
-					{this.props.appliedAudit.get_brand_name.client_name}
+					{this.props.appliedAudit.get_brand_name.client_name ? this.props.appliedAudit.get_brand_name.client_name : "N/A" }
 				</td>
 				<td >
 					<tr>

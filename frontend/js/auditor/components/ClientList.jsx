@@ -4,7 +4,6 @@ import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
 import $ from "jquery";
 
-import moment from "moment";
 import { affectInputEventToComponent } from "../../react_utils.js";
 
 
@@ -66,12 +65,6 @@ class AuditCycleRow extends Component{
 							<td className="truncateStyle1">
 								{ this.props.fees ? <span>upto <b>₹ {this.props.fees}</b>, </span> : null }
 								{ this.props.reimbursement ? <span>Reimbursement upto <b>₹ {this.props.reimbursement}</b></span> : null }
-							</td>
-						</tr>
-						<tr>
-							<td className="text-right">Dates:</td>
-							<td>
-								<b>{moment(this.props.audit_cycle.start_date).format("Do MMM")}</b> to <b>{moment(this.props.audit_cycle.end_date).format("Do MMM")}</b>
 							</td>
 						</tr>
 					</tbody>

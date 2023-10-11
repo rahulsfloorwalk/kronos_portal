@@ -169,7 +169,8 @@ class AvailableAuditsView(APIView):
     }
     def get(self, request, format=None):
         kms = request.GET.get('kms')
-        available_audits = audit_service.find_audits_for_auditor(request.user.id, kms)
+        # available_audits = audit_service.find_audits_for_auditor(request.user.id, kms)
+        available_audits = audit_service.find_audits_for_auditor_limit(request.user.id, kms)
         return Response(AuditSerializer(available_audits, many=True).data)
 
 class AppliedAuditsView(APIView):

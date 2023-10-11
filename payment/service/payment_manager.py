@@ -300,26 +300,28 @@ def find_new_pending_csv_for_audit_cycle(audit_cycle_id):
 
 def get_datarow_for_payment(payment, payment_reason):
     user_details = get_user_details_for_payment(payment)
-    datarow = [
-        utils.today_ist().strftime("%d/%m/%Y"),
-        payment.amount,
+    datarow= [
         user_details['name'],
-        payment_reason,
         "" + user_details['account_number'],
         user_details['ifsc'],
+        payment.amount,
+        'IMPS',
+        'Auditor Payment',
+        payment_reason,
+        '',
         payment.user.email,
-        user_details['beneficiary_id'],
+        payment.user.id,
         "FWTRANSFER00" + str(payment.id),
     ]
     return datarow
 
 
 def get_fieldnames():
-    fieldnames = ['Payment_Value_Date', 'Payment_Amount',
-                  'Beneficiary_Name',
-                  'ReasonForPayment', 'Credit_Account_No', 'IFSC_Code',
-                  'Notification_Emails',
-                  'Bene_Id', 'Transfer_Id']
+    fieldnames = ['Beneficiary Name', 'Beneficiary Account Number',
+                  'IFSC Code',
+                  'Payout Amount', 'Payout Mode', 'Payout Narration',
+                  'Notes',
+                  'Phone Number', 'Email ID', 'Contact Reference ID', 'Payout Reference ID']
     return fieldnames
 
 

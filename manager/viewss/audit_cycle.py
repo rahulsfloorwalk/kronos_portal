@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer, CharField, ModelSerializer, IntegerField
-
+from rest_framework.exceptions import ValidationError
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
@@ -10,7 +10,8 @@ from audit.service import audit_cycle as audit_cycle_service
 from audit_store import service as audit_store_service
 from auditor.service import application_service
 from questionnaire.service import questionnaire as questionnaire_service
-from manager.serializers import AuditCycleSerializer
+from manager.serializers import AuditCycleSerializer,AttachmentSerializer
+from manager.service import audit_cycle_attachment_service
 from audit.models import AuditCycle
 from kronos.exceptions import AppLogicError
 
@@ -289,3 +290,46 @@ class AuditAlignmentFactors(APIView):
     def post(self, request, audit_cycle_id, format=None):
         audit_cycles = audit_cycle_service.set_audit_alignment_factor_by_audit_cycle(audit_cycle_id, request.data)
         return Response(AuditCycleSerializer(audit_cycles).data)
+    
+    
+class AuditCycleAttachmentView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups ={
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
+    def get(self,request,audit_cycle_id):
+        attachment = audit_cycle_attachment_service.find_attachment_by_audit_cycle_id(audit_cycle_id)
+        return Response(AttachmentSerializer(attachment,many=True).data)    
+    def post(self,request,audit_cycle_id):
+        try:
+            post_data,attachment = audit_cycle_attachment_service.audit_cycle_image_upload_by_audit_cycle_id(
+                audit_cycle_id,
+                request.data["file_name"],
+                request.data["file_size"],
+                request.data["file_type"]) 
+            post_data["attachment"] = AttachmentSerializer(attachment).data
+            return Response(post_data)
+        except KeyError as e:
+            raise ValidationError({
+                'file_name': "file name is required"
+            })
+            
+
+class AuditCycleDeleteView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups = {
+        'DELETE': [GROUP_NAME_MANAGER],
+    }
+    def delete(self,request,attachment_id):
+        audit_cycle_attachment_service.delete_for_audit_cycle(attachment_id,request.data)
+        return Response()
+    
+class AuditCycleAttachmentCompleteView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, attachment_id):
+        attachment = audit_cycle_attachment_service.complete_for_audit_cycle(attachment_id, request.data)
+        return Response(AttachmentSerializer(attachment).data)

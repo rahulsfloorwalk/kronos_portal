@@ -106,7 +106,7 @@ class AuditStoreDetails extends React.Component {
 					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary pull-right" style={{marginLeft: "1%"}} type="button">Performed the Audit?</button></Link>
 				);
 			}
-			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary pull-right">Any Concern?</Link>);
+			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary pull-right">Having Trouble ?</Link>);
 		}
 		if(this.props.auditStore.status === "ACKNOWLEDGED"){
 			submitAuditButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary btn-lg">Submit Report</button>);
@@ -115,7 +115,7 @@ class AuditStoreDetails extends React.Component {
 					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary pull-right" style={{marginLeft: "1%"}} type="button">Performed the Audit?</button></Link>
 				);
 			}
-			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary pull-right">Any Concern?</Link>);
+			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary pull-right">Having Trouble ?</Link>);
 			// attachmentArrangeButton = <button className="btn btn-lg btn-primary" style={{marginLeft:"10px"}} onClick={this.arrangeAttachmentByProofTag}>Send proofs to relevant sections</button>;
 		}
 
@@ -139,7 +139,7 @@ class AuditStoreDetails extends React.Component {
 				<div className="row">
 					{performAuditButton}{concernButton}{support_button}
 				</div>
-				<h2 className="page-header">Audit Report - [ID: {this.props.params.auditStoreId}]  <b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b></h2>
+				<h2 className="page-header"><b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> [Report ID: {this.props.params.auditStoreId}]</h2>
 				<div className="row">
 					<div className="col-md-12">
 						<div className="panel panel-default">
@@ -150,7 +150,7 @@ class AuditStoreDetails extends React.Component {
 										<th>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</th>
 									</tr>
 									<tr>
-										<td className="text-right">Store:</td>
+										<td className="text-right">Store Name:</td>
 										<th>{this.props.auditStore.audit.store.name}</th>
 									</tr>
 									<tr>
@@ -172,35 +172,6 @@ class AuditStoreDetails extends React.Component {
 									<tr>
 										<td className="text-right">Status:</td>
 										<th>{<AuditStoreStatusLabel status={this.props.auditStore.status}/>}
-											{this.props.auditStore.status=="SUBMITTED" ?
-												<sub>
-													<br/>
-													<i>
-														It usually takes 7 working days for the Quality check, the team may reach out to you in case of any concerns.
-													</i>
-												</sub>:
-												this.props.auditStore.status=="COMPLETED" ?
-													<sub>
-														<br/>
-														<i>
-															It may take upto 15 days for the client to review the report. Once, it is reviewed, it will be accepted and payments will be processed.
-														</i>
-													</sub> :
-													this.props.auditStore.status=="ACCEPTED" ?
-														<sub>
-															<br/>
-															<i>
-																Congratulations! Your report has been accepted and the payments for this report will be done in 45 days from the month end in your bank account.
-															</i>
-														</sub>:
-														this.props.auditStore.status=="PM_REVIEW" ?
-															<sub>
-																<br/>
-																<i>
-																	It may take upto 3 days for the Project Team to review the report. Once, it is reviewed, it will be shared with the client.
-																</i>
-															</sub>:
-															"" }
 										</th>
 									</tr>
 								</tbody>
@@ -216,7 +187,7 @@ class AuditStoreDetails extends React.Component {
 					<div className="col-md-6">
 					</div>
 				</div>
-				{/* {buttonPanel} */}
+				{buttonPanel}
 				<AttachmentUploadBox auditStoreId={this.props.params.auditStoreId} editable={this.isReportEditable()}/>
 				<ReportSummary audit_store_id={this.props.params.auditStoreId} report_summary={this.props.auditStore.report_summary} editable={this.isReportEditable()} />
 				<SectionList auditStoreId={this.props.params.auditStoreId} showErrors={this.state.showErrors} editable={this.isReportEditable()} auditStore={this.props.auditStore}/>

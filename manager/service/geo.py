@@ -46,6 +46,17 @@ def get_distance_from_lat_lon(lat_lon1,lat_lon2):
     distance = round(R * c, 2)
     return distance
 
+def get_distance_from_lat1_lon1_and_lat2_lon2(lat1,lon1,lat2,lon2):
+    lat1 = math.radians(lat1)
+    lon1 = math.radians(lon1)
+    lat2 = math.radians(lat2)
+    lon2 = math.radians(lon2)
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = (math.sin(dlat / 2)) ** 2 + math.cos(lat1) * math.cos(lat2) * (math.sin(dlon / 2)) ** 2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    distance = round(R * c, 2)
+    return distance
 
 def calculate_distance_from_pincode(pincode1, pincode2):
     lat_lon1 = get_lat_lon_from_pincode(pincode1)

@@ -28,6 +28,7 @@ from answer.service import answer as answer_service
 from auditor.models import ProfileInfo
 from auditor.service import profile_info_service
 from .models import Attachment
+from audit.models import AuditCycle
 from audit.service import audit_cycle_proof_tag
 from questionnaire.service.section_proof_tag import get_section_id_by_audit_cycle_proof_tag_id
 from answer.service import report_section as answer_service_report_section
@@ -35,6 +36,7 @@ from manager.service import solution_service
 from client.models import MPOrder
 from manager.service import mp_order_service
 from manager.service import category as category_service
+from audit.service import audit_cycle as audit_cycle_service
 from manager.models import MPSolution,MPCategory
 from client.models import ClientRequirements
 from manager.service import client_requirement_attachment_service
@@ -198,6 +200,16 @@ def upload_for_clientrequiremnt(client_requirements_id,file_name,file_size,mime_
     attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], clientrequirement)
     return (post_data, attachment)
 
+def upload_for_audit_cycle(audit_cycle_id,file_name,file_size,mime_type):
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    check_file_size(file_size)
+    basename, file_extension = parse_file_name(file_name)
+    valid_file_type(mime_type, file_extension)
+    proof_type = get_proof_type(mime_type)
+    post_data = get_signed_post(file_extension)
+    attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], audit_cycle)
+    return (post_data, attachment)
+
 def upload_for_order(order_id,file_name,file_size,mime_type):
     order= mp_order_service.find_order_by_id(order_id)
     check_file_size(file_size)
@@ -289,6 +301,13 @@ def get_category_for_attachment(attachment_id: int) -> MPCategory:
         return category_service.find_category_by_id(attachment.object_id)
     raise AppLogicError("Invalid Attachment Content Type3")
 
+def get_audit_cycle_for_attachment(attachment_id: int)-> AuditCycle:
+    attachment = find_by_id(attachment_id)
+    if attachment.content_type.model_class() is AuditCycle:
+        return audit_cycle_service.find_by_id(attachment.object_id)
+    raise AppLogicError("Invalid Attachment Content Type3")
+
+
 def get_order_for_attachment(attachment_id : int) -> MPOrder:
     attachment = find_by_id(attachment_id)
     if attachment.content_type.model_class() is MPOrder:
@@ -309,6 +328,9 @@ def find_by_category(category_id):
 
 def find_by_clientrequirement(client_requirements_id):
     return Attachment.objects.filter(clientrequirements__id=client_requirements_id,status=Attachment.ATTACHED).order_by('id')
+
+def find_by_audit_cycle(audit_cycle_id):
+    return Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED).order_by('id')
 
 def find_by_audit_store_and_section(audit_store_id, section_id):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)

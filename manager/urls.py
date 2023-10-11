@@ -74,6 +74,9 @@ urlpatterns = ([
     url(r'category_attachment/(?P<attachment_id>[0-9]+)/delete$',category_views.CategoryDeleteView.as_view(),name='category_delete_view'),
     url(r'category_attachment/(?P<attachment_id>[0-9]+)/complete$',category_views.CategoryAttachmentCompleteView.as_view(),name='category_attachment_complete_view'),
     
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment$',audit_cycle_views.AuditCycleAttachmentView.as_view(),name='category_attachment_view'),
+    url(r'audit_cycle_attachment/(?P<attachment_id>[0-9]+)/delete$',audit_cycle_views.AuditCycleDeleteView.as_view(),name='category_delete_view'),
+    url(r'audit_cycle_attachment/(?P<attachment_id>[0-9]+)/complete$',audit_cycle_views.AuditCycleAttachmentCompleteView.as_view(),name='category_attachment_complete_view'),
     
     url(r'solution$', solution_views.SolutionView.as_view(), name='solution_view'),
     
