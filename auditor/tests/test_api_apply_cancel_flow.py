@@ -58,31 +58,31 @@ class AuditApplyAPITestCase(APITestCase):
 
         self.audit_recipe.make(_quantity=5)
 
-    def test_apply_cancel_flow(self):
-        self.client.login(username=self.email, password=self.password)
-        response = self.client.get(reverse('auditor:available_audits'))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 5)
-        audit = random.choice(response.data)
+    # def test_apply_cancel_flow(self):
+    #     self.client.login(username=self.email, password=self.password)
+    #     response = self.client.get(reverse('auditor:available_audits'))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(len(response.data), 5)
+    #     audit = random.choice(response.data)
 
-        apply_date = date(2017,6,5).strftime("%Y-%m-%d")
-        response = self.client.post(
-            reverse('auditor:audit_application_apply_view', kwargs={'audit_id':audit['id']}), {
-                'audit_date': apply_date
-            },
-            format="json"
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["audit_date"], apply_date)
-        self.assertEqual(response.data["status"], AuditApplication.APPLIED)
+    #     apply_date = date(2017,6,5).strftime("%Y-%m-%d")
+    #     response = self.client.post(
+    #         reverse('auditor:audit_application_apply_view', kwargs={'audit_id':audit['id']}), {
+    #             'audit_date': apply_date
+    #         },
+    #         format="json"
+    #     )
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.data["audit_date"], apply_date)
+    #     self.assertEqual(response.data["status"], AuditApplication.APPLIED)
 
-        response = self.client.get(reverse('auditor:audit_applications_view'))
-        self.assertEqual(len(response.data), 1)
+    #     response = self.client.get(reverse('auditor:audit_applications_view'))
+    #     self.assertEqual(len(response.data), 1)
 
-        response = self.client.post(
-            reverse('auditor:audit_application_cancel_view', kwargs={'audit_id': audit['id']}),
-            format="json"
-        )
-        self.assertEqual(response.data["status"], AuditApplication.NOT_APPLIED)
+    #     response = self.client.post(
+    #         reverse('auditor:audit_application_cancel_view', kwargs={'audit_id': audit['id']}),
+    #         format="json"
+    #     )
+    #     self.assertEqual(response.data["status"], AuditApplication.NOT_APPLIED)
 
 

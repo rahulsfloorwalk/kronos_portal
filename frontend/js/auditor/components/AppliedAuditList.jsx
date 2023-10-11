@@ -5,34 +5,64 @@ import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 import { findAppliedAudits} from "../service/applied_audits.js";
 
+import {Link} from "react-router";
 class AppliedAuditRow extends React.Component{
 	static propTypes = {
-		// children: PropTypes.node,
 		seq:PropTypes.number.isRequired,
 		appliedAudit: PropTypes.shape({
+			id: PropTypes.string,
 			audit_date:PropTypes.string,
 			get_brand_name: PropTypes.shape({
 				client_name: PropTypes.string,
 			}),
-			status:PropTypes.string
+			status:PropTypes.string,
+			audit: PropTypes.shape({
+				id:PropTypes.string,
+				audit_cycle: PropTypes.shape({
+					id: PropTypes.number,
+				}),
+			}),
 		})
 	};
 	render(){
+		const currentDate = new Date().toISOString().slice(0, 10);
 		return (
 			<tr>
 				<td>
 					{this.props.seq}
 				</td>
 				<td >
-					{this.props.appliedAudit.get_brand_name.client_name}
+					{this.props.appliedAudit.get_brand_name.client_name ? this.props.appliedAudit.get_brand_name.client_name : "N/A" }
 				</td>
 				<td >
-					<b>{moment(this.props.appliedAudit.audit_date).format(momentDateFormat)}</b>
+					<tr>
+						<b>{moment(this.props.appliedAudit.audit_date).format(momentDateFormat)}</b>
+					</tr>
+					{currentDate > this.props.appliedAudit.audit_date && this.props.appliedAudit.status == "APPLIED" ?
+						<tr>
+							<div>
+								<span style={{color:"red",fontSize:"10px"}}><i>(Your audit application date has passed,<br/> kindly select a new date using the reapply button.)</i></span>
+							</div>
+						</tr>
+						:null}
 				</td>
 				<td >
 					{this.props.appliedAudit.status == "APPLIED"
 						?
-						<b > <ApplicationStatusLabel status={this.props.appliedAudit.status} /></b>
+						<b >
+							<ApplicationStatusLabel status={this.props.appliedAudit.status} />&nbsp;&nbsp;
+							{
+								currentDate > this.props.appliedAudit.audit_date
+									?
+									(
+										<Link testDecoration='None' className='btn-sm btn-success' to={`audit/cycle/${this.props.appliedAudit.audit.audit_cycle.id}/audit/${this.props.appliedAudit.audit.id}/reapply`}>
+											Re Apply
+										</Link>
+									)
+									:
+									null
+							}
+						</b>
 						: this.props.appliedAudit.status == "APPROVED"
 							?
 							<b ><ApplicationStatusLabel status= {this.props.appliedAudit.status}/></b>

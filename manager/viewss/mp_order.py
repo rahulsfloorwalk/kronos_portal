@@ -18,10 +18,10 @@ from datetime import datetime, timedelta
 from django.utils.text import slugify
 from audit.service import audit_cycle as audit_cycle_service
 from client.models import Client,Store
-from manager.models import MPSolutionOtherDetails,MPSolutionQuestion,MPSolutionProofTagList,MPSolution,City,MPSolutionCategoryDetails
+from manager.models import MPSolutionOtherDetails,MPSolutionQuestion,MPSolutionProofTagList,MPSolution,City
 from django.utils import timezone
 from audit.models import AuditCycle
-from rest_framework.serializers import Serializer, CharField, ModelSerializer, IntegerField
+from rest_framework.serializers import Serializer, CharField, ModelSerializer
 from manager.viewss.section import SectionDeSerializer
 from questionnaire.service import section as section_service
 from manager.viewss.question import QuestionDeSerializer
@@ -30,7 +30,7 @@ from audit.service import audit_service
 from ..serializers import AuditSerializer
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from rest_framework import serializers
-from manager.serializers import AuditCycleSerializer,StoreSerializer,CitySerializer,ClientSerializer
+from manager.serializers import AuditCycleSerializer,StoreSerializer,CitySerializer
 from questionnaire.models import QuestionnaireType
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 from client_report.service import audit_section
@@ -44,8 +44,13 @@ from manager.viewss.client_profile import ClientProfileSerializer
 from manager.serializers import AuditStoreSerializerWithoutAudit
 from manager.serializers import AttachmentSerializer
 from rest_framework.exceptions import ValidationError
+from rest_framework.pagination import PageNumberPagination
 
 
+class CustomPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
 
 def get_order_data(data):
     order_dict = model_to_dict(data)
@@ -128,6 +133,8 @@ class MpOrderIdView(APIView):
         'GET':[GROUP_NAME_CLIENT],
         'POST':[GROUP_NAME_CLIENT]
     }   
+
+   
     def get_object(self,order_id):
         try:
             return MPOrder.objects.get(pk=order_id)
@@ -135,7 +142,11 @@ class MpOrderIdView(APIView):
             raise ObjectNotFound
     def get(self,request,order_id):
         result = mp_order_service.find_order_detail_by_order_id(order_id)
-        return Response(result) 
+        order_instance = self.get_object(order_id)
+        mp_order_data = MPOrderSerializer(order_instance).data
+        # mp_order_data =  MPOrderSerializer().data
+        return Response(mp_order_data)
+
     def post(self,request,order_id):
         
         order=self.get_object(order_id)
@@ -217,7 +228,7 @@ class MpPaymentView(APIView):
         order_id = request.data.get('mp_order_id')
         attachments = request.FILES.get('file') 
 
-        client = razorpay.Client(auth=('rzp_test_5ws7pWCryHQLI3', 'WHigTD04Xt2JsFPSpgbrj8My'))
+        client = razorpay.Client(auth=('rzp_live_7n6ULYH6VDbGb9', 'WV27rxb1UuffQbBU6xNoPMVv'))
         order = get_object_or_404(MPOrder, id=order_id)
 
         tax_rate = order.solution.tax.rate
@@ -336,7 +347,6 @@ class MpPaymentCompleteView(APIView):
         
         return JsonResponse({'status': 'success'})   
 
-
 def payment_is_successful(payment_id, signature):    
     if payment_id and signature:
         return True
@@ -357,7 +367,6 @@ def create_questionnaire_type(questionnaire_data):
         
         return (add_questionnaire_type.instance.id)
     
-
 
 def get_last_audit_cycle_number(client):
     last_audit_cycle = AuditCycle.objects.filter(client=client).order_by('-id').first()
@@ -530,12 +539,19 @@ class AuditCycleViewByClient(APIView):
         audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client_id)
         return Response(AuditCycleSerializer(audit_cycles, many=True).data)
     
+class MPOrderReportSerializer(ModelSerializer):
+    solution = SolutionSerializer()
+    class Meta:
+        model=MPOrder
+        fields=('id','solution','user','created_at','modified_at')
+   
 
 class OrderReportsView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
+    pagination_class = CustomPagination
 
     def get(self, request):
         user = request.user
@@ -543,68 +559,89 @@ class OrderReportsView(APIView):
             client = Client.objects.get(email=user.email)
         except Client.DoesNotExist:
             return JsonResponse({'error': 'Client not found for this user.'}, status=404)
-
-        status = request.query_params.get('status')
-        status_param = request.query_params.get('status_param')
-        valid_statuses = ['COMPLETE', 'ACTIVE']
         
-        if status and status == 'DRAFT':
+        pages = request.query_params.get('pages') if 'pages' in request.query_params else None
+        status = request.query_params.get('status') if 'status' in request.query_params else None
+        valid_statuses = ['COMPLETE', 'ACTIVE']
+        ALL = [valid_statuses]
+        product_name = request.query_params.get('product_name')
+        start_date_str = request.query_params.get('start_date')
+        end_date_str = request.query_params.get('end_date')
+        
+
+        audit_cycles = AuditCycle.objects.filter(client=client.id)
+
+        if pages =='dashboard':
+            if status and status == 'DRAFT':
                 mp_order = MPOrder.objects.filter(user=request.user, status=status)
                 if mp_order:
                     mp_order = mp_order.order_by('-id')[:3] 
                     mp_order_data = []
                     for mp_order in mp_order:            
                         mp_order_data.append({
-                            'mp_order': MPOrderSerializer(mp_order).data,
+                            'mp_order': MPOrderReportSerializer(mp_order).data,
                         })
                     return Response({'mp_order_data': mp_order_data})
                 else:
                     return Response({'message': 'No DRAFT status MPOrder found for this client.'})
-        elif status and status in valid_statuses:
-            audit_cycles = AuditCycle.objects.filter(client=client.id, status=status)
-
-        elif status_param and status_param in valid_statuses:
-            audit_cycles = AuditCycle.objects.filter(client=client.id, status=status_param).order_by('-id')[:3]
-
-        elif status and status == 'ALL':
-            audit_cycles = AuditCycle.objects.filter(client=client.id, status__in=valid_statuses)
-       
+            elif status and status in valid_statuses:
+                audit_cycles = audit_cycles.filter(status=status).order_by('-id')[:3]
+            else:
+                return Response({'message': 'Invalid status parameter. Valid values are DRAFT, COMPLETE, ACTIVE, or ALL.'}, status=400)
+        
+        elif pages == 'reports':
+            audit_cycles = AuditCycle.objects.filter(client=client.id)
+            if status and status in ALL:
+                audit_cycles = AuditCycle.objects.filter(client=client.id, status__in=ALL)
+            if status and status in valid_statuses:
+                audit_cycles = audit_cycles.filter(status=status)
+            if product_name:
+                audit_cycles = audit_cycles.filter(order_id__solution__name__icontains=product_name)
+            if start_date_str:
+                audit_cycles = audit_cycles.filter(start_date=start_date_str)
+            if end_date_str:
+                audit_cycles = audit_cycles.filter(end_date=end_date_str)
+            
+            paginator = self.pagination_class()
+            audit_cycles = paginator.paginate_queryset(audit_cycles, request)
+        
         else:
-            return Response({'message': 'Invalid status parameter. Valid values are DRAFT, COMPLETE, ACTIVE, or ALL.'}, status=400)
+            return Response({'message': 'Invalid status parameter. Valid values are DRAFT, COMPLETE, ACTIVE, or ALL.'}, status=400)       
 
         audit_cycle_data = []
 
-        product_name = request.query_params.get('product_name')
-        start_date_str = request.query_params.get('start_date')
-        end_date_str = request.query_params.get('end_date')
-
-        if product_name:
-            audit_cycles = audit_cycles.filter(order_id__solution__name__icontains=product_name)
-        if start_date_str:
-                audit_cycles = audit_cycles.filter(start_date=start_date_str)                
-        if end_date_str:
-                audit_cycles = audit_cycles.filter(end_date=end_date_str)
-
         for audit_cycle in audit_cycles:
             audit_score_response = audit_cycle.get_total_percentage()
-           
+
             if audit_cycle.order is not None:
-                order = MPOrder.objects.get(id=audit_cycle.order.id)
-                store_info = order.store
-                store_count = len(store_info) if store_info else 0
+                order = audit_cycle.order
+
                 audit_cycle_data.append({
                     'id': audit_cycle.id,
-                    'audit_cycle': AuditCycleSerializer(audit_cycle).data,
-                    'order': MPOrderSerializer(order).data,
+                    'audit_cycle': MPReportsAuditCycleSerializer(audit_cycle).data,
+                    'order': MPReportsOrderSerializer(order).data,
                     'audit_score': audit_score_response,
-                    'store_info': store_info,
-                    'store_count': store_count,
                 })
+        
         if audit_cycle_data:
-            return Response({'audit_cycle_data': audit_cycle_data})
+            if pages == 'reports':
+                pagination = {
+                    'page': paginator.page.number,
+                    'total_pages': paginator.page.paginator.num_pages,
+                    'count': paginator.page.paginator.count,
+                    'next': paginator.get_next_link(),
+                    'previous': paginator.get_previous_link(),
+                }
+                response_data = {
+                    'pagination': pagination,
+                    'audit_cycle_data': audit_cycle_data,
+                }
+            else:
+                response_data = {'audit_cycle_data': audit_cycle_data}
+            
+            return Response(response_data)
         else:
             return JsonResponse({'error': 'No audit cycles found for this client.'})
-
 
 class MPReportsAuditCycleSerializer(ModelSerializer):
     class Meta:
@@ -612,7 +649,6 @@ class MPReportsAuditCycleSerializer(ModelSerializer):
         fields = (
             'id',
             'name',
-            'type',
             'status',
             'start_date',
             'end_date',
@@ -621,15 +657,24 @@ class MPReportsAuditCycleSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-    
+
+class MPReportsSolutionSerializer(ModelSerializer):
+    class Meta:
+        model = MPSolution
+        fields = (
+            'id',
+            'name',
+            'price',
+        )
+        read_only_fields = fields
+
 class MPReportsOrderSerializer(ModelSerializer):
-    solution = SolutionSerializer()
+    solution = MPReportsSolutionSerializer()
     category_name = serializers.CharField(source='category.name', read_only=True)
     class Meta:
         model=MPOrder
         # exclude = ('attachments',) 
-        fields=('id','solution','category','category_name','no_of_response','status','store','created_at','modified_at')
-            
+        fields=('id','solution','category','category_name','no_of_response','status')         
 
 class OrderReportListView(APIView):
     permission_classes = [HasGroupPermission]
@@ -722,10 +767,6 @@ class MPOrderSerializer(ModelSerializer):
             attachments_data.append(attachment_data)
 
         return attachments_data
-
-    # return attachments_data
-    #     # Extract relevant data from attachments and return it as a list of dictionaries
-    #     return [{'filename': attachment.filename, 'url': attachment.url} for attachment in attachments]
     
 class MPOrderRepotsSerializer(ModelSerializer):
     user= UserSerializer()
@@ -772,14 +813,12 @@ class MPOrderReportListDetailView(APIView):
         audit_cycle = AuditCycle.objects.get(id=audit_cycle_id) 
         order = MPOrder.objects.get(id=audit_cycle.order.id)
 
-        audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
-        
+        audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)  
         report_data = []
-
         for audit_store in audit_stores:
             answers = answer_service.find_by_audit_store(audit_store['audit_store_id'])
             answer_data = AnswerSerializer(answers, many=True).data
-            report_data.append({
+            report_data=({
                 'audit_cycle_name': audit_cycle.name,
                 'order': MPOrderRepotsSerializer(order).data,
                 'audit_stores': audit_store,
@@ -806,6 +845,7 @@ class OrderInvoicesView(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
+    pagination_class = CustomPagination
     def get(self, request):
         user = request.user
         try:
@@ -816,24 +856,38 @@ class OrderInvoicesView(APIView):
         client_profile = MPClientProfileInfo.objects.get(user=user.id)
         orders = MPOrder.objects.filter(user=client_profile.user, status__in=['ACTIVE', 'COMPLETE'])
         
-        status = request.query_params.get('status')
-        if status:
-            orders = orders.filter(status=status)
+        # status = request.query_params.get('status')
+        # if status:
+        #     orders = orders.filter(status=status)
+
         
-        invoice_data_list = []
+        pages = request.query_params.get('pages') if 'pages' in request.query_params else None
+        status = request.query_params.get('status') if 'status' in request.query_params else None
+        valid =  ['COMPLETE', 'ACTIVE']
+        ALL = [valid]
         product_name = request.query_params.get('product_name')
         year = request.query_params.get('year')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
 
-        if product_name:
-            orders = orders.filter(solution__name__icontains=product_name)
-        if year:
-            year = int(year)
-            orders = orders.filter(transaction__payment_success_date__year=year)
-        if start_date and end_date:
-           orders = orders.filter(transaction__payment_success_date__date__range=(start_date,end_date))           
+        if pages=='invoice':
+            orders = MPOrder.objects.filter(user=client_profile.user, status__in=['ACTIVE', 'COMPLETE'])
+            if status and status in ALL :
+                orders = MPOrder.objects.filter(client=client.id,status__in=ALL)
+            if product_name:
+                orders = orders.filter(solution__name__icontains=product_name)   
+            if year:
+                year = int(year)
+                orders = orders.filter(transaction__payment_success_date__year=year)
+            if start_date and end_date:
+                orders = orders.filter(transaction__payment_success_date__date__range=(start_date,end_date))   
 
+            paginator = self.pagination_class()
+            orders = paginator.paginate_queryset(orders, request)   
+        else:
+            return JsonResponse({'error': 'No payment for any audit cycles.'})
+        
+        invoice_data_list = []
         for order in orders:
             order_data = MPOrderRepotsSerializer(order).data
             transaction = Transaction.objects.filter(order_id=order.id).first()
@@ -846,7 +900,18 @@ class OrderInvoicesView(APIView):
             invoice_data_list.append(invoice_data)
         
         if invoice_data_list:
-            return Response({'invoice_data_list': invoice_data_list})
+            pagination = {
+                'page' : paginator.page.number,
+                'total_pages' : paginator.page.paginator.num_pages,
+                'next' : paginator.get_next_link(),
+                'previous' : paginator.get_previous_link(),
+            }
+            response_data = {
+                'pagination' : pagination,
+                'invoice_data_list': invoice_data_list
+            }
+            return Response(response_data)
+            # return Response({'invoice_data_list': invoice_data_list})
         else:
             return JsonResponse({'error': 'No payment for any audit cycles.'})   
 
@@ -984,14 +1049,13 @@ class MPOrderList(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT]
     }
-
+    pagination_class = CustomPagination
     def get(self, request):
         user = request.user
         try:
             client = Client.objects.get(email=user.email)
         except Client.DoesNotExist:
             return JsonResponse({'error': 'Client not found for this user.'}, status=404)
-
         valid_statuses = ['DRAFT', 'COMPLETE', 'ACTIVE']
         status = request.query_params.get('status')
         if status and status == 'ALL':
@@ -1056,6 +1120,7 @@ class StoreSearchView(APIView):
 
         if not (name or city or state or status):
             return Response({'error': 'At least one of the parameters (name, city, state, status) is required.'}, status=404)
+
         queryset = Store.objects.filter(client=client)
 
         if name:
@@ -1069,7 +1134,6 @@ class StoreSearchView(APIView):
                 queryset = Store.objects.filter(client=client)
             else:
                 return Response({'error': 'Invalid value for the "status" parameter. It should be "ALL" to retrieve all data.'}, status=404)
-            
         if not queryset.exists():
             return Response({'error': 'No records found for the given query parameters.'}, status=404)
 

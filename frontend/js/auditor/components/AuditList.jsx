@@ -72,21 +72,16 @@ class AuditRow extends React.Component{
 		}
 		let fees = this.props.audit.earnings_per_audit ? <span>Flat: <big><b>₹ {this.props.audit.earnings_per_audit}</b></big>, </span> : "";
 		let reimb = this.props.audit.reimbursement ? <span>Reimbursement upto: <big><b>₹ {this.props.audit.reimbursement}</b></big></span> : "";
-		let eligible= this.props.audit.audit_cycle.eligibility ? <MarkdownViewer markdown={this.props.audit.audit_cycle.eligibility || ""}/>:"";
 		return (
 			<div className="row">
 				<div className="col-sm-3">
-					<label className="hidden-sm hidden-md hidden-lg">Store Location</label>
-					<p><b><big>{this.props.audit.store.name}, {this.props.audit.store.city.name}</big></b></p>
-					<p><b>{this.props.audit.store.address}</b></p>
+					<label className="hidden-sm hidden-md hidden-lg">Store Name</label>
+					<p><big>{this.props.audit.store.name}, {this.props.audit.store.city.name}</big></p>
+					<p>{this.props.audit.store.address}</p>
 				</div>
 				<div className="col-sm-3">
 					<label className="hidden-sm hidden-md hidden-lg">Earnings</label>
 					<p>{fees}{reimb}</p>
-				</div>
-				<div className="col-sm-3">
-					<label className="hidden-sm hidden-md hidden-lg">Eligibiltiy</label>
-					<p>{eligible}</p>
 				</div>
 				<div className="col-sm-3">
 					<p>
@@ -205,36 +200,8 @@ class AuditList extends Component{
 							</div>
 							<div className="col-sm-4">
 								<p>
-									<span className="text-muted" style={labelStyle}>Start Date</span><br/>
-									<span style={valueStyle}><b>{moment(this.props.auditCycle.start_date).format(momentDateFormat)}</b></span>
-								</p>
-							</div>
-							<div className="col-sm-4">
-								<p>
-									<span style={labelStyle} className="text-muted">End Date</span><br/>
-									<span style={valueStyle}><b>{moment(this.props.auditCycle.end_date).format(momentDateFormat)}</b></span>
-									{/*
-						<table className="table table-bordered">
-							<tbody>
-								<tr>
-									<td className="text-right">Type</td>
-									<td><b><AuditTypeLabel auditType={this.props.auditCycle.type}/></b></td>
-								</tr>
-								<tr>
-									<td className="text-right">Start Date</td>
-									<td>
-									<b>{moment(this.props.auditCycle.start_date).format(momentDateFormat)}</b>
-									</td>
-								</tr>
-								<tr>
-									<td className="text-right">End Date</td>
-									<td>
-									<b>{moment(this.props.auditCycle.end_date).format(momentDateFormat)}</b>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						*/}
+									<span style={labelStyle} className="text-muted">Eligibility</span><br/>
+									<span style={valueStyle}><b>{this.props.auditCycle.eligibility ? this.props.auditCycle.eligibility : "N/A" }</b></span>
 								</p>
 							</div>
 							<div className="col-sm-12">
@@ -246,9 +213,8 @@ class AuditList extends Component{
 				</div>
 				<h3 className="page-header hidden-sm hidden-md hidden-lg">Audit Locations</h3>
 				<div className="row hidden-xs">
-					<div className="col-sm-3"><big><b>Store Location</b></big></div>
+					<div className="col-sm-3"><big><b>Store Name</b></big></div>
 					<div className="col-sm-3"><big><b>Earnings</b></big></div>
-					<div className="col-sm-3"><big><b>Eligibility</b></big></div>
 					<div className="col-sm-3"><big><b>Status</b></big></div>
 					<div className="col-xs-12"><hr/></div>
 				</div>

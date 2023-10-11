@@ -13,6 +13,7 @@ from .viewss import answer as answer_views
 from .viewss import client_user as client_user_views
 from .viewss import client_manager as client_manager_views
 from .viewss import client_trainer as client_trainer_views
+from .viewss import client_requirements as client_requirements_views
 from .viewss import report_section as report_section_views
 from .viewss import attachment as attachment_views
 from .viewss import notifications as notification_views
@@ -56,6 +57,7 @@ urlpatterns = ([
     url(r'client/(?P<client_id>[0-9]+)/store$', store_views.StoreViewByClient.as_view(), name='store_view_by_client'),
     url(r'client/(?P<client_id>[0-9]+)/store/import$', store_views.ImportStoreView.as_view(), name='import_store_view'),
     url(r'client/(?P<client_id>[0-9]+)/store/import/sample$', store_views.StoreSampleXlsxView.as_view(), name='sample_import_store_view'),
+    # url(r'client/(?P<client_id>[0-9]+)/store/import/sampleclient$', store_views.StoreSampleClientXlsxView.as_view(), name='sampleclient_import_store_view'),
     url(r'client/(?P<client_id>[0-9]+)$', client_views.ClientIdView.as_view(), name='client_id_view'),
     url(r'client/(?P<client_id>[0-9]+)/audit_store/(?P<audit_store_id>[0-9]+)/xlsx_report$', audit_store_views.AuditStoreXlsxReport.as_view(), name='audit_store_xlsx_report'),
     url(r'client/dashboard_cycle_status$', client_views.ClientViewByDashboardCyleStatus.as_view(), name='client_view_by_dashboard_cycle_status'),
@@ -72,6 +74,9 @@ urlpatterns = ([
     url(r'category_attachment/(?P<attachment_id>[0-9]+)/delete$',category_views.CategoryDeleteView.as_view(),name='category_delete_view'),
     url(r'category_attachment/(?P<attachment_id>[0-9]+)/complete$',category_views.CategoryAttachmentCompleteView.as_view(),name='category_attachment_complete_view'),
     
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment$',audit_cycle_views.AuditCycleAttachmentView.as_view(),name='category_attachment_view'),
+    url(r'audit_cycle_attachment/(?P<attachment_id>[0-9]+)/delete$',audit_cycle_views.AuditCycleDeleteView.as_view(),name='category_delete_view'),
+    url(r'audit_cycle_attachment/(?P<attachment_id>[0-9]+)/complete$',audit_cycle_views.AuditCycleAttachmentCompleteView.as_view(),name='category_attachment_complete_view'),
     
     url(r'solution$', solution_views.SolutionView.as_view(), name='solution_view'),
     
@@ -286,7 +291,16 @@ urlpatterns = ([
     url(r'client_manager/(?P<client_manager_id>[0-9]+)$', client_manager_views.ClientManagerIdView.as_view(), name='client_manager_id_view'),
 
     url(r'client/(?P<client_id>[0-9]+)/client_trainer$', client_trainer_views.ClientTrainerByClientView.as_view(), name='client_trainer_view_by_client'),
-    # url(r'client/(?P<client_id>[0-9]+)/client_requirements',client_requirements_views.ClientRequirementsView.as_view(), name='client_requirements_view')
+
+    url(r'client/(?P<client_id>[0-9]+)/client_requirements',client_requirements_views.ClientRequirementsView.as_view(), name='client_requirements_view'),
+    url(r'client/client_requirements/(?P<client_requirements_id>[0-9]+)',client_requirements_views.ClientRequirementsIdView.as_view(), name='client_requirements_id_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/client_requirements',client_requirements_views.ClientReqAuditView.as_view(), name='client_requirements_audit_view'),
+
+    url(r'client_requirements/(?P<client_requirements_id>[0-9]+)/attachment$',client_requirements_views.ClientRequirementAttachmentView.as_view(),name='client_requirements_attachment_view'),
+    url(r'client_requirement_attachment/(?P<attachment_id>[0-9]+)/deletes$',client_requirements_views.ClientRequirementDeleteView.as_view(),name='client_requirement_delete_view'),
+    url(r'client_requirements_attachment/(?P<attachment_id>[0-9]+)/complete$',client_requirements_views.ClientRequirementAttachmentCompleteView.as_view(),name='client_requirements_attachment_complete_view'),
+
+
     url(r'client_trainer$', client_trainer_views.ClientTrainerView.as_view(), name='client_trainer_view'),
     url(r'client_trainer/(?P<client_trainer_id>[0-9]+)$', client_trainer_views.ClientTrainerIdView.as_view(), name='client_trainer_id_view'),
 

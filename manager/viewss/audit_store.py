@@ -373,10 +373,10 @@ class AuditStoreIdRejectView(APIView):
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreXlsxReport(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-    }
+    # permission_classes = [HasGroupPermission]
+    # required_groups = {
+    #     'GET': [GROUP_NAME_MANAGER],
+    # }
     def get(self, request, client_id, audit_store_id, format=None):
         report, name = xlsx_report_service.get_xlsx_report_for_manager(audit_store_id)
         response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

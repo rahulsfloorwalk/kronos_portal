@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 import { fetchClient } from "../../service/client.js";
 
-import { King, Pencil, Retweet, Home, Bishop, Knight, Education } from "../../../components/Icons.jsx";
+import { King, Pencil, Retweet, Home, Bishop, Knight, Education,Info } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
 import NavLink from "../../../components/NavLink.jsx";
 
@@ -67,7 +67,7 @@ export default class ClientDetail extends React.Component {
 							<NavLink to={`/client/${this.props.params.clientId}/client_user`}><Bishop/> Client Users</NavLink>
 							<NavLink to={`/client/${this.props.params.clientId}/client_manager`}><Knight/> Managers</NavLink>
 							<NavLink to={`/client/${this.props.params.clientId}/client_trainer`}><Education/> Trainers</NavLink>
-							{/* <NavLink to={`/client/${this.props.params.clientId}/client_requirements`}><Info/> Client Requirements</NavLink>	 */}
+							<NavLink to={`/client/${this.props.params.clientId}/client_requirements`}><Info/> Client Requirements</NavLink>
 						</ul>
 						{this.props.children}
 					</div>

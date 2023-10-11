@@ -31,9 +31,10 @@ def auto_tattava_report_action_target_date_to_admin():
                         'description':j.action_plan_description,
                         'report_id':i
                     })
-        _logger.info("sending email for action plan with %s Action Plans",len(action_list))
-        mail_count+=1
-        send_target_date_reminder.delay(action_list,client_id)
+        if len(action_list)>0:
+            _logger.info("sending email for action plan with %s Action Plans",len(action_list))
+            mail_count+=1
+            send_target_date_reminder.delay(action_list,client_id)
     return mail_count                
                 
     

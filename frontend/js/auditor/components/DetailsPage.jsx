@@ -63,7 +63,7 @@ class DetailsPage extends React.Component {
 							<ProfilePercentage />
 							<p>Certification Score: &nbsp; {this.props.profileInfo.certification_score ?
 								<b>{this.props.profileInfo.certification_score} %</b>
-								: <b>NA &nbsp;&nbsp;<Link to='/certification'> (View)</Link></b> }
+								: <b>N/A &nbsp;&nbsp;<Link to='/certification'> (View)</Link></b> }
 							</p>
 							<p>Email: <b>{this.props.user.email}</b></p>
 							<p>Mobile Number: &nbsp;

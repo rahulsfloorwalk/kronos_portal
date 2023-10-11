@@ -10,7 +10,7 @@ import moment from "moment";
 
 import { momentDateFormat }  from "../../../config.js";
 
-import { loadAuditApplyForm, submitAuditApplyForm } from "../actions/application.js";
+import { submitAuditCancelForm,loadAuditCancelForm,submitAuditApplyForm } from "../actions/application.js";
 
 import FormErrorList from "../../components/FormErrorList.jsx";
 import Modal from "../../components/Modal.jsx";
@@ -18,7 +18,7 @@ import Modal from "../../components/Modal.jsx";
 import { auditPropType } from "../prop_types";
 
 
-class AuditApplyForm extends React.Component {
+class AuditReapplyForm extends React.Component {
 	static propTypes = {
 		dispatch: PropTypes.func.isRequired,
 		params: PropTypes.shape({
@@ -40,7 +40,7 @@ class AuditApplyForm extends React.Component {
 	};
 
 	componentDidMount() {
-		this.props.dispatch(loadAuditApplyForm(this.props.params.auditId));
+		this.props.dispatch(loadAuditCancelForm(this.props.params.auditId));
 	}
 
 	dateChanged = (date) => {
@@ -54,13 +54,16 @@ class AuditApplyForm extends React.Component {
 	onSubmit = (e) => {
 		e.preventDefault();
 		this.setSubmitting(true);
-		this.props.dispatch(submitAuditApplyForm({
-			audit_id: this.props.audit.id,
-			audit_date: this.state.audit_date ? this.state.audit_date.format("YYYY-MM-DD") : "",
-		})).done(() => {
-			hashHistory.push(`/audit/cycle/${this.props.audit.audit_cycle.id}`);
-			window.location.reload();
-		}).always(() => this.setSubmitting(false));
+		var promise = this.props.dispatch(submitAuditCancelForm( this.props.audit.id));
+		promise.then(() =>{
+			this.props.dispatch(submitAuditApplyForm({
+				audit_id: this.props.audit.id,
+				audit_date: this.state.audit_date ? this.state.audit_date.format("YYYY-MM-DD") : "",
+			})).done(() => {
+				hashHistory.push("/applied_audits");
+				window.location.reload();
+			}).always(() => this.setSubmitting(false));
+		});
 	};
 
 	isValidDate = (currentDate) => {
@@ -109,7 +112,7 @@ class AuditApplyForm extends React.Component {
 			eDate=SevenDaysLaterDate;
 		}
 		return (
-			<Modal modalTitle={`Apply for Audit at ${this.props.audit.store.city.name}`} onClose={hashHistory.goBack}>
+			<Modal modalTitle={`Reapply for Audit at ${this.props.audit.store.city.name}`} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<p className="text-center">
@@ -128,7 +131,7 @@ class AuditApplyForm extends React.Component {
 					<FormErrorList errors={this.props.errors.audit_date}/>
 					<button className="btn btn-lg btn-primary btn-block" disabled={!this.state.audit_date || this.state.submitting}>
 						{ this.state.submitting ? "applying..." :
-							<span>Apply{ this.state.audit_date ? <span> for <b>{this.state.audit_date.format(momentDateFormat)}</b></span> : null }</span> }
+							<span>Reapply{ this.state.audit_date ? <span> for <b>{this.state.audit_date.format(momentDateFormat)}</b></span> : null }</span> }
 					</button>
 				</form>
 			</Modal>
@@ -143,4 +146,4 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export default ReactRedux.connect( mapStoreToProps)(AuditApplyForm);
+export default ReactRedux.connect( mapStoreToProps)(AuditReapplyForm);
