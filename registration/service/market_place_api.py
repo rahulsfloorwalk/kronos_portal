@@ -150,7 +150,7 @@ def sign_up_market_place(request):
             _logger.info("verification email disabled. skipping email for user : %s", user.email)
             _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
 
-        response = {'detail': 'Client Registered Successfully. Please Check Email for OTP Verification...','user':user.id}
+        response = {'detail': 'Client Registered Successfully. Please Check Email for OTP Verification...','user':user.id,'email':user.email}
         status = 200
     return response, status
     
@@ -195,7 +195,7 @@ def log_in_market_place(request):
                 _logger.info("verification email disabled. skipping email for user : %s", user.email)
                 _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
             
-            response={'details': 'OTP is Shared On Your Email !!','user':user.id }
+            response={'details': 'OTP is Shared On Your Email !!','user':user.id,'email':user.email}
             status= 200
         else:
             login(request,user,backend='registration.backend.CaseInsensitiveModelBackend1')
@@ -273,43 +273,54 @@ def change_password(user_id,old_password,new_password):
 
 @atomic
 def forgot_password(request):
-    to_check_email=request.get('email')
+    to_check_email = request.get('email')
     try:
         validate_email(to_check_email)
     except ValidationError:
-        response = {'detail':'Please enter a valid email'}
+        response = {'detail': 'Please enter a valid email'}
         status = 400
-    if to_check_email:
-         to_check_email = to_check_email.strip().lower()
-    
-    user = User.objects.get(email__iexact=to_check_email)
-    group_name = user.groups.get()
-    if group_name.name=="Client":
-        otp = generate_otp()
-        otp_verification=OTPVerification.objects.get(user=user)
-        otp_verification.otp=otp
-        otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
-        otp_verification.save()
-        message = get_template('registration/market_place/forgot_password_otp_verification.html').render({
-            'otp': otp,
-            'email': user.email,
-            **registration_context(),
-        })
+    else:
+        if to_check_email:
+            to_check_email = to_check_email.strip().lower()
 
-        msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
-        msg.content_subtype = 'html'
+        try:
+            user = User.objects.get(email__iexact=to_check_email)
+            group_name = user.groups.get()
+            if group_name.name == "Client":
+                otp = generate_otp()
+                otp_verification = OTPVerification.objects.get(user=user)
+                otp_verification.otp = otp
+                otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+                otp_verification.save()
+                message = get_template('registration/market_place/forgot_password_otp_verification.html').render({
+                    'otp': otp,
+                    'email': user.email,
+                    **registration_context(),
+                })
 
-        if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
-            msg.send()
-            _logger.info("forgot password email sent to user : %s", user.email)
-        else:
-            _logger.info("forgot password email disabled. skipping email for user : %s", user.email)
-            _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
+                msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
+                msg.content_subtype = 'html'
 
-        
-        response={'details': 'OTP is Sent In Your Registered Mail !! ','user':user.id}
-        status=200
-    return response,status
+                if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+                    msg.send()
+                    _logger.info("forgot password email sent to user: %s", user.email)
+                else:
+                    _logger.info("forgot password email disabled. skipping email for user: %s", user.email)
+                    _logger.debug("DUMPING VERIFICATION EMAIL: %s", message)
+
+                response = {'details': 'OTP is Sent In Your Registered Mail !! ', 'user': user.id}
+                status = 200
+            if group_name.name!="Client":
+                response={'details': 'Email is Registered as a {}!! Please use Client Account Email'.format(group_name.name)}
+                status= 200
+        except User.DoesNotExist:
+            response = {'detail': 'Email ID not Exist please Enter Valide Email ID'}
+            status = 404
+
+    _logger.info("Response: %s", response)
+    _logger.info("Status: %s", status)
+
+    return response, status
 
 @atomic
 def verify_otp_for_forgot_password(request):

@@ -224,56 +224,68 @@ class MpPaymentView(APIView):
         mime_type = file.file_type
         return file_name, file_size, mime_type
     
-    def post(self,request):
-        order_id = request.data.get('mp_order_id')
-        attachments = request.FILES.get('file') 
-
-        client = razorpay.Client(auth=('rzp_live_7n6ULYH6VDbGb9', 'WV27rxb1UuffQbBU6xNoPMVv'))
-        order = get_object_or_404(MPOrder, id=order_id)
-
-        tax_rate = order.solution.tax.rate
-        tax_amount = (tax_rate/100)*order.price
-        order_amount = int((order.price + tax_amount) *100)  # Amount in paise (e.g., 1000 paise = Rs. 10)
-        order_currency = 'INR'
-        order_id=order.id
-        order_receipt = 'order_receipt_{}'.format(order_id)
-        notes = {'note_key': 'note_value'}
-        response = client.order.create(
-            {'amount': order_amount, 'currency': order_currency, 'receipt': order_receipt, 'notes': notes}
-        )
-
-        order.razorpay_payment_id = response['id']
+    def post(self, request):
         try:
-            solution= MPSolution.objects.get(id=request.data['solution'])
-        except MPSolution.DoesNotExist as e:
-            raise ObjectNotFound from e
-        try:
-            category= MPCategory.objects.get(id=request.data['category'])
-        except MPCategory.DoesNotExist as e:
-            raise ObjectNotFound from e
-        
-        sum=0
-        if request.data.get('store'):
-            for i in request.data.get('store'):
-                sum+=i['count']
-        order.no_of_response=request.data.get('no_of_response')
-        order.describe=request.data.get('describe')
-        order.solution = solution
-        order.category = category
-        order.status=request.data.get('status')
-        solution_price = int(solution.price)
-        no_of_response = int(request.data.get('no_of_response'))
+            order_id = request.data.get('mp_order_id')
+            attachments = request.FILES.get('file')
+            client = razorpay.Client(auth=('rzp_live_7n6ULYH6VDbGb9', 'WV27rxb1UuffQbBU6xNoPMVv'))
+            order = get_object_or_404(MPOrder, id=order_id)
 
-        order.price = solution_price * no_of_response 
-    
-        store=[]
-        if request.data.get('store'):
-            for i in request.data['store']:
-                store.append(i)
-            order.store=store
-        order.save()
-        if attachments:
-            post_data,attachment = mp_order_service.order_file_upload_by_order_id(order_id,request.data.get('file').get("file_name"),request.data.get('file').get("file_size"),request.data.get('file').get("file_type"))
+            tax_rate = order.solution.tax.rate
+            tax_amount = (tax_rate / 100) * order.price
+            order_amount = int((order.price + tax_amount) * 100)
+            order_currency = 'INR'
+            order_id = order.id
+            order_receipt = 'order_receipt_{}'.format(order_id)
+            notes = {'note_key': 'note_value'}
+            response = client.order.create({
+                'amount': order_amount,
+                'currency': order_currency,
+                'receipt': order_receipt,
+                'notes': notes
+            })
+
+            order.razorpay_payment_id = response['id']
+            try:
+                solution = MPSolution.objects.get(id=request.data['solution'])
+            except MPSolution.DoesNotExist as e:
+                raise ObjectNotFound from e
+            try:
+                category = MPCategory.objects.get(id=request.data['category'])
+            except MPCategory.DoesNotExist as e:
+                raise ObjectNotFound from e
+
+            sum = 0
+            if request.data.get('store'):
+                for i in request.data.get('store'):
+                    sum += i['count']
+            order.no_of_response = request.data.get('no_of_response')
+            order.describe = request.data.get('describe')
+            order.solution = solution
+            order.category = category
+            order.status = request.data.get('status')
+            solution_price = int(solution.price)
+            no_of_response = int(request.data.get('no_of_response'))
+
+            order.price = solution_price * no_of_response
+
+            store = []
+            if request.data.get('store'):
+                for i in request.data['store']:
+                    store.append(i)
+                order.store = store
+            order.save()
+            if attachments:
+                post_data, attachment = mp_order_service.order_file_upload_by_order_id(
+                    order_id, request.data.get('file').get("file_name"),
+                    request.data.get('file').get("file_size"),
+                    request.data.get('file').get("file_type")
+                )
+        except Exception as e:
+            order.payment_status = MPOrder.PAYMENT_FAILED
+            order.save()
+            return JsonResponse({'error': 'Payment initiation failed'}, status=500)
+
         return JsonResponse(response)
     
 class MpPaymentCompleteView(APIView):
@@ -1124,7 +1136,7 @@ class StoreSearchView(APIView):
         queryset = Store.objects.filter(client=client)
 
         if name:
-            queryset = queryset.filter(name__icontains=name)
+            queryset = queryset.filter(name__istartswith=name)
         if city:
             queryset = queryset.filter(city__name__icontains=city)
         if state:
@@ -1139,3 +1151,63 @@ class StoreSearchView(APIView):
 
         serializer = StoreSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
+
+class ClientStoreLocationsList(APIView):
+    def get(self, request):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return Response({'error': 'Client not found for this user.'}, status=404)
+
+        client_stores = Store.objects.filter(client=client)
+
+        states = {}
+        cities = set()
+
+        for store in client_stores:
+            state_code = store.city.state
+            state_name=store.city.state_name()
+            city_name = store.city.name              
+
+            states[state_code] = state_name
+            cities.add(city_name)
+
+        response_data = {
+            'states': states,
+            'cities': list(cities),
+        }
+
+        return Response(response_data)
+
+class MPOrderReportProductLisrView(APIView):
+    def get(self, request):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return Response({'error': 'Client not found for this user.'}, status=404)
+
+        product_name_list = AuditCycle.objects.filter(client=client).values_list(
+            'order__solution__name', flat=True
+        ).distinct()
+
+        return Response({'unique_product_names': product_name_list})
+    
+class OrderInvoceProductListView(APIView):
+
+    def get(self, request):
+        user = request.user
+        try:
+            client_profile = MPClientProfileInfo.objects.get(user=user.id)
+        except MPClientProfileInfo.DoesNotExist:
+            return Response({'error': 'Client profile not found for this user.'}, status=404)
+
+
+        orders = MPOrder.objects.filter(user=client_profile.user, status__in=['ACTIVE', 'COMPLETE'])
+        orders = orders.filter(transaction__isnull=False)
+
+        invoice_project_names = orders.values_list('solution__name', flat=True).distinct()
+
+        return Response({'invoice_project_names': invoice_project_names})
+    
