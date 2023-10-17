@@ -228,7 +228,7 @@ class MpPaymentView(APIView):
         try:
             order_id = request.data.get('mp_order_id')
             attachments = request.FILES.get('file')
-            client = razorpay.Client(auth=('rzp_live_7n6ULYH6VDbGb9', 'WV27rxb1UuffQbBU6xNoPMVv'))
+            client = razorpay.Client(auth=('rzp_live_5JGzDGrzqTtLPp', 'PZmd3pTqDOywom9DJJ5qGFoq'))
             order = get_object_or_404(MPOrder, id=order_id)
 
             tax_rate = order.solution.tax.rate
@@ -1152,7 +1152,7 @@ class StoreSearchView(APIView):
         serializer = StoreSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
-class ClientStoreLocationsList(APIView):
+class ClientStoreLocationsListView(APIView):
     def get(self, request):
         user = request.user
         try:
@@ -1161,9 +1161,12 @@ class ClientStoreLocationsList(APIView):
             return Response({'error': 'Client not found for this user.'}, status=404)
 
         client_stores = Store.objects.filter(client=client)
-
+        state_code = request.query_params.get('state_code')
         states = {}
         cities = set()
+
+        if state_code:
+            client_stores = client_stores.filter(client=client,city__state=state_code)     
 
         for store in client_stores:
             state_code = store.city.state
@@ -1175,11 +1178,33 @@ class ClientStoreLocationsList(APIView):
 
         response_data = {
             'states': states,
-            'cities': list(cities),
+            'cities': cities,
         }
+        return Response(response_data)    
 
+class ClientStoreCityLocationsListView(APIView):
+    def get(self,request):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return Response({'error': 'client not found for this user.'},status=404)
+        
+        state_code = request.query_params.get('state_code')
+        cities = set()
+        client_stores = Store.objects.filter(client=client)
+
+        if state_code:
+            client_stores = client_stores.filter(client=client,city__state=state_code)
+
+        for store in client_stores:
+            city_name = store.city.name
+            cities.add(city_name)
+        response_data = {
+            'cities':cities,
+        }
         return Response(response_data)
-
+    
 class MPOrderReportProductLisrView(APIView):
     def get(self, request):
         user = request.user
