@@ -2,10 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { hashHistory } from "react-router";
-
+import Loading from "../../components/Loading.jsx";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
-
 import moment from "moment";
 
 import { momentDateFormat }  from "../../../config.js";
@@ -91,6 +90,9 @@ class AuditReapplyForm extends React.Component {
 	};
 
 	render() {
+		if(! this.props.audit){
+			return <Loading/>;
+		}
 		const sDate= new Date();
 		let hours = sDate.getHours();
 		let minutes = sDate.getMinutes();

@@ -12,7 +12,7 @@ import { fetchSections } from "../../service/section.js";
 import { fetchReportSections } from "../../service/report_section.js";
 import { findImpactFactorsByAuditStore } from "../../service/impact_factor";
 
-import { File, Print, Download, Comment, Plus, Cross, Envelope } from "../../../components/Icons.jsx";
+import { File, Print, Download, Comment, Plus, Cross } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
 
 import Alert from "react-s-alert";
@@ -181,11 +181,11 @@ export default class AuditStoreDetail extends React.Component {
 		this.setState({ person });
 	};
 
-	showReportModal = () => {
-		this.setState({
-			report_display:"block"
-		});
-	};
+	// showReportModal = () => {
+	// 	this.setState({
+	// 		report_display:"block"
+	// 	});
+	// };
 
 	hideReportModal = () => {
 		this.setState({ report_display:"none", reportErrMsg: "" });
@@ -301,9 +301,9 @@ export default class AuditStoreDetail extends React.Component {
 							<Print/> Print Report
 						</a>
 					}
-					{ ! printMode ? <button className="btn btn-default pull-right hidden-print" onClick={this.showReportModal}>
+					{/* { ! printMode ? <button className="btn btn-default pull-right hidden-print" onClick={this.showReportModal}>
 						<Envelope/> Send PDF Report
-					</button> : "" }
+					</button> : "" } */}
 					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + "client/audit_store/" + this.state.auditStore.id + "/ears_report"}>
 						<Download/> E.A.R.S Report
 					</a> : ""}

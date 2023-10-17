@@ -20,10 +20,15 @@ class GuidelineAttachment extends React.Component{
 		uploadMessage:"",
 		attachments:[],
 		inProgress:{},
+		expanded: false,
 		uploading:false,
 		selectedAttachment: undefined,
 		loading:false,
 		audit_cycle:{},
+	};
+
+	toggleExpand = () => {
+		this.setState({ expanded: !this.state.expanded });
 	};
 	reloadState = () => {
 		findAttachmentsByAuditCycleId(this.props.params.auditCycleId).then((attachments) => {

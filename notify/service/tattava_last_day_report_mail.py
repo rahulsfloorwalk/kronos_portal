@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 @app.task(iqnore_result=True)
 def auto_tattava_mail_for_last_day_completed_report():
-    client_id = 32 #hardcoded
+    client_id = 157 #hardcoded
     client_review_reports = find_yesterday_client_review_status_reports(client_id)
     mail_count=0
     if client_review_reports:
@@ -36,18 +36,18 @@ def tattava_send_live_report_mail(report_list):
     params={
         **registration_context(),
     }
-    # to_email=[
-    #     'sumit.kumar@tattvaspa.org',
-    #     'prem.choudhary@tattvaspa.com',
-    #     'karan@tattvaspa.com',
-    #     'vinay.singh@tattvaspa.org',
-    #     'komal@tattvaspa.org',
-    #     'rashmi@tattvaspa.com',
-    #     'praveen.limadiya@tattvaspa.com',
-    #     'naman@tattvaspa.org',
-    #     'shipra@tattvaspa.com'
-    #     ]
-    to_email=['arpan.patidar@floorwalk.in']
+    to_email=[
+        'sumit.kumar@tattvaspa.org',
+        'prem.choudhary@tattvaspa.com',
+        'karan@tattvaspa.com',
+        'vinay.singh@tattvaspa.org',
+        'komal@tattvaspa.org',
+        'rashmi@tattvaspa.com',
+        'praveen.limadiya@tattvaspa.com',
+        'naman@tattvaspa.org',
+        'shipra@tattvaspa.com'
+        ]
+    # to_email=['arpan.patidar@floorwalk.in']
     subject = "{} report is live".format(str(len(report_list)))
     if len(report_list) > 1:
         subject = "{} reports are live".format(str(len(report_list)))
