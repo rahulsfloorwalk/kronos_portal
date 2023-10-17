@@ -214,17 +214,25 @@ class MpOrderStatusView(APIView):
 class MpPaymentView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups={
-        'GET':[GROUP_NAME_CLIENT],
         'POST':[GROUP_NAME_CLIENT]
     }
+    def post(self,request):
+        order_id = request.data.get('mp_order_id')
+        attachments = request.FILES.get('file') 
+        client = razorpay.Client(auth=('rzp_live_7n6ULYH6VDbGb9', 'WV27rxb1UuffQbBU6xNoPMVv'))
+        order = get_object_or_404(MPOrder, id=order_id)
+        tax_rate = order.solution.tax.rate
+        tax_amount = (tax_rate/100)*order.price
+        order_amount = int((order.price + tax_amount) *100)  # Amount in paise (e.g., 1000 paise = Rs. 10)
+        order_currency = 'INR'
+        order_id=order.id
+        order_receipt = 'order_receipt_{}'.format(order_id)
+        notes = {'note_key': 'note_value'}
+        response = client.order.create(
+            {'amount': order_amount, 'currency': order_currency, 'receipt': order_receipt, 'notes': notes}
+        )
 
-    def extract_data(self,file):
-        file_name = file.file_name
-        file_size = file.file_size
-        mime_type = file.file_type
-        return file_name, file_size, mime_type
-    
-    def post(self, request):
+        order.razorpay_payment_id = response['id']
         try:
             order_id = request.data.get('mp_order_id')
             attachments = request.FILES.get('file')

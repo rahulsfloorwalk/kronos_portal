@@ -10,14 +10,12 @@ from audit.models import AuditCycle
 
 @atomic
 def approved(application_id):
-    
     audit_application = AuditApplication.objects.select_related('audit', 'audit__audit_cycle', 'profileinfo').get(
         id=application_id,
         audit__hidden = False,
         audit_date__exact=today_ist() + timedelta(days=1),
         report_exists=False,
-        audit__audit_cycle__status=AuditCycle.ACTIVE,
-        status=AuditApplication.APPLIED)
+        audit__audit_cycle__status=AuditCycle.ACTIVE)
     if audit_application.audit.valid_report_count() < audit_application.audit.count:
         distance = audit_application.distance()
         profile_percentage = audit_application.profile_match_percentage()

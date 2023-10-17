@@ -61,7 +61,6 @@ def apply(audit_id, user_id, audit_date):
         if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
             raise AppLogicError("preferred audit date is not within range")
 
-        # print('64',audit.audit_cycle.status,application.status)
         if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.ARCHIVED) and application.status == AuditApplication.NOT_APPLIED or application.status == AuditApplication.WITHDRAWN or application.status is None:
             application.status = AuditApplication.APPLIED
             application.audit_date = audit_date

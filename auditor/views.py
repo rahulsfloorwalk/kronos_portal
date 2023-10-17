@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.serializers import Serializer, BooleanField, CharField
 from attachment.service import set_attachment_by_proof_tag
-
+from django.db.transaction import atomic
 import attachment.service_auditor as attachment_auditor_service
 from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
@@ -278,6 +278,7 @@ class AuditApplicationApplyView(APIView):
     required_groups = {
         'POST': [GROUP_NAME_AUDITOR]
     }
+    @atomic
     def post(self, request, audit_id, format=None):
         request.data["audit_id"] = audit_id
         request.data["profileinfo_id"] = request.user.profileinfo.id
