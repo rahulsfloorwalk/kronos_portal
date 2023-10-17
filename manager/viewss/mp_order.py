@@ -214,25 +214,17 @@ class MpOrderStatusView(APIView):
 class MpPaymentView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups={
+        'GET':[GROUP_NAME_CLIENT],
         'POST':[GROUP_NAME_CLIENT]
     }
-    def post(self,request):
-        order_id = request.data.get('mp_order_id')
-        attachments = request.FILES.get('file') 
-        client = razorpay.Client(auth=('rzp_live_7n6ULYH6VDbGb9', 'WV27rxb1UuffQbBU6xNoPMVv'))
-        order = get_object_or_404(MPOrder, id=order_id)
-        tax_rate = order.solution.tax.rate
-        tax_amount = (tax_rate/100)*order.price
-        order_amount = int((order.price + tax_amount) *100)  # Amount in paise (e.g., 1000 paise = Rs. 10)
-        order_currency = 'INR'
-        order_id=order.id
-        order_receipt = 'order_receipt_{}'.format(order_id)
-        notes = {'note_key': 'note_value'}
-        response = client.order.create(
-            {'amount': order_amount, 'currency': order_currency, 'receipt': order_receipt, 'notes': notes}
-        )
 
-        order.razorpay_payment_id = response['id']
+    def extract_data(self,file):
+        file_name = file.file_name
+        file_size = file.file_size
+        mime_type = file.file_type
+        return file_name, file_size, mime_type
+    
+    def post(self, request):
         try:
             order_id = request.data.get('mp_order_id')
             attachments = request.FILES.get('file')
@@ -616,7 +608,7 @@ class OrderReportsView(APIView):
             if status and status in valid_statuses:
                 audit_cycles = audit_cycles.filter(status=status)
             if product_name:
-                audit_cycles = audit_cycles.filter(order_id__solution__name__icontains=product_name)
+                audit_cycles = audit_cycles.filter(order_id_solutionname_icontains=product_name)
             if start_date_str:
                 audit_cycles = audit_cycles.filter(start_date=start_date_str)
             if end_date_str:
@@ -808,13 +800,13 @@ class CustomAuditCycleSerializer(ModelSerializer):
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
-        fields = '__all__' 
+        fields = '_all_' 
 
 
 class AuditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Audit
-        fields = '__all__'
+        fields = '_all_'
 
 
 class MPOrderReportListDetailView(APIView):
@@ -852,13 +844,13 @@ class MPOrderReportListDetailView(APIView):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = '_all_'
 
 class AnswerSerializer(serializers.ModelSerializer):
     question = QuestionSerializer() 
     class Meta:
         model = Answer
-        fields = '__all__'
+        fields = '_all_'
 
 class OrderInvoicesView(APIView):
     permission_classes = [HasGroupPermission]
@@ -895,12 +887,12 @@ class OrderInvoicesView(APIView):
             if status and status in ALL :
                 orders = MPOrder.objects.filter(client=client.id,status__in=ALL)
             if product_name:
-                orders = orders.filter(solution__name__icontains=product_name)   
+                orders = orders.filter(solution_name_icontains=product_name)   
             if year:
                 year = int(year)
-                orders = orders.filter(transaction__payment_success_date__year=year)
+                orders = orders.filter(transaction_payment_success_date_year=year)
             if start_date and end_date:
-                orders = orders.filter(transaction__payment_success_date__date__range=(start_date,end_date))   
+                orders = orders.filter(transaction_payment_success_datedate_range=(start_date,end_date))   
 
             paginator = self.pagination_class()
             orders = paginator.paginate_queryset(orders, request)   
@@ -998,10 +990,10 @@ def find_audits_by_audit_cycle_id(audit_cycle_id):
         'store__city',
         'audit_stores',
         'audit_stores__user',
-        'audit_stores__user__profileinfo',
+        'audit_stores_user_profileinfo',
         'applications',
         'applications__profileinfo',
-        'applications__profileinfo__user',
+        'applications_profileinfo_user',
         'audit_cycle__questionnaire_type',
         'audit_cycle__audits',
     )
@@ -1146,9 +1138,9 @@ class StoreSearchView(APIView):
         if name:
             queryset = queryset.filter(name__istartswith=name)
         if city:
-            queryset = queryset.filter(city__name__icontains=city)
+            queryset = queryset.filter(city_name_icontains=city)
         if state:
-            queryset = queryset.filter(city__state__icontains=state)
+            queryset = queryset.filter(city_state_icontains=state)
         if status :
             if status.upper() == 'ALL':
                 queryset = Store.objects.filter(client=client)
@@ -1222,7 +1214,7 @@ class MPOrderReportProductLisrView(APIView):
             return Response({'error': 'Client not found for this user.'}, status=404)
 
         product_name_list = AuditCycle.objects.filter(client=client).values_list(
-            'order__solution__name', flat=True
+            'order_solution_name', flat=True
         ).distinct()
 
         return Response({'unique_product_names': product_name_list})
@@ -1243,4 +1235,3 @@ class OrderInvoceProductListView(APIView):
         invoice_project_names = orders.values_list('solution__name', flat=True).distinct()
 
         return Response({'invoice_project_names': invoice_project_names})
-    
