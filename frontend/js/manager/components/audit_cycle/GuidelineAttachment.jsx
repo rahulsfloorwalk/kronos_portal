@@ -30,7 +30,6 @@ class GuidelineAttachment extends React.Component{
 	toggleExpand = () => {
 		this.setState({ expanded: !this.state.expanded });
 	};
-	
 	reloadState = () => {
 		findAttachmentsByAuditCycleId(this.props.params.auditCycleId).then((attachments) => {
 			this.setState({

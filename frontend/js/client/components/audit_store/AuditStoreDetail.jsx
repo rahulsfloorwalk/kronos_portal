@@ -12,7 +12,7 @@ import { fetchSections } from "../../service/section.js";
 import { fetchReportSections } from "../../service/report_section.js";
 import { findImpactFactorsByAuditStore } from "../../service/impact_factor";
 
-import { File, Print, Download, Comment, Plus, Cross, Envelope } from "../../../components/Icons.jsx";
+import { File, Print, Download, Comment, Plus, Cross } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
 
 import Alert from "react-s-alert";
