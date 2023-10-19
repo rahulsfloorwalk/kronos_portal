@@ -155,17 +155,17 @@ class StoreGetClientView(APIView):
         stores = store_service.find_stores_by_client(client.id)
         stores = StoreSerializer(stores, many=True).data
 
-        paginator = self.pagination_class()
-        stores = paginator.paginate_queryset(stores,request)
-        response_data = {
-            'pagination' : {
-                'page' : paginator.page.number,
-                'total_pages' : paginator.page.paginator.num_pages,
-                'count' : paginator.get_next_link(),
-                'previous' : paginator.get_previous_link(), 
-            },
-            'stores' : stores
-        }
+        # paginator = self.pagination_class()
+        # stores = paginator.paginate_queryset(stores,request)
+        # response_data = {
+        #     'pagination' : {
+        #         'page' : paginator.page.number,
+        #         'total_pages' : paginator.page.paginator.num_pages,
+        #         'count' : paginator.get_next_link(),
+        #         'previous' : paginator.get_previous_link(), 
+        #     },
+        #     'stores' : stores
+        # }
         # return Response(response_data)
 
         return Response(stores)    

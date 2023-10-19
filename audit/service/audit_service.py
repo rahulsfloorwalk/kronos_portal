@@ -93,6 +93,17 @@ def find_audits_by_audit_cycle_id(audit_cycle_id):
         'audit_cycle__audits',
     )
 
+def mp_find_audits_by_audit_cycle_id(audit_cycle_id):
+    return Audit.objects.filter(audit_cycle_id=audit_cycle_id).prefetch_related(
+        'store',
+        'store__client',
+        'store__city',
+        'audit_stores',
+        'applications',
+        'audit_cycle__questionnaire_type',
+        'audit_cycle__audits',
+    )
+
 def save(audit):
     try:
         audit.save()
