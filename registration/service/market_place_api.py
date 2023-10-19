@@ -277,7 +277,7 @@ def forgot_password(request):
     try:
         validate_email(to_check_email)
     except ValidationError:
-        response = {'detail': 'Please enter a valid email'}
+        response = {'details': 'Please enter a valid email'}
         status = 400
     else:
         if to_check_email:
@@ -314,7 +314,7 @@ def forgot_password(request):
                 response={'details': 'Email is Registered as a {}!! Please use Client Account Email'.format(group_name.name)}
                 status= 200
         except User.DoesNotExist:
-            response = {'detail': 'Email ID not Exist please Enter Valide Email ID'}
+            response = {'details': 'Email ID does not Exist please Enter Valide Email ID'}
             status = 404
 
     _logger.info("Response: %s", response)

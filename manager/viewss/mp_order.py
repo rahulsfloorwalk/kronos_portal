@@ -322,8 +322,10 @@ class MpPaymentCompleteView(APIView):
                     return JsonResponse({'error': 'Payment failed for some reason'})
             else:
                 return JsonResponse({'error': 'Order exists but status is not DRAFT'})
-        except MPOrder.DoesNotExist:
-            return JsonResponse({'error': 'Order exists but status is not DRAFT.'}, status=404)
+        except Exception as e:
+            order.payment_status = MPOrder.PAYMENT_FAILED
+            order.save()
+            return JsonResponse({'error': 'Payment initiation failed'}, status=500)
 
         transaction = Transaction(order=order, payment_id=payment_id, signature=signature)
         transaction.payment_success_date = timezone.now()
@@ -431,6 +433,19 @@ def create_audit_cycle(client, order, solution_details,transaction,add_questionn
         serialized_audit_cycle = MPAuditCycleDeSerializer(saved_audit_cycle).data  
 
         return (saved_audit_cycle)
+
+class MpPaymentFailedView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'GET':[GROUP_NAME_CLIENT],
+        'POST':[GROUP_NAME_CLIENT]
+    }
+    def post(self, request):
+        order_id = request.data.get('mp_order_id')
+        order = get_object_or_404(MPOrder, id=order_id)
+        order.payment_status = MPOrder.PAYMENT_FAILED
+        order.save()
+        return JsonResponse({'error': 'Payment initiation failed'}, status=500)
 
 class MPAuditCycleDeSerializer(ModelSerializer):
     class Meta:
@@ -608,7 +623,7 @@ class OrderReportsView(APIView):
             if status and status in valid_statuses:
                 audit_cycles = audit_cycles.filter(status=status)
             if product_name:
-                audit_cycles = audit_cycles.filter(order_id_solutionname_icontains=product_name)
+                audit_cycles = audit_cycles.filter(order_id__solution__name__icontains=product_name)
             if start_date_str:
                 audit_cycles = audit_cycles.filter(start_date=start_date_str)
             if end_date_str:
@@ -800,13 +815,13 @@ class CustomAuditCycleSerializer(ModelSerializer):
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
-        fields = '_all_' 
+        fields = '__all__' 
 
 
 class AuditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Audit
-        fields = '_all_'
+        fields = '__all__'
 
 
 class MPOrderReportListDetailView(APIView):
@@ -844,13 +859,13 @@ class MPOrderReportListDetailView(APIView):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = '_all_'
+        fields = '__all__'
 
 class AnswerSerializer(serializers.ModelSerializer):
     question = QuestionSerializer() 
     class Meta:
         model = Answer
-        fields = '_all_'
+        fields = '__all__'
 
 class OrderInvoicesView(APIView):
     permission_classes = [HasGroupPermission]
@@ -887,12 +902,12 @@ class OrderInvoicesView(APIView):
             if status and status in ALL :
                 orders = MPOrder.objects.filter(client=client.id,status__in=ALL)
             if product_name:
-                orders = orders.filter(solution_name_icontains=product_name)   
+                orders = orders.filter(solution__name__icontains=product_name)   
             if year:
                 year = int(year)
-                orders = orders.filter(transaction_payment_success_date_year=year)
+                orders = orders.filter(transaction__payment_success_date__year=year)
             if start_date and end_date:
-                orders = orders.filter(transaction_payment_success_datedate_range=(start_date,end_date))   
+                orders = orders.filter(transaction__payment_success_date__date__range=(start_date,end_date))   
 
             paginator = self.pagination_class()
             orders = paginator.paginate_queryset(orders, request)   
@@ -973,30 +988,16 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields=('id','payment_success_date')
 
-class AuditByAuditCycle(APIView):
+class MPAuditByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET': [GROUP_NAME_CLIENT]
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, format=None):
-        audits = find_audits_by_audit_cycle_id(audit_cycle_id)
+        audits = audit_service.mp_find_audits_by_audit_cycle_id(audit_cycle_id)
         serial_audits = AuditSerializer(audits, many=True).data
         return Response(serial_audits)
     
-def find_audits_by_audit_cycle_id(audit_cycle_id):
-    return Audit.objects.filter(audit_cycle_id=audit_cycle_id).prefetch_related(
-        'store',
-        'store__client',
-        'store__city',
-        'audit_stores',
-        'audit_stores__user',
-        'audit_stores_user_profileinfo',
-        'applications',
-        'applications__profileinfo',
-        'applications_profileinfo_user',
-        'audit_cycle__questionnaire_type',
-        'audit_cycle__audits',
-    )
 
 class AuditSerializer(ModelSerializer):
     # StoreSerializer
@@ -1118,6 +1119,7 @@ class StoreSearchView(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
+    # pagination_class = CustomPagination
     def get(self, request):
         user = request.user
         try:
@@ -1134,23 +1136,46 @@ class StoreSearchView(APIView):
             return Response({'error': 'At least one of the parameters (name, city, state, status) is required.'}, status=404)
 
         queryset = Store.objects.filter(client=client)
+        store_count = len(queryset)
 
-        if name:
+        if city and state:
+            if name:
+                queryset = queryset.filter(city__state__icontains=state,city__name__icontains=city,name__istartswith=name)
+            else:
+                queryset = queryset.filter(city__state__icontains=state,city__name__icontains=city)
+        elif state and name:
+            queryset = queryset.filter(city__state__icontains=state,name__istartswith=name)
+        elif city and name:
+            queryset = queryset.filter(city__name__icontains=city,name__istartswith=name)
+        elif name:
             queryset = queryset.filter(name__istartswith=name)
-        if city:
-            queryset = queryset.filter(city_name_icontains=city)
-        if state:
-            queryset = queryset.filter(city_state_icontains=state)
-        if status :
+        elif city:
+            queryset = queryset.filter(city__name__icontains=city)
+        elif state:
+            queryset = queryset.filter(city__state__icontains=state)
+        elif status :
             if status.upper() == 'ALL':
                 queryset = Store.objects.filter(client=client)
+                # serializer = StoreSerializer(queryset, many=True).data
+                # return Response(serializer, status=200)
             else:
                 return Response({'error': 'Invalid value for the "status" parameter. It should be "ALL" to retrieve all data.'}, status=404)
-        if not queryset.exists():
+        else:
             return Response({'error': 'No records found for the given query parameters.'}, status=404)
+        
+        serializer = StoreSerializer(queryset, many=True).data
 
-        serializer = StoreSerializer(queryset, many=True)
-        return Response(serializer.data, status=200)
+        # return Response(serializer.data, status=200)
+
+        # serializer = StoreSerializer(queryset, many=True).data
+        # paginator = self.pagination_class()
+        # stores = paginator.paginate_queryset(serializer,request)
+        
+        response_data = {
+            "data":serializer,
+            "store_count": store_count
+        }
+        return Response(response_data, status=200)
 
 class ClientStoreLocationsListView(APIView):
     def get(self, request):
@@ -1214,7 +1239,7 @@ class MPOrderReportProductLisrView(APIView):
             return Response({'error': 'Client not found for this user.'}, status=404)
 
         product_name_list = AuditCycle.objects.filter(client=client).values_list(
-            'order_solution_name', flat=True
+            'order__solution__name', flat=True
         ).distinct()
 
         return Response({'unique_product_names': product_name_list})
@@ -1235,3 +1260,4 @@ class OrderInvoceProductListView(APIView):
         invoice_project_names = orders.values_list('solution__name', flat=True).distinct()
 
         return Response({'invoice_project_names': invoice_project_names})
+    
