@@ -13,7 +13,7 @@ from celery import shared_task
 from .message import send_whatsapp_message
 from .. import verbs
 from auditor.service.profile_info_service import find_profile_info_by_user_id
-
+from attachment.models import Attachment
 
 _logger = logging.getLogger(__name__)
 
@@ -67,6 +67,10 @@ def notification_whatsapp_task(notif_id, message=""):
             send_whatsapp_message(whatsapp_number, dial_code, template_name, params)
             return True
 
+        elif notif.verb == verbs.AUDIT_STORE_ASSIGNED_PDF:
+            params, template_name = get_params_from_audit_store_pdf(notif, message)
+            send_whatsapp_message(whatsapp_number, dial_code, template_name, params)
+            return True
         elif notif.verb == verbs.AUDIT_STORE_UNSUBMITTED:
             params, template_name = get_params_from_audit_store(notif, message)
             if params and template_name:
@@ -74,6 +78,19 @@ def notification_whatsapp_task(notif_id, message=""):
                 return True
 
     return False
+
+def get_params_from_audit_store_pdf(notif_id, message):
+    audit_store = notif_id.action_object
+    first_name = audit_store.user.profileinfo.first_name
+    client = audit_store.audit.audit_cycle.client.auditor_display_name()
+    audit_date = audit_store.audit_date.strftime('%m/%d/%Y')
+    pdf=Attachment.objects.get(audit_cycles__id=audit_store.audit.audit_cycle.id,status=Attachment.ATTACHED)
+    if notif_id.verb == verbs.AUDIT_STORE_ASSIGNED_PDF:
+        template_name = settings.WHATSAPP_TEMPLATE['AUDIT_ASSIGNED_PDF']
+
+        # Make field sequence as per api documentation/message template
+        params = [{"default":first_name}, {"default":client}, {"default":audit_date},{'pdf_url':pdf.generate_presigned_url()}]
+        return params, template_name
 
 def get_params_from_audit_store(notif_id, message):
     audit_store = notif_id.action_object

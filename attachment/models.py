@@ -5,7 +5,13 @@ from django.contrib.postgres.fields import JSONField
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from audit.models.proof_tag import AuditCycleProofTagList
-
+import argparse
+import logging
+from botocore.client import Config
+import boto3
+from botocore.exceptions import ClientError
+import requests
+from botocore.client import Config
 class Attachment(Model):
 
     PHOTO = 'PHOTO'
@@ -65,6 +71,28 @@ class Attachment(Model):
         s3 = settings.AWS["S3_ATTACHMENTS"]
         return "https://s3-{}.amazonaws.com/{}/{}".format(s3["REGION"],s3["BUCKET"],self.file_slug)
 
+
+    def generate_presigned_url(self):
+        AWS = settings.AWS
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=AWS["S3_ATTACHMENTS"]["AWS_ACCESS_KEY_ID"],
+            aws_secret_access_key=AWS["S3_ATTACHMENTS"]["AWS_SECRET_ACCESS_KEY"],
+            region_name=AWS["S3_ATTACHMENTS"]['REGION'],
+            config=Config(signature_version='s3v4')
+        )
+        content_type = 'application/pdf'
+        presigned_url = s3.generate_presigned_url(
+            'get_object',
+            Params={
+                'Bucket': AWS["S3_ATTACHMENTS"]["BUCKET"],
+                'Key': self.file_slug,
+                'ResponseContentType': content_type
+            }
+        )
+
+        return presigned_url
+    
     '''def extra(self):
         if self.proof_type == self.PHOTO:
             subdomain = settings.IMGIX_SUBDOMAIN

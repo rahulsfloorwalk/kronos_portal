@@ -39,6 +39,9 @@ class NotificationItem extends React.Component {
 		case "AUDIT_STORE_WITHDRAWN":
 			return <span className="text-default"> withdrawn </span>;
 		case "AUDIT_STORE_ASSIGNED":
+			return <span className="text-warning"> assigned </span>;
+		case "AUDIT_STORE_ASSIGNED_PDF":
+			return <span className="text-warning"> assigned </span>;
 		case "AUDIT_STORE_FIAT_ASSIGNED":
 			return <span className="text-warning"> assigned </span>;
 		case "AUDIT_STORE_UNSUBMITTED":

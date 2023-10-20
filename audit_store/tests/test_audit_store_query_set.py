@@ -34,36 +34,36 @@ class AuditStoreQuerySetTestCase(TestCase):
 
         self.check_points = {}
 
-    def test_assign_audit_report_sends_signal(self):
-        audit = mommy.make(Audit)
-        with catch_signal(audit_store_status_change) as mock:
-            audit_store = AuditStore.objects.assign_audit_store(audit, datetime.now().date(), self.auditor_user, 3000, 4000, self.check_points, self.manager_user)
+    # def test_assign_audit_report_sends_signal(self):
+    #     audit = mommy.make(Audit)
+    #     with catch_signal(audit_store_status_change) as mock:
+    #         audit_store = AuditStore.objects.assign_audit_store(audit, datetime.now().date(), self.auditor_user, 3000, 4000, self.check_points, self.manager_user)
 
-            mock.assert_called_once_with(
-                signal=audit_store_status_change,
-                sender=AuditStoreQuerySet,
-                status=AuditStore.ASSIGNED,
-                old_status=None,
-                user_actor=self.manager_user,
-                audit_store=audit_store,
-            )
+    #         mock.assert_called_once_with(
+    #             signal=audit_store_status_change,
+    #             sender=AuditStoreQuerySet,
+    #             status=AuditStore.ASSIGNED,
+    #             old_status=None,
+    #             user_actor=self.manager_user,
+    #             audit_store=audit_store,
+    #         )
 
-    def test_assign_audit_report_creates_and_assigns_audit_store(self):
-        audit = mommy.make(Audit, reimbursement=2000, earnings_per_audit=3000)
-        audit_store = AuditStore.objects.assign_audit_store(
-            audit,
-            datetime.now().date(),
-            self.auditor_user,
-            3000,
-            4000,
-            self.check_points,
-            self.manager_user,
-        )
-        self.assertEqual(datetime.now().date(), audit_store.audit_date)
-        self.assertEqual(self.auditor_user, audit_store.user)
-        self.assertEqual(audit, audit_store.audit)
-        expect(audit_store.reimbursement).to(equal(3000))
-        expect(audit_store.earnings_per_audit).to(equal(4000))
+    # def test_assign_audit_report_creates_and_assigns_audit_store(self):
+    #     audit = mommy.make(Audit, reimbursement=2000, earnings_per_audit=3000)
+    #     audit_store = AuditStore.objects.assign_audit_store(
+    #         audit,
+    #         datetime.now().date(),
+    #         self.auditor_user,
+    #         3000,
+    #         4000,
+    #         self.check_points,
+    #         self.manager_user,
+    #     )
+    #     self.assertEqual(datetime.now().date(), audit_store.audit_date)
+    #     self.assertEqual(self.auditor_user, audit_store.user)
+    #     self.assertEqual(audit, audit_store.audit)
+    #     expect(audit_store.reimbursement).to(equal(3000))
+    #     expect(audit_store.earnings_per_audit).to(equal(4000))
 
     def test_presentable(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)

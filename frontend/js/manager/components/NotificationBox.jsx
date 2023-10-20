@@ -39,6 +39,8 @@ class NotificationItem extends React.Component {
 			return <span className="text-default"> withdrew </span>;
 		case "AUDIT_STORE_ASSIGNED":
 			return <span className="text-warning"> assigned </span>;
+		case "AUDIT_STORE_ASSIGNED_PDF":
+			return <span className="text-warning"> assigned </span>;
 		case "AUDIT_STORE_FIAT_ASSIGNED":
 			return <span className="text-warning"> fiat assigned </span>;
 		case "AUDIT_STORE_ACKNOWLEDGED":
@@ -218,7 +220,9 @@ export default class NotificationBox extends React.Component {
 							<option value="AUDIT_STORE_SUBMITTED">Report Submitted</option>
 							<option value="AUDIT_STORE_UNSUBMITTED">Report Un Submitted</option>
 							<option value="AUDIT_STORE_ASSIGNED">Report Assigned</option>
+							<option value="AUDIT_STORE_ASSIGNED_PDF">Report Assigned</option>
 							<option value="AUDIT_STORE_FIAT_ASSIGNED">Report Fiat Assigned</option>
+							<option value="AUDIT_STORE_FIAT_ASSIGNED_PDF">Report Fiat Assigned</option>
 							<option value="AUDIT_STORE_ACKNOWLEDGED">Report Acknowledged</option>
 							<option value="AUDIT_STORE_WITHDRAWN">Report Withdrawn</option>
 							<option value="AUDIT_STORE_FAILED">Report Failed</option>

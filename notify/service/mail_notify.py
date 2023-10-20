@@ -18,7 +18,7 @@ from .mail import send_email
 from registration.context import registration_context
 
 _logger = logging.getLogger(__name__)
-
+from attachment.models import Attachment
 def send_notification_mail(notif_id, message):
     if settings.EMAIL_SWITCH['NOTIFICATION_EMAIL']:
         notification_email_task.delay(notif_id, message)
@@ -94,6 +94,16 @@ def notification_email_task(notif_id, message):
             params['txt_template'] = 'notify/fiat_assign_email.txt'
             params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
             params['audit_post_approval_description'] = notif.target.post_approval_description
+
+        elif notif.verb == verbs.AUDIT_STORE_ASSIGNED_PDF:
+            pdf=Attachment.objects.get(audit_cycles__id=notif.target.audit_cycle.id,status=Attachment.ATTACHED)
+            get_params_from_audit_store(notif.action_object, params)
+            subject = "Audit Assigned for {}".format(params['client'])
+            params['html_template'] = 'notify/assign_email_pdf.html'
+            params['txt_template'] = 'notify/assign_email_pdf.txt'
+            params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
+            params['audit_post_approval_description'] = notif.target.post_approval_description
+            params['pdf_url'] = pdf.generate_presigned_url()
 
         elif notif.verb == verbs.AUDIT_STORE_ASSIGNED:
             get_params_from_audit_store(notif.action_object, params)
