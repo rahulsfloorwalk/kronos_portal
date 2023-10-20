@@ -8,10 +8,18 @@ from notify.service import mail_notify
 from notify.service import message_notify
 from audit_store.signals import audit_store_status_change
 from audit_store.models import AuditStore
-
+from attachment.models import Attachment
 from registration.models import GROUP_NAME_MANAGER
 
+from kronos.exceptions import ObjectNotFound
 
+def find_by_audit_cycle(audit_cycle_id):
+    try:
+        return Attachment.objects.get(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED)
+    except Attachment.DoesNotExist as e:
+        return None
+        
+    
 @receiver(audit_store_status_change, dispatch_uid="status_change_notification_callback")
 def status_change_notification_callback(sender, **kwargs):
     user_actor = kwargs['user_actor']
@@ -21,8 +29,14 @@ def status_change_notification_callback(sender, **kwargs):
     message = kwargs['message'] if 'message' in kwargs else ''
 
     if status == AuditStore.ASSIGNED:
-        send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_ASSIGNED, audit_store, audit_store.audit)
-        send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_ASSIGNED, audit_store, audit_store.audit)
+        pdf=  find_by_audit_cycle(audit_store.audit.audit_cycle.id)
+        if pdf:
+            if pdf.generate_presigned_url():
+                send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_ASSIGNED_PDF, audit_store, audit_store.audit)
+                send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_ASSIGNED_PDF, audit_store, audit_store.audit)
+        else:
+            send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_ASSIGNED, audit_store, audit_store.audit)
+            send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_ASSIGNED, audit_store, audit_store.audit)
     if status == AuditStore.ACKNOWLEDGED and old_status == AuditStore.ASSIGNED:
         send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_ACKNOWLEDGED, audit_store, audit_store.audit)
         send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_ACKNOWLEDGED, audit_store, audit_store.audit)

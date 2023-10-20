@@ -1,0 +1,18 @@
+Hello {{ name }}
+We have approved your application to performa an audit at {{ client }} on {{ audit_date }}. You must log into the portal and go through the questionnaire before agreeing to conduct the audit.
+
+The audit details are as follows:
+Store Name: {{ store_name }}
+Store Address: {{ store_address }}
+Audit Date: {{ audit_date }}
+Click Here to Read Audit Guidelines
+
+{{ kronos_base_url }}/auth/login?next=/static/auditor/index.html%23/audit_store&ref=email_cta&utm_source=email_footer
+Note: It is mandatory to view the questionnaire and agree to it before conducting the audit.
+
+{{pdf_url}}
+--
+Thanks and regards,
+FloorWalk Team
+
+Please note that this is system generated email. Do not reply to this email. For any queries, write to us at contactus@floorwalk.in
