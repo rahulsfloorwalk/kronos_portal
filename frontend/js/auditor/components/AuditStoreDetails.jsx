@@ -6,7 +6,7 @@ import Alert from "react-s-alert";
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 
-import { fetchAuditStore, acknowledgeAuditStore, submitAuditStore, arrangeAttachment } from "../actions/audit_store.js";
+import { fetchAuditStore, acknowledgeAuditStore, submitAuditStore, arrangeAttachment,FetchGuidlineByAuditStore } from "../actions/audit_store.js";
 
 import Loading from "../../components/Loading.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
@@ -34,10 +34,12 @@ class AuditStoreDetails extends React.Component {
 		submitMessage : "",
 		submitStatus: "",
 		showErrors: false,
+		guideline:""
 	};
 
 	componentDidMount() {
 		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
+		FetchGuidlineByAuditStore(this.props.params.auditStoreId).then((guideline)=> this.setState({guideline:guideline}));
 	}
 
 	submitButtonClicked = () => {
@@ -84,7 +86,10 @@ class AuditStoreDetails extends React.Component {
 			location.reload();
 		});
 	};
-
+	openPDFInNewTab = () => {
+		const { guideline } = this.state;
+		window.open(guideline, "_blank");
+	};
 	render() {
 		if(! this.props.auditStore){
 			return <Loading/>;
@@ -174,6 +179,12 @@ class AuditStoreDetails extends React.Component {
 										<th>{<AuditStoreStatusLabel status={this.props.auditStore.status}/>}
 										</th>
 									</tr>
+									{this.state.guideline && this.state.guideline ?
+										<tr>
+											<td className="text-right">PDF Guideline:</td>
+											<th><button className="btn btn-primary sm" onClick={this.openPDFInNewTab}>Open Guideline</button></th>
+										</tr>
+										: null}
 								</tbody>
 							</table>
 							{ !(! this.props.auditStore.audit.post_approval_description && ! this.props.auditStore.audit.audit_cycle.post_approval_description) ?

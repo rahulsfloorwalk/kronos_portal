@@ -29,6 +29,10 @@ def find_by_audit_store_for_auditor(audit_store_id: int, user_id: int):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
     return attachment_service.find_by_audit_store(audit_store.id)
 
+def find_attachment_by_audit_store_id(audit_store_id:int):
+    audit_store = AuditStore.objects.get(id=audit_store_id)
+    return attachment_service.find_by_audit_cycle_id(audit_store.audit.audit_cycle.id)
+    
 
 def find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, user_id):
     report_section = report_section_auditor_service.find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, user_id)
