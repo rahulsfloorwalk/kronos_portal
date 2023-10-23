@@ -332,6 +332,9 @@ def find_by_clientrequirement(client_requirements_id):
 def find_by_audit_cycle(audit_cycle_id):
     return Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED).order_by('id')
 
+def find_by_audit_cycle_id(audit_cycle_id):
+    return Attachment.objects.get(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED).generate_presigned_url()
+
 def find_by_audit_store_and_section(audit_store_id, section_id):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
     return Attachment.objects.filter(report_sections__id=report_section.id, status=Attachment.ATTACHED).order_by('id')

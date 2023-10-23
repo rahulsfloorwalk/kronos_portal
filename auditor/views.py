@@ -525,6 +525,14 @@ class CommentSubmitView(APIView):
         report_section = report_section_service.submit_auditor_comment(audit_store.id, section.id, request.user.id, auditor_comment)
         return Response(ReportSectionSerializer(report_section).data)
 
+class AuditGuidelineByAuditStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_grooups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+    def get(self,request,audit_store_id,format=None):
+        attachment = attachment_auditor_service.find_attachment_by_audit_store_id(audit_store_id)
+        return Response(attachment)
 
 class AuditStoreAttachmentView(APIView):
     permission_classes = [HasGroupPermission]

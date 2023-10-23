@@ -58,6 +58,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/fail$', views.AuditStoreIdFailView.as_view(), name="audit_store_id_fail_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/withdraw$', views.AuditStoreIdWithdrawView.as_view(), name="audit_store_id_withdraw_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', views.AuditStoreAttachmentView.as_view(), name="audit_store_upload_view"),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/guildline$', views.AuditGuidelineByAuditStore.as_view(), name='audit_guideline_by_audit_store'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment$', views.ReportSectionAttachmentView.as_view(), name="report_section_attachment_view"),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_concern$', views.AuditStoreReportConcern.as_view(), name="audit_store_report_concern"),
