@@ -88,8 +88,8 @@ class AuditStoreDetails extends React.Component {
 	};
 	openPDFInNewTab = () => {
 		const { guideline } = this.state;
-		window.open(guideline, '_blank');
-	  };
+		window.open(guideline, "_blank");
+	};
 	render() {
 		if(! this.props.auditStore){
 			return <Loading/>;
@@ -184,7 +184,7 @@ class AuditStoreDetails extends React.Component {
 											<td className="text-right">PDF Guideline:</td>
 											<th><button className="btn btn-primary sm" onClick={this.openPDFInNewTab}>Open Guideline</button></th>
 										</tr>
-									: null}
+										: null}
 								</tbody>
 							</table>
 							{ !(! this.props.auditStore.audit.post_approval_description && ! this.props.auditStore.audit.audit_cycle.post_approval_description) ?
