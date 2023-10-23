@@ -45,6 +45,7 @@ from manager.serializers import AuditStoreSerializerWithoutAudit
 from manager.serializers import AttachmentSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
+from django.conf import settings
 
 
 class CustomPagination(PageNumberPagination):
@@ -228,9 +229,10 @@ class MpPaymentView(APIView):
         try:
             order_id = request.data.get('mp_order_id')
             attachments = request.FILES.get('file')
-            client = razorpay.Client(auth=('rzp_live_5JGzDGrzqTtLPp', 'PZmd3pTqDOywom9DJJ5qGFoq'))
-            order = get_object_or_404(MPOrder, id=order_id)
+            # client = razorpay.Client(auth=('rzp_live_5JGzDGrzqTtLPp', 'PZmd3pTqDOywom9DJJ5qGFoq'))
+            client = razorpay.Client(auth=(settings.RAZORPAY_ACCESS_KEY, settings.RAZORPAY_SECRET_KEY))
 
+            order = get_object_or_404(MPOrder, id=order_id)
             tax_rate = order.solution.tax.rate
             tax_amount = (tax_rate / 100) * order.price
             order_amount = int((order.price + tax_amount) * 100)
@@ -671,6 +673,7 @@ class OrderReportsView(APIView):
             return JsonResponse({'error': 'No audit cycles found for this client.'})
 
 class MPReportsAuditCycleSerializer(ModelSerializer):
+    order_status = serializers.CharField(source='order.status', read_only=True)
     class Meta:
         model = AuditCycle
         fields = (
@@ -681,6 +684,7 @@ class MPReportsAuditCycleSerializer(ModelSerializer):
             'end_date',
             'planned_audit',
             'audit_count',
+            'order_status',
         )
         read_only_fields = fields
 
