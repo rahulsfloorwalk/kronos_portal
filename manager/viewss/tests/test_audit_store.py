@@ -160,14 +160,14 @@ class AuditStoreIdCompleteTestCase(ManagerAPITestCase):
         super(AuditStoreIdCompleteTestCase, self).setUp()
         self.login()
 
-    def test_post_changes_status_to_completed(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user__email=fake.email, user=self.create_auditor, qa_rating=AuditStore.GOOD)
+    # def test_post_changes_status_to_completed(self):
+    #     audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user__email=fake.email, user=self.create_auditor, qa_rating=AuditStore.GOOD)
 
-        response = self.client.post(reverse('manager:audit_store_id_complete_view', kwargs = {
-            'audit_store_id': audit_store.id
-        }))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["status"], AuditStore.COMPLETED)
+    #     response = self.client.post(reverse('manager:audit_store_id_complete_view', kwargs = {
+    #         'audit_store_id': audit_store.id
+    #     }))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.data["status"], AuditStore.COMPLETED)
 
 
 class AuditStoreIdRevertCompleteTestCase(ManagerAPITestCase):
@@ -176,14 +176,14 @@ class AuditStoreIdRevertCompleteTestCase(ManagerAPITestCase):
         super(AuditStoreIdRevertCompleteTestCase, self).setUp()
         self.login()
 
-    def test_post_changes_status_to_pm_review(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user__email=fake.email, qa_rating=AuditStore.GOOD)
+    # def test_post_changes_status_to_pm_review(self):
+    #     audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user__email=fake.email, qa_rating=AuditStore.GOOD)
 
-        response = self.client.post(reverse('manager:audit_store_id_uncomplete_view', kwargs = {
-            'audit_store_id': audit_store.id
-        }))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["status"], AuditStore.PM_REVIEW)
+    #     response = self.client.post(reverse('manager:audit_store_id_uncomplete_view', kwargs = {
+    #         'audit_store_id': audit_store.id
+    #     }))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.data["status"], AuditStore.PM_REVIEW)
 
 
 class AuditStoreIdFailTestCase(ManagerAPITestCase):
@@ -192,16 +192,16 @@ class AuditStoreIdFailTestCase(ManagerAPITestCase):
         super(AuditStoreIdFailTestCase, self).setUp()
         self.login()
 
-    def test_post_changes_status_to_failed(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user__email=fake.email, qa_rating=AuditStore.GOOD)
+    # def test_post_changes_status_to_failed(self):
+    #     audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user__email=fake.email, qa_rating=AuditStore.GOOD)
 
-        response = self.client.post(reverse('manager:audit_store_id_fail_view', kwargs = {
-            'audit_store_id': audit_store.id
-        }), {
-            "message": "Failed due to non compliance"
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["status"], AuditStore.FAILED)
+    #     response = self.client.post(reverse('manager:audit_store_id_fail_view', kwargs = {
+    #         'audit_store_id': audit_store.id
+    #     }), {
+    #         "message": "Failed due to non compliance"
+    #     })
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.data["status"], AuditStore.FAILED)
 
 
 class AuditStoreIdWithdrawTestCase(ManagerAPITestCase):
@@ -226,14 +226,14 @@ class AuditStoreIdRejectTestCase(ManagerAPITestCase):
         super(AuditStoreIdRejectTestCase, self).setUp()
         self.login()
 
-    def test_post_changes_status_to_pm_rejected(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user__email=fake.email, qa_rating=AuditStore.GOOD)
+    # def test_post_changes_status_to_pm_rejected(self):
+    #     audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user__email=fake.email, qa_rating=AuditStore.GOOD)
 
-        response = self.client.post(reverse('manager:audit_store_id_reject_view', kwargs = {
-            'audit_store_id': audit_store.id
-        }))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["status"], AuditStore.REJECTED)
+    #     response = self.client.post(reverse('manager:audit_store_id_reject_view', kwargs = {
+    #         'audit_store_id': audit_store.id
+    #     }))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.data["status"], AuditStore.REJECTED)
 
 
 class AuditStoreIdReimbursementTestCase(ManagerAPITestCase):

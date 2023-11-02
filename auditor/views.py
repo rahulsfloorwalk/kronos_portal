@@ -180,8 +180,10 @@ class AppliedAuditsView(APIView):
         'POST': [GROUP_NAME_AUDITOR]
     }
     def get(self, request, format=None):
-        applied_audits = audit_service.find_applied_audits_by_auditor_id(request.user.id)
-        return Response(AppliedAuditSerializer(applied_audits,many=True).data)
+        applied_audits,total_count = audit_service.find_applied_audits_by_auditor_id(request.user.id, request.GET.get('is_load_more'), request.GET.get('last_total_count'))
+        # return Response(AppliedAuditSerializer(applied_audits,many=True).data)
+        return Response({'applied_audits': AppliedAuditSerializer(applied_audits, many=True).data, 'total_count': total_count})
+        
         
 class AvailableAuditsByCityView(APIView):
     permission_classes = [HasGroupPermission]
@@ -213,6 +215,7 @@ class AuditApplicationsView(APIView):
     def get(self, request, format=None):
         applications = application_service.get_applications(request.user.profileinfo.id)
         return Response(AuditApplicationSerializer(applications, many=True).data)
+        # return Response({'applications': AuditStoreSerializer(applications, many=True).data, 'total_count': total_count})
 
 
 class AuditStoresView(APIView):
@@ -224,8 +227,8 @@ class AuditStoresView(APIView):
     def get(self, request, format=None):
         audit_stores = audit_store_service.find_audit_stores_for_auditor(request.user.profileinfo.id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data)
-
-
+        # return Response({'audit_stores': AuditStoreSerializer(audit_stores, many=True).data, 'total_count': total_count})
+        
 class AuditStoreIdReportSummaryView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

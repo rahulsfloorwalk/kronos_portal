@@ -171,7 +171,7 @@ def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
     nearDis=[]
     for i in available_audits:
         if i.store.pincode:
-            if geo.get_lat_lon_from_pincode(i.store.pincode).get('lat') and geo.get_lat_lon_from_pincode(i.store.pincode).get('lon'):
+            if geo.get_lat_lon_from_pincode(i.store.pincode):
                 lat2=geo.get_lat_lon_from_pincode(i.store.pincode).get('lat')
                 lon2=geo.get_lat_lon_from_pincode(i.store.pincode).get('lon')
         elif i.store.address and re.findall("\d{6}", i.store.address):
@@ -259,13 +259,21 @@ def find_audits_around_city(city_id:int, kms:int=None):
     return available_audits
 
 
-def find_applied_audits_by_auditor_id(user_id):
+def find_applied_audits_by_auditor_id(user_id,is_load_more, last_total_count):
     auditor = auditor_service.find_auditor_by_id(user_id)
     applied_audits = AuditApplication.objects.filter(
         profileinfo_id=auditor.profileinfo.id,
         status__in=(AuditApplication.APPLIED,AuditApplication.REJECTED,AuditApplication.WAITLISTED,AuditApplication.WAITLISTED,AuditApplication.APPROVED),
         audit__audit_cycle__status=AuditCycle.ACTIVE)
-    return applied_audits
+    total_count = applied_audits.count()
+    if is_load_more:
+        start = int(last_total_count)
+        end = int(last_total_count) + 20
+        applied_audits_obj_slice = applied_audits[start:end]
+    else:
+        applied_audits_obj_slice = applied_audits[0:20]
+    
+    return applied_audits_obj_slice,total_count
 
 def find_audits_for_auditor_limit(user_id,kms):
     auditor = auditor_service.find_auditor_by_id(user_id)

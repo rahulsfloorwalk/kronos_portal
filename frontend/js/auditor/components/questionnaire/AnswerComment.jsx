@@ -56,7 +56,7 @@ class __AnswerComment extends Component {
 	};
 
 	onBlur = (e) => {
-		if(this.props.required && e.target.value == ""){
+		if(this.props.required && e.target.value.trim() === ""){
 			this.setState({
 				error: true,
 				comment_error:""
@@ -92,7 +92,9 @@ class __AnswerComment extends Component {
 							onChange={this.commentChanged}
 							onBlur={this.onBlur}
 							placeholder="Comment"
-							minLength="30"/>
+							// minLength="30"
+							/>
+							{this.state.comment_error ? <span style={{color:"red"}}>{this.state.comment_error}</span> : null}
 					</GrammarlyEditorPlugin>
 				</div>
 			);

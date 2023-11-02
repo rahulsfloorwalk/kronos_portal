@@ -25,7 +25,7 @@ class AuditCycleView(APIView):
     }
     def get(self, request, format=None):
         client = client_service.find_client_by_user_id(request.user.id)
-        audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client.id)
+        audit_cycles,total_count = audit_cycle_service.find_audit_cycles_by_client_limit(client.id,request.GET.get('is_load_more'),request.GET.get('last_total_count'))
         return Response(AuditCycleSerializer(audit_cycles, many=True).data)
 
     def post(self, request):

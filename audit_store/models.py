@@ -317,8 +317,16 @@ class AuditStore(Model):
                     #     raise AppLogicError("Report not submittable, some required answer comment is incomplete")
                     # if answer.question.optional_comment_required and answer.answer_comment in (None, ''):
                     #     raise AppLogicError("Report not submittable, some required answer comment is incomplete")
+                   # # if not answer.question.question_type == Question.MULTISELECT:
+                    #     if not answer.not_applicable and answer.answer_text in (None, ''):
+                    #         _logger.debug("Report not submittable, some answer is incomplete")
+                    #         return False
+                    if answer.question.optional_comment_required is False and answer.marks_obtained==0 and answer.question.question_type == Question.MUTEX and (answer.answer_comment is None or answer.answer_comment.strip() == ''):
+                        raise AppLogicError("Report not submittable, some required answer comment is incomplete")
+                    if answer.question.optional_comment_required and (answer.answer_comment is None or answer.answer_comment.strip() == ''):
+                        raise AppLogicError("Report not submittable, some required answer comment is incomplete")
                     if not answer.question.question_type == Question.MULTISELECT:
-                        if not answer.not_applicable and answer.answer_text in (None, ''):
+                        if not answer.not_applicable and (answer.answer_text is None or answer.answer_text.strip() == ''):
                             _logger.debug("Report not submittable, some answer is incomplete")
                             return False
 
