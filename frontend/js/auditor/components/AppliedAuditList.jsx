@@ -157,8 +157,8 @@ export default class AppliedAuditList extends React.Component {
 						</tbody>
 					</table>
 					<div className="text-center">
-					{loadMoreButton}
-				</div>
+						{loadMoreButton}
+					</div>
 					{this.props.children}
 				</div>
 			</div>

@@ -61,29 +61,29 @@ export default class AuditCycleList extends React.Component{
 
 	componentDidMount() {
 		fetchAuditCyclesByClient(this.props.params.clientId).then((auditCycles) => {
-			this.setState({
-				auditCycles: auditCycles.audit_cycles,
-				total_count: auditCycles.total_count,
-				auditcycles_list_count: auditCycles.audit_cycles.length,
-			});
+			if(auditCycles.audit_cycles){
+				this.setState({
+					auditCycles: auditCycles.audit_cycles,
+					total_count: auditCycles.total_count,
+					auditcycles_list_count: auditCycles.audit_cycles.length,
+				});
+			}
 		});
-	}	
+	}
 	loadMoreCycles = () => {
 		this.setState({
-		  loadMoreLoader: true
+			loadMoreLoader: true
 		});
 		let is_load_more = true;
 		findAuditCyclesByClientLoadMore(is_load_more, this.state.auditcycles_list_count, this.props.params.clientId).then(result => {
-		  console.log("34", result.audit_cycles);
-		  let auditCyclesList = result.audit_cycles;
-		  this.setState(prevState => ({
-			auditCycles: [...prevState.auditCycles, ...auditCyclesList], 
-			auditcycles_list_count: prevState.auditcycles_list_count + auditCyclesList.length, 
-			loadMoreLoader: false,
-		  }));
+			let auditCyclesList = result.audit_cycles;
+			this.setState(prevState => ({
+				auditCycles: [...prevState.auditCycles, ...auditCyclesList],
+				auditcycles_list_count: prevState.auditcycles_list_count + auditCyclesList.length,
+				loadMoreLoader: false,
+			}));
 		});
-	  };
-	  
+	};
 	render(){
 		let rows = [];
 		for(let ac of this.state.auditCycles) {

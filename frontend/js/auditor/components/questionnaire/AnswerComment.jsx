@@ -93,8 +93,8 @@ class __AnswerComment extends Component {
 							onBlur={this.onBlur}
 							placeholder="Comment"
 							// minLength="30"
-							/>
-							{this.state.comment_error ? <span style={{color:"red"}}>{this.state.comment_error}</span> : null}
+						/>
+						{this.state.comment_error ? <span style={{color:"red"}}>{this.state.comment_error}</span> : null}
 					</GrammarlyEditorPlugin>
 				</div>
 			);
