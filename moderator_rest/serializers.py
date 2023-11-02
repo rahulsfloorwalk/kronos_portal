@@ -1,5 +1,6 @@
 from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, SerializerMethodField
 from rest_framework.serializers import CharField
+from rest_framework import serializers
 from django.contrib.auth.models import User
 from auditor.service.profile_info_service import get_avg_auditor_rating_by_user
 
@@ -214,7 +215,8 @@ class QuestionSerializer(ModelSerializer):
             'section',
             'question_type',
             'question_data',
-            'hide_question'
+            'hide_question',
+            'optional_comment_required',
         )
         read_only_fields = fields
 
@@ -281,7 +283,9 @@ class SectionDeSerializer(ModelSerializer):
         return section
 
 
-class AnswerSerializer(ModelSerializer):
+class AnswerSerializer(serializers.ModelSerializer):
+    # question = QuestionSerializer.optional_comment_required() 
+    optional_comment_required = serializers.BooleanField(source='question.optional_comment_required', read_only=True)
     class Meta:
         model = Answer
         fields = (
@@ -293,7 +297,8 @@ class AnswerSerializer(ModelSerializer):
             'revert_message',
             'marks_obtained',
             'not_applicable',
-            'get_answer_text_list'
+            'get_answer_text_list',
+            'optional_comment_required',
         )
         read_only_fields = fields
 

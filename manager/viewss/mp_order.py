@@ -230,7 +230,8 @@ class MpPaymentView(APIView):
             order_id = request.data.get('mp_order_id')
             attachments = request.FILES.get('file')
             # client = razorpay.Client(auth=('rzp_live_5JGzDGrzqTtLPp', 'PZmd3pTqDOywom9DJJ5qGFoq'))
-            client = razorpay.Client(auth=(settings.RAZORPAY_ACCESS_KEY, settings.RAZORPAY_SECRET_KEY))
+            
+            client = razorpay.Client(auth=(settings.MARKET_PLACE_RAZORPAY_ACCESS_KEY, settings.MARKET_PLACE_RAZORPAY_SECRET_KEY))
 
             order = get_object_or_404(MPOrder, id=order_id)
             tax_rate = order.solution.tax.rate
@@ -390,15 +391,19 @@ def get_last_audit_cycle_number(client):
     if last_audit_cycle:
         my_list = last_audit_cycle.name.split(' ')
         
-        if my_list[-1].startswith('(') and my_list[-1].endswith(')'):
-            my_list[-1] = my_list[-1][1:-1]
-        last_number = my_list[3]
-        return last_number
+        if len(my_list) >= 4:
+            if my_list[-1].startswith('(') and my_list[-1].endswith(')'):
+                my_list[-1] = my_list[-1][1:-1]
+            last_number = my_list[3]
+            return last_number
     else:
         return 0
 def create_audit_cycle(client, order, solution_details,transaction,add_questionnaire_type_id):
         last_audit_cycle_number = get_last_audit_cycle_number(client)
-        new_audit_cycle_number = int(last_audit_cycle_number) + 1
+        if last_audit_cycle_number is not None:
+             new_audit_cycle_number = int(last_audit_cycle_number) + 1
+        else:
+            new_audit_cycle_number = 1 
 
         solution_name = solution_details.solution.name
         formatted_date = datetime.now().strftime('%b %Y')
@@ -614,16 +619,16 @@ class OrderReportsView(APIView):
                 else:
                     return Response({'message': 'No DRAFT status MPOrder found for this client.'})
             elif status and status in valid_statuses:
-                audit_cycles = audit_cycles.filter(status=status).order_by('-id')[:3]
+                audit_cycles = audit_cycles.filter(order__status=status).order_by('-id')[:3]
             else:
                 return Response({'message': 'Invalid status parameter. Valid values are DRAFT, COMPLETE, ACTIVE, or ALL.'}, status=400)
         
         elif pages == 'reports':
             audit_cycles = AuditCycle.objects.filter(client=client.id)
             if status and status in ALL:
-                audit_cycles = AuditCycle.objects.filter(client=client.id, status__in=ALL)
+                audit_cycles = AuditCycle.objects.filter(client=client.id, order__status__in=ALL)
             if status and status in valid_statuses:
-                audit_cycles = audit_cycles.filter(status=status)
+                audit_cycles = audit_cycles.filter(order__status=status)
             if product_name:
                 audit_cycles = audit_cycles.filter(order_id__solution__name__icontains=product_name)
             if start_date_str:
@@ -1264,4 +1269,25 @@ class OrderInvoceProductListView(APIView):
         invoice_project_names = orders.values_list('solution__name', flat=True).distinct()
 
         return Response({'invoice_project_names': invoice_project_names})
+    
+class OrderInvoiceProductYearListView(APIView):
+    def get(self, request):
+        user = request.user
+        try:
+            client_profile = MPClientProfileInfo.objects.get(user=user.id)
+        except MPClientProfileInfo.DoesNotExist:
+            return Response({'error':'Client profile not found for this user.'}, status=404)
+        
+        orders = MPOrder.objects.filter(user=client_profile.user, status__in=['ACTIVE', 'COMPLETE'])
+        
+        order_ids = orders.values_list('id', flat=True)
+        
+        transactions = Transaction.objects.filter(order_id__in=order_ids)
+        serializer = TransactionSerializer(transactions, many=True).data
+        date_list = [item['payment_success_date'] for item in serializer]
+
+        year_list = [datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ").year for date in date_list]
+        unique_years = list(set(year_list))
+        
+        return Response({'year_list': unique_years})
     

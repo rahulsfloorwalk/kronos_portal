@@ -60,7 +60,7 @@ def find_by_audit_cycle_distinct_user(audit_cycle_id):
         .order_by('user__email').prefetch_related('user')
 
 
-def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, start_date, end_date):
+def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, start_date, end_date,is_load_more,last_total_count):
     total_audit_count = 0
     if status != "" and last_audit_id != "":
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id, audit_stores__status=status) \
@@ -155,7 +155,13 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, star
                 audit_report_list.append(audit_report_dict)
         audit_store_dict['reports'] = audit_report_list
         audit_store_list.append(audit_store_dict)
-    return {'audit_store_list': audit_store_list, 'total_audit_count': total_audit_count}
+        if is_load_more:
+            start  = int(last_total_count)
+            end = int(last_total_count) + 20
+            audit_store_list_obj_slice = audit_store_list[start:end]
+        else:
+            audit_store_list_obj_slice = audit_store_list[0:20]
+    return {'audit_store_list': audit_store_list_obj_slice, 'total_audit_count': total_audit_count}
 
 
 def find_by_id_for_auditor(audit_store_id, user_id):

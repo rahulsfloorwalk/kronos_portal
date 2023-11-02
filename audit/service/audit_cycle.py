@@ -330,6 +330,19 @@ def find_audit_cycles_by_client(client_id):
     return AuditCycle.objects.filter(client_id=client_id).order_by('-end_date')
 
 
+def find_audit_cycles_by_client_limit(client_id,is_load_more,last_total_count):
+    audit_cycles = AuditCycle.objects.filter(client_id=client_id).order_by('-end_date')
+    total_count = audit_cycles.count()
+    if is_load_more :
+        start = int(last_total_count)
+        end = int(last_total_count) + 50
+        audit_cycles_obj_slice = audit_cycles[start:end]
+    else:
+        audit_cycles_obj_slice = audit_cycles[0:50]
+    # return AuditCycle.objects.filter(client_id=client_id).order_by('-end_date')
+    return audit_cycles_obj_slice,total_count
+
+
 def copy_audit_details_from_to(from_audit_cycle_id, to_audit_cycle_id, checkpoints, post_approval_desc, proof_tags, audit_alignment_factors):
     if not from_audit_cycle_id:
         raise AppLogicError("Please Select Audit Cycle")

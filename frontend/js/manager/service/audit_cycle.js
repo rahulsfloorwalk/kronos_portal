@@ -5,6 +5,10 @@ export function fetchAuditCyclesByClient(clientId){
 	return $.get( url.api_base_path + `manager/client/${clientId}/audit_cycle`);
 }
 
+export function findAuditCyclesByClientLoadMore(is_load_more, audit_cycle_count,clientId){
+	return $.get( url.api_base_path + `manager/client/${clientId}/audit_cycle?is_load_more=${is_load_more}&last_total_count=${audit_cycle_count}`);
+}
+
 export function copyAuditDetailsFromTo(state_data, toauditCycleId){
 	return $.ajax({
 		type: "POST",

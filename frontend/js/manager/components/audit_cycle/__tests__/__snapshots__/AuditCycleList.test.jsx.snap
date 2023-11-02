@@ -48,76 +48,10 @@ exports[`<AuditCycleList/> renders a list of audit cycles 1`] = `
         <th />
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td>
-          Telephonic February 2018
-        </td>
-        <td>
-          23rd Feb 2018
-        </td>
-        <td>
-          1st Mar 2018
-        </td>
-        <td>
-          <span>
-            <span
-              className="glyphicon glyphicon-phone-alt"
-            />
-             
-            Phone
-          </span>
-        </td>
-        <td>
-          Phone
-        </td>
-        <td>
-          Archived
-        </td>
-        <td>
-          <a
-            className="btn btn-default pull-right"
-            onClick={[Function]}
-            style={Object {}}
-          >
-            View
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          February 2018
-        </td>
-        <td>
-          23rd Feb 2018
-        </td>
-        <td>
-          28th Feb 2018
-        </td>
-        <td>
-          <span>
-            <span
-              className="glyphicon glyphicon-road"
-            />
-             
-            Walk In
-          </span>
-        </td>
-        <td />
-        <td>
-          Archived
-        </td>
-        <td>
-          <a
-            className="btn btn-default pull-right"
-            onClick={[Function]}
-            style={Object {}}
-          >
-            View
-          </a>
-        </td>
-      </tr>
-    </tbody>
+    <tbody />
   </table>
+  <div
+    className="text-center"
+  />
 </div>
 `;

@@ -90,23 +90,23 @@ def complete_report(audit_store_id, user_id):
     # set_attachment_by_proof_tag(audit_store_id)
     audit_store.complete(by=user)
 
-    # audit_cycle_id = audit_store.audit.audit_cycle.id
-    # audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
-    # total_audit_count = audit_cycle.audit_count()
+    audit_cycle_id = audit_store.audit.audit_cycle.id
+    audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+    total_audit_count = audit_cycle.audit_count()
 
-    # audit_ids = audit_cycle.audits.values_list('id', flat=True)
-    # audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
-    # store_statuses = [audit_store.status for audit_store in audit_stores]
+    audit_ids = audit_cycle.audits.values_list('id', flat=True)
+    audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
+    store_statuses = [audit_store.status for audit_store in audit_stores]
 
-    # mp_order = MPOrder.objects.get(id=audit_cycle.order)
+    mp_order = MPOrder.objects.get(id=audit_cycle.order.id)
 
-    # # store_ids = [audit_store.id for audit_store in audit_stores]
-    # if store_statuses.count('COMPLETED') + store_statuses.count('ACCEPTED') == total_audit_count:
-    #     mp_order.status = 'COMPLETE'
-    #     mp_order.save()
-    # else:
-    #     mp_order.status = 'ACTIVE'
-    #     mp_order.save()
+    # store_ids = [audit_store.id for audit_store in audit_stores]
+    if store_statuses.count('COMPLETED') + store_statuses.count('ACCEPTED') == total_audit_count:
+        mp_order.status = 'COMPLETE'
+        mp_order.save()
+    else:
+        mp_order.status = 'ACTIVE'
+        mp_order.save()
     
     report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
     for report in report_obj:
@@ -119,23 +119,23 @@ def revert_complete_report(audit_store_id, user_id):
     user = manager_service.find_manager_by_user_id(user_id)
     audit_store.revert_complete(by=user)
 
-    # audit_cycle_id = audit_store.audit.audit_cycle.id
-    # audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
-    # total_audit_count = audit_cycle.audit_count()
+    audit_cycle_id = audit_store.audit.audit_cycle.id
+    audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+    total_audit_count = audit_cycle.audit_count()
 
-    # audit_ids = audit_cycle.audits.values_list('id', flat=True)
-    # audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
-    # store_statuses = [audit_store.status for audit_store in audit_stores]
-    # # store_ids = [audit_store.id for audit_store in audit_stores]
-    # mp_order = MPOrder.objects.get(id=audit_cycle.order)
+    audit_ids = audit_cycle.audits.values_list('id', flat=True)
+    audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
+    store_statuses = [audit_store.status for audit_store in audit_stores]
+    # store_ids = [audit_store.id for audit_store in audit_stores]
+    mp_order = MPOrder.objects.get(id=audit_cycle.order.id)
 
-    # # store_ids = [audit_store.id for audit_store in audit_stores]
-    # if store_statuses.count('COMPLETED') + store_statuses.count('ACCEPTED') == total_audit_count:
-    #     mp_order.status = 'COMPLETE'
-    #     mp_order.save()
-    # else:
-    #     mp_order.status = 'ACTIVE'
-    #     mp_order.save()
+    # store_ids = [audit_store.id for audit_store in audit_stores]
+    if store_statuses.count('COMPLETED') + store_statuses.count('ACCEPTED') == total_audit_count:
+        mp_order.status = 'COMPLETE'
+        mp_order.save()
+    else:
+        mp_order.status = 'ACTIVE'
+        mp_order.save()
 
     return audit_store
 
@@ -145,23 +145,23 @@ def accept_report(audit_store_id, user_id):
     user = manager_service.find_manager_by_user_id(user_id)
     audit_store.accept(by=user)
     
-    # audit_cycle_id = audit_store.audit.audit_cycle.id
-    # audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
-    # total_audit_count = audit_cycle.audit_count()
+    audit_cycle_id = audit_store.audit.audit_cycle.id
+    audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+    total_audit_count = audit_cycle.audit_count()
 
-    # audit_ids = audit_cycle.audits.values_list('id', flat=True)
-    # audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
-    # store_statuses = [audit_store.status for audit_store in audit_stores]
-    # # store_ids = [audit_store.id for audit_store in audit_stores]
-    # mp_order = MPOrder.objects.get(id=audit_cycle.order)
+    audit_ids = audit_cycle.audits.values_list('id', flat=True)
+    audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
+    store_statuses = [audit_store.status for audit_store in audit_stores]
+    # store_ids = [audit_store.id for audit_store in audit_stores]
+    mp_order = MPOrder.objects.get(id=audit_cycle.order.id)
 
-    # # store_ids = [audit_store.id for audit_store in audit_stores]
-    # if store_statuses.count('COMPLETED') + store_statuses.count('ACCEPTED') == total_audit_count:
-    #     mp_order.status = 'COMPLETE'
-    #     mp_order.save()
-    # else:
-    #     mp_order.status = 'ACTIVE'
-    #     mp_order.save()
+    # store_ids = [audit_store.id for audit_store in audit_stores]
+    if store_statuses.count('COMPLETED') + store_statuses.count('ACCEPTED') == total_audit_count:
+        mp_order.status = 'COMPLETE'
+        mp_order.save()
+    else:
+        mp_order.status = 'ACTIVE'
+        mp_order.save()
     
     return audit_store
 
@@ -171,23 +171,23 @@ def reject_report(audit_store_id, user_id):
     user = manager_service.find_manager_by_user_id(user_id)
     audit_store.reject(by=user)
 
-    # audit_cycle_id = audit_store.audit.audit_cycle.id
-    # audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
-    # total_audit_count = audit_cycle.audit_count()
+    audit_cycle_id = audit_store.audit.audit_cycle.id
+    audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+    total_audit_count = audit_cycle.audit_count()
 
-    # audit_ids = audit_cycle.audits.values_list('id', flat=True)
-    # audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
-    # store_statuses = [audit_store.status for audit_store in audit_stores]
-    # # store_ids = [audit_store.id for audit_store in audit_stores]
-    # mp_order = MPOrder.objects.get(id=audit_cycle.order)
+    audit_ids = audit_cycle.audits.values_list('id', flat=True)
+    audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
+    store_statuses = [audit_store.status for audit_store in audit_stores]
+    # store_ids = [audit_store.id for audit_store in audit_stores]
+    mp_order = MPOrder.objects.get(id=audit_cycle.order.id)
 
-    # # store_ids = [audit_store.id for audit_store in audit_stores]
-    # if store_statuses.count('COMPLETED') + store_statuses.count('ACCEPTED') == total_audit_count:
-    #     mp_order.status = 'COMPLETE'
-    #     mp_order.save()
-    # else:
-    #     mp_order.status = 'ACTIVE'
-    #     mp_order.save()
+    # store_ids = [audit_store.id for audit_store in audit_stores]
+    if store_statuses.count('COMPLETED') + store_statuses.count('ACCEPTED') == total_audit_count:
+        mp_order.status = 'COMPLETE'
+        mp_order.save()
+    else:
+        mp_order.status = 'ACTIVE'
+        mp_order.save()
 
     return audit_store
 
@@ -197,23 +197,23 @@ def fail_report(audit_store_id, user_id, message):
     user = manager_service.find_manager_by_user_id(user_id)
     audit_store.fail(by=user, message=message)
 
-    # audit_cycle_id = audit_store.audit.audit_cycle.id
-    # audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
-    # total_audit_count = audit_cycle.audit_count()
+    audit_cycle_id = audit_store.audit.audit_cycle.id
+    audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+    total_audit_count = audit_cycle.audit_count()
 
-    # audit_ids = audit_cycle.audits.values_list('id', flat=True)
-    # audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
-    # store_statuses = [audit_store.status for audit_store in audit_stores]
-    # # store_ids = [audit_store.id for audit_store in audit_stores]
-    # mp_order = MPOrder.objects.filter(id=audit_cycle.order)
+    audit_ids = audit_cycle.audits.values_list('id', flat=True)
+    audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
+    store_statuses = [audit_store.status for audit_store in audit_stores]
+    # store_ids = [audit_store.id for audit_store in audit_stores]
+    mp_order = MPOrder.objects.filter(id=audit_cycle.order.id)
 
-    # # store_ids = [audit_store.id for audit_store in audit_stores]
-    # if store_statuses.count('COMPLETED') + store_statuses.count('ACCEPTED') == total_audit_count:
-    #     mp_order.status = 'COMPLETE'
-    #     mp_order.save()
-    # else:
-    #     mp_order.status = 'ACTIVE'
-    #     mp_order.save()
+    # store_ids = [audit_store.id for audit_store in audit_stores]
+    if store_statuses.count('COMPLETED') + store_statuses.count('ACCEPTED') == total_audit_count:
+        mp_order.status = 'COMPLETE'
+        mp_order.save()
+    else:
+        mp_order.status = 'ACTIVE'
+        mp_order.save()
         
     return audit_store
 

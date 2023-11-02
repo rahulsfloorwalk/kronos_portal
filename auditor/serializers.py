@@ -461,7 +461,9 @@ class AnswerDeSerializer(ModelSerializer):
         )
         validators=[]
 
-class AnswerSerializer(ModelSerializer):
+class AnswerSerializer(serializers.ModelSerializer):
+    question_data = serializers.JSONField(source='question.question_data', read_only=True)
+    max_marks = serializers.IntegerField(source='question.max_marks',read_only=True)
     class Meta:
         model = Answer
         fields = (
@@ -471,7 +473,9 @@ class AnswerSerializer(ModelSerializer):
             'revert_message',
             'answer_text',
             'answer_comment',
-            'get_answer_text_list'
+            'get_answer_text_list',
+            'max_marks',
+            'question_data'
         )
         read_only_fields = fields
 
