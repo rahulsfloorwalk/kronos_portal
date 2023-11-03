@@ -432,7 +432,8 @@ class QuestionSerializer(ModelSerializer):
             'question_data',
             'section',
             'hide_question',
-            'optional_comment_required'
+            'optional_comment_required',
+            'max_marks'
         )
         read_only_fields = fields
 

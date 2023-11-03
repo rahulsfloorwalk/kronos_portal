@@ -6,8 +6,9 @@ import moment from "moment";
 import { momentDateFormat }  from "../../../../config.js";
 
 import { Plus, Retweet } from "../../../components/Icons.jsx";
+import { fetchAuditCyclesByClient } from "../../service/audit_cycle.js";
 import AuditTypeLabel from "../../../components/AuditTypeLabel.jsx";
-import { fetchAuditCyclesByClient,findAuditCyclesByClientLoadMore } from "../../service/audit_cycle.js";
+// import { fetchAuditCyclesByClient,findAuditCyclesByClientLoadMore } from "../../service/audit_cycle.js";
 import { getAuditStatus } from "../../../utils.js";
 
 class AuditCycleRow extends React.Component{
@@ -53,49 +54,50 @@ export default class AuditCycleList extends React.Component{
 
 	state = {
 		auditCycles: [],
-		loadMoreLoader: false,
-		loading: false,
-		total_count: 0,
-		auditcycles_list_count: 0,
+		// loadMoreLoader: false,
+		// loading: false,
+		// total_count: 0,
+		// auditcycles_list_count: 0,
 	};
 
 	componentDidMount() {
 		fetchAuditCyclesByClient(this.props.params.clientId).then((auditCycles) => {
-			if(auditCycles.audit_cycles){
-				this.setState({
-					auditCycles: auditCycles.audit_cycles,
-					total_count: auditCycles.total_count,
-					auditcycles_list_count: auditCycles.audit_cycles.length,
-				});
-			}
+			this.setState({auditCycles});
+			// if(auditCycles.audit_cycles){
+			// 	this.setState({
+			// 		auditCycles: auditCycles.audit_cycles,
+			// 		total_count: auditCycles.total_count,
+			// 		auditcycles_list_count: auditCycles.audit_cycles.length,
+			// 	});
+			// }
 		});
 	}
-	loadMoreCycles = () => {
-		this.setState({
-			loadMoreLoader: true
-		});
-		let is_load_more = true;
-		findAuditCyclesByClientLoadMore(is_load_more, this.state.auditcycles_list_count, this.props.params.clientId).then(result => {
-			let auditCyclesList = result.audit_cycles;
-			this.setState(prevState => ({
-				auditCycles: [...prevState.auditCycles, ...auditCyclesList],
-				auditcycles_list_count: prevState.auditcycles_list_count + auditCyclesList.length,
-				loadMoreLoader: false,
-			}));
-		});
-	};
+	// loadMoreCycles = () => {
+	// 	this.setState({
+	// 		loadMoreLoader: true
+	// 	});
+	// 	let is_load_more = true;
+	// 	findAuditCyclesByClientLoadMore(is_load_more, this.state.auditcycles_list_count, this.props.params.clientId).then(result => {
+	// 		let auditCyclesList = result.audit_cycles;
+	// 		this.setState(prevState => ({
+	// 			auditCycles: [...prevState.auditCycles, ...auditCyclesList],
+	// 			auditcycles_list_count: prevState.auditcycles_list_count + auditCyclesList.length,
+	// 			loadMoreLoader: false,
+	// 		}));
+	// 	});
+	// };
 	render(){
 		let rows = [];
 		for(let ac of this.state.auditCycles) {
 			rows.push(<AuditCycleRow auditCycle={ac} key={ac.id}/>);
 		}
 		let addAuditCycleLink = `/client/${this.props.params.clientId}/audit_cycle/add`;
-		let loadMoreButton;
-		if (this.state.total_count > this.state.auditcycles_list_count) {
-			loadMoreButton = (<button className="btn btn-default" onClick={this.loadMoreCycles}>
-				Load More
-			</button>);
-		}
+		// let loadMoreButton;
+		// if (this.state.total_count > this.state.auditcycles_list_count) {
+		// 	loadMoreButton = (<button className="btn btn-default" onClick={this.loadMoreCycles}>
+		// 		Load More
+		// 	</button>);
+		// }
 		return (
 			<div className="table-responsive">
 				<h3 className="page-header">
@@ -118,9 +120,9 @@ export default class AuditCycleList extends React.Component{
 						{rows}
 					</tbody>
 				</table>
-				<div className="text-center">
+				{/* <div className="text-center">
 					{loadMoreButton}
-				</div>
+				</div> */}
 				{this.props.children}
 			</div>
 		);
