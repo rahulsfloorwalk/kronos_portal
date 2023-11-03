@@ -63,9 +63,8 @@ class AuditCycleViewByClient(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, client_id, format=None):
-        audit_cycles = audit_cycle_service.find_audit_cycles_by_client_limit(client_id)
+        audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client_id)
         return Response(AuditCycleSerializer(audit_cycles, many=True).data)
-        # return Response({'audit_cycles':AuditCycleSerializer(audit_cycles,many=True).data,'total_count':total_count})
 
 class AuditCycleView(APIView):
     permission_classes = [HasGroupPermission]
