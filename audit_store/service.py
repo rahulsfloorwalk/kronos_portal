@@ -416,13 +416,15 @@ def set_check_points(audit_store_id, check_points):
 def find_7_days_assigned_reports():
     return AuditStore.objects.filter(audit_date__lte=today_ist() - timedelta(days=7),
                                      audit__audit_cycle__status=AuditCycle.ACTIVE,
-                                     status=AuditStore.ASSIGNED)
+                                     status=AuditStore.ASSIGNED,
+                                     audit__audit_cycle__audit_auto_approve=True)
 
 
 def find_10_days_in_progress_reports():
     return AuditStore.objects.filter(audit_date__lte=today_ist() - timedelta(days=10),
                                      audit__audit_cycle__status=AuditCycle.ACTIVE,
-                                     status=AuditStore.ACKNOWLEDGED)
+                                     status=AuditStore.ACKNOWLEDGED,
+                                     audit__audit_cycle__audit_auto_approve=True)
 
 
 def find_2_days_not_submitted_reports():
