@@ -28,6 +28,7 @@ from auditor.service import preferences_service
 from auditor.service import stats as auditor_dashboard_service
 from manager import states
 from manager import country
+from manager.service.instance_approved_application import audit_cycle_audit_auto_approve_check_by_applictaion_id
 from manager.models import City
 from manager.service import notifications as notification_service
 from payment.service import payment_auditor as payment_service
@@ -294,7 +295,9 @@ class AuditApplicationApplyView(APIView):
             request.user.id,
             application_apply_ds.validated_data["audit_date"]
         )
-        if str(request.data['audit_date']) == str(tomorrow_date):
+        # if str(request.data['audit_date']) == str(tomorrow_date):
+        audit_auto_approve = audit_cycle_audit_auto_approve_check_by_applictaion_id(application.id) 
+        if str(request.data['audit_date']) == str(tomorrow_date) and audit_auto_approve:
             instance_approved_application.approved(application.id)
         return Response(AuditApplicationSerializer(application).data)
 
