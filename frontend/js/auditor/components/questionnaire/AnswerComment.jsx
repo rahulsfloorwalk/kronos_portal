@@ -16,6 +16,7 @@ class __AnswerComment extends Component {
 			PropTypes.number,
 			PropTypes.string,
 		]).isRequired,
+		question_marks:PropTypes.number.isRequired,
 		question_id: PropTypes.oneOfType([
 			PropTypes.number,
 			PropTypes.string,
@@ -76,7 +77,7 @@ class __AnswerComment extends Component {
 	};
 
 	render(){
-		if(this.props.editable && this.props.required || this.props.ans){
+		if(this.props.editable && this.props.required || this.props.ans && this.props.question_marks){
 			return (
 				<div>
 					<GrammarlyEditorPlugin clientId={ClientID}>
@@ -99,7 +100,7 @@ class __AnswerComment extends Component {
 				</div>
 			);
 		} else {
-			return this.props.answer_comment ? <span> ( {this.props.answer_comment})</span> : null;
+			return this.props.answer_comment ? <span> ({this.props.answer_comment})</span> : null;
 		}
 	}
 }

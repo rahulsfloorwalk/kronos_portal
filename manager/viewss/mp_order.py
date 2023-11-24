@@ -46,6 +46,8 @@ from manager.serializers import AttachmentSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
 from django.conf import settings
+from . import payment_service
+from rest_framework.permissions import AllowAny
 
 
 class CustomPagination(PageNumberPagination):
@@ -361,6 +363,8 @@ class MpPaymentCompleteView(APIView):
             section_proof_tag.save_section_proof_tag(add_section.id,audit_cycle_response.id,proof_tag_list)
 
         add_store_response = add_store_to_audit(audit_cycle_response,order,solution_details)
+        success_payment_email_for_company = payment_service.success_payment_email_for_company(order.id)
+        active_cycle_email_for_client = payment_service.active_cycle_email_for_client(order.id)
         
         return JsonResponse({'status': 'success'})   
 
@@ -1088,6 +1092,35 @@ class MPOrderList(APIView):
             return Response({'message': 'Invalid status parameter. Valid values are DRAFT, COMPLETE, ACTIVE, or ALL.'}, status=400)
 
         mp_order_data = [{'mp_order': MPOrderSerializer(mp_order_item).data} for mp_order_item in mp_order]
+        return Response({'mp_order_data': mp_order_data})
+    
+class Manager_Dashbord_MPOrder_List(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER]
+    }
+    def get(self, request):
+        user = request.user
+        valid_statuses = ['DRAFT', 'COMPLETE', 'ACTIVE']
+        status = request.query_params.get('status')
+
+        if status and status == 'ALL':
+            mp_order = MPOrder.objects.filter(status__in=valid_statuses)
+        elif status and status in valid_statuses:
+            mp_order = MPOrder.objects.filter(status=status)
+        else:
+            return Response({'message': 'Invalid status parameter. Valid values are DRAFT, COMPLETE, ACTIVE, or ALL.'}, status=400)
+        mp_order_data = [{'mp_order': MPOrderSerializer(mp_order_item).data} for mp_order_item in mp_order]
+        return Response({'mp_order_data': mp_order_data})
+    
+class MpOrderCompletePaymentIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER]
+    }
+    def get(self, request, order_id):
+        mp_order = MPOrder.objects.get(id=order_id)
+        mp_order_data = {'mp_order': MPOrderSerializer(mp_order).data}
         return Response({'mp_order_data': mp_order_data})
     
 class AuditCycleDetailView(APIView):

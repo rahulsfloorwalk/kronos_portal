@@ -126,7 +126,9 @@ urlpatterns = ([
     
     # For Loggedin User 
     url(r'mp_order_list$',mp_order_views.MPOrderList.as_view(),name='mp_order_list_view'),
+    url(r'mp/manager_dashbord_mporder_list$',mp_order_views.Manager_Dashbord_MPOrder_List.as_view(),name='manager_dashbord_mporder_list_view'),
     url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
+    url(r'mp_order/(?P<order_id>[0-9]+)/complete_payment$',mp_order_views.MpOrderCompletePaymentIdView.as_view(),name='mp_order_complete_payment_id view'),
 
     # -----------------------------------------
   
