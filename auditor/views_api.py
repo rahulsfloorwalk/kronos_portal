@@ -9,7 +9,34 @@ from .service import preferences_service
 from registration.service import auditor as auditor_registration
 from .serializers import UserAPISerializer, PreferencesSerializer
 
+from django.views import View
+from django.db.transaction import atomic
+from django.http import JsonResponse
+import json
+from registration.mixins import HasGroupPermission
+from rest_framework.permissions import AllowAny,IsAuthenticated
 
+class SignUpAPI(View):
+    @atomic
+    def post(self, request):
+        response, status = auditor_service_api.sign_up_auditor(request)
+        return JsonResponse(response, status=status)
+
+
+class LoginAPI(APIView):
+    permission_classes = [AllowAny]
+    @atomic
+    def post(self, request):
+        response, status_code = auditor_service_api.login_auditor(request)
+        return Response(response, status=status_code)
+
+class LogoutAPI(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self,request):
+        if 'user_id' in request.session:
+            del request.session['user_id']
+        return JsonResponse({'message': 'User logged out successfully'})
+    
 class ChangePasswordDeSerializer(Serializer):
     old_password = CharField(min_length=8, max_length=128)
     new_password = CharField(min_length=8, max_length=128)

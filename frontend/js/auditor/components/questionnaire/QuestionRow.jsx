@@ -131,6 +131,7 @@ class QuestionRow extends React.Component {
 			{this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT"
 				? <AnswerComment editable={false}
 					audit_store_id={this.props.auditStoreId} question_id={this.props.q.id}
+					question_marks={this.props.q.max_marks}
 					answer_comment={this.props.answer && this.props.answer.answer_comment}
 					required={this.props.q.optional_comment_required}
 					showErrors={this.props.showErrors}
@@ -180,6 +181,7 @@ class QuestionRow extends React.Component {
 							<AnswerComment
 								audit_store_id={this.props.auditStoreId}
 								question_id={this.props.q.id}
+								question_marks={this.props.q.max_marks}
 								answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}
 								editable={true}
 								required={this.props.q.optional_comment_required}
@@ -211,7 +213,7 @@ class QuestionRow extends React.Component {
 						</div>
 						{this.props.q.optional_comment_required &&
 						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required} showErrors={this.props.showErrors} />
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} question_marks={this.props.q.max_marks} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required} showErrors={this.props.showErrors} />
 						</div>
 						}
 					</div>

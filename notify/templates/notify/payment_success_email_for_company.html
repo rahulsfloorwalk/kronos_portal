@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<p>
+		<h1> Looks like You have another request</h1>
+		<p>Hello</p>
+		<p>Looks like you’re getting popular!</p>
+		<p><b>1. Order ID : </b>{{order_id}}</p>
+		<p><b>2. Brand Name : </b>{{brand_name}}</p>
+		<p><b>3. Solution : </b>{{solution}}</p>
+		<p><b>4. Number of Audits : </b>{{no_of_audits}}</p>
+		{% comment %} <p><b>5. Started date : </b>{{auditor_email}}</p> {% endcomment %}
+		<p><b>6. Started Date: {{ start_date|date:"Y-m-d" }}</p>
+		<br/>
+		<p>To view more details about the project click here. Please assign the project to a manager to begin execution.</p><br/>
+		<p>Hurry up, the lines getting longer!</p>
+		<p><a href="{{ kronos_base_url }}{% url 'registration:manager_login' %}?next=/static/manager/index.html#/mp_order/{{order_id}}/complete_payment" target="_blank" style="text-decoration:underline;background-color:#ffffff;border:solid 1px #3498db;border-radius:5px;box-sizing:border-box;color:#3498db;cursor:pointer;display:inline-block;font-size:14px;font-weight:bold;margin:0;padding:12px 25px;text-decoration:none;background-color:#3498db;border-color:#3498db;color:#ffffff;">Click Here</a></p>
+        <p>--</p>
+		<p>Team FloorWalk.</p>
+		<br>
+		<br>
+	</body>
+</html>

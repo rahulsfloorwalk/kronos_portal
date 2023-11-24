@@ -74,7 +74,10 @@ urlpatterns = ([
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list$', views.AttachmentProofTagList.as_view(), name='attachment_proof_tag_list'),
 
-    # API for android
+    # API for android App
+    url(r'app/signup_api$', views_api.SignUpAPI.as_view(), name="signup_api"),
+    url(r'app/login_api$', views_api.LoginAPI.as_view(), name="login_api"),
+    url(r'app/logout_api$', views_api.LogoutAPI.as_view(), name="logout_api"),
     url(r'change_password_api$', views_api.ChangePasswordView.as_view(), name="change_password_api"),
     url(r'dashboard_api$', views_api.DashboardView.as_view(), name="dashboard_view"),
     url(r'auditor_profile_api$', views_api.AuditorProfileView.as_view(), name="auditor_profile_view"),
