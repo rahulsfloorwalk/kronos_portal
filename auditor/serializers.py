@@ -22,6 +22,7 @@ from auditor.models import Preferences
 from agency.models import Agency
 # from kronos.utils import validate_ifsc, validate_pan
 from kronos.utils import find_payment_due_date, get_difference_between_date
+from client.service.client_manager import get_manager_email_list_by_audit_store_obj
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -403,6 +404,10 @@ class AuditStoreSerializer(ModelSerializer):
 
     def get_date_difference(self, audit_store_obj):
         return get_difference_between_date(audit_store_obj.audit_date)
+    
+    manager_email_list = SerializerMethodField()
+    def get_manager_email_list(self, audit_store_obj):
+        return get_manager_email_list_by_audit_store_obj(audit_store_obj)
 
     audit = AuditSerializer()
     class Meta:
@@ -418,6 +423,7 @@ class AuditStoreSerializer(ModelSerializer):
             'user',
             'get_date_diff',
             'max_attachment_limit',
+            'manager_email_list',
         )
         read_only_fields = fields
 

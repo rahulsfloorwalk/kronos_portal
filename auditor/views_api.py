@@ -42,7 +42,7 @@ class ChangePasswordDeSerializer(Serializer):
     new_password = CharField(min_length=8, max_length=128)
 
 
-class ChangePasswordView(APIView):
+class ChangePasswordAPI(APIView):
     permission_classes = [HasGroupPermission]
     authentication_classes = [TokenAuthentication]
     required_groups = {
@@ -58,7 +58,38 @@ class ChangePasswordView(APIView):
             ds.validated_data['new_password']
         )
         return Response(response)
+    
 
+class ForgotPasswordAPI(APIView):
+    permission_classes=[AllowAny]
+    def post(self,request):
+        response,status = auditor_service_api.forgot_password(request.data)
+        return JsonResponse(response,status=status)
+
+
+class PasswordResetConfirmAPIView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request, uidb64, token):
+        response, status = auditor_service_api.password_reset_confirm(request, uidb64, token)
+        return JsonResponse(response, status=status)
+
+
+class VerifyAndForgotPasswordAPI(APIView):
+    permission_classes=[AllowAny]
+    def post(self,request):
+        response,status = auditor_service_api.verify_otp_for_forgot_password(request.data)
+        return JsonResponse(response,status=status)
+
+
+class SetPasswordAPI(APIView):
+    permission_classes=[HasGroupPermission]
+    required_group={
+        'POST':[GROUP_NAME_AUDITOR]
+    }
+    def post(self,request):
+        response,status = auditor_service_api.set_password(request)
+        return JsonResponse(response,status=status) 
+  
 
 class DashboardView(APIView):
     permission_classes = [HasGroupPermission]
