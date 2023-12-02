@@ -324,6 +324,12 @@ def set_audit_alignment_factor_by_audit_cycle(audit_cycle_id: int, factors: dict
             'type': 'func'
         },
     ]
+    # selected_options = []
+    # for factor in audit_cycle.audit_alignment_factors:
+    #     if factor['value']:
+    #         selected_options.extend(["{}:{}".format(factor['key'], factor['value'])])
+    # eligibility_value = ', '.join(selected_options)
+    # audit_cycle.eligibility = eligibility_value
     return save(audit_cycle)
 
 def find_audit_cycles_by_client(client_id):

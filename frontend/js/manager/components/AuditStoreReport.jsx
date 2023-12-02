@@ -34,6 +34,7 @@ class AnswerComment extends Component {
 		audit_store_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		question_id: PropTypes.number,
 		editable: PropTypes.bool,
+		required : PropTypes.bool,
 	};
 	constructor(props){
 		super(props);
@@ -76,7 +77,7 @@ class AnswerComment extends Component {
 			return (
 				<div className={`${hasSuccess} ${hasError}`}>
 					<GrammarlyEditorPlugin clientId={ClientID}>
-						<textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" rows="1"/>
+						<textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" style={(this.props.required ?{border: "solid 2px #a94442"}: null)}rows="1"/>
 					</GrammarlyEditorPlugin>
 				</div>
 			);
@@ -100,6 +101,7 @@ class __QuestionRow extends React.Component {
 			question_type: PropTypes.string.isRequired,
 			question_txt: PropTypes.string.isRequired,
 			hide_question: PropTypes.bool,
+			optional_comment_required : PropTypes.bool,
 			question_data: PropTypes.shape({
 				options: PropTypes.arrayOf(PropTypes.shape({
 				})),
@@ -189,7 +191,7 @@ class __QuestionRow extends React.Component {
 			<span>
 				<big>{this.state.answer.answer_text}</big>
 				{ this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT"
-					?  <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
+					?  <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} required={this.props.q.optional_comment_required}/>
 					: null
 				}
 			</span>
@@ -242,7 +244,7 @@ class __QuestionRow extends React.Component {
 							</div>
 						</div>
 						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} required={this.props.q.optional_comment_required}/>
 						</div>
 					</div>
 				);
@@ -268,7 +270,7 @@ class __QuestionRow extends React.Component {
 							{this.state.answer.answer_text}
 						</div>
 						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true}/>
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required}/>
 						</div>
 					</div>
 				);

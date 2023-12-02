@@ -9,8 +9,8 @@ from django.core.validators import validate_email
 from registration.service import mobile_number_service
 from auditor.models import Preferences
 import hashlib
-from registration.models import Verification
 from os import urandom
+import random
 import datetime
 from django.utils import timezone
 from django.template.loader import get_template
@@ -20,15 +20,27 @@ from django.forms import ValidationError
 from django.db.models import Q
 from rest_framework.authtoken.models import Token
 from auditor.models import ProfileInfo, AdditionalInfo
-from registration.models import GROUP_NAME_AUDITOR
+from registration.models import GROUP_NAME_AUDITOR,Verification,OTPVerification
 from django.db import IntegrityError
 from registration.service.auditor import generate_ref_code
 from registration.context import registration_context
 from auditor.service import auditor_api
 from django.contrib.auth import login, logout
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.contrib.auth import get_user_model
+from django.utils.http import  urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.translation import gettext_lazy as _
+from django.utils.encoding import force_bytes, force_text
 
+
+UserModel = get_user_model()
 _logger = logging.getLogger(__name__)
 
+
+def generate_otp():
+    return str(random.randint(1000, 9999))
 
 @atomic
 def change_password(user_id, old_password, new_password):
@@ -56,6 +68,161 @@ def get_auditor_dashboard_data(user_id):
     }
     return result
 
+# @atomic
+# def forgot_password(request):
+#     to_check_email = request.get('email')
+#     try:
+#         validate_email(to_check_email)
+#     except ValidationError:
+#         response = {'details': 'Please enter a valid email'}
+#         status = 400
+    
+#     else:
+#         if to_check_email:
+#             to_check_email = to_check_email.strip().lower()
+#         try:
+#             user = User.objects.get(email__iexact=to_check_email)
+#             group_name = user.groups.get()
+
+#             if group_name.name == "Auditor":
+#                 # Try to get the existing OTPVerification
+#                 otp_verification, created = OTPVerification.objects.get_or_create(
+#                     user=user,
+#                     defaults={'otp': generate_otp(), 'otp_expires': timezone.now() + datetime.timedelta(minutes=5)}
+#                 )
+#                 message = get_template('registration/auditor_app/forgot_password_otp_verification.html').render({
+#                     'otp': otp_verification.otp,
+#                     'email': user.email,
+#                     **registration_context(),
+#                 })
+#                 msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
+#                 msg.content_subtype = 'html'
+#                 if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+#                     msg.send()
+#                     _logger.info("forgot password email sent to user: %s", user.email)
+#                 else:
+#                     _logger.info("forgot password email disabled. skipping email for user: %s", user.email)
+#                     _logger.debug("DUMPING VERIFICATION EMAIL: %s", message)
+
+#                 response = {'details': 'OTP is Sent In Your Registered Mail !! ', 'user': user.id}
+#                 status = 200
+#             elif group_name.name != "Auditor":
+#                 response = {'details': 'Email is Registered as a {}!! Please use Auditor Account Email'.format(group_name.name)}
+#                 status = 200
+#         except User.DoesNotExist:
+#             response = {'details': 'Email ID does not Exist please Enter Valid Email ID'}
+#             status = 404
+
+#     _logger.info("Response: %s", response)
+#     _logger.info("Status: %s", status)
+
+#     return response, status
+
+
+@atomic
+def forgot_password(request):
+    to_check_email = request.get("email")
+    try:
+        validate_email(to_check_email)
+    except ValidationError:
+        response = {'detail': 'Please enter a valid email'}
+        status = 400
+        return response, status
+    
+    else:
+        if to_check_email:
+            to_check_email = to_check_email.strip().lower()
+        try:
+            user = User.objects.get(email__iexact=to_check_email)
+            group_name = user.groups.get()
+
+            if group_name.name == "Auditor":
+                # Generate verification key
+                salt_hash_hexstr = hashlib.sha1(urandom(16)).hexdigest()
+                email_hash_hexstr = hashlib.sha1(user.email.encode('utf-8')).hexdigest()
+                cat_str = salt_hash_hexstr + email_hash_hexstr
+                activation_key = hashlib.sha1(cat_str.encode('utf-8')).hexdigest()
+
+                # Save the verification key and expiration time
+                verification, created = Verification.objects.get_or_create(user=user)
+                verification.activation_key = activation_key
+                verification.key_expires = timezone.now() + timezone.timedelta(days=2)
+                verification.save()
+
+                # Generate reset link
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                token = default_token_generator.make_token(user)
+                reset_url = reverse('auditor:password_reset_confirm', args=[uidb64, token])
+                context = {
+                    'email': user.email,
+                    'reset_url': reset_url,
+                    **registration_context(),
+                }
+                message = get_template('registration/auditor_app/forgot_password_otp_verification.html').render(context)
+
+                # Send password reset email
+                # subject = 'Password Reset'
+                # from_email = settings.DEFAULT_FROM_EMAIL
+                # to_email = [user.email]
+
+                # send_mail(subject, message, from_email, to_email, fail_silently=False)
+
+                msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
+                msg.content_subtype = 'html'
+                if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+                    msg.send()
+                    _logger.info("Password reset email sent to user: %s", user.email)
+                else:
+                    _logger.info("Password reset email disabled. Skipping email for user: %s", user.email)
+                    _logger.debug("DUMPING PASSWORD RESET EMAIL: %s", message)
+
+                response = {'detail': 'Password reset instructions sent to your email','user': user.id}
+                status = 200
+            elif group_name.name != "Auditor":
+                response = {'detail': 'Email is Registered as a {}!! Please use Client Account Email'.format(group_name.name)}
+                status = 200
+        except User.DoesNotExist:
+            response = {'detail': 'Email ID does not Exist. Please Enter a Valid Email ID'}
+            status = 404
+    _logger.info("Response: %s", response)
+    _logger.info("Status: %s", status)
+    return response, status
+
+def password_reset_confirm(request, uidb64, token):
+    # Extract necessary information from the request object
+    uid = force_text(urlsafe_base64_decode(uidb64))
+    try:
+        user = UserModel._default_manager.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
+        user = None
+    if user is not None and default_token_generator.check_token(user, token):
+        # user = request.user.id
+        password = request.data.get('password')
+        user = User.objects.get(pk=user.id)  # Get the user object from the user ID
+        user.set_password(password)
+        user.save()
+        response = {'detail': 'Password Changed'}
+        status = 200
+        print(password)
+        print(user.password)
+        return response, status
+    else:
+        response = {'detail': 'Invalid token or user not found'}
+        status = 400
+
+    return response, status
+
+
+@atomic
+def set_password(request):
+    user=request.user.id
+    password= request.data.get('password')
+    user = User.objects.get(pk=user)
+    user.set_password(password)
+    user.save()
+    response={'detail': 'Password Changed'}
+    status=200
+    return response,status
 
 def sign_up_auditor(request):
     to_check_email = request.POST.get("username")
@@ -214,3 +381,54 @@ def login_auditor(request):
         response = {'detail': 'Username or Password incorrect'}
         status = 400
     return response, status
+
+
+@atomic
+def verify_otp_for_forgot_password(request):
+    otp = request.get('otp') 
+    user = request.get('user')
+    try:
+        user_=User.objects.get(id=user) 
+        otp_verification = OTPVerification.objects.get(user=user_.id)
+        
+        if otp_verification.is_expired():
+            otp = generate_otp()
+            otp_verification=OTPVerification.objects.get(user_id=user_.id)
+            otp_verification.otp = otp
+            otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+            otp_verification.save()
+            message = get_template('registration/auditor_app/forgot_password_otp_verification.html').render({
+                'otp': otp,
+                'email': user_.email,
+                **registration_context(),
+            })
+            msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user_.email,))
+            msg.content_subtype = 'html'
+
+            if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+                msg.send()
+                _logger.info("forgot password email sent to user : %s", user_.email)
+            else:
+                _logger.info("forgot password email disabled. skipping email for user : %s", user_.email)
+                _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
+            
+            response={'detail': 'Old OTP Has Expired, New OTP is Shared On Your Email !!','user':user }
+            status= 200
+
+        else:
+            if otp_verification.otp == otp:
+                user_=User.objects.get(id=user)
+                otp_verification.is_verified = True
+                otp_verification.save()
+                token, created = Token.objects.get_or_create(user=user_)
+                response = {'detail': 'OTP Verified !! Please Change Password', 'token': token.key,'user':user_.id}
+                status = 200
+            
+            else:
+                response = {'detail': 'Invalid OTP.'}
+                status = 400
+    except OTPVerification.DoesNotExist:
+        response = {'detail': 'Record not found.'}
+        status = 404
+    
+    return response,status

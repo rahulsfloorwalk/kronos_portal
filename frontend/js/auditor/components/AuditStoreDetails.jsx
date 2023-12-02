@@ -125,9 +125,11 @@ class AuditStoreDetails extends React.Component {
 		}
 
 		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
-		const fees = earnings_per_audit ? <b>Fees: ₹ {earnings_per_audit}, </b> : "";
+		const fees = earnings_per_audit ? <b> ₹ {earnings_per_audit}, </b> : "";
 		const reimbursement = this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement;
 		const reimb = reimbursement ? <span>Reimbursement upto: <b>₹ {reimbursement}</b></span> : "";
+		const manager_email_list = this.props.auditStore.manager_email_list;
+		const mngr = manager_email_list ? <span><b> {manager_email_list}</b></span> : "";
 
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
@@ -178,6 +180,10 @@ class AuditStoreDetails extends React.Component {
 										<td className="text-right">Status:</td>
 										<th>{<AuditStoreStatusLabel status={this.props.auditStore.status}/>}
 										</th>
+									</tr>
+									<tr>
+										<td className="text-right">Managers:</td>
+										<th>{<span>{mngr}</span>}</th>
 									</tr>
 									{this.state.guideline && this.state.guideline ?
 										<tr>

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
 
-import NotificationBox from "./../components/NotificationBox.jsx";
+// import NotificationBox from "./../components/NotificationBox.jsx";
 import StatCard from "./../components/StatCard.jsx";
 import ProfileCard from "./../components/ProfileCard.jsx";
 
@@ -63,7 +63,7 @@ class Dashboard extends React.Component {
 				<div>
 					{/*<h3 className="page-header">Welcome {this.props.firstName} {this.props.lastName}</h3>*/}
 					<div className="row">
-						<div className="col-md-8">
+						<div className="col-md-12">
 							<br/>
 							<ProfileCard
 								firstName={this.props.firstName}
@@ -107,9 +107,9 @@ class Dashboard extends React.Component {
 								</div>
 							</div>
 						</div>
-						<div className="col-md-4">
+						{/* <div className="col-md-4">
 							<NotificationBox/>
-						</div>
+						</div> */}
 					</div>
 				</div>
 			);

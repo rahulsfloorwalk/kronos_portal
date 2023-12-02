@@ -4,28 +4,27 @@ from client.models import Client,MPOrder,Transaction,MPClientProfileInfo
 from registration.models import GROUP_NAME_CLIENT
 from audit.models import AuditCycle
 from django.template.loader import get_template
-from registration.context import payment_context
+from registration.context import registration_context
 from notify.service.mail import send_email
 import logging
 from celery import shared_task
+from django.shortcuts import get_object_or_404
 
 _logger = logging.getLogger(__name__)
 
+
+def find_transaction_by_order_id(order_id):
+    transaction = get_object_or_404(Transaction, id=order_id)
+    return transaction
 
 def success_payment_email_for_company(order_id):
     mp_order = MPOrder.objects.get(id=order_id)
     transaction = find_transaction_by_order_id(mp_order.id)
 
-    account_email = ['pooja.satfale@floorwalk.in','sourabh@floorwalk.in','tiyasha.roy@floorwalk.in']
+    account_email = ['pooja.satfale@floorwalk.in','sourabh@floorwalk.in','tiyasha.roy@floorwalk.in','rahul.solanki@floorwalk.in']
+    # account_email = ['rahul.solanki@floorwalk.in']
     send_payment_success_email.delay(account_email, order_id,transaction.id)
     return mp_order 
-    
-def find_transaction_by_order_id(order_id):
-    try:
-        transaction= Transaction.objects.get(id=order_id)
-        return transaction
-    except Transaction.DoesNotExist as e:
-        raise ObjectNotFound from e
 
 @shared_task(ignore_result=True)
 def send_payment_success_email(email_address,order_id,transaction_id):
@@ -35,15 +34,15 @@ def send_payment_success_email(email_address,order_id,transaction_id):
 
     params = {
         'order_id': mp_order.id,
-        'brand_name': client_profile.brand,
+        'brand': client_profile.brand,
         'solution': mp_order.solution,
         'no_of_audits':mp_order.no_of_response,
         'start_date': transaction.payment_success_date,
-        **payment_context(),
+        **registration_context(),
     }
 
     # generate email from templates
-    subject = "Looks like You have another request - {} - {}".format( params['order_id'],params['brand_name'], params['solution'], params['no_of_audits'], params['start_date'])
+    subject = "Looks like You have another request - Order ID: {} - Brand: {}".format( params['order_id'],params['brand'])
     html_message = get_template("notify/payment_success_email_for_company.html").render(params)
     txt_message = get_template("notify/payment_success_email_for_company.txt").render(params)
     
@@ -55,7 +54,7 @@ def send_payment_success_email(email_address,order_id,transaction_id):
 def failed_payment_email_for_company(order_id):
     mp_order = MPOrder.objects.get(id=order_id)
 
-    account_email = ['pooja.satfale@floorwalk.in','sourabh@floorwalk.in','tiyasha.roy@floorwalk.in']
+    account_email = ['pooja.satfale@floorwalk.in','sourabh@floorwalk.in','tiyasha.roy@floorwalk.in','rahul.solanki@floorwalk.in']
     send_failed_payment_success_email.delay(account_email, order_id)
     return mp_order 
 
@@ -67,15 +66,15 @@ def send_failed_payment_success_email(email_address,order_id):
 
     params = {
         'order_id': mp_order.id,
-        'brand_name': client_profile.brand,
+        'brand': client_profile.brand,
         'solution': mp_order.solution,
         'no_of_audits':mp_order.no_of_response,
         'start_date': start_date,
-        **payment_context(),
+        **registration_context(),
     }
 
     # generate email from templates
-    subject = "Looks like You have another request - {} - {}".format( params['order_id'],params['brand_name'], params['solution'], params['no_of_audits'], params['start_date'])
+    subject = "Looks like You have another request - {} - {}".format( params['order_id'],params['brand'], params['solution'], params['no_of_audits'], params['start_date'])
     html_message = get_template("notify/payment_success_email_for_company.html").render(params)
     txt_message = get_template("notify/payment_success_email_for_company.txt").render(params)
     
@@ -97,12 +96,12 @@ def active_cycle_success_email(email_address,order_id):
     client_profile = MPClientProfileInfo.objects.get(user=mp_order.user)
 
     params = {
-        'brand_name': client_profile.brand,
-        **payment_context(),
+        'brand': client_profile.brand,
+        **registration_context(),
     }
 
     # generate email from templates
-    subject = "Welcome on Onboard the FloorWalk Express - {}".format(params['brand_name'])
+    subject = "Welcome on Onboard the FloorWalk Express - {}".format(params['brand'])
     html_message = get_template("notify/active_cycle_email_for_client.html").render(params)
     txt_message = get_template("notify/active_cycle_email_for_client.txt").render(params)
     

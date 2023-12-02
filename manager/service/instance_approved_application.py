@@ -7,6 +7,7 @@ from django.db.models import F
 from auditor.service import profile_info_service
 from datetime import timedelta
 from audit.models import AuditCycle
+from django.core.exceptions import ObjectDoesNotExist
 
 @atomic
 def approved(application_id):
@@ -34,13 +35,16 @@ def approved(application_id):
         else:
             return False
     return False
-
-def audit_cycle_audit_auto_approve_check_by_applictaion_id(application_id):
-    audit_application = AuditApplication.objects.select_related('audit', 'audit__audit_cycle', 'profileinfo').get(
-        id=application_id,
-        audit__hidden=False,
-        audit_date__exact=today_ist() + timedelta(days=1),
-        report_exists=False,
-        audit__audit_cycle__status=AuditCycle.ACTIVE
-    )
-    return audit_application.audit.audit_cycle.audit_auto_approve
+# def audit_cycle_audit_auto_approve_check_by_applictaion_id(application_id):
+#     try:
+#         audit_application = AuditApplication.objects.select_related('audit', 'audit__audit_cycle', 'profileinfo').get(
+#             id=application_id,
+#             audit__hidden=False,
+#             audit_date__exact=today_ist() + timedelta(days=1),
+#             report_exists=False,
+#             audit__audit_cycle__status=AuditCycle.ACTIVE
+#         )
+#         return audit_application.audit.audit_cycle.audit_auto_approve
+#     except ObjectDoesNotExist:
+#         return None
+        

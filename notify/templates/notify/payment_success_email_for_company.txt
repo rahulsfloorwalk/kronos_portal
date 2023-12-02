@@ -2,7 +2,7 @@ Looks like You have another request
 Hello,
 Looks like you’re getting popular!
 1. Order ID : {{order_id}}
-2. Brand Name : {{brand_name}}
+2. Brand Name : {{brand}}
 3. Solution : {{solution}}
 4. Number of Audits : {{no_of_audits}}
 5. Started date : {{ start_date|date:"Y-m-d" }}
