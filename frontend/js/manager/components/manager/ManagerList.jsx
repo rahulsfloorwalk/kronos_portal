@@ -12,6 +12,8 @@ class ManagerRow extends React.Component {
 		manager: PropTypes.shape({
 			id: PropTypes.number,
 			email: PropTypes.string,
+			name: PropTypes.string,
+			mobile: PropTypes.string,
 			is_active: PropTypes.bool,
 		}),
 	};
@@ -21,6 +23,8 @@ class ManagerRow extends React.Component {
 			<tr>
 				<td className="text-right">{this.props.seq}</td>
 				<td>{this.props.manager.email}</td>
+				<td>{this.props.manager.name}</td>
+				<td>{this.props.manager.mobile}</td>
 				<td>{is_active}</td>
 				<td>
 					<Link to={`/manager/${this.props.manager.id}/edit`} className="btn btn-default"><Pencil/></Link>
@@ -65,6 +69,8 @@ export default class ManagerList extends React.Component {
 						<tr>
 							<th className="text-right">#</th>
 							<th>Email Address</th>
+							<th>Name</th>
+							<th>Mobile</th>
 							<th>Active</th>
 							<th></th>
 						</tr>

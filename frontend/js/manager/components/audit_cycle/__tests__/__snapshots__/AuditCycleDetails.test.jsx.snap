@@ -107,14 +107,7 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
       </a>
       ) 
        
-      (
-      <a
-        onClick={[Function]}
-        style={Object {}}
-      >
-        Eligibility
-      </a>
-      ) (
+       (
       <a
         onClick={[Function]}
         style={Object {}}

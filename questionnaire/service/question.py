@@ -63,6 +63,7 @@ def copy_questions_from_to(from_section_id, to_section_id):
             new_question.question_type = question.question_type
             new_question.question_data = question.question_data
             new_question.sequence = question.sequence
+            new_question.optional_comment_required = question.optional_comment_required
             new_question.section = to_section
             save(new_question)
 

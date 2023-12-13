@@ -23,7 +23,9 @@ export default class ManagerForm extends React.Component {
 		manager: {
 			email: "",
 			password: "",
-			is_active: true
+			is_active: true,
+			name:"",
+			mobile:"",
 		},
 		errors: {
 		}
@@ -64,12 +66,16 @@ export default class ManagerForm extends React.Component {
 				this.props.params.userId,
 				this.state.manager.email,
 				this.state.manager.password,
-				this.state.manager.is_active);
+				this.state.manager.is_active,
+				this.state.manager.name,
+				this.state.manager.mobile);
 		} else {
 			promise = insert(
 				this.state.manager.email,
 				this.state.manager.password,
-				this.state.manager.is_active);
+				this.state.manager.is_active,
+				this.state.manager.name,
+				this.state.manager.mobile);
 		}
 		promise.then(function(){
 			hashHistory.push("/manager");
@@ -94,6 +100,8 @@ export default class ManagerForm extends React.Component {
 					<FormErrorList errors={this.state.errors.non_field_errors}/>
 					<FormInput label="Email Address" type="email" value={this.state.manager.email} name="email" onChange={this.fieldChanged} errors={this.state.errors.email}/>
 					<FormInput label="Password" type="text" value={this.state.manager.password} name="password" onChange={this.fieldChanged} errors={this.state.errors.password} placeholder={passwordPlaceholder}/>
+					<FormInput label="Name" type="text" value={this.state.manager.name} name="name" onChange={this.fieldChanged} errors={this.state.errors.name}/>
+					<FormInput label="Mobile" type="text" value={this.state.manager.mobile} name="mobile" onChange={this.fieldChanged} errors={this.state.errors.mobile}/>
 					<FormInput label="Active?" type="checkbox" checked={this.state.manager.is_active} name="is_active" onChange={this.fieldChanged} errors={this.state.errors.is_active}/>
 					<SaveButton/>
 				</form>

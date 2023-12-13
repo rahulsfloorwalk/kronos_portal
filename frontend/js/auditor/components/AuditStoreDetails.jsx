@@ -129,7 +129,34 @@ class AuditStoreDetails extends React.Component {
 		const reimbursement = this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement;
 		const reimb = reimbursement ? <span>Reimbursement upto: <b>₹ {reimbursement}</b></span> : "";
 		const manager_email_list = this.props.auditStore.manager_email_list;
-		const mngr = manager_email_list ? <span><b> {manager_email_list}</b></span> : "";
+		let mngr = "";
+		if (manager_email_list && manager_email_list.length > 0) {
+			mngr = (
+				<span>
+					<b>{manager_email_list.join(", ")}</b>
+				</span>
+			);
+		}
+
+		const manager_contact_list = this.props.auditStore.manager_contact_list;
+		let mngr_cntct = "";
+		if (manager_contact_list && manager_contact_list.length > 0) {
+			mngr_cntct = (
+				<span>
+					<b>{manager_contact_list.join(", ")}</b>
+				</span>
+			);
+		}
+
+		// const manager_name_list = this.props.auditStore.manager_name_list;
+		// let mngr_name = "";
+		// if (manager_name_list && manager_name_list.length > 0) {
+		// mngr_name = (
+		// 	<span>
+		// 	<b>{manager_name_list.join(', ')}</b>
+		// 	</span>
+		// );
+		// }
 
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
@@ -183,7 +210,11 @@ class AuditStoreDetails extends React.Component {
 									</tr>
 									<tr>
 										<td className="text-right">Managers:</td>
-										<th>{<span>{mngr}</span>}</th>
+										<th>{mngr}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Contacts:</td>
+										<th>{mngr_cntct}</th>
 									</tr>
 									{this.state.guideline && this.state.guideline ?
 										<tr>

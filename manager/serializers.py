@@ -12,6 +12,7 @@ from registration.models import MobileNumber
 from .models import City, ProofTag,MPCategory,MPTax,MPSolution
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 from attachment.models import Attachment
+from manager.models import ManagerProfileInfo
 class ClientSerializer(ModelSerializer):
     class Meta:
         model = Client
@@ -263,8 +264,16 @@ class PaymentSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class ManagerProfileInfoSerializer(ModelSerializer):
+    class Meta:
+        model = ManagerProfileInfo
+        fields = ('mobile',)
+
 class PlainUserSerializer(ModelSerializer):
     mobile_numbers = MobileNumberSerializer(many=True)
+    # mobile = ManagerProfileInfoSerializer(many=True)
+    mobile = SerializerMethodField()
+    name = SerializerMethodField()
     class Meta:
         model = User
         fields = (
@@ -272,8 +281,23 @@ class PlainUserSerializer(ModelSerializer):
             'email',
             'is_active',
             'mobile_numbers',
+            'name',
+            'mobile'
         )
         read_only_fields = fields
+    def get_mobile(self, obj):
+        try:
+            manager_profile_info = ManagerProfileInfo.objects.get(user=obj)
+            return manager_profile_info.mobile
+        except ManagerProfileInfo.DoesNotExist:
+            return None
+        
+    def get_name(self, obj):
+        try:
+            manager_profile_info = ManagerProfileInfo.objects.get(user=obj)
+            return manager_profile_info.name
+        except ManagerProfileInfo.DoesNotExist:
+            return None
 
 class AgencyUserInfoSerializer(ModelSerializer):
     agency = AgencySerializer()

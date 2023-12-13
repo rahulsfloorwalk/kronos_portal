@@ -3,6 +3,7 @@ from django.db.transaction import atomic
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from manager.service.manager import find_by_id
 from ..models import ClientManager
+from manager.models import ManagerProfileInfo
 
 
 def find_client_manager_by_id(client_manager_id):
@@ -44,3 +45,31 @@ def get_manager_email_list_by_audit_store_obj(audit_store):
     for cm in client_managers:
         manager_email_list.append(cm.user.email)
     return manager_email_list
+
+def get_manager_contacts_list_by_audit_store_obj(audit_store):
+    manager_contacts_list = []
+    client_managers = ClientManager.objects.filter(client__id=audit_store.audit.audit_cycle.client.id,
+                                                   is_active=True,receive_email_notification=True)
+    for cm in client_managers:
+        try:
+            # ManagerProfileInfo has a 'user' field associated with the user
+            manager_profile = ManagerProfileInfo.objects.get(user=cm.user)
+            manager_contacts_list.append(manager_profile.mobile)
+        except ManagerProfileInfo.DoesNotExist:
+            pass
+
+    return manager_contacts_list
+
+def get_manager_names_list_by_audit_store_obj(audit_store):
+    manager_name_list = []
+    client_managers = ClientManager.objects.filter(client__id=audit_store.audit.audit_cycle.client.id,
+                                                   is_active=True,receive_email_notification=True)
+    for cm in client_managers:
+        try:
+            # ManagerProfileInfo has a 'user' field associated with the user
+            manager_profile = ManagerProfileInfo.objects.get(user=cm.user)
+            manager_name_list.append(manager_profile.name)
+        except ManagerProfileInfo.DoesNotExist:
+            pass
+
+    return manager_name_list
