@@ -363,8 +363,8 @@ class MpPaymentCompleteView(APIView):
             section_proof_tag.save_section_proof_tag(add_section.id,audit_cycle_response.id,proof_tag_list)
 
         add_store_response = add_store_to_audit(audit_cycle_response,order,solution_details)
-        success_payment_email_for_company = payment_service.success_payment_email_for_company(order.id)
-        active_cycle_email_for_client = payment_service.active_cycle_email_for_client(order.id)
+        # success_payment_email_for_company = payment_service.success_payment_email_for_company(order.id)
+        # active_cycle_email_for_client = payment_service.active_cycle_email_for_client(order.id)
         
         return JsonResponse({'status': 'success'})   
 

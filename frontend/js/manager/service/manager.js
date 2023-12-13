@@ -11,27 +11,31 @@ export function findById(managerId){
 }
 
 
-export function insert( email, password, is_active){
+export function insert( email, password, is_active,name,mobile){
 	return $.ajax({
 		url: url.api_base_path + "manager/manager",
 		method: "POST",
 		data: JSON.stringify({
 			email,
 			password,
-			is_active
+			is_active,
+			name,
+			mobile
 		}),
 		contentType: "application/json"
 	});
 }
 
-export function update(managerId, email, password, is_active){
+export function update(managerId, email, password, is_active,name,mobile){
 	return $.ajax({
 		url: url.api_base_path + `manager/manager/${managerId}`,
 		method: "POST",
 		data: JSON.stringify({
 			email,
 			password,
-			is_active
+			is_active,
+			name,
+			mobile
 		}),
 		contentType: "application/json"
 	});

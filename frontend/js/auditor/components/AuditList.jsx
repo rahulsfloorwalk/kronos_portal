@@ -16,7 +16,7 @@ import { Cross, ShareAlt } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
 import { fetchPreferences } from "../service/preferences.js";
-
+import { getGender,getIncomeText,getCarCost,getEducationStatus,getReportRating,getMaritalStatus,getAuditorRating } from "../../utils.js";
 import { auditPropType, auditCyclePropType, applicationPropType } from "../prop_types";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
@@ -113,6 +113,7 @@ class AuditList extends Component{
 		super(props);
 		this.state = {
 			loading: false,
+			audit_alignment_factors:"",
 		};
 	}
 	setLoading = (loading) => {
@@ -139,6 +140,49 @@ class AuditList extends Component{
 		this.props.dispatch(fetchProfileInfo());
 		this.props.dispatch(fetchApplications());
 	}
+	componentWillReceiveProps(nextProps){
+		if(nextProps.auditCycle){
+			const audit_alignment_factors = nextProps.auditCycle.audit_alignment_factors.map(factor => {
+				let value = "";
+				if (Array.isArray(factor.value) && factor.value.length > 0) {
+					switch(factor.key) {
+					case "gender":
+						value = factor.value.map(getGender).join(", ");
+						break;
+					case "education":
+						value = factor.value.map(getEducationStatus).join(", ");
+						break;
+					case "income":
+						value = factor.value.map(getIncomeText).join(", ");
+						break;
+					case "car_cost":
+						value = factor.value.map(getCarCost).join(", ");
+						break;
+					case "marital_status":
+						value = factor.value.map(getMaritalStatus).join(", ");
+						break;
+					case "auditor_rating":
+						value = factor.value.map(getAuditorRating).join(", ");
+						break;
+					case "report_rating":
+						value = factor.value.map(getReportRating).join(", ");
+						break;
+					default:
+						value = factor.value.join(", ");
+					}
+				} else if (typeof (factor.value) === "string" && factor.value.trim() !== "") {
+					value = factor.value;
+				}
+				const key = factor.key.charAt(0).toUpperCase() + factor.key.slice(1);
+				// const spacedKey = '\u00A0\u00A0 ' + key.replace(/_/g, ' ');
+				return value ? `${key}: ${value}` : null;
+			}).filter(Boolean).join(", ");
+			this.setState({
+				audit_alignment_factors
+			});
+		}
+	}
+
 	render(){
 		if(this.state.loading || !this.props.auditCycle){
 			return <Loading/>;
@@ -161,6 +205,7 @@ class AuditList extends Component{
 		//let flexLeft = {display: "flex", justifyContent: "left", alignItems: "center"};
 		let labelStyle = {fontSize: "1.2em"};
 		let valueStyle = {fontSize: "1.5em"};
+		let eligibilityStyle = {fontSize: "1.5rem"};
 		const support_button = this.props.auditCycle.support_page_link ? <a href={this.props.auditCycle.support_page_link} target="_blank" rel="noopener noreferrer" className="btn btn-primary"><span style={{animation: "blink 1s linear infinite",fontWeight:"bold"}}>Need support for {this.props.auditCycle.client.auditor_display_name}?</span></a> : null;
 		return (
 			<div>
@@ -198,10 +243,12 @@ class AuditList extends Component{
 									<span style={valueStyle}><b><AuditTypeLabel auditType={this.props.auditCycle.type}/></b></span>
 								</p>
 							</div>
-							<div className="col-sm-4">
+							<div className="col-sm-8">
 								<p>
 									<span style={labelStyle} className="text-muted">Eligibility</span><br/>
-									<span style={valueStyle}><b>{this.props.auditCycle.eligibility ? this.props.auditCycle.eligibility : "N/A" }</b></span>
+									{/* <span style={valueStyle}><b>{this.state.eligibility ? this.state.eligibility : "N/A" }</b></span> */}
+									{/* <span style={eligibilityStyle}>{this.state.audit_alignment_factors ? this.state.audit_alignment_factors : "N/A" }</span> */}
+									<span style={eligibilityStyle}>{this.state.audit_alignment_factors? this.state.audit_alignment_factors.split(/(\b\w+:)/g).map((part, index) =>	index % 2 === 1 ? <span style={{ fontWeight: "bold" }}>{part}</span> : part	): "N/A"}</span>
 								</p>
 							</div>
 							<div className="col-sm-12">

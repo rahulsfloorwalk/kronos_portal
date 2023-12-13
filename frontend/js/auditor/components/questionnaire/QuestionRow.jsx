@@ -220,7 +220,7 @@ class QuestionRow extends React.Component {
 				);
 			}
 		}
-		let goodClass = this.state.focused || this.state.saving || !this.state.answer_text ? "" : "success";
+		let goodClass = this.state.focused || this.state.saving || !this.state.answer_text || this.props.q.optional_comment_required && this.props.answer.answer_comment==="" ||(this.props.q.question_type==="MUTEX" && this.props.q.question_data.options && this.props.q.question_data.options.some((o) => o.value === this.state.answer_text && o.marks === 0)) && this.props.q.max_marks!==0 && this.props.answer.answer_comment===""? "" : "success";
 		let badClass = this.props.showErrors && !this.state.answer_text ? "danger" : "";
 		return (
 			<tr className={goodClass || badClass}>

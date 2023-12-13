@@ -22,7 +22,7 @@ from auditor.models import Preferences
 from agency.models import Agency
 # from kronos.utils import validate_ifsc, validate_pan
 from kronos.utils import find_payment_due_date, get_difference_between_date
-from client.service.client_manager import get_manager_email_list_by_audit_store_obj
+from client.service.client_manager import get_manager_email_list_by_audit_store_obj,get_manager_contacts_list_by_audit_store_obj,get_manager_names_list_by_audit_store_obj
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -305,6 +305,7 @@ class AuditCycleSerializer(ModelSerializer):
             'description',
             'eligibility',
             'post_approval_description',
+            'audit_alignment_factors',
             'client',
             'support_page_link'
         )
@@ -408,6 +409,14 @@ class AuditStoreSerializer(ModelSerializer):
     manager_email_list = SerializerMethodField()
     def get_manager_email_list(self, audit_store_obj):
         return get_manager_email_list_by_audit_store_obj(audit_store_obj)
+    
+    manager_contact_list = SerializerMethodField()
+    def get_manager_contact_list(self, audit_store_obj):
+        return get_manager_contacts_list_by_audit_store_obj(audit_store_obj)
+    
+    manager_name_list = SerializerMethodField()
+    def get_manager_name_list(self, audit_store_obj):
+        return get_manager_names_list_by_audit_store_obj(audit_store_obj)
 
     audit = AuditSerializer()
     class Meta:
@@ -424,6 +433,8 @@ class AuditStoreSerializer(ModelSerializer):
             'get_date_diff',
             'max_attachment_limit',
             'manager_email_list',
+            'manager_contact_list',
+            'manager_name_list',
         )
         read_only_fields = fields
 
