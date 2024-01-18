@@ -164,11 +164,12 @@ class QuestionRow extends React.Component {
 						<div className="col-xs-5">
 							<select className="form-control"
 								name="answer_text"
-								style={
-									this.props.q.question_data.options.some((o) => o.value === this.state.answer_text && o.marks === 0)
-										? { border: "solid 1px #a94442" }
-										: {}
-								}
+								// style={
+								// 	this.props.q.question_data.options.some((o) => o.value === this.state.answer_text && o.marks === 0)
+								// 		? { border: "solid 1px #a94442" }
+								// 		: {}
+								// }
+								
 								onChange={this.inputChanged}
 								onFocus={this.onFocus}
 								onBlur={this.submitAnswer}
@@ -220,7 +221,8 @@ class QuestionRow extends React.Component {
 				);
 			}
 		}
-		let goodClass = this.state.focused || this.state.saving || !this.state.answer_text || this.props.q.optional_comment_required && this.props.answer.answer_comment==="" ||(this.props.q.question_type==="MUTEX" && this.props.q.question_data.options && this.props.q.question_data.options.some((o) => o.value === this.state.answer_text && o.marks === 0)) && this.props.q.max_marks!==0 && this.props.answer.answer_comment===""? "" : "success";
+		// let goodClass = this.state.focused || this.state.saving || !this.state.answer_text || this.props.q.optional_comment_required && this.props.answer.answer_comment==="" ||(this.props.q.question_type==="MUTEX" && this.props.q.question_data.options && this.props.q.question_data.options.some((o) => o.value === this.state.answer_text && o.marks === 0)) && this.props.q.max_marks!==0 && this.props.answer.answer_comment===""? "" : "success";
+		let goodClass = this.state.focused || this.state.saving || !this.state.answer_text || this.props.q.optional_comment_required && this.props.answer.answer_comment==="" ||(this.props.q.question_type==="MUTEX" && this.props.q.question_data.options && this.props.q.question_data.options.some((o) => o.value === this.state.answer_text && o.marks === 0) && this.props.answer.answer_comment!=="") && this.props.q.max_marks!==0 && this.props.answer.answer_comment===""? "" : "success";
 		let badClass = this.props.showErrors && !this.state.answer_text ? "danger" : "";
 		return (
 			<tr className={goodClass || badClass}>

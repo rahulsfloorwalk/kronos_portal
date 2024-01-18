@@ -49,6 +49,10 @@ export function deactivateAuditor(userId){
 	return $.post( url.api_base_path + `manager/auditor/${userId}/deactivate`);
 }
 
+export function deactivateAuditorfromAuditorPortal(userId){
+	return $.post( url.api_base_path + `auditor/auditor_self/${userId}/deactivate`);
+}
+
 export function verifyAuditor(userId){
 	return $.post( url.api_base_path + `manager/auditor/${userId}/verify`);
 }

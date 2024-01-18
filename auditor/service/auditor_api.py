@@ -226,6 +226,8 @@ def set_password(request):
 
 def sign_up_auditor(request):
     to_check_email = request.POST.get("username")
+    # for key, value in request.POST.items():
+    #     print(f"{key}: {value}")
     try:
         validate_email(to_check_email)
     except ValidationError:
@@ -266,12 +268,13 @@ def sign_up_auditor(request):
         else:
             response={'details': 'User is Already Registered !! Please Login'}
             status=200
+        # profile_info = ProfileInfo.objects.get(user=user)
 
     # if User.objects.filter(Q(email__iexact=to_check_email) | Q(username__iexact=to_check_email)).exists():
     #     response = {'detail': 'a user with this email already exists'}
     #     status = 400
     #     return response, status
-    except:
+    except User.DoesNotExist:
         user = User()
         user.email = request.POST.get("username")
         user.phone = request.POST.get("phone")
@@ -294,6 +297,7 @@ def sign_up_auditor(request):
         prefs.save()
 
     try:
+        additional_info = AdditionalInfo.objects.get(user=user)
         additional_info.referral_code = generate_ref_code(user.email, profile_info.mobile_number)
         additional_info.save()
     except IntegrityError:

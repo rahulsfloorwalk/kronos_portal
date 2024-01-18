@@ -13,8 +13,10 @@ import AdditionalInfoPanel from "./AdditionalInfoPanel.jsx";
 import IdProofPanel from "./IdProofPanel.jsx";
 
 import Panel from "../../components/Panel.jsx";
-import { Cross, Check } from "../../components/Icons.jsx";
+import { Cross, Check,Lock } from "../../components/Icons.jsx";
 import ProfilePercentage from "./ProfilePercentage.jsx";
+import { deactivateAuditorfromAuditorPortal } from "../../manager/service/auditor.js";
+import Alert from "react-s-alert";
 
 class DetailsPage extends React.Component {
 	static propTypes = {
@@ -33,6 +35,7 @@ class DetailsPage extends React.Component {
 	state = {
 		loading: false,
 		preferences: {},
+		isModalOpen: false,
 	};
 
 	setLoading = (loading) => {
@@ -54,6 +57,26 @@ class DetailsPage extends React.Component {
 		}).always(() => this.setLoading(false));
 	}
 	render() {
+		// let statusButton;
+			// statusButton = (<button onClick={() => {const confirmed = window.confirm("Are you sure you want to deactivate your account?");
+			// 	  if (confirmed) {
+			// 		deactivateAuditorfromAuditorPortal(this.props.profileInfo.user_id).then((auditor) => {
+			// 		  this.setState({ auditor });
+			// 		  Alert.success("AUDITOR DEACTIVATED. If you want to reactivate your Account, please contact us at contactus@floorwalk.in");
+			// 		});
+			// 	  } else {
+			// 		Alert.info("Deactivation canceled");
+			// 	  }
+			// 	}}className="btn btn-default">
+			// 		<Lock /> Deactivate
+			//   	</button>);
+
+		const statusButton = (
+			<button onClick={() => this.setState({ isModalOpen: true })} className="btn btn-default" >
+				<Lock /> Deactivate
+			</button>
+		);
+
 		return (
 			<div>
 				<div className="row">
@@ -85,6 +108,11 @@ class DetailsPage extends React.Component {
 								<li>{this.state.preferences.receive_transactional_whatsapp_message ? <Check/> : <Cross/>} on Whatsapp</li>
 							</ul>
 							{/* <p className="text-muted"><small>If you want to change your mobile number or email, please contact us.</small></p> */}
+							<div className="panel-heading">
+						<span className="pull-left">
+							{statusButton}
+						</span>
+					</div>
 						</Panel>
 					</div>
 					<div className="col-md-8">
@@ -97,10 +125,43 @@ class DetailsPage extends React.Component {
 					</div>
 					{this.props.children}
 				</div>
-			</div>
-		);
+				{this.state.isModalOpen && (
+				<div className="modal" tabIndex="-1" style={{ display: "block" }}>
+					<div className="modal-backdrop fade in" style={{ zIndex: "1060", height: "100%" }} onClick={() => this.setState({ isModalOpen: false })}/>
+						<div className="modal-dialog" style={{ zIndex: "1070" }}>
+							<div className="modal-content">
+								<div className="modal-header">
+									<button type="button" className="close" onClick={() => this.setState({ isModalOpen: false })}>
+										&times;
+									</button>
+									<h4 className="modal-title">Deactivate Confirmation :</h4>
+								</div>
+								<div className="modal-body">
+									<p>Are you sure you want to deactivate your account?</p>
+									<p>If you deactivate your account, you will not be able to login.</p>
+									<p>
+										If you want to reactivate your Account, please contact us at{" "}
+										<a href="mailto:contactus@floorwalk.in">contactus@floorwalk.in</a>.
+									</p>
+								</div>
+								<div className="modal-footer">
+									<button className="btn btn-danger" onClick={() => { deactivateAuditorfromAuditorPortal( this.props.profileInfo.user_id ).then((auditor) => {
+										this.setState({ auditor });
+										Alert.success( "AUDITOR DEACTIVATED. If you want to reactivate your Account, please contact us at contactus@floorwalk.in");
+										this.setState({ isModalOpen: false });
+										}); }}> Deactivate
+									</button>
+									<button className="btn btn-secondary" onClick={() => { this.setState({ isModalOpen: false }); }}>
+										Cancel
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>)}
+				</div>
+			);
+		}
 	}
-}
 
 var mapStoreToProps = function(store){
 	return {

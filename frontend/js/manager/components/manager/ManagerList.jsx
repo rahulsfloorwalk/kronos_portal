@@ -15,10 +15,13 @@ class ManagerRow extends React.Component {
 			name: PropTypes.string,
 			mobile: PropTypes.string,
 			is_active: PropTypes.bool,
+			is_admin: PropTypes.bool,
 		}),
 	};
 	render() {
 		var is_active = this.props.manager.is_active ? <Check/> : <Cross/>;
+		var is_admin = this.props.manager.is_admin ? <Check /> : <Cross />;
+		
 		return (
 			<tr>
 				<td className="text-right">{this.props.seq}</td>
@@ -26,6 +29,7 @@ class ManagerRow extends React.Component {
 				<td>{this.props.manager.name}</td>
 				<td>{this.props.manager.mobile}</td>
 				<td>{is_active}</td>
+				<td>{is_admin}</td>
 				<td>
 					<Link to={`/manager/${this.props.manager.id}/edit`} className="btn btn-default"><Pencil/></Link>
 				</td>
@@ -50,7 +54,7 @@ export default class ManagerList extends React.Component {
 			});
 		});
 	}
-
+	
 	componentWillReceiveProps() {
 		this.componentDidMount();
 	}
@@ -72,6 +76,7 @@ export default class ManagerList extends React.Component {
 							<th>Name</th>
 							<th>Mobile</th>
 							<th>Active</th>
+							<th>Admin</th>
 							<th></th>
 						</tr>
 					</thead>

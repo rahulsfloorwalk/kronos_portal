@@ -7,6 +7,8 @@ from audit_store.models import AuditStore,ReportActionPlan
 from django.contrib.auth.models import Group,User
 from registration.models import GROUP_NAME_CLIENT
 from django.utils import timezone
+from manager.models import ManagerProfileInfo
+
 def find_client_user_by_audit_store_id(audit_store_id):
     audit_store=AuditStore.objects.get(id=audit_store_id)
     client_users= NonClientAdminUserStore.objects.filter(stores__store_list__contains=audit_store.audit.store_id)
@@ -76,8 +78,34 @@ def find_bank_info_by_id(client_id):
 def find_all_clients():
     return Client.objects.all()
 
-def find_all_clients_if_true():
-    return Client.objects.filter(is_active=True)
+# def find_all_clients_if_true():
+#     return Client.objects.filter(is_active=True)
+
+# def find_all_clients_if_true():
+#     return Client.objects.filter(
+#         is_active=True,
+#         managers__is_active=True,
+#         managers__receive_email_notification=True
+#     ).distinct()
+
+def find_all_clients_if_true(user):
+    try:
+        manager_profile_info = ManagerProfileInfo.objects.get(user=user)
+        if manager_profile_info.is_admin:
+            # Return all clients if manager is_admin is True
+            return Client.objects.filter(is_active=True)
+        else:
+            # Return filtered clients based on manager conditions
+            return Client.objects.filter(
+                is_active=True,
+                managers__user=user,
+                managers__is_active=True,
+                managers__receive_email_notification=True
+            ).distinct()
+    except ManagerProfileInfo.DoesNotExist:
+        # Handle the case where ManagerProfileInfo doesn't exist for the user
+        return Client.objects.none()
+
 
 
 def save(client):

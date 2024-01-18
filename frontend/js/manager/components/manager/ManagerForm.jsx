@@ -26,6 +26,7 @@ export default class ManagerForm extends React.Component {
 			is_active: true,
 			name:"",
 			mobile:"",
+			is_admin: false,
 		},
 		errors: {
 		}
@@ -60,6 +61,7 @@ export default class ManagerForm extends React.Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
+		console.log(this.state.manager.is_admin)
 		var promise;
 		if(this.props.params.userId){
 			promise = update(
@@ -68,14 +70,16 @@ export default class ManagerForm extends React.Component {
 				this.state.manager.password,
 				this.state.manager.is_active,
 				this.state.manager.name,
-				this.state.manager.mobile);
+				this.state.manager.mobile,
+				this.state.manager.is_admin);
 		} else {
 			promise = insert(
 				this.state.manager.email,
 				this.state.manager.password,
 				this.state.manager.is_active,
 				this.state.manager.name,
-				this.state.manager.mobile);
+				this.state.manager.mobile,
+				this.state.manager.is_admin);
 		}
 		promise.then(function(){
 			hashHistory.push("/manager");
@@ -103,6 +107,7 @@ export default class ManagerForm extends React.Component {
 					<FormInput label="Name" type="text" value={this.state.manager.name} name="name" onChange={this.fieldChanged} errors={this.state.errors.name}/>
 					<FormInput label="Mobile" type="text" value={this.state.manager.mobile} name="mobile" onChange={this.fieldChanged} errors={this.state.errors.mobile}/>
 					<FormInput label="Active?" type="checkbox" checked={this.state.manager.is_active} name="is_active" onChange={this.fieldChanged} errors={this.state.errors.is_active}/>
+					<FormInput label="Admin?" type="checkbox" checked={this.state.manager.is_admin} name="is_admin" onChange={this.fieldChanged} errors={this.state.errors.is_admin}/>
 					<SaveButton/>
 				</form>
 			</Modal>

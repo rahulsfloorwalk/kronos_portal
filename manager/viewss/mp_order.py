@@ -694,6 +694,7 @@ class MPReportsAuditCycleSerializer(ModelSerializer):
             'planned_audit',
             'audit_count',
             'order_status',
+            'get_total_percentage',
         )
         read_only_fields = fields
 
@@ -1008,14 +1009,40 @@ class MPAuditByAuditCycle(APIView):
     }
     def get(self, request, audit_cycle_id, format=None):
         audits = audit_service.mp_find_audits_by_audit_cycle_id(audit_cycle_id)
-        serial_audits = AuditSerializer(audits, many=True).data
-        return Response(serial_audits)
-    
+        serialized_audits = AuditSerializer(audits, many=True).data
+
+        store_audit_scores = self.calculate_store_average_scores(audits)
+
+        for audit, store_score in zip(serialized_audits, store_audit_scores):
+            audit['store_average_score'] = store_score['average_percentage']
+
+        return Response(serialized_audits)
+
+    def calculate_store_average_scores(self, audits):
+        store_audit_scores = []
+
+        for audit in audits:
+            store_reports = AuditStore.objects.filter(audit=audit)
+            if store_reports:
+                total_percentage = sum(report.audit_store_percentage for report in store_reports)
+                average_percentage = total_percentage / len(store_reports)
+            else:
+                average_percentage = 0
+
+            store_audit_scores.append({
+                'store_id': audit.store.id,
+                'store_name': audit.store.name,
+                'average_percentage': average_percentage,
+            })
+
+        return store_audit_scores
 
 class AuditSerializer(ModelSerializer):
     # StoreSerializer
     store = StoreDeSerializer()
     audit_cycle = AuditCycleSerializer()
+
+    store_average_percentage = serializers.FloatField(source='calculate_store_average_percentage', read_only=True)
     class Meta:
         model = Audit
         fields = (
@@ -1031,9 +1058,18 @@ class AuditSerializer(ModelSerializer):
             'application_count',
             'report_count',
             'valid_report_count',
+            'store_average_percentage',
         )
         read_only_fields = fields
-    
+    def calculate_store_average_percentage(self, obj):
+        store_reports = AuditStore.objects.filter(audit=obj)
+        if store_reports:
+            total_percentage = sum(report.audit_store_percentage for report in store_reports)
+            average_percentage = total_percentage / len(store_reports)
+        else:
+            average_percentage = 0
+
+        return average_percentage
 
 class AuditStoreByAuditClient(APIView):
     permission_classes = [HasGroupPermission]

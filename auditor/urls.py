@@ -73,9 +73,11 @@ urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag$', views.AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list$', views.AttachmentProofTagList.as_view(), name='attachment_proof_tag_list'),
+    url(r'auditor_self/(?P<user_id>[0-9]+)/deactivate$', views.AuditorSelfDeactivateView.as_view(), name="auditor_self_id_deactivate_view"),
+
 
     # API for android App
-    url(r'app/signup_api$', views_api.SignUpAPI.as_view(), name="signup_api"),
+    url(r'app/signup_api_app$', views_api.SignUpAPI.as_view(), name="signup_api_app"),
     url(r'app/login_api$', views_api.LoginAPI.as_view(), name="login_api"),
     url(r'app/logout_api$', views_api.LogoutAPI.as_view(), name="logout_api"),
 
@@ -85,7 +87,20 @@ urlpatterns = ([
     # url(r'password-reset-confirm/<str:uidb64>/<str:token>$', views_api.auditor_service_api.PasswordResetConfirmAPIView.as_view(), name='password_reset_confirm'),
 
     url(r'app/verify_and_forgot_password_api$', views_api.VerifyAndForgotPasswordAPI.as_view(), name="verify_and_forgot_password_api"),
-    url(r'app/verify_and_forgot_password_set_api$', views_api.SetPasswordAPI.as_view(), name="verify_and_forgot_password_set_api"),    
+    url(r'app/verify_and_forgot_password_set_api$', views_api.SetPasswordAPI.as_view(), name="verify_and_forgot_password_set_api"),   
+
+    url(r'profile_info/pronouns$', views.ProfileInfoPronounsView.as_view(), name="profile_info_pronouns_view"), 
+    url(r'profile_info/gender$', views.ProfileInfoGenderView.as_view(), name="profile_info_gender_view"), 
+    url(r'profile_info/marital_status$', views.ProfileInfoMaritalStatusView.as_view(), name="profile_info_marital_status_view"), 
+    url(r'profile_info/education$', views.ProfileEducationInfoView.as_view(), name="profile_info_education_view"), 
+    
+    url(r'profile_info/income$', views.ProfileInfoIncomeView.as_view(), name="profile_info_income_view"), 
+    url(r'profile_info/audit_rating$', views.ProfileInfoAuditRatingView.as_view(), name="profile_info_audit_rating_view"), 
+    url(r'profile_info/occupation$', views.ProfileInfoOccupationView.as_view(), name="profile_info_occupation_view"), 
+    url(r'profile_info/distance$', views.ProfileInfoDistanceView.as_view(), name="profile_info_distance_view"), 
+    url(r'profile_info/industry$', views.ProfileInfoIndustryView.as_view(), name="profile_info_industry_view"), 
+    url(r'profile_info/car_cost$', views.ProfileInfoCarCostView.as_view(), name="profile_info_car_cost_view"), 
+    url(r'profile_info/resolution$', views.ProfileInfoResolutionView.as_view(), name="profile_info_resolution_view"), 
 
     url(r'dashboard_api$', views_api.DashboardView.as_view(), name="dashboard_view"),
     url(r'auditor_profile_api$', views_api.AuditorProfileView.as_view(), name="auditor_profile_view"),
