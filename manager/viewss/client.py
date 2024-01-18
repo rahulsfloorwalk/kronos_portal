@@ -14,7 +14,7 @@ class ClientView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def get(self, request, format=None):
-        clients = client_service.find_all_clients_if_true()
+        clients = client_service.find_all_clients_if_true(request.user)
         return Response(ClientSerializer(clients, many=True).data)
 
     def post(self, request):

@@ -11,7 +11,7 @@ export function findById(managerId){
 }
 
 
-export function insert( email, password, is_active,name,mobile){
+export function insert( email, password, is_active,name,mobile,is_admin){
 	return $.ajax({
 		url: url.api_base_path + "manager/manager",
 		method: "POST",
@@ -20,13 +20,14 @@ export function insert( email, password, is_active,name,mobile){
 			password,
 			is_active,
 			name,
-			mobile
+			mobile,
+			is_admin
 		}),
 		contentType: "application/json"
 	});
 }
 
-export function update(managerId, email, password, is_active,name,mobile){
+export function update(managerId, email, password, is_active,name,mobile,is_admin){
 	return $.ajax({
 		url: url.api_base_path + `manager/manager/${managerId}`,
 		method: "POST",
@@ -35,7 +36,8 @@ export function update(managerId, email, password, is_active,name,mobile){
 			password,
 			is_active,
 			name,
-			mobile
+			mobile,
+			is_admin
 		}),
 		contentType: "application/json"
 	});

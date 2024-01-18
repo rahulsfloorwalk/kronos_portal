@@ -153,3 +153,31 @@ class AuditCycle(Model):
 
     def __str__(self):
         return "AuditCycle({}): {}, client: {}".format(self.id, self.name, self.client)
+    
+    def get_avg_percentage(self, store_id):
+        total_percentage = 0
+        total_planned_audit = 0
+
+        for audit in self.audits.all():
+            audit_stores = audit.audit_stores.presentable()
+            store_found = False
+
+            for audit_store_obj in audit_stores:
+                if audit_store_obj.audit.store.id == store_id:
+                    store_found = True
+                    if hasattr(audit_store_obj, 'planned_audit'):
+                        total_percentage += audit_store_obj.audit_store_percentage
+                        total_planned_audit += audit_store_obj.planned_audit
+
+            if not store_found:
+                # Handle the case when no data is found for the given store
+                return None
+
+        avg_percentage = None
+        if total_percentage != 0 and total_planned_audit != 0:
+            avg_percentage = round(total_percentage / total_planned_audit)
+
+        return avg_percentage
+
+
+

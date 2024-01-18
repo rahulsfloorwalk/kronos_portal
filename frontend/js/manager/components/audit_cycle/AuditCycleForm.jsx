@@ -174,9 +174,9 @@ export class AuditCycleForm extends Component{
 								<option value="WALKIN">{getAuditType("WALKIN")}</option>
 								<option value="PHONE">{getAuditType("PHONE")}</option>
 								<option value="WEB">{getAuditType("WEB")}</option>
-								<option value="VISIBILITY">{getAuditType("VISIBILITY")}</option>
-								<option value="COMPETITION">{getAuditType("COMPETITION")}</option>
 								<option value="SERVICE">{getAuditType("SERVICE")}</option>
+								{/* <option value="VISIBILITY">{getAuditType("VISIBILITY")}</option>
+								<option value="COMPETITION">{getAuditType("COMPETITION")}</option>
 								<option value="SALES">{getAuditType("SALES")}</option>
 								<option value="SMAAASH_ARENA">{getAuditType("SMAAASH_ARENA")}</option>
 								<option value="FINE_DINE">{getAuditType("FINE_DINE")}</option>
@@ -191,7 +191,7 @@ export class AuditCycleForm extends Component{
 								<option value="SKIN_HYDRATION">{getAuditType("SKIN_HYDRATION")}</option>
 								<option value="HYPER_PIGMENTATION">{getAuditType("HYPER_PIGMENTATION")}</option>
 								<option value="SKIN_SENSITIVE">{getAuditType("SKIN_SENSITIVE")}</option>
-								<option value="RETAIL">{getAuditType("RETAIL")}</option>
+								<option value="RETAIL">{getAuditType("RETAIL")}</option> */}
 							</FormSelect>
 						</div>
 						<div className="col-md-6">

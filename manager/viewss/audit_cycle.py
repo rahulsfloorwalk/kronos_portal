@@ -14,6 +14,8 @@ from manager.serializers import AuditCycleSerializer,AttachmentSerializer
 from manager.service import audit_cycle_attachment_service
 from audit.models import AuditCycle
 from kronos.exceptions import AppLogicError
+from manager.models import ManagerProfileInfo
+from client.models import Client,ClientManager
 
 class AuditCycleDeSerializer(ModelSerializer):
     class Meta:
@@ -64,7 +66,32 @@ class AuditCycleViewByClient(APIView):
     }
     def get(self, request, client_id, format=None):
         audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client_id)
+        manager_profile = ManagerProfileInfo.objects.get(user=request.user)
+        try:
+            manager_profile = ManagerProfileInfo.objects.get(user=request.user)
+            if manager_profile.is_admin:
+                # If user is admin, show all data
+                audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client_id)
+            else:
+                # If user is ClientManager, show data related to their client
+                client_manager = ClientManager.objects.get(user=request.user, is_active=True)
+                if client_manager.client_id == int(client_id):
+                    audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client_id)
+                else:
+                    return Response({"detail": "You are not authorized to view this data."}, status=404)
+        except ManagerProfileInfo.DoesNotExist:
+            return Response({"detail": "You are not authorized to view this data."}, status=404)
+        except ClientManager.DoesNotExist:
+            return Response({"detail": "You are not authorized to view this data."}, status=404)
+        
         return Response(AuditCycleSerializer(audit_cycles, many=True).data)
+    
+    def handle_exception(self, exc):
+        response = super().handle_exception(exc)
+        if isinstance(response, HttpResponse) and response.status_code == 403:
+            response.data = {"detail": "You are not authorized to view this data."}
+        return response
+
 
 class AuditCycleView(APIView):
     permission_classes = [HasGroupPermission]
@@ -210,7 +237,7 @@ class AuditCycleDashboard(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, format=None):
-        return Response(audit_cycle_service.get_audit_cycle_dashboard())
+        return Response(audit_cycle_service.get_audit_cycle_dashboard(request.user))
 
 class AuditCycleDashboardStatusViewByClient(APIView):
     permission_classes = [HasGroupPermission]

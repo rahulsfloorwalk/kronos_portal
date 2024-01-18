@@ -22,7 +22,7 @@ from auditor.models import Preferences
 from agency.models import Agency
 # from kronos.utils import validate_ifsc, validate_pan
 from kronos.utils import find_payment_due_date, get_difference_between_date
-from client.service.client_manager import get_manager_email_list_by_audit_store_obj,get_manager_contacts_list_by_audit_store_obj,get_manager_names_list_by_audit_store_obj
+from client.service.client_manager import get_manager_info_list_by_audit_store_obj
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -406,18 +406,15 @@ class AuditStoreSerializer(ModelSerializer):
     def get_date_difference(self, audit_store_obj):
         return get_difference_between_date(audit_store_obj.audit_date)
     
-    manager_email_list = SerializerMethodField()
-    def get_manager_email_list(self, audit_store_obj):
-        return get_manager_email_list_by_audit_store_obj(audit_store_obj)
+    # manager_email_list = SerializerMethodField()
+    # def get_manager_email_list(self, audit_store_obj):
+    #     return get_manager_email_list_by_audit_store_obj(audit_store_obj)
     
-    manager_contact_list = SerializerMethodField()
-    def get_manager_contact_list(self, audit_store_obj):
-        return get_manager_contacts_list_by_audit_store_obj(audit_store_obj)
+    manager_info_list = SerializerMethodField()
+    def get_manager_info_list(self, audit_store_obj):
+        manager_info = get_manager_info_list_by_audit_store_obj(audit_store_obj)
+        return [{'name': info.get('name', ''), 'mobile': info.get('mobile', '')} for info in manager_info]
     
-    manager_name_list = SerializerMethodField()
-    def get_manager_name_list(self, audit_store_obj):
-        return get_manager_names_list_by_audit_store_obj(audit_store_obj)
-
     audit = AuditSerializer()
     class Meta:
         model = AuditStore
@@ -432,9 +429,8 @@ class AuditStoreSerializer(ModelSerializer):
             'user',
             'get_date_diff',
             'max_attachment_limit',
-            'manager_email_list',
-            'manager_contact_list',
-            'manager_name_list',
+            # 'manager_email_list',            
+            'manager_info_list',
         )
         read_only_fields = fields
 
@@ -712,6 +708,7 @@ class ReferralSerializer(ModelSerializer):
         read_only_fields = fields
 
 class PreferencesSerializer(ModelSerializer):
+    is_active = serializers.BooleanField(source='user.is_active', read_only=True)
     class Meta:
         model = Preferences
         fields = (
@@ -719,6 +716,7 @@ class PreferencesSerializer(ModelSerializer):
             'receive_new_opportunities_email',
             'receive_new_opportunities_sms',
             'receive_transactional_whatsapp_message',
+            'is_active',
             'user_id',
             'pp_accepted',
             'agreement_accepted',
@@ -739,7 +737,7 @@ class PreferencesSerializer(ModelSerializer):
         preferences.receive_new_opportunities_sms = self.validated_data.get('receive_new_opportunities_sms', preferences.receive_new_opportunities_sms)
         preferences.receive_transactional_whatsapp_message = self.validated_data.get('receive_transactional_whatsapp_message', preferences.receive_transactional_whatsapp_message)
 
-        return preferences
+        return preferences  
 
 
 class ProofTagSerializer(ModelSerializer):
@@ -783,3 +781,211 @@ class UserAPISerializer(ModelSerializer):
             'preferences'
         )
         read_only_fields = fields
+    
+class PronounsSerializer(serializers.Serializer):
+    HE_HIM = "hh"
+    SHE_HER = "sh"
+    THEY_THEM = "tt"
+    HE_THEY = "ht"
+    SHE_THEY = "st"
+    PRONOUNS = (
+        (HE_HIM, "He/Him"),
+        (SHE_HER, "She/Her"),
+        (THEY_THEM, "They/Them"),
+        (HE_THEY, "He/They"),
+        (SHE_THEY, "She/They")
+    )
+
+    pronouns = serializers.ChoiceField(choices=PRONOUNS, allow_blank=True, required=False)
+
+class GenderSerializer(serializers.Serializer):
+    MALE = 'M'
+    FEMALE = 'F'
+    TRANS = 'T'
+    NON_BINARY = 'N'
+    
+    GENDER = (
+        (MALE, 'Male'),
+        (FEMALE, 'Female'),
+        (TRANS, 'Trans person'),
+        (NON_BINARY, 'Non-binary'),
+    )
+
+    gender = serializers.ChoiceField(choices=GENDER, allow_blank=True, required=False)
+
+class MaritalStatusSerializer(serializers.Serializer):
+    SINGLE = 'S'
+    MARRIED = 'M'
+    DIVORCED = 'D'
+    WIDOWED = 'W'
+    MARITAL_STATUS = (
+        (SINGLE, 'Single'),
+        (MARRIED, 'Married'),
+        (DIVORCED, 'Divorced'),
+        (WIDOWED, 'Widowed'),
+    )
+
+    marital_status = serializers.ChoiceField(choices=MARITAL_STATUS, allow_blank=True, required=False)
+
+class EducationSerializer(serializers.Serializer):
+    TENTH = 'TE'
+    TWELFTH = 'TW'
+    COLLEGE = 'CO'
+    GRADUATE = 'GR'
+    POST_GRADUATE = 'PG'
+    
+    EDUCATION = (
+        (TENTH, "10th (Middle School)"),
+        (TWELFTH, "12th (High School)"),
+        (COLLEGE, "In College"),
+        (GRADUATE, "Graduate"),
+        (POST_GRADUATE, "Post Graduate and Above"),
+    )
+
+    education = serializers.ChoiceField(choices=EDUCATION, allow_blank=True, required=False)
+
+class IncomeSerializer(serializers.Serializer):
+    NOT_ANSWERED = 0
+    ONE = 1
+    ONE_THREE = 2
+    THREE_EIGHT = 3
+    EIGHT_FIFTEEN = 4
+    FIFTEEN_PLUS = 5
+    INCOME = (
+        (NOT_ANSWERED, "not answered"),
+        (ONE, "less than 1 lpa"),
+        (ONE_THREE, "1 to 3 lpa"),
+        (THREE_EIGHT, "3 to 8 lpa"),
+        (EIGHT_FIFTEEN, "8 to 15 lpa"),
+        (FIFTEEN_PLUS, "15+ lpa"),
+    )
+
+    income = serializers.ChoiceField(choices=INCOME, allow_blank=True, required=False)
+
+class AuditorRatingSerializer(serializers.Serializer):
+    EXCELLENT = "E"
+    GOOD = "G"
+    AVERAGE = "A"
+    WORSE = "W"
+    AUDITOR_RATING = (
+        (EXCELLENT, "Excellent"),
+        (GOOD, "Good"),
+        (AVERAGE, "Average"),
+        (WORSE, "Worse"),
+    )
+
+    auditor_rating = serializers.ChoiceField(choices=AUDITOR_RATING, allow_blank=True, required=False)
+class OccupationSerializer(serializers.Serializer):
+    
+    STUDENT = "STUDENT"
+    SERVICE = "SERVICE"
+    SELF_EMPLOYED = "SELF_EMPLOYED"
+    BUSINESS = "BUSINESS"
+    UNEMPLOYED = "UNEMPLOYED"
+    RETIRED = "RETIRED"
+    OCCUPATION = (
+        (STUDENT, 'student'),
+        (SERVICE, 'service'),
+        (SELF_EMPLOYED, 'self employed'),
+        (BUSINESS, 'business'),
+        (UNEMPLOYED, 'unemployed'),
+        (RETIRED, 'retired'),
+    )
+
+    occupation = serializers.ChoiceField(choices=OCCUPATION, allow_blank=True, required=False)
+
+class DistanceSerializer(serializers.Serializer):
+
+    Upto_1_km = "1"
+    Upto_5_km = "5"
+    Upto_10_km = "10"
+    Upto_20_km = "20"
+    Upto_50_km = "50"
+    Upto_100_km = "100" 
+    DISTANCE = (
+        (Upto_1_km, 'Upto 1 km'),
+        (Upto_5_km, 'Upto 5 km'),
+        (Upto_10_km, 'Upto 10 km'),
+        (Upto_20_km,'Upto 20 km'),
+        (Upto_50_km,'Upto 50 km'),
+        (Upto_100_km, 'Upto 100 km'),
+    )
+    distance = serializers.ChoiceField(choices=DISTANCE, allow_blank=True, required=False)
+
+class IndustrySerializer(serializers.Serializer):
+    INDUSTRY = (
+        (1, "Advertising and Marketing"),
+        (2, "Agriculture"),
+        (3, "Arts"),
+        (4, "Architecture"),
+        (5, "Advisory"),
+        (6, "Accounting"),
+        (7, "Aviation"),
+        (8, "Apparel"),
+        (9, "Automotive"),
+        (10, "Banking"),
+        (11, "Biotechnology"),
+        (12, "Civil Engineering"),
+        (13, "Civic-Social organization"),
+        (14, "Consumer Goods and Services"),
+        (15, "Cosmetics"),
+        (16, "Entertainment"),
+        (17, "Event Management"),
+        (18, "Financial Services"),
+        (19, "Food and Beverage"),
+        (20, "Graphic Designing"),
+        (21, "Health and Fitness"),
+        (22, "Hospitality"),
+        (23, "Import-Export Industry"),
+        (24, "Information Technology"),
+        (25, "Insurance"),
+        (26, "Luxury Goods"),
+        (27, "Management Consulting"),
+        (28, "Market Research"),
+        (29, "Medical"),
+        (30, "Music"),
+        (31, "Not for Profit"),
+        (32, "Oil and Energy"),
+        (33, "Pharmaceuticals"),
+        (34, "Photography"),
+        (35, "Real-Estate"),
+        (36, "Retail Industry"),
+        (37, "Sales"),
+        (38, "Sports"),
+        (39, "Supply Chain and Logistics"),
+        (40, "Telecommunications"),
+        (41, "Transportation"),
+        (42, "Veterinary"),
+        (43, "Other"),
+    )
+
+    industry = serializers.ChoiceField(choices=INDUSTRY, allow_blank=True, required=False)
+
+class CarCostSerializer(serializers.Serializer):
+    CAR_COST = (
+        ("", ""),
+        (1, "<3 lacs"),
+        (2, "3 lacs – 5 lacs"),
+        (3, "5 lacs – 10 lacs"),
+        (4, "10 lacs – 15 lacs"),
+        (5, "15 lacs and above"),
+    )
+    car_cost = serializers.ChoiceField(choices=CAR_COST, allow_blank=True, required=False)
+
+class ResolutionSerializer(serializers.Serializer):
+
+    ONE = 1
+    FIVE = 2
+    TEN = 3
+    FIFTEEN = 4
+    DONT_KNOW = 5
+    NO_CAMERA = 6
+    RESOLUTION = (
+        (ONE, "1 to 5 megapixel"),
+        (FIVE, "5 to 10 megapixel"),
+        (TEN, "10 to 15 megapixel"),
+        (FIFTEEN, "15+ megapixel"),
+        (DONT_KNOW, "dont know"),
+        (NO_CAMERA, "no camera"),
+    )
+    resolution = serializers.ChoiceField(choices = RESOLUTION, allow_blank = True, required=False)

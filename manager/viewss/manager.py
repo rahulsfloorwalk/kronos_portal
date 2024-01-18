@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, EmailField, CharField, BooleanField
+from rest_framework.serializers import Serializer, EmailField, CharField, BooleanField ,NullBooleanField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -18,7 +18,8 @@ class ManagerDeSerializer(Serializer):
     is_active = BooleanField()
     name = CharField(max_length=50, required=False, allow_blank=True, allow_null=True)
     mobile = CharField(max_length=15, required=False, allow_blank=True, allow_null=True)
-
+    is_admin = BooleanField(required=False, default=False)
+    
 
 class ManagerView(APIView):
     permission_classes = [HasGroupPermission]
@@ -36,6 +37,9 @@ class ManagerView(APIView):
 
         mobile = manager_ds.validated_data.get("mobile")
         name = manager_ds.validated_data.get("name")
+        
+
+        is_admin = manager_ds.validated_data.get("is_admin", False)
         saved_manager_user = manager_service.insert(
             manager_ds.validated_data["email"],
             manager_ds.validated_data["password"],
@@ -57,6 +61,15 @@ class ManagerView(APIView):
             )
             if not created:
                 manager_profile_info.mobile = mobile
+                manager_profile_info.save()
+
+        if is_admin is not None:
+            manager_profile_info, created = ManagerProfileInfo.objects.get_or_create(
+                user=user_instance,
+                defaults={'is_admin':is_admin}
+            )
+            if not created:
+                manager_profile_info.is_admin = is_admin
                 manager_profile_info.save()
 
         return Response(PlainUserSerializer(saved_manager_user).data)
@@ -84,6 +97,7 @@ class ManagerIdView(APIView):
         user_instance = User.objects.get(id=saved_user.id)
         mobile = manager_ds.validated_data.get("mobile")
         name = manager_ds.validated_data.get("name")
+        is_admin = manager_ds.validated_data.get("is_admin")
 
         if mobile is not None:
             manager_profile_info, created = ManagerProfileInfo.objects.get_or_create(
@@ -103,6 +117,14 @@ class ManagerIdView(APIView):
             if not created:
                 manager_profile_info.name = name
                 manager_profile_info.save()
-
+        
+        if is_admin is not None:
+            manager_profile_info, created = ManagerProfileInfo.objects.get_or_create(
+                user=user_instance,
+                defaults={'is_admin':is_admin}
+            )
+            if not created:
+                manager_profile_info.is_admin = is_admin
+                manager_profile_info.save()
         return Response(PlainUserSerializer(saved_user).data)
 

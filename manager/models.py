@@ -11,7 +11,9 @@ from manager import country
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 import re
-from django.db.models import Model, QuerySet, CharField, AutoField, EmailField, ForeignKey,DateField, OneToOneField, DateTimeField, BooleanField, DecimalField,IntegerField
+from django.db.models import Model, QuerySet, CharField, AutoField, EmailField, ForeignKey,DateField, OneToOneField, DateTimeField, BooleanField, DecimalField,IntegerField,NullBooleanField
+
+
 
 
 class City(Model):
@@ -366,6 +368,7 @@ class ManagerProfileInfo(Model):
     name = CharField(db_column='name' , max_length=50, blank=True,null=True)
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
     mobile = CharField(db_column='mobile', max_length=15, blank=True,null=True)
+    is_admin = BooleanField(db_column='admin', blank=True,default=False)
     
     def __str__(self):
-        return "ManagerProfileInfo: {} {}".format(self.id, self.mobile_number)
+        return "ManagerProfileInfo: {} {}".format(self.id, self.mobile, self.is_admin)

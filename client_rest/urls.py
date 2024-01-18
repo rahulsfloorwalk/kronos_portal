@@ -135,8 +135,6 @@ urlpatterns = ([
     url(r'mp/invoice_product_year_list$', mp_order_views.OrderInvoiceProductYearListView.as_view(), name='Order_invoices_product_year_list_view'),
     url(r'mp/audit_cycle_detail/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.AuditCycleDetailView.as_view(), name='audit_cycle_detail_view'),
 
-
-    url(r'mp/audit_cycle_detail/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.AuditCycleDetailView.as_view(), name='audit_cycle_detail_view'),
     url(r'mp/audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', mp_order_views.MPAuditByAuditCycle.as_view(), name='mp_audit_by_audit_cycle_view'),
     url(r'mp/audit/(?P<audit_id>[0-9]+)/audit_stores$', mp_order_views.AuditStoreByAuditClient.as_view(), name='audit_store_by_audit_id_view_client'),
     url(r'mp/store/import/client_sample$', views.StoreSampleClientXlsxView.as_view(), name='sample_client_import_store_view'),
