@@ -14,11 +14,13 @@ from audit_store import service as audit_store_service
 from audit_store import service_auditor as audit_store_auditor_service
 from auditor.serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer, PlainUserSerializer
 from auditor.serializers import AnswerSerializer
+from auditor.serializers import GenderSerializer,MaritalStatusSerializer,EducationSerializer,IncomeSerializer,AuditorRatingSerializer,PronounsSerializer,IndustrySerializer
 from auditor.serializers import AttachmentSerializer
 from auditor.serializers import AuditStoreSerializer
 from auditor.serializers import NotificationSerializer
 from auditor.serializers import PaymentSerializer
 from auditor.serializers import ProfileInfoSerializer, AdditionalInfoDeSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer,AppliedAuditSerializer, PreferencesSerializer
+from auditor.serializers import ResolutionSerializer,OccupationSerializer,DistanceSerializer,CarCostSerializer
 from auditor.serializers import ReportSectionSerializer, ReportSectionDeSerializer
 from auditor.serializers import ReferralSerializer
 from auditor.serializers import SectionSerializer
@@ -28,7 +30,7 @@ from auditor.service import preferences_service
 from auditor.service import stats as auditor_dashboard_service
 from manager import states
 from manager import country
-# from manager.service.instance_approved_application import audit_cycle_audit_auto_approve_check_by_applictaion_id
+from manager.service.instance_approved_application import audit_cycle_audit_auto_approve_check_by_applictaion_id
 from manager.models import City
 from manager.service import notifications as notification_service
 from payment.service import payment_auditor as payment_service
@@ -47,6 +49,9 @@ from manager.service import instance_approved_application
 from audit_store.models import AuditStore
 from answer.models import ReportSection
 from datetime import datetime, timedelta
+import registration.service.auditor as auditor_service
+from manager.viewss.auditor import AuditorSerializer
+
 
 # Get the current date
 current_date = datetime.now().date()
@@ -295,8 +300,8 @@ class AuditApplicationApplyView(APIView):
             request.user.id,
             application_apply_ds.validated_data["audit_date"]
         )
-        # audit_auto_approve = audit_cycle_audit_auto_approve_check_by_applictaion_id(application.id) 
-        if str(request.data['audit_date']) == str(tomorrow_date) :
+        audit_auto_approve = audit_cycle_audit_auto_approve_check_by_applictaion_id(application.id) 
+        if str(request.data['audit_date']) == str(tomorrow_date) and audit_auto_approve:
             instance_approved_application.approved(application.id)
         return Response(AuditApplicationSerializer(application).data)
 
@@ -818,3 +823,124 @@ class AttachmentIdProofTagView(APIView):
     def post(self, request, attachment_id):
         attachment = attachment_auditor_service.save_attachment_proof_tag(attachment_id, request.data['proof_tag_id'])
         return Response(AttachmentSerializer(attachment).data)
+
+class ProfileInfoPronounsView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, format=None):
+        all_pronouns_info = [{'value': choice[0], 'label': choice[1]} for choice in PronounsSerializer.PRONOUNS]
+        return Response(all_pronouns_info)
+
+class ProfileInfoGenderView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, format=None):
+        all_gender_info = [{'value': choice[0], 'label': choice[1]} for choice in GenderSerializer.GENDER]
+        return Response(all_gender_info)
+    
+
+class ProfileInfoMaritalStatusView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, format=None):
+        all_marital_status_info = [{'value': choice[0], 'label': choice[1]} for choice in MaritalStatusSerializer.MARITAL_STATUS]
+        return Response(all_marital_status_info)
+
+class ProfileEducationInfoView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, format=None):
+        all_education_info = [{'value': choice[0], 'label': choice[1]} for choice in EducationSerializer.EDUCATION]
+        return Response(all_education_info)
+
+class ProfileInfoIncomeView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, format=None):
+        all_income_info = [{'value': choice[0], 'label': choice[1]} for choice in IncomeSerializer.INCOME]
+        return Response(all_income_info)
+
+class ProfileInfoAuditRatingView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, format=None):
+        all_audit_rating_info = [{'value': choice[0], 'label': choice[1]} for choice in AuditorRatingSerializer.AUDITOR_RATING]
+        return Response(all_audit_rating_info)
+    
+class ProfileInfoOccupationView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET':[GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, format=None):
+        all_occupation_info = [{'value': choice[0], 'label': choice[1]} for choice in OccupationSerializer.OCCUPATION]
+        return Response(all_occupation_info)
+    
+class ProfileInfoDistanceView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET':[GROUP_NAME_AUDITOR]
+    }
+    def get(self,request, format=None):
+        all_distance_info = [{'value':choice[0], 'lable':choice[1]} for choice in DistanceSerializer.DISTANCE]
+        return Response(all_distance_info)
+
+class ProfileInfoIndustryView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET':[GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, format=None):
+        all_industry_info = [{'value': choice[0], 'label': choice[1]} for choice in IndustrySerializer.INDUSTRY]
+        return Response(all_industry_info)
+    
+class ProfileInfoCarCostView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET':[GROUP_NAME_AUDITOR]
+    }
+    def get(self,request,format=None):
+        all_car_cost_info = [{'value':choice[0], 'lable': choice[1]} for choice in CarCostSerializer.CAR_COST]
+        return Response(all_car_cost_info)
+    
+class ProfileInfoResolutionView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, format=None):
+        all_resolution_info = [{'value':choice[0],'lable':choice[1]} for choice in ResolutionSerializer.RESOLUTION]
+        return Response(all_resolution_info)
+
+
+class AuditorSelfDeactivateView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+    def post(self, request, user_id):
+        user = auditor_service.deactivate_auditor(user_id)
+        return Response(AuditorSerializer(user).data)

@@ -13,6 +13,8 @@ from client.models import MPOrder
 from auditor.models import AuditApplication
 from audit_store.models import AuditStore
 from . import audit_cycle_proof_tag
+from manager.models import ManagerProfileInfo
+from client.models import Client
 
 
 def save(audit):
@@ -103,31 +105,78 @@ def get_audit_cycle_stats(audit_cycle):
             result.get('audit_store')[key[0]] = 0
     return result
 
-def get_audit_cycle_dashboard():
-    audit_cycles = AuditCycle.objects.filter(
-        status__in=AuditCycle.MANAGER_DASHBOARD_STATUSES
-    ).order_by('end_date') \
-        .select_related('client') \
-        .prefetch_related(
-            'audits',
-            'audits__applications',
-            'audits__audit_stores',
-    )
+# def get_audit_cycle_dashboard():
+#     audit_cycles = AuditCycle.objects.filter(
+#         status__in=AuditCycle.MANAGER_DASHBOARD_STATUSES
+#     ).order_by('end_date') \
+#         .select_related('client') \
+#         .prefetch_related(
+#             'audits',
+#             'audits__applications',
+#             'audits__audit_stores',
+#     )
 
-    response = []
-    for audit_cycle in audit_cycles:
-        obj = {}
-        obj['id'] = audit_cycle.id
-        obj['name'] = audit_cycle.name
-        obj['status'] = audit_cycle.status
-        obj['client'] = audit_cycle.client.name
-        obj['start_date'] = audit_cycle.start_date
-        obj['end_date'] = audit_cycle.end_date
-        obj['audit_count'] = audit_cycle.planned_audit
-        obj['stats'] = get_audit_cycle_stats(audit_cycle)
-        response.append(obj)
+#     response = []
+#     for audit_cycle in audit_cycles:
+#         obj = {}
+#         obj['id'] = audit_cycle.id
+#         obj['name'] = audit_cycle.name
+#         obj['status'] = audit_cycle.status
+#         obj['client'] = audit_cycle.client.name
+#         obj['start_date'] = audit_cycle.start_date
+#         obj['end_date'] = audit_cycle.end_date
+#         obj['audit_count'] = audit_cycle.planned_audit
+#         obj['stats'] = get_audit_cycle_stats(audit_cycle)
+#         response.append(obj)
 
-    return response
+#     return response
+
+def get_audit_cycle_dashboard(user):
+    try:
+        manager_profile_info = ManagerProfileInfo.objects.get(user=user)
+        clients = get_clients_for_manager(manager_profile_info)
+
+        audit_cycles = AuditCycle.objects.filter(
+            status__in=AuditCycle.MANAGER_DASHBOARD_STATUSES,
+            client__in=clients
+        ).order_by('end_date') \
+            .select_related('client') \
+            .prefetch_related(
+                'audits',
+                'audits__applications',
+                'audits__audit_stores',
+        )
+
+        response = []
+        for audit_cycle in audit_cycles:
+            obj = {}
+            obj['id'] = audit_cycle.id
+            obj['name'] = audit_cycle.name
+            obj['status'] = audit_cycle.status
+            obj['client'] = audit_cycle.client.name
+            obj['start_date'] = audit_cycle.start_date
+            obj['end_date'] = audit_cycle.end_date
+            obj['audit_count'] = audit_cycle.planned_audit
+            obj['stats'] = get_audit_cycle_stats(audit_cycle)
+            response.append(obj)
+
+        return response
+    except ManagerProfileInfo.DoesNotExist:
+        # Handle the case where ManagerProfileInfo doesn't exist for the user
+        return []
+
+def get_clients_for_manager(manager_profile_info):
+    if manager_profile_info.is_admin:
+        # Return all clients if manager is_admin is True
+        return Client.objects.filter(is_active=True)
+    else:
+        # Return filtered clients based on manager conditions
+        return Client.objects.filter(
+            is_active=True,
+            managers__user=manager_profile_info.user,
+            managers__is_active=True,
+            managers__receive_email_notification=True
+        ).distinct()
 
 
 def get_audit_cycle_dashboard_by_client(client_id):
@@ -211,7 +260,17 @@ def find_by_id(audit_cycle_id):
     except AuditCycle.DoesNotExist as e:
         raise ObjectNotFound from e
 
-
+def find_by_auditcycle_id_for_client(audit_cycle_id, client=None):
+    try:
+        if client:
+            # Assuming AuditCycle model has a ForeignKey to Client
+            audit_cycle = AuditCycle.objects.get(id=audit_cycle_id, client=client)
+        else:
+            audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
+        return audit_cycle
+    except AuditCycle.DoesNotExist:
+        return None
+        
 def set_post_approval_description(audit_cycle_id, post_approval_description):
     audit_cycle = find_by_id(audit_cycle_id)
 

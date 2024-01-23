@@ -314,6 +314,8 @@ urlpatterns = ([
     url(r'moderator$', moderator_views.ModeratorView.as_view(), name='moderator_view'),
     url(r'manager/(?P<user_id>[0-9]+)$', manager_views.ManagerIdView.as_view(), name='manager_id_view'),
     url(r'manager$', manager_views.ManagerView.as_view(), name='manager_view'),
+    url(r'manager_profile$', manager_views.ManagerprofileView.as_view(), name='manager_profile_view'),
+
 
     url(r'trainer/(?P<user_id>[0-9]+)$', trainer_views.TrainerIdView.as_view(), name='trainer_id_view'),
     url(r'trainer$', trainer_views.TrainerView.as_view(), name='trainer_view'),

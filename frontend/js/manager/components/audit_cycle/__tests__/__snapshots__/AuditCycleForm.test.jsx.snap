@@ -966,94 +966,9 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                     Web
                   </option>
                   <option
-                    value="VISIBILITY"
-                  >
-                    Visibility
-                  </option>
-                  <option
-                    value="COMPETITION"
-                  >
-                    Competition
-                  </option>
-                  <option
                     value="SERVICE"
                   >
                     Service
-                  </option>
-                  <option
-                    value="SALES"
-                  >
-                    Sales
-                  </option>
-                  <option
-                    value="SMAAASH_ARENA"
-                  >
-                    Smaaash Arena
-                  </option>
-                  <option
-                    value="FINE_DINE"
-                  >
-                    Fine Dine
-                  </option>
-                  <option
-                    value="SKY_KARTING"
-                  >
-                    Sky Karting
-                  </option>
-                  <option
-                    value="GENERAL"
-                  >
-                    General
-                  </option>
-                  <option
-                    value="SMAAASH"
-                  >
-                    Smaaash
-                  </option>
-                  <option
-                    value="SMAAASH_MEGA"
-                  >
-                    Smaaash Mega
-                  </option>
-                  <option
-                    value="SMAAASH_ZONE"
-                  >
-                    Smaaash Zone
-                  </option>
-                  <option
-                    value="DDC"
-                  >
-                    Ddc
-                  </option>
-                  <option
-                    value="HTC"
-                  >
-                    Htc
-                  </option>
-                  <option
-                    value="ASCVD"
-                  >
-                    Ascvd
-                  </option>
-                  <option
-                    value="SKIN_HYDRATION"
-                  >
-                    Skin Hydration
-                  </option>
-                  <option
-                    value="HYPER_PIGMENTATION"
-                  >
-                    Hyper Pigmentation
-                  </option>
-                  <option
-                    value="SKIN_SENSITIVE"
-                  >
-                    Skin Sensitive
-                  </option>
-                  <option
-                    value="RETAIL"
-                  >
-                    Retail
                   </option>
                 </select>
                 <ul />
@@ -2207,94 +2122,9 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                     Web
                   </option>
                   <option
-                    value="VISIBILITY"
-                  >
-                    Visibility
-                  </option>
-                  <option
-                    value="COMPETITION"
-                  >
-                    Competition
-                  </option>
-                  <option
                     value="SERVICE"
                   >
                     Service
-                  </option>
-                  <option
-                    value="SALES"
-                  >
-                    Sales
-                  </option>
-                  <option
-                    value="SMAAASH_ARENA"
-                  >
-                    Smaaash Arena
-                  </option>
-                  <option
-                    value="FINE_DINE"
-                  >
-                    Fine Dine
-                  </option>
-                  <option
-                    value="SKY_KARTING"
-                  >
-                    Sky Karting
-                  </option>
-                  <option
-                    value="GENERAL"
-                  >
-                    General
-                  </option>
-                  <option
-                    value="SMAAASH"
-                  >
-                    Smaaash
-                  </option>
-                  <option
-                    value="SMAAASH_MEGA"
-                  >
-                    Smaaash Mega
-                  </option>
-                  <option
-                    value="SMAAASH_ZONE"
-                  >
-                    Smaaash Zone
-                  </option>
-                  <option
-                    value="DDC"
-                  >
-                    Ddc
-                  </option>
-                  <option
-                    value="HTC"
-                  >
-                    Htc
-                  </option>
-                  <option
-                    value="ASCVD"
-                  >
-                    Ascvd
-                  </option>
-                  <option
-                    value="SKIN_HYDRATION"
-                  >
-                    Skin Hydration
-                  </option>
-                  <option
-                    value="HYPER_PIGMENTATION"
-                  >
-                    Hyper Pigmentation
-                  </option>
-                  <option
-                    value="SKIN_SENSITIVE"
-                  >
-                    Skin Sensitive
-                  </option>
-                  <option
-                    value="RETAIL"
-                  >
-                    Retail
                   </option>
                 </select>
                 <ul />

@@ -269,11 +269,26 @@ class ManagerProfileInfoSerializer(ModelSerializer):
         model = ManagerProfileInfo
         fields = ('mobile',)
 
+class ManagerProfileSerializer(ModelSerializer):
+    email = SerializerMethodField()
+
+    class Meta:
+        model = ManagerProfileInfo
+        fields = ('id',
+                  'name',
+                  'mobile',
+                  'is_admin',
+                  'email')
+
+    def get_email(self, obj):
+        return obj.user.email if obj.user else None
+
 class PlainUserSerializer(ModelSerializer):
     mobile_numbers = MobileNumberSerializer(many=True)
     # mobile = ManagerProfileInfoSerializer(many=True)
     mobile = SerializerMethodField()
     name = SerializerMethodField()
+    is_admin = SerializerMethodField()
     class Meta:
         model = User
         fields = (
@@ -282,7 +297,8 @@ class PlainUserSerializer(ModelSerializer):
             'is_active',
             'mobile_numbers',
             'name',
-            'mobile'
+            'mobile',
+            'is_admin'
         )
         read_only_fields = fields
     def get_mobile(self, obj):
@@ -296,6 +312,12 @@ class PlainUserSerializer(ModelSerializer):
         try:
             manager_profile_info = ManagerProfileInfo.objects.get(user=obj)
             return manager_profile_info.name
+        except ManagerProfileInfo.DoesNotExist:
+            return None
+    def get_is_admin(self, obj):
+        try:
+            manager_profile_info =ManagerProfileInfo.objects.get(user=obj)
+            return manager_profile_info.is_admin
         except ManagerProfileInfo.DoesNotExist:
             return None
 

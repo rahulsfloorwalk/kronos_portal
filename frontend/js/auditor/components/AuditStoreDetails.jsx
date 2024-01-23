@@ -128,24 +128,12 @@ class AuditStoreDetails extends React.Component {
 		const fees = earnings_per_audit ? <b> ₹ {earnings_per_audit}, </b> : "";
 		const reimbursement = this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement;
 		const reimb = reimbursement ? <span>Reimbursement upto: <b>₹ {reimbursement}</b></span> : "";
-		const manager_email_list = this.props.auditStore.manager_email_list;
-		let mngr = "";
-		if (manager_email_list && manager_email_list.length > 0) {
-			mngr = (
-				<span>
-					<b>{manager_email_list.join(", ")}</b>
-				</span>
-			);
-		}
 
-		const manager_contact_list = this.props.auditStore.manager_contact_list;
+		const manager_info_list = this.props.auditStore.manager_info_list;
 		let mngr_cntct = "";
-		if (manager_contact_list && manager_contact_list.length > 0) {
-			mngr_cntct = (
-				<span>
-					<b>{manager_contact_list.join(", ")}</b>
-				</span>
-			);
+		if (manager_info_list && manager_info_list.length > 0) {
+			const contactString = manager_info_list.map(manager => `${manager.name} (${manager.mobile})`).join(", ");
+			mngr_cntct = <span><b>{contactString}</b></span>;
 		}
 
 		// const manager_name_list = this.props.auditStore.manager_name_list;
@@ -175,45 +163,41 @@ class AuditStoreDetails extends React.Component {
 				</div>
 				<h2 className="page-header"><b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> [Report ID: {this.props.params.auditStoreId}]</h2>
 				<div className="row">
-					<div className="col-md-12">
+					<div className="col-md-5">
 						<div className="panel panel-default">
 							<table className="table table-striped">
 								<tbody>
 									<tr>
-										<td className="text-right">Type:</td>
+										<td className="text">Type:</td>
 										<th>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</th>
 									</tr>
 									<tr>
-										<td className="text-right">Store Name:</td>
+										<td className="text">Store Name:</td>
 										<th>{this.props.auditStore.audit.store.name}</th>
 									</tr>
 									<tr>
-										<td className="text-right">Phone:</td>
+										<td className="text">Phone:</td>
 										<th>{this.props.auditStore.audit.store.phone}</th>
 									</tr>
 									<tr>
-										<td className="text-right">Address:</td>
+										<td className="text">Address:</td>
 										<th>{this.props.auditStore.audit.store.address}</th>
 									</tr>
 									<tr>
-										<td className="text-right">Fees:</td>
+										<td className="text">Fees:</td>
 										<th>{<span>{fees}{reimb}</span>}</th>
 									</tr>
 									<tr>
-										<td className="text-right">Audit Date:</td>
+										<td className="text">Audit Date:</td>
 										<th>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</th>
 									</tr>
 									<tr>
-										<td className="text-right">Status:</td>
+										<td className="text">Status:</td>
 										<th>{<AuditStoreStatusLabel status={this.props.auditStore.status}/>}
 										</th>
 									</tr>
 									<tr>
-										<td className="text-right">Managers:</td>
-										<th>{mngr}</th>
-									</tr>
-									<tr>
-										<td className="text-right">Contacts:</td>
+										<td className="text">Contacts:</td>
 										<th>{mngr_cntct}</th>
 									</tr>
 									{this.state.guideline && this.state.guideline ?
@@ -224,16 +208,20 @@ class AuditStoreDetails extends React.Component {
 										: null}
 								</tbody>
 							</table>
-							{ !(! this.props.auditStore.audit.post_approval_description && ! this.props.auditStore.audit.audit_cycle.post_approval_description) ?
-								<div className="panel-body">
-									<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
-									<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
-								</div>
-								: null }
 						</div>
+					</div>
+					<div className="col-md-7">
+						<td className="text-right"style={{ fontSize: "16px", }}><b> Guidelines:-</b></td>
+						{ !(! this.props.auditStore.audit.post_approval_description && ! this.props.auditStore.audit.audit_cycle.post_approval_description) ?
+							<div className="panel-body" style={{ marginTop: "-20px" }}>
+								<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
+								<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
+							</div>
+							: null }
 					</div>
 					<div className="col-md-6">
 					</div>
+
 				</div>
 				{buttonPanel}
 				<AttachmentUploadBox auditStoreId={this.props.params.auditStoreId} editable={this.isReportEditable()}/>

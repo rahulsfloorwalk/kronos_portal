@@ -73,3 +73,21 @@ def get_manager_names_list_by_audit_store_obj(audit_store):
             pass
 
     return manager_name_list
+
+def get_manager_info_list_by_audit_store_obj(audit_store):
+    manager_info_list = []
+    client_managers = ClientManager.objects.filter(client__id=audit_store.audit.audit_cycle.client.id,
+                                                   is_active=True,receive_email_notification=True)
+
+    for cm in client_managers:
+        try:
+            manager_profile = ManagerProfileInfo.objects.get(user=cm.user)
+            name = getattr(manager_profile, 'name', '')
+            mobile = getattr(manager_profile, 'mobile', '')
+            manager_info_list.append({'name': name, 'mobile': mobile})
+        except ManagerProfileInfo.DoesNotExist:
+            pass
+
+    return manager_info_list
+
+

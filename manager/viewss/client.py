@@ -7,6 +7,9 @@ from rest_framework.permissions import AllowAny
 from ..serializers import ClientSerializer,ClientForEcommSerializer
 from client.service import client_service,client_user_service
 from rest_framework.throttling import AnonRateThrottle
+from manager.models import ManagerProfileInfo
+from client.models import Client,ClientManager
+
 class ClientView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -14,7 +17,7 @@ class ClientView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def get(self, request, format=None):
-        clients = client_service.find_all_clients_if_true()
+        clients = client_service.find_all_clients_if_true(request.user)
         return Response(ClientSerializer(clients, many=True).data)
 
     def post(self, request):
@@ -32,6 +35,19 @@ class ClientIdView(APIView):
     }
     def get(self, request, client_id, format=None):
         client = client_service.find_client_by_id(client_id)
+        try:
+            manager_profile = ManagerProfileInfo.objects.get(user=request.user)
+
+            if manager_profile.is_admin:
+                client = client_service.find_client_by_id(client_id)
+            else:
+                client_managers = ClientManager.objects.filter(user=request.user,is_active=True,client_id=client_id)
+                if client_managers.exists():
+                    client = client_service.find_client_by_id(client_id)
+                else:
+                    return Response({"detail": "You are not authorized to view this data."}, status=200)
+        except ManagerProfileInfo.DoesNotExist:
+            return Response({"detail": "You are not authorized to view this data."}, status=200)
         return Response(ClientSerializer(client).data)
 
     def post(self, request, client_id):
