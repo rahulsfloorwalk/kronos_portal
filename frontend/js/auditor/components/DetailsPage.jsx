@@ -29,6 +29,7 @@ class DetailsPage extends React.Component {
 			mobile_number: PropTypes.string,
 			whatsapp_number: PropTypes.string,
 			certification_score: PropTypes.string,
+			user_id: PropTypes.string,
 		}),
 	};
 
@@ -58,18 +59,18 @@ class DetailsPage extends React.Component {
 	}
 	render() {
 		// let statusButton;
-			// statusButton = (<button onClick={() => {const confirmed = window.confirm("Are you sure you want to deactivate your account?");
-			// 	  if (confirmed) {
-			// 		deactivateAuditorfromAuditorPortal(this.props.profileInfo.user_id).then((auditor) => {
-			// 		  this.setState({ auditor });
-			// 		  Alert.success("AUDITOR DEACTIVATED. If you want to reactivate your Account, please contact us at contactus@floorwalk.in");
-			// 		});
-			// 	  } else {
-			// 		Alert.info("Deactivation canceled");
-			// 	  }
-			// 	}}className="btn btn-default">
-			// 		<Lock /> Deactivate
-			//   	</button>);
+		// statusButton = (<button onClick={() => {const confirmed = window.confirm("Are you sure you want to deactivate your account?");
+		// 	  if (confirmed) {
+		// 		deactivateAuditorfromAuditorPortal(this.props.profileInfo.user_id).then((auditor) => {
+		// 		  this.setState({ auditor });
+		// 		  Alert.success("AUDITOR DEACTIVATED. If you want to reactivate your Account, please contact us at contactus@floorwalk.in");
+		// 		});
+		// 	  } else {
+		// 		Alert.info("Deactivation canceled");
+		// 	  }
+		// 	}}className="btn btn-default">
+		// 		<Lock /> Deactivate
+		//   	</button>);
 
 		const statusButton = (
 			<button onClick={() => this.setState({ isModalOpen: true })} className="btn btn-default" >
@@ -109,10 +110,10 @@ class DetailsPage extends React.Component {
 							</ul>
 							{/* <p className="text-muted"><small>If you want to change your mobile number or email, please contact us.</small></p> */}
 							<div className="panel-heading">
-						<span className="pull-left">
-							{statusButton}
-						</span>
-					</div>
+								<span className="pull-left">
+									{statusButton}
+								</span>
+							</div>
 						</Panel>
 					</div>
 					<div className="col-md-8">
@@ -126,8 +127,8 @@ class DetailsPage extends React.Component {
 					{this.props.children}
 				</div>
 				{this.state.isModalOpen && (
-				<div className="modal" tabIndex="-1" style={{ display: "block" }}>
-					<div className="modal-backdrop fade in" style={{ zIndex: "1060", height: "100%" }} onClick={() => this.setState({ isModalOpen: false })}/>
+					<div className="modal" tabIndex="-1" style={{ display: "block" }}>
+						<div className="modal-backdrop fade in" style={{ zIndex: "1060", height: "100%" }} onClick={() => this.setState({ isModalOpen: false })}/>
 						<div className="modal-dialog" style={{ zIndex: "1070" }}>
 							<div className="modal-content">
 								<div className="modal-header">
@@ -149,7 +150,7 @@ class DetailsPage extends React.Component {
 										this.setState({ auditor });
 										Alert.success( "AUDITOR DEACTIVATED. If you want to reactivate your Account, please contact us at contactus@floorwalk.in");
 										this.setState({ isModalOpen: false });
-										}); }}> Deactivate
+									}); }}> Deactivate
 									</button>
 									<button className="btn btn-secondary" onClick={() => { this.setState({ isModalOpen: false }); }}>
 										Cancel
@@ -158,10 +159,10 @@ class DetailsPage extends React.Component {
 							</div>
 						</div>
 					</div>)}
-				</div>
-			);
-		}
+			</div>
+		);
 	}
+}
 
 var mapStoreToProps = function(store){
 	return {

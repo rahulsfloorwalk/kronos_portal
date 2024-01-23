@@ -21,7 +21,7 @@ class ManagerRow extends React.Component {
 	render() {
 		var is_active = this.props.manager.is_active ? <Check/> : <Cross/>;
 		var is_admin = this.props.manager.is_admin ? <Check /> : <Cross />;
-		
+
 		return (
 			<tr>
 				<td className="text-right">{this.props.seq}</td>
@@ -54,7 +54,7 @@ export default class ManagerList extends React.Component {
 			});
 		});
 	}
-	
+
 	componentWillReceiveProps() {
 		this.componentDidMount();
 	}

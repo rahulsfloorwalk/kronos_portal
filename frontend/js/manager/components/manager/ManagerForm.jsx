@@ -61,7 +61,6 @@ export default class ManagerForm extends React.Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		console.log(this.state.manager.is_admin)
 		var promise;
 		if(this.props.params.userId){
 			promise = update(

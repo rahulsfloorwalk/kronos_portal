@@ -211,9 +211,9 @@ class AuditStoreDetails extends React.Component {
 						</div>
 					</div>
 					<div className="col-md-7">
-						<td className="text-right"style={{ fontSize: '16px', }}><b> Guidelines:-</b></td>
+						<td className="text-right"style={{ fontSize: "16px", }}><b> Guidelines:-</b></td>
 						{ !(! this.props.auditStore.audit.post_approval_description && ! this.props.auditStore.audit.audit_cycle.post_approval_description) ?
-							<div className="panel-body" style={{ marginTop: '-20px' }}>
+							<div className="panel-body" style={{ marginTop: "-20px" }}>
 								<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
 								<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
 							</div>

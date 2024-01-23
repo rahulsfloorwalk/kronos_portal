@@ -99,7 +99,7 @@ class Dashboard extends React.Component {
 											title="Payments Pending "
 											image={moneyImgUrl} count={stats.pending_payment}/>
 									</div>
-									<div className="col-md-6" style={{ marginBottom: '15px' }}>
+									<div className="col-md-6" style={{ marginBottom: "15px" }}>
 										<StatCard
 											title="Profile Completion %"
 											image={UserImgUrl} count={this.state.percentage}/>

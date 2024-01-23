@@ -6,6 +6,10 @@ export function findManagers(){
 }
 
 
+export function findManagerProfile(){
+	return $.get( url.api_base_path + "manager/manager_profile");
+}
+
 export function findById(managerId){
 	return $.get( url.api_base_path + `manager/manager/${managerId}`);
 }

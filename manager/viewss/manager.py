@@ -9,6 +9,8 @@ from ..serializers import PlainUserSerializer
 from ..service import manager as manager_service
 from manager.models import ManagerProfileInfo
 from django.contrib.auth.models import User
+from manager.serializers import ManagerProfileSerializer
+from django.shortcuts import get_object_or_404
 
 
 
@@ -18,8 +20,27 @@ class ManagerDeSerializer(Serializer):
     is_active = BooleanField()
     name = CharField(max_length=50, required=False, allow_blank=True, allow_null=True)
     mobile = CharField(max_length=15, required=False, allow_blank=True, allow_null=True)
-    is_admin = BooleanField(required=False, default=False)
-    
+    is_admin = BooleanField(required=False, default=False) 
+
+# class ManagerprofileView(APIView):
+#     permission_classes = [HasGroupPermission]
+#     required_groups = {
+#         'GET': [GROUP_NAME_MANAGER],
+#         'POST': [GROUP_NAME_MANAGER]
+#     }
+#     def get(self, request, format=None):
+#         manager_profile = ManagerProfileInfo.objects.get(user=request.user)
+#         return Response(ManagerProfileSerializer(manager_profile).data)
+
+class ManagerprofileView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, format=None):
+        manager_profile = get_object_or_404(ManagerProfileInfo, user=request.user)
+        return Response(ManagerProfileSerializer(manager_profile).data)
 
 class ManagerView(APIView):
     permission_classes = [HasGroupPermission]

@@ -260,7 +260,17 @@ def find_by_id(audit_cycle_id):
     except AuditCycle.DoesNotExist as e:
         raise ObjectNotFound from e
 
-
+def find_by_auditcycle_id_for_client(audit_cycle_id, client=None):
+    try:
+        if client:
+            # Assuming AuditCycle model has a ForeignKey to Client
+            audit_cycle = AuditCycle.objects.get(id=audit_cycle_id, client=client)
+        else:
+            audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
+        return audit_cycle
+    except AuditCycle.DoesNotExist:
+        return None
+        
 def set_post_approval_description(audit_cycle_id, post_approval_description):
     audit_cycle = find_by_id(audit_cycle_id)
 

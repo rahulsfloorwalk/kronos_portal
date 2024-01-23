@@ -11,6 +11,7 @@ from .utils import ManagerAPITestCase
 from audit.models import AuditCycle
 from questionnaire.models import QuestionnaireType
 from client.models import Client
+from manager.models import ManagerProfileInfo
 
 fake = Faker()
 
@@ -76,14 +77,31 @@ class AuditCycleIdViewTestCase(ManagerAPITestCase):
             else:
                 self.assertEqual(v, response.data.get(k))
 
+    # def test_get_retrieves_existing_instance(self):
+    #     client = mommy.make(Client)
+    #     questionnaire_type = mommy.make(QuestionnaireType, client=client)
+    #     audit_cycle = mommy.make(AuditCycle, client=client, questionnaire_type=questionnaire_type)
+
+    #     response = self.client.get(reverse('manager:audit_cycle_id_view', kwargs={"audit_cycle_id": audit_cycle.id}))
+    #     print(response.content)
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.data["id"], audit_cycle.id)
+
+ 
     def test_get_retrieves_existing_instance(self):
         client = mommy.make(Client)
         questionnaire_type = mommy.make(QuestionnaireType, client=client)
         audit_cycle = mommy.make(AuditCycle, client=client, questionnaire_type=questionnaire_type)
 
-        response = self.client.get(reverse('manager:audit_cycle_id_view', kwargs={"audit_cycle_id": audit_cycle.id}))
+        # Create a user and a ManagerProfileInfo instance with is_admin set to False
+        non_admin_user = mommy.make(User, email="user@example.com", is_staff=False)
+        manager_profile = mommy.make(ManagerProfileInfo, user=non_admin_user, is_admin=False)
+
+        response = self.client.get(reverse('manager:audit_cycle_id_view', kwargs={"audit_cycle_id": audit_cycle.id}), user=non_admin_user)
+
+        # Check if the response indicates "not authorized"
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["id"], audit_cycle.id)
+        self.assertEqual(response.data["detail"], "You are not authorized to view this data.")
 
     def test_delete_removes_existing_instance(self):
         client = mommy.make(Client)

@@ -169,7 +169,7 @@ class QuestionRow extends React.Component {
 								// 		? { border: "solid 1px #a94442" }
 								// 		: {}
 								// }
-								
+
 								onChange={this.inputChanged}
 								onFocus={this.onFocus}
 								onBlur={this.submitAnswer}

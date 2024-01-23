@@ -269,6 +269,20 @@ class ManagerProfileInfoSerializer(ModelSerializer):
         model = ManagerProfileInfo
         fields = ('mobile',)
 
+class ManagerProfileSerializer(ModelSerializer):
+    email = SerializerMethodField()
+
+    class Meta:
+        model = ManagerProfileInfo
+        fields = ('id',
+                  'name',
+                  'mobile',
+                  'is_admin',
+                  'email')
+
+    def get_email(self, obj):
+        return obj.user.email if obj.user else None
+
 class PlainUserSerializer(ModelSerializer):
     mobile_numbers = MobileNumberSerializer(many=True)
     # mobile = ManagerProfileInfoSerializer(many=True)
