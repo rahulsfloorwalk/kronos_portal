@@ -104,7 +104,8 @@ class AuditStoreDetails extends React.Component {
 					</button>
 				&nbsp;
 				&nbsp;
-					<big>I have read the <b>instructions</b>, <b>questionnaire</b> and agree to conduct the audit.</big>
+					{/* <big>I have read the <b>instructions</b>, <b>questionnaire</b> and agree to conduct the audit.</big> */}
+					<big>Click on the <b>Agree</b> button and start filling out the <b>Report.</b></big>
 				</span>);
 			if(this.props.auditStore.get_date_diff > 0){
 				performAuditButton = (

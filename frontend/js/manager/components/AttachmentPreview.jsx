@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 
 import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";
 import Loading from "../../components/Loading.jsx";
-import InPlaceEditable from "../../components/InPlaceEditable.jsx";
 
 import { DownloadAlt,  Cross, Repeat, Plus, Minus } from "../../components/Icons.jsx";
 import { attachmentPropType } from "../prop_types";
@@ -334,9 +333,11 @@ export default class AttachmentPreview extends React.Component {
 					</button>
 				);
 			}
-			headingText = (<InPlaceEditable inputText={this.props.attachment.file_name} onSave={this.props.onRename}>
-				{icon} {this.props.attachment.file_name}
-			</InPlaceEditable>);
+			// headingText = (<InPlaceEditable inputText={this.props.attachment.file_name} onSave={this.props.onRename}>
+			// 	{icon} {this.props.attachment.file_name}
+			// </InPlaceEditable>);     //comment all for rename prooftag not editable
+			headingText = <span>{icon} {this.props.attachment.file_name}</span>;   //new line add for rename not editable
+
 			if(option_tag_list.length > 0){
 				proof_tag_select_box = (<select className="form-control form-control-sm pull-right" value={proof_tag_select_box_value} onChange={this.props.onChange} style={proof_tag_select_box_style}>
 					<option value="">Select Tag</option>

@@ -7,7 +7,7 @@ import Loading from "../../components/Loading.jsx";
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 
-import { findPayments, findPaymentSummary } from "../service/payment.js";
+import { findPayments, findPaymentSummary, findPaymentStatus} from "../service/payment.js";
 import { fetchConfig } from "../service/config.js";
 
 import PaymentStatusLabel from "../../components/PaymentStatusLabel.jsx";
@@ -31,6 +31,9 @@ class PaymentRow extends React.Component{
 				</th>
 				<th className="text-center">
 					<big><b>₹ {this.props.payment.amount}</b></big>
+				</th>
+				<th className="text-center">
+					<big><b>₹ {this.props.payment.reimbursement}</b></big>
 				</th>
 				<th className="text-center">
 					{ this.props.payment.status == "PENDING" ? <p><b>{moment(this.props.payment.payment_due_date).format(momentDateFormat)}</b></p> : null }
@@ -58,6 +61,7 @@ export default class PaymentList extends React.Component{
 			payment_list_count: 0,
 			payments: [],
 			config: {},
+			selectedStatus: "ALL",
 		};
 	}
 
@@ -101,6 +105,46 @@ export default class PaymentList extends React.Component{
 			});
 		});
 	};
+
+	// handleStatusChange = (event) => {
+	// 	const selectedStatus = event.target.value;
+	// 	const actualStatus = selectedStatus === "Payment Status" ? "ALL" : selectedStatus;
+	// 	this.setState({ selectedStatus: actualStatus }, this.fetchPaymentData);
+	// }
+	handleStatusChange = (event) => {
+		const selectedStatus = event.target.value;
+		this.setState({ selectedStatus }, () => {
+			if (selectedStatus !== "ALL") {
+				this.setLoading(true);
+				findPaymentStatus(selectedStatus)
+					.then(result => {
+						this.setState({
+							payments: result.payments,
+							total_count: result.total_count,
+							payment_list_count: result.payments.length
+						});
+					})
+					.always(() => {
+						this.setLoading(false);
+					});
+			} else {
+				this.setLoading(true); // Set loading state before fetching all payments
+				findPayments(false, this.state.payment_list_count)
+					.then(result => {
+						let { payments, total_count } = result;
+						this.setState({
+							payments: payments,
+							total_count: total_count,
+							payment_list_count: payments.length
+						});
+					})
+					.always(() => {
+						this.setLoading(false); // Clear loading state after fetching payments
+					});
+			}
+		});
+	};
+
 	render(){
 		if(this.state.loading){
 			return <Loading/>;
@@ -118,6 +162,10 @@ export default class PaymentList extends React.Component{
 						Load More
 					</button>);
 				}
+				const filteredPayments = this.state.selectedStatus === "ALL"
+					? this.state.payments
+					: this.state.payments.filter(payment => payment.status === this.state.selectedStatus);
+
 				return (
 					<div>
 						<h2 className="page-header">
@@ -136,7 +184,10 @@ export default class PaymentList extends React.Component{
 										Total Audits Conducted
 									</th>
 									<th className="text-center">
-										Total Payments Transferred
+										Total Fee Payments Transferred
+									</th>
+									<th className="text-center">
+										Total Payments Reimbursement
 									</th>
 									<th className="text-center">
 										Total Payments Pending
@@ -152,6 +203,9 @@ export default class PaymentList extends React.Component{
 										Rs. {this.state.summary.total_transfered}
 									</th>
 									<th className="text-center">
+										Rs. {this.state.summary.total_reimbursement}
+									</th>
+									<th className="text-center">
 										Rs. {this.state.summary.total_pending}
 									</th>
 								</tr>
@@ -163,15 +217,27 @@ export default class PaymentList extends React.Component{
 								<tr className="bg-primary">
 									<th className="text-center">Client</th>
 									<th className="text-center">Audit Date</th>
-									<th className="text-center">Payment Status</th>
-									<th className="text-center">Payment</th>
+									{/* <th className="text-center">Payment Status</th> */}
+									<th className="text-center">
+										<div className="dropdown" style={{ display: "inline-block" }}>
+											<select className="form-control" value={this.state.selectedStatus} onChange={this.handleStatusChange}>
+												<option value="ALL">Payment Status</option>
+												<option value="PAID">Paid</option>
+												<option value="PENDING">Pending</option>
+												<option value="FAILED">Failed</option>
+											</select>
+										</div>
+									</th>
+									<th className="text-center">Fee Payment</th>
+									<th className="text-center">Reimbursement</th>
 									<th className="text-center">Expected Payment Date</th>
 									<th className="text-center">Paid on</th>
 									<th className="text-center">Action</th>
 								</tr>
 							</thead>
 							<tbody>
-								{rows}
+								{/* {rows} */}
+								{filteredPayments.map(p => <PaymentRow payment={p} key={p.id} />)}
 							</tbody>
 						</table>
 						<div className="text-center">

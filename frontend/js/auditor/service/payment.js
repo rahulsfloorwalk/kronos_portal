@@ -19,3 +19,7 @@ export function submitConcern(paymentId, message){
 		contentType: "application/json"
 	});
 }
+
+export function findPaymentStatus(status) {
+	return $.get(url.api_base_path + `auditor/payment/status?status=${status}`);
+}

@@ -73,8 +73,8 @@ class DetailsPage extends React.Component {
 		//   	</button>);
 
 		const statusButton = (
-			<button onClick={() => this.setState({ isModalOpen: true })} className="btn btn-default" >
-				<Lock /> Deactivate
+			<button onClick={() => this.setState({ isModalOpen: true })} className="btn btn-default " >
+				<Lock /> Deactivate My profile
 			</button>
 		);
 
@@ -109,8 +109,8 @@ class DetailsPage extends React.Component {
 								<li>{this.state.preferences.receive_transactional_whatsapp_message ? <Check/> : <Cross/>} on Whatsapp</li>
 							</ul>
 							{/* <p className="text-muted"><small>If you want to change your mobile number or email, please contact us.</small></p> */}
-							<div className="panel-heading">
-								<span className="pull-left">
+							<div className="panel-heading ">
+								<span className="pull-right ">
 									{statusButton}
 								</span>
 							</div>

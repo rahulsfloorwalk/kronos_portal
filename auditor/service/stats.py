@@ -12,6 +12,7 @@ from auditor.service import bank_info_service
 from auditor.service import additional_info_service
 import attachment.service_auditor as auditor_attachment_service
 from social.service import social_auditor
+from audit.service import audit_service
 
 
 def getAuditorHistoryStats(user_id):
@@ -98,16 +99,19 @@ def getCompletedAcceptedAuditStores(user_id):
 def getAuditorStats(user_id):
     try:
         auditor = User.objects.get(pk=user_id)
+        kms = 100
         if auditor and auditor.groups.filter(name=GROUP_NAME_AUDITOR).exists():
             profileInfo = ProfileInfo.objects.get(user=auditor)
             audit_applications = AuditApplication.objects.filter(profileinfo=profileInfo).order_by('-audit_date')
             audit_stores = AuditStore.objects.filter(user=auditor).order_by('-audit_date')
             payments = Payment.objects.filter(user=auditor)
+            available_audits = audit_service.find_audits_for_auditor_limit(user_id, kms)
             result = {
                 'applied': 0,
                 'assigned': 0,
                 'completed': 0,
-                'pending_payment': 0
+                'pending_payment': 0,
+                'available_audits': len(available_audits)
             }
             result['applied'] = len(audit_applications)
 

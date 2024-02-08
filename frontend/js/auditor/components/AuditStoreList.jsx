@@ -22,6 +22,11 @@ class AuditStoreRow extends React.Component {
 		auditStore: auditStorePropType,
 	};
 	render() {
+		let revertMessage = null;
+		if (this.props.auditStore.report_revert_count > 0) {
+			revertMessage = <h4 style={{marginLeft: "10px"}}><b>(Reverted)</b></h4>;
+		}
+
 		let withdrawButton , auditStoreStatusLabel, withdrawMessage, viewButton, concernButton;
 		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
 		const fees = earnings_per_audit ? <b>Fees: ₹ {earnings_per_audit}, </b> : "";
@@ -51,12 +56,37 @@ class AuditStoreRow extends React.Component {
 				viewButton = (<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-success">View Report</Link>);
 			}
 		}
-
+		// let completionPercentage;
+		// if (this.props.auditStore.completion_percentage !== undefined) {
+		// 	completionPercentage = (
+		// 		<div>
+		// 			{this.props.auditStore.completion_percentage} / 100     {/*uncomment when not use percentage bar*/}
+		// 		</div>
+		// 	);
+		// }
 		return (
 			<div className="panel panel-default">
 				<div className="panel-body">
-					<h3 className="">
-						<b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> - {this.props.auditStore.audit.store.name}
+					<h3 className="d-flex align-items-center" style={{ display: "flex", alignItems: "center" }}>
+						<b style={{ marginRight: "10px" }}>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> - {this.props.auditStore.audit.store.name}
+						&nbsp;
+						{this.props.auditStore.status === "SUBMITTED" ? (
+							<span className="btn btn-success">
+								Submited
+							</span>
+						) : (
+							<div className="d-flex align-items-center mt-3">
+								<Link to={`/audit_store/${this.props.auditStore.id}/section`} style={{ display: "flex", alignItems: "center", marginTop: "18px", textDecoration: "none" }}>
+									<div className="progress" style={{ width: "100px", marginLeft: "10px" }}>
+										<div className="progress-bar bg-primary" role="progressbar" style={{ width: `${this.props.auditStore.completion_percentage}%`, backgroundColor: this.props.auditStore.completion_percentage === 100 ? "#28a745" : " " }} aria-valuenow={this.props.auditStore.completion_percentage} aria-valuemin="0" aria-valuemax="100">
+											{this.props.auditStore.completion_percentage}%
+										</div>
+									</div>
+								</Link>
+							</div>
+
+						)}
+						{revertMessage}
 					</h3>
 					<div>
 						{auditStoreStatusLabel}
@@ -87,6 +117,7 @@ class AuditStoreRow extends React.Component {
 					{withdrawMessage}
 					&nbsp;&nbsp;
 					{concernButton}
+					{/* <div style={{ display: "inline-block", verticalAlign: "bottom"}}>{completionPercentage} <b>Completion Percentage</b></div>  percentage bar */}
 				</div>
 			</div>
 		);

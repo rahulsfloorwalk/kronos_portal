@@ -172,6 +172,9 @@ class ClientList extends Component{
 		let auditCycles = [];
 		let auditCycleExtra = {};
 		for(let id in this.props.audits) {
+			if (auditCycles.length === 5) {
+				break; // Break out of the loop if we have collected 5 items
+			}
 			let ac = auditCycles.filter(ac => ac.id === this.props.audits[id].audit_cycle.id);
 			if(ac.length === 0){
 				auditCycleExtra[this.props.audits[id].audit_cycle.id] = {

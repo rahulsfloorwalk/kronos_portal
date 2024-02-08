@@ -38,6 +38,7 @@ class __Section extends React.Component{
 			auditor_comment: "",
 			auditor_comment_error: "",
 			focused: false,
+			collapsed: false,
 		};
 	}
 
@@ -93,6 +94,17 @@ class __Section extends React.Component{
 		Alert.success("Data Saved");
 	};
 
+	areAllQuestionsComplete = () => {
+		const allComplete = this.props.section.questions &&
+			this.props.section.questions.every((q) => q.answer && q.answer.trim().length > 0);
+		return allComplete;
+	};
+
+	toggleCollapse = () => {
+		this.setState((prevState) => ({
+			collapsed: !prevState.collapsed,
+		}));
+	};
 	render(){
 		let questionRows = [];
 		const remainingCharacters = 150 - this.state.auditor_comment.length;
@@ -151,58 +163,70 @@ class __Section extends React.Component{
 		else {
 			characterCountClass = "danger";
 		}
-		let goodClass = this.state.focused || this.state.saving || !this.state.auditor_comment || (this.state.auditor_comment).length < 150 ? "" : "success";
-		let badClass = (this.props.showErrors || this.state.auditor_comment_error) && (this.state.auditor_comment).length < 150 ? "danger" : "";
+		// let goodClass = this.state.focused || this.state.saving || !this.state.auditor_comment || (this.state.auditor_comment).length < 150 ? "" : "success";
+		// let badClass = (this.props.showErrors || this.state.auditor_comment_error) && (this.state.auditor_comment).length < 150 ? "danger" : "";
+		let allQuestionsComplete = this.areAllQuestionsComplete();
+		let goodClass = allQuestionsComplete ? "success" : "";
+		let badClass = (this.props.showErrors || this.state.auditor_comment_error) && !allQuestionsComplete ? "danger" : "";
+
 
 		return (
-			<div className="panel panel-default report-scroll">
-				<div className="panel-heading">
+			<div className={`panel panel-default report-scroll ${this.state.collapsed ? "collapsed" : ""}`}>
+				<div className="panel-heading" onClick={this.toggleCollapse}>
 					<h4 className="panel-title">
 						{this.props.section.sequence} - <b>{this.props.section.name}</b>
+						<span className="pull-right">
+							{this.state.collapsed ?
+								<span className="glyphicon glyphicon-minus"></span> :
+								<span className="glyphicon glyphicon-plus"></span>
+							}
+						</span>
 					</h4>
 				</div>
-				<table className="table table-striped">
-					<thead>
-						<tr>
-							<th>
-								<div className="row">
-									<div className="col-xs-1 text-right">#</div>
-									<div className="col-xs-10 col-md-5">Question</div>
-									<div className="col-xs-12 col-md-6 hidden-xs hidden-sm">Answer</div>
-								</div>
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						{questionRows}
-						{ this.props.section.hide_comment == false ?
-							<tr className={goodClass || badClass}>
-								<td>
+				{!this.state.collapsed && (
+					<table className="table table-striped">
+						<thead>
+							<tr>
+								<th>
 									<div className="row">
-										<div className="col-xs-offset-1 col-md-11">
-											<b>Section Summary:</b>{" "}
-											<small className={`text-${characterCountClass}`}>
-												{remainingCharacters && remainingCharacters >= 0 && remainingCharacters<=150
-													?
-													`(Min 150 characters in length), [${remainingCharacters} characters remaining.]`
-													:
-													this.state.auditor_comment_error
-														?
-														this.state.auditor_comment_error
-														: null
-												}
-											</small>{" "}
-											{commentElement}
-										</div>
-										{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.props.reportSection && this.props.reportSection.revert_message ? <div className="col-xs-12 col-xs-offset-1 col-md-12 col-md-offset-1" style={{marginTop:"9px"}}>
-											<p className="text-danger"><b>Revert message: </b>{this.props.reportSection.revert_message}</p>
-										</div> : null}
+										<div className="col-xs-1 text-right">#</div>
+										<div className="col-xs-10 col-md-5">Question</div>
+										<div className="col-xs-12 col-md-6 hidden-xs hidden-sm">Answer</div>
 									</div>
-								</td>
+								</th>
 							</tr>
-							: null}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{questionRows}
+							{ this.props.section.hide_comment == false ?
+								<tr className={goodClass || badClass}>
+									<td>
+										<div className="row">
+											<div className="col-xs-offset-1 col-md-11">
+												<b>Section Summary:</b>{" "}
+												<small className={`text-${characterCountClass}`}>
+													{remainingCharacters && remainingCharacters >= 0 && remainingCharacters<=150
+														?
+														`(Min 150 characters in length), [${remainingCharacters} characters remaining.]`
+														:
+														this.state.auditor_comment_error
+															?
+															this.state.auditor_comment_error
+															: null
+													}
+												</small>{" "}
+												{commentElement}
+											</div>
+											{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.props.reportSection && this.props.reportSection.revert_message ? <div className="col-xs-12 col-xs-offset-1 col-md-12 col-md-offset-1" style={{marginTop:"9px"}}>
+												<p className="text-danger"><b>Revert message: </b>{this.props.reportSection.revert_message}</p>
+											</div> : null}
+										</div>
+									</td>
+								</tr>
+								: null}
+						</tbody>
+					</table>
+				)}
 				{section_attachment_box_element}
 			</div>
 		);

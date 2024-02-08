@@ -23,6 +23,7 @@ from agency.models import Agency
 # from kronos.utils import validate_ifsc, validate_pan
 from kronos.utils import find_payment_due_date, get_difference_between_date
 from client.service.client_manager import get_manager_info_list_by_audit_store_obj
+from auditor.service.auditor_api import get_report_completion_percentage
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -402,9 +403,15 @@ class AuditApplicationCancelDeSerializer(Serializer):
 
 class AuditStoreSerializer(ModelSerializer):
     get_date_diff = SerializerMethodField('get_date_difference')
+    completion_percentage = SerializerMethodField()
 
     def get_date_difference(self, audit_store_obj):
         return get_difference_between_date(audit_store_obj.audit_date)
+    
+    def get_completion_percentage(self, audit_store_obj):
+        # Call the get_report_completion_percentage function to fetch completion percentage for the audit store
+        completion_percentage = get_report_completion_percentage(audit_store_obj.id)
+        return completion_percentage
     
     # manager_email_list = SerializerMethodField()
     # def get_manager_email_list(self, audit_store_obj):
@@ -431,6 +438,8 @@ class AuditStoreSerializer(ModelSerializer):
             'max_attachment_limit',
             # 'manager_email_list',            
             'manager_info_list',
+            'report_revert_count',
+            'completion_percentage'
         )
         read_only_fields = fields
 
@@ -631,9 +640,13 @@ class NotificationSerializer(ModelSerializer):
 
 class PaymentSerializer(ModelSerializer):
     payment_due_date = SerializerMethodField()
+    reimbursement = SerializerMethodField()
 
     def get_payment_due_date(self, payment_obj):
         return find_payment_due_date(payment_obj.audit_store.audit_date)
+    
+    def get_reimbursement(self,payment_obj):
+        return payment_obj.audit_store.reimbursement
 
     class Meta:
         model = Payment
@@ -647,7 +660,8 @@ class PaymentSerializer(ModelSerializer):
             'added_on',
             'paid_on',
             'get_audit_details',
-            'payment_due_date'
+            'payment_due_date',
+            'reimbursement'
         )
         read_only_fields = fields
 
