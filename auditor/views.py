@@ -692,7 +692,7 @@ class PaymentView(APIView):
         return Response({'payments': PaymentSerializer(payments, many=True).data, 'total_count': total_count})
     
 class PaymentStatusView(APIView):
-    permission_classes: [HasGroupPermission]
+    permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_AUDITOR]
     }
