@@ -485,7 +485,8 @@ class AttachmentUploadBox extends React.Component {
 						{/* <p className="text-danger"><b>You can only add up to {this.props.auditStore.max_attachment_limit} attachments for this report.</b></p> */}
 						{/* <AttachmentLegend />
 						<br/> */}
-						{proof_tag_list}
+						<div style={{display: "flex", justifyContent: "flex-start", alignItems: "center", gap: "1rem",flexWrap: "wrap" }}>{proof_tag_list}</div>
+
 						{submitMessageElement}
 					</div>
 					{/* {selectSection} */}

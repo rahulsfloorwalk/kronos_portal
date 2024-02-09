@@ -335,9 +335,9 @@ def get_manager_wise_profitability_report(month, year, manager):
 def get_client_wise_profitability_report(client, year, last_client_id):
     total_client_count = 0
     if client:
-        client_list = Client.objects.filter(id = client).order_by('-id')
+        client_list = Client.objects.filter(id = client, is_active=True).order_by('-id')
     else:
-        client_list = Client.objects.all().order_by('-id')
+        client_list = Client.objects.filter(is_active=True).order_by('-id')
 
     total_client_count = client_list.count()
 
