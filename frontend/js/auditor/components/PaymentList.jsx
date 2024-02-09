@@ -19,32 +19,34 @@ class PaymentRow extends React.Component{
 
 	render(){
 		return (
-			<tr>
-				<th className="text-center">
-					<b>{this.props.payment.get_audit_details.client_name}</b>
-				</th>
-				<th className="text-center">
-					<b>{moment(this.props.payment.get_audit_details.audit_date).format(momentDateFormat)}</b>
-				</th>
-				<th className="text-center">
-					<PaymentStatusLabel status={this.props.payment.status}/>
-				</th>
-				<th className="text-center">
-					<big><b>₹ {this.props.payment.amount}</b></big>
-				</th>
-				<th className="text-center">
-					<big><b>₹ {this.props.payment.reimbursement}</b></big>
-				</th>
-				<th className="text-center">
-					{ this.props.payment.status == "PENDING" ? <p><b>{moment(this.props.payment.payment_due_date).format(momentDateFormat)}</b></p> : null }
-				</th>
-				<th className="text-center">
-					{ this.props.payment.paid_on ? <p><b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
-				</th>
-				<th className="text-center">
-					<Link to={`payment/${this.props.payment.id}/payment_concern`} className="btn btn-sm btn-primary">Having Trouble?</Link>
-				</th>
-			</tr>
+			this.props.payment.status ?
+				<tr>
+					<th className="text-center">
+						<b>{this.props.payment.get_audit_details.client_name}</b>
+					</th>
+					<th className="text-center">
+						<b>{moment(this.props.payment.get_audit_details.audit_date).format(momentDateFormat)}</b>
+					</th>
+					<th className="text-center">
+						<PaymentStatusLabel status={this.props.payment.status}/>
+					</th>
+					<th className="text-center">
+						<big><b>₹ {this.props.payment.amount}</b></big>
+					</th>
+					<th className="text-center">
+						<big><b>₹ {this.props.payment.reimbursement}</b></big>
+					</th>
+					<th className="text-center">
+						{ this.props.payment.status == "PENDING" ? <p><b>{moment(this.props.payment.payment_due_date).format(momentDateFormat)}</b></p> : null }
+					</th>
+					<th className="text-center">
+						{ this.props.payment.paid_on ? <p><b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
+					</th>
+					<th className="text-center">
+						<Link to={`payment/${this.props.payment.id}/payment_concern`} className="btn btn-sm btn-primary">Having Trouble?</Link>
+					</th>
+				</tr>
+				: null
 		);
 	}
 }
@@ -114,34 +116,35 @@ export default class PaymentList extends React.Component{
 	handleStatusChange = (event) => {
 		const selectedStatus = event.target.value;
 		this.setState({ selectedStatus }, () => {
-			if (selectedStatus !== "ALL") {
-				this.setLoading(true);
-				findPaymentStatus(selectedStatus)
-					.then(result => {
-						this.setState({
-							payments: result.payments,
-							total_count: result.total_count,
-							payment_list_count: result.payments.length
-						});
-					})
-					.always(() => {
-						this.setLoading(false);
+			// if (selectedStatus !== "ALL") {
+			this.setLoading(true);
+			findPaymentStatus(selectedStatus)
+				.then(result => {
+					this.setState({
+						payments: result.payments,
+						total_count: result.total_count,
+						payment_list_count: result.payments.length
 					});
-			} else {
-				this.setLoading(true); // Set loading state before fetching all payments
-				findPayments(false, this.state.payment_list_count)
-					.then(result => {
-						let { payments, total_count } = result;
-						this.setState({
-							payments: payments,
-							total_count: total_count,
-							payment_list_count: payments.length
-						});
-					})
-					.always(() => {
-						this.setLoading(false); // Clear loading state after fetching payments
-					});
-			}
+
+				})
+				.always(() => {
+					this.setLoading(false);
+				});
+			// } else {
+			// 	this.setLoading(true); // Set loading state before fetching all payments
+			// 	findPayments(false, this.state.payment_list_count)
+			// 		.then(result => {
+			// 			let { payments, total_count } = result;
+			// 			this.setState({
+			// 				payments: payments,
+			// 				total_count: total_count,
+			// 				payment_list_count: payments.length
+			// 			});
+			// 		})
+			// 		.always(() => {
+			// 			this.setLoading(false); // Clear loading state after fetching payments
+			// 		});
+			// }
 		});
 	};
 
@@ -150,7 +153,9 @@ export default class PaymentList extends React.Component{
 			return <Loading/>;
 		}
 		else{
-			let rows = this.state.payments.map(p => <PaymentRow payment={p} key={p.id}/>);
+			// if(this.state.payments.find(item=>item.user_id)){
+			let	rows = this.state.payments.map(p => <PaymentRow payment={p} key={p.id}/>); // }
+
 			if(rows.length > 0){
 				let loadMoreLoading;
 				if(this.state.loadMoreLoader){
@@ -162,10 +167,11 @@ export default class PaymentList extends React.Component{
 						Load More
 					</button>);
 				}
-				const filteredPayments = this.state.selectedStatus === "ALL"
-					? this.state.payments
-					: this.state.payments.filter(payment => payment.status === this.state.selectedStatus);
-
+				// 	const filteredPayments =
+				// 	this.state.selectedStatus === "ALL"
+				// 		? this.state.payments
+				// 		:
+				// 		this.state.payments.filter(payment => payment.status === this.state.selectedStatus);
 				return (
 					<div>
 						<h2 className="page-header">
@@ -236,8 +242,8 @@ export default class PaymentList extends React.Component{
 								</tr>
 							</thead>
 							<tbody>
-								{/* {rows} */}
-								{filteredPayments.map(p => <PaymentRow payment={p} key={p.id} />)}
+								{rows}
+								{/* {filteredPayments.map(p => <PaymentRow payment={p} key={p.id} />)} */}
 							</tbody>
 						</table>
 						<div className="text-center">

@@ -46,8 +46,14 @@ def get_payment_status_wise_list_by_user(user, status):
         payments = Payment.objects.filter(user=user, status='PENDING')
     elif status == 'FAILED':
         payments = Payment.objects.filter(user=user, status='FAILED')
+    elif status == 'ALL':
+        payments = Payment.objects.filter(user=user)
     else:
         payments = Payment.objects.filter(user=user)
+
+    if not payments:
+        return "No data available"
+    
     return payments
 
 def get_payment_summary_by_user(user_id):

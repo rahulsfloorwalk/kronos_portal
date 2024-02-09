@@ -1,19 +1,19 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import { shallow } from "enzyme";
-import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
-import { ClientID } from "../../../../constants.js";
+// import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+// import { ClientID } from "../../../../constants.js";
 import { __AuditorComment } from "../AuditorComment.jsx";
-jest.mock("@grammarly/editor-sdk-react", () => ({
-	GrammarlyEditorPlugin: ({ children }) => children,
-}));
+// jest.mock("@grammarly/editor-sdk-react", () => ({
+// 	GrammarlyEditorPlugin: ({ children }) => children,
+// }));
 
 describe("<__AuditorComment/>", () => {
 	describe("when auditor comment is editable", () => {
 		const editable = true;
 
 		it("renders a comment correctly", () => {
-			const tree = renderer.create(<GrammarlyEditorPlugin clientId={ClientID}><__AuditorComment auditorComment="Hello World" onCommentChanged={jest.fn()} editable={editable}/></GrammarlyEditorPlugin>).toJSON();
+			const tree = renderer.create(<__AuditorComment auditorComment="Hello World" onCommentChanged={jest.fn()} editable={editable}/>).toJSON();
 			expect(tree).toMatchSnapshot();
 		});
 

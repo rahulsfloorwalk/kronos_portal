@@ -642,11 +642,24 @@ class PaymentSerializer(ModelSerializer):
     payment_due_date = SerializerMethodField()
     reimbursement = SerializerMethodField()
 
-    def get_payment_due_date(self, payment_obj):
-        return find_payment_due_date(payment_obj.audit_store.audit_date)
+    # def get_payment_due_date(self, payment_obj):
+        # return find_payment_due_date(payment_obj.audit_store.audit_date)
     
+    def get_payment_due_date(self, payment_obj):
+        if isinstance(payment_obj, Payment):
+            audit_store = payment_obj.audit_store
+            if audit_store:
+                audit_date = audit_store.audit_date
+                if audit_date:
+                    return find_payment_due_date(audit_date)
+        return None
+
     def get_reimbursement(self,payment_obj):
-        return payment_obj.audit_store.reimbursement
+        if isinstance(payment_obj, Payment):
+            return payment_obj.audit_store.reimbursement if payment_obj.audit_store else None
+        return None
+    # def get_reimbursement(self,payment_obj):
+    #     return payment_obj.audit_store.reimbursement
 
     class Meta:
         model = Payment
