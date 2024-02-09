@@ -8,9 +8,9 @@ import Alert from "react-s-alert";
 import Jumbotron from "../../components/Jumbotron.jsx";
 import { Tasks, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
-import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+// import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
 
-import { ClientID } from "../../constants.js";
+// import { ClientID } from "../../constants.js";
 
 import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, renameAttachment, moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
 import { affectInputEventToComponent, orderKeys } from "../../react_utils.js";
@@ -76,9 +76,7 @@ class AnswerComment extends Component {
 			let hasError = this.state.error ? "has-error" : "";
 			return (
 				<div className={`${hasSuccess} ${hasError}`}>
-					<GrammarlyEditorPlugin clientId={ClientID}>
-						<textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" style={(this.props.required ?{border: "solid 2px #a94442"}: null)}rows="1"/>
-					</GrammarlyEditorPlugin>
+					<textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" style={(this.props.required ?{border: "solid 2px #a94442"}: null)}rows="1"/>
 				</div>
 			);
 		} else {
@@ -221,12 +219,10 @@ class __QuestionRow extends React.Component {
 			if(this.props.q.question_type === "PLAIN"){
 				answerElement = (
 					<div className={hasAnswerError + hasAnswerSuccess}>
-						<GrammarlyEditorPlugin clientId={ClientID}>
-							<textarea className="form-control"
-								onChange={this.answerChanged}
-								onBlur={this.saveAnswer}
-								value={this.state.answer.answer_text}></textarea>
-						</GrammarlyEditorPlugin>
+						<textarea className="form-control"
+							onChange={this.answerChanged}
+							onBlur={this.saveAnswer}
+							value={this.state.answer.answer_text}></textarea>
 					</div>
 				);
 			} else if(this.props.q.question_type === "MUTEX") {
@@ -782,18 +778,16 @@ class __Section extends React.Component{
 			let hasAuditorCommentSuccess = this.state.auditorCommentSuccess ? "has-success" : "";
 			auditorCommentElement = (
 				<div className={hasAuditorCommentError + hasAuditorCommentSuccess}>
-					<GrammarlyEditorPlugin clientId={ClientID}>
-						<textarea
-							disabled={this.state.savingAuditorComment}
-							placeholder="enter auditor comment here"
-							required="true"
-							className="form-control"
-							name="auditor_comment"
-							value={this.state.auditor_comment}
-							onBlur={this.saveAuditorComment}
-							onChange={this.inputChanged}
-						/>
-					</GrammarlyEditorPlugin>
+					<textarea
+						disabled={this.state.savingAuditorComment}
+						placeholder="enter auditor comment here"
+						required="true"
+						className="form-control"
+						name="auditor_comment"
+						value={this.state.auditor_comment}
+						onBlur={this.saveAuditorComment}
+						onChange={this.inputChanged}
+					/>
 				</div>
 			);
 

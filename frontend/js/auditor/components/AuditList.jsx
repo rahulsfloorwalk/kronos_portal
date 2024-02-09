@@ -19,6 +19,7 @@ import { fetchPreferences } from "../service/preferences.js";
 import { getGender,getIncomeText,getCarCost,getEducationStatus,getReportRating,getMaritalStatus,getAuditorRating } from "../../utils.js";
 import { auditPropType, auditCyclePropType, applicationPropType } from "../prop_types";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
+import "../../../css/bs_overrides.scss";
 
 class AuditRow extends React.Component{
 	static propTypes = {
@@ -42,26 +43,30 @@ class AuditRow extends React.Component{
 	render(){
 		let button, auditDate, textLabel,redirectButton;
 		if( typeof this.props.application === "undefined" || this.props.application.status === "NOT_APPLIED"){
-			button = <button type="button" className="btn btn-primary" onClick={this.applyButtonClicked}><ShareAlt/> Apply</button>;
+			button = <button type="button" className="btn btn-primary btn-lg btn-block" style={{ borderColor: "bule", borderRadius: "0px 0px 3px 3px"}} onClick={this.applyButtonClicked}><ShareAlt/> Apply</button>;
 		}
 		else if( this.props.application.status === "APPLIED" || this.props.application.status === "WAITLISTED"){
 			let cancelLink = `/audit/cycle/${this.props.audit.audit_cycle.id}/audit/${this.props.audit.id}/cancel`;
-			let cancelButton = <Link to={cancelLink} className="btn btn-sm btn-default" title="Cancel Application"><Cross/> Cancel</Link>;
+			let cancelButton =
+			<div style={{paddingBottom:"0.5rem",paddingTop: "0.5rem"}}>
+				<Link to={cancelLink} className="btn btn-sm btn-default" title="Cancel Application"><Cross/> Cancel</Link>
+			</div>;
 			if(this.props.application.status === "APPLIED"){
 				auditDate = <p>You have <b className="text-info">applied</b> for an audit on <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. It is pending for approval.<br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT UNTIL YOUR APPLICATION IS APPROVED.</b></small></p>;
 			}
 
 			if(this.props.application.status === "WAITLISTED"){
-				auditDate = <p>Your application is on <b className="text-warning">wait list</b>. There is a good chance that it may get approved.<br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT UNTIL YOUR APPLICATION IS APPROVED.</b></small></p>;
+				auditDate = <p >Your application is on <b className="text-warning">wait list</b>. There is a good chance that it may get approved.<br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT UNTIL YOUR APPLICATION IS APPROVED.</b></small></p>;
 			}
 
 			button = cancelButton;
-			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
+			textLabel = <div style={{paddingBottom:"0.5rem",paddingTop: "0.5rem"}}><ApplicationStatusLabel status={this.props.application.status}/></div> ;
 		}
 		else if( this.props.application.status === "APPROVED"){
-			redirectButton = <button type="button" className="btn btn-primary" onClick={this.FillReportClicked} >Fill Report</button>;
-			auditDate =  <span>Your <b className="text-success">approved</b> audit date is <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. Don&#39;t forget to conduct the audit!</span>;
-			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
+			redirectButton = <div style={{paddingTop: "0.5rem"}}><button type="button" className="btn btn-primary" onClick={this.FillReportClicked} >Fill Report</button></div>;
+			// redirectButton = <button type="button" className="btn btn-primary" onClick={this.FillReportClicked} >Fill Report</button>;
+			auditDate =  <span> <br /> Your <b className="text-success" >approved</b> audit date is <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. Don&#39;t forget to conduct the audit!</span>;
+			textLabel = <div style={{paddingTop: "0.5rem"}}><ApplicationStatusLabel status={this.props.application.status}/></div>;
 		}
 		else if( this.props.application.status === "WITHDRAWN"){
 			auditDate =  <span>Your Audit Application has <b className="text-default">Withdrawn</b>. <br/>You Can Re-Apply by clicking  apply button.<br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT.</b></small></span>;
@@ -73,27 +78,72 @@ class AuditRow extends React.Component{
 		let fees = this.props.audit.earnings_per_audit ? <span>Flat: <big><b>₹ {this.props.audit.earnings_per_audit}</b></big>, </span> : "";
 		let reimb = this.props.audit.reimbursement ? <span>Reimbursement upto: <big><b>₹ {this.props.audit.reimbursement}</b></big></span> : "";
 		return (
-			<div className="row">
-				<div className="col-sm-3">
-					<label className="hidden-sm hidden-md hidden-lg">Store Name</label>
-					<p><big>{this.props.audit.store.name}, {this.props.audit.store.city.name}</big></p>
-					<p>{this.props.audit.store.address}</p>
-				</div>
-				<div className="col-sm-3">
-					<label className="hidden-sm hidden-md hidden-lg">Earnings</label>
-					<p>{fees}{reimb}</p>
-				</div>
-				<div className="col-sm-3">
-					<p>
-						{textLabel ? <b>{textLabel}</b> : null}&nbsp;{button}&nbsp;&nbsp;{redirectButton}
-					</p>
-				</div>
-				{ auditDate ?
-					<div className="col-xs-12 col-sm-4 col-sm-offset-8">
-						{auditDate}
+			// <div className="row">
+			// 	<div className="col-sm-3">
+			// 		<label className="hidden-sm hidden-md hidden-lg">Store Name</label>
+			// 		<p><big>{this.props.audit.store.name}, {this.props.audit.store.city.name}</big></p>
+			// 		<p>{this.props.audit.store.address}</p>
+			// 	</div>
+			// 	<div className="col-sm-3">
+			// 		<label className="hidden-sm hidden-md hidden-lg">Earnings</label>
+			// 		<p>{fees}{reimb}</p>
+			// 	</div>
+			// 	<div className="col-sm-3">
+			// 		<p>
+			// 			{textLabel ? <b>{textLabel}</b> : null}&nbsp;{button}&nbsp;&nbsp;{redirectButton}
+			// 		</p>
+			// 	</div>
+			// 	{ auditDate ?
+			// 		<div className="col-xs-12 col-sm-4 col-sm-offset-8">
+			// 			{auditDate}
+			// 		</div>
+			// 		: null}
+			// 	<div className="col-xs-12"><hr/></div>
+			// </div>
+			<div className="panel panel-default" style={{ width: "100%", margin: "auto" }}>
+				<table className="table" style={{ width: "100%" }}>
+					<colgroup>
+						<col style={{ width: "27%" }} />
+						<col style={{ width: "73%" }} />
+					</colgroup>
+					<tbody>
+						<tr className="even-row">
+							<td className="text-left" style={{ border: "none",borderRadius: "5px"  }}>Store Name:</td>
+							<td style={{ border: "none",borderRadius: "5px" }}>
+								<b>
+									<p><big>{this.props.audit.store.name}, {this.props.audit.store.city.name}</big></p>
+									<p>{this.props.audit.store.address}</p>
+								</b>
+							</td>
+						</tr>
+						<tr className="odd-row">
+							<td className="text-left">Earnings:</td>
+							<td className="truncateStyle1"><p>{fees}{reimb}</p></td>
+						</tr>
+						<tr className="even-row">
+							<td className="text-left" colSpan="2" style={{ whiteSpace: "pre-wrap" }}>
+								{/* <p>{this.props.application && auditDate ? auditDate : "You have not applied"}</p> */}
+								<p>
+									{this.props.application && auditDate ? auditDate : (
+										<small><b className="text-danger"> <br /> NOTE: PLEASE CHECK ELIGIBILITY BEFORE APPLY.</b> <br /> </small>
+									)}
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div style={{ display: "flex", justifyContent: "center",borderRadius: "3px"}} className="odd-row">
+					{textLabel && (
+						<b className="" style={{ fontSize: "15px", textAlign: "center", marginRight: "5px", marginTop: "4px",}}>
+							{textLabel}
+						</b>
+					)}
+					{button}
+					<div style={{paddingBottom:"0.5rem"}}>
+						{redirectButton}
 					</div>
-					: null}
-				<div className="col-xs-12"><hr/></div>
+				</div>
 			</div>
 		);
 	}
@@ -174,6 +224,7 @@ class AuditList extends Component{
 					value = factor.value;
 				}
 				const key = factor.key.charAt(0).toUpperCase() + factor.key.slice(1);
+				// const key = factor.key.replace(/_/g, ' ').replace(/\b\w/g, firstChar => firstChar.toUpperCase());
 				// const spacedKey = '\u00A0\u00A0 ' + key.replace(/_/g, ' ');
 				return value ? `${key}: ${value}` : null;
 			}).filter(Boolean).join(", ");
@@ -248,7 +299,23 @@ class AuditList extends Component{
 									<span style={labelStyle} className="text-muted">Eligibility</span><br/>
 									{/* <span style={valueStyle}><b>{this.state.eligibility ? this.state.eligibility : "N/A" }</b></span> */}
 									{/* <span style={eligibilityStyle}>{this.state.audit_alignment_factors ? this.state.audit_alignment_factors : "N/A" }</span> */}
-									<span style={eligibilityStyle}>{this.state.audit_alignment_factors? this.state.audit_alignment_factors.split(/(\b\w+:)/g).map((part, index) =>	index % 2 === 1 ? <span style={{ fontWeight: "bold" }}>{part}</span> : part	): "N/A"}</span>
+									{/* <span style={eligibilityStyle}>{this.state.audit_alignment_factors? this.state.audit_alignment_factors.split(/(\b\w+:)/g).map((part, index) =>	index % 2 === 1 ? <span style={{ fontWeight: "bold" }}>{part}</span> : part	): "N/A"}</span> */}
+									<span style={eligibilityStyle}>{this.state.audit_alignment_factors
+										? this.state.audit_alignment_factors
+											.split(/(\b\w+:)/g)
+											.map((part, index) => {
+												if (index % 2 === 1 && part.includes("_")) {
+													part = part.replace(/_/g, " ");
+													return <span style={{ fontWeight: "bold" }}>{part}</span>;
+												} else if (index % 2 === 1) {
+													const containsOnlyOneWord = /^\w+$/.test(part.trim());
+													return containsOnlyOneWord ? part : <span style={{ fontWeight: "bold" }}>{part}</span>;
+												}
+												return part;
+											})
+										: "N/A"}
+									</span>
+
 								</p>
 							</div>
 							<div className="col-sm-12">
@@ -258,15 +325,25 @@ class AuditList extends Component{
 						</div>
 					</div>
 				</div>
-				<h3 className="page-header hidden-sm hidden-md hidden-lg">Audit Locations</h3>
-				<div className="row hidden-xs">
+				<h3 className="page-header hidden-sm hidden-md hidden-xs">Audit Locations :</h3>
+				{/* <div className="row hidden-xs">
 					<div className="col-sm-3"><big><b>Store Name</b></big></div>
 					<div className="col-sm-3"><big><b>Earnings</b></big></div>
 					<div className="col-sm-3"><big><b>Status</b></big></div>
 					<div className="col-xs-12"><hr/></div>
+				</div> */}
+				{/* {rows}
+				{this.props.children} */}
+
+				<div className="audit_list_detail_row" style={{ display: "flex", flexWrap: "wrap", }}>
+					{rows.map((row, index) => (
+						<div key={index} className="audit_list_detail_box">
+							{row}
+						</div>
+					))}
 				</div>
-				{rows}
 				{this.props.children}
+
 			</div>
 		);
 	}

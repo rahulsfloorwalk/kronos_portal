@@ -1,12 +1,12 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import {QuestionRow} from "../AuditStoreSections";
-import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
-import { ClientID } from "../../../constants";
+// import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+// import { ClientID } from "../../../constants";
 
-jest.mock("@grammarly/editor-sdk-react", () => ({
-	GrammarlyEditorPlugin: ({ children }) => children,
-}));
+// jest.mock("@grammarly/editor-sdk-react", () => ({
+// 	GrammarlyEditorPlugin: ({ children }) => children,
+// }));
 
 
 const sampleQuestion = {
@@ -101,7 +101,7 @@ const sampleAuditStore = {
 describe("<QuestionRow/>", () => {
 
 	it("renders the question row correctly when answer has 0 marks", (done) => {
-		const r = renderer.create(<GrammarlyEditorPlugin clientId={ClientID}><QuestionRow q={sampleQuestion} key={sampleQuestion.id} answer={sampleAnswer} marking={true} auditStore={sampleAuditStore} auditStoreId={sampleAuditStore.id}/></GrammarlyEditorPlugin>);
+		const r = renderer.create(<QuestionRow q={sampleQuestion} key={sampleQuestion.id} answer={sampleAnswer} marking={true} auditStore={sampleAuditStore} auditStoreId={sampleAuditStore.id}/>);
 		setTimeout(() => {
 			expect(r.toJSON()).toMatchSnapshot();
 			done();
@@ -109,7 +109,7 @@ describe("<QuestionRow/>", () => {
 	});
 
 	it("renders the question row correctly when answer has non 0 marks", (done) => {
-		const r = renderer.create(<GrammarlyEditorPlugin clientId={ClientID}><QuestionRow q={sampleQuestion} key={sampleQuestion.id} answer={sampleAnswerWithMarks} marking={true} auditStore={sampleAuditStore} auditStoreId={sampleAuditStore.id}/></GrammarlyEditorPlugin>);
+		const r = renderer.create(<QuestionRow q={sampleQuestion} key={sampleQuestion.id} answer={sampleAnswerWithMarks} marking={true} auditStore={sampleAuditStore} auditStoreId={sampleAuditStore.id}/>);
 		setTimeout(() => {
 			expect(r.toJSON()).toMatchSnapshot();
 			done();

@@ -39,12 +39,29 @@ def get_payment_list_by_user(user_id, is_load_more, last_total_count):
         payment_obj_slice = payments[0:20]
     return payment_obj_slice, total_count
 
+def get_payment_status_wise_list_by_user(user, status):
+    if status == 'PAID':
+        payments = Payment.objects.filter(user=user, status='PAID')
+    elif status == 'PENDING':
+        payments = Payment.objects.filter(user=user, status='PENDING')
+    elif status == 'FAILED':
+        payments = Payment.objects.filter(user=user, status='FAILED')
+    elif status == 'ALL':
+        payments = Payment.objects.filter(user=user)
+    else:
+        payments = Payment.objects.filter(user=user)
+
+    if not payments:
+        return "No data available"
+    
+    return payments
 
 def get_payment_summary_by_user(user_id):
     payments = find_by_user(user_id)
     summary = payments.aggregate(
         total_audits = Count('audit_store', distinct=True),
         total_transfered = Sum(Case(When(status=Payment.PAID,then=F('amount')), default=0)),
-        total_pending = Sum(Case(When(status__in=[Payment.PENDING],then=F('amount')), default=0))
+        total_pending = Sum(Case(When(status__in=[Payment.PENDING],then=F('amount')), default=0)),
+        total_reimbursement = Sum('audit_store__reimbursement')
     )
     return summary

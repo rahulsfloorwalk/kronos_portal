@@ -16,6 +16,7 @@ import thumbsUpImgUrl from "../../../img/thumbsup_100.png";
 import checkmarkImgUrl from "../../../img/checkmark_100.png";
 import moneyImgUrl from "../../../img/money_100.png";
 import UserImgUrl from "../../../img/user_100.png";
+import oppotunitiesImgUrl from "../../../img/file_100.png";
 
 import { fetchProfileInfo, fetchAuditorStats, fetchAuditorScore } from "../actions/dashboard.js";
 import { getProfileCompletionPercentage } from "../service/dashboard.js";
@@ -63,15 +64,23 @@ class Dashboard extends React.Component {
 				<div>
 					{/*<h3 className="page-header">Welcome {this.props.firstName} {this.props.lastName}</h3>*/}
 					<div className="row">
-						<div className="col-md-12">
-							<br/>
-							<ProfileCard
-								firstName={this.props.firstName}
-								lastName={this.props.lastName}
-								city={this.props.city.name}
-								phone={this.props.phone}
-							/>
-							<br/>
+						<br />
+						<div className="col-md-3">
+							<div className="panel panel-primary">
+								<div className="panel-heading">
+									<h4 className="panel-title">Your Profile</h4>
+								</div>
+								<div className="panel-body">
+									<ProfileCard
+										firstName={this.props.firstName}
+										lastName={this.props.lastName}
+										city={this.props.city.name}
+										phone={this.props.phone}
+									/>
+								</div>
+							</div>
+						</div>
+						<div className="col-md-9">
 							<div className="panel panel-primary">
 								<div className="panel-heading">
 									<h4 className="panel-title">
@@ -80,29 +89,48 @@ class Dashboard extends React.Component {
 								</div>
 								<div className="row">
 									<div className="col-md-6">
-										<StatCard
-											title="Audits Applied"
-											image={applicationImgUrl} count={stats.applied}/>
+										<Link to="/audit" style={{ color: "black" }}>
+											<StatCard
+												title="All Opportunities"
+												image={oppotunitiesImgUrl} count={stats.available_audits}/>
+										</Link>
 									</div>
 									<div className="col-md-6">
-										<StatCard
-											title="Audits Assigned"
-											image={thumbsUpImgUrl} count={stats.assigned}/>
+										<Link to="/applied_audits" style={{ color: "black" }}>
+											<StatCard
+												title="Audits Applied"
+												image={applicationImgUrl} count={stats.applied}/>
+										</Link>
 									</div>
 									<div className="col-md-6">
-										<StatCard
-											title="Reports Completed"
-											image={checkmarkImgUrl} count={stats.completed}/>
+										<Link to="/applied_audits" style={{ color: "black" }}>
+											<StatCard
+												title="Audits Assigned"
+												image={thumbsUpImgUrl} count={stats.assigned}/>
+										</Link>
 									</div>
 									<div className="col-md-6">
-										<StatCard
-											title="Payments Pending "
-											image={moneyImgUrl} count={stats.pending_payment}/>
+										<Link to="/audit_store" style={{ color: "black" }}>
+											<StatCard
+												title="Reports Completed"
+												image={checkmarkImgUrl} count={stats.completed}/>
+										</Link>
+									</div>
+									<div className="col-md-6">
+										<Link to="/payment" style={{ color: "black" }}>
+											<StatCard
+												title="Payments Pending "
+												image={moneyImgUrl} count={stats.pending_payment}/>
+										</Link>
 									</div>
 									<div className="col-md-6" style={{ marginBottom: "15px" }}>
-										<StatCard
-											title="Profile Completion %"
-											image={UserImgUrl} count={this.state.percentage}/>
+										<Link to="/details" style={{ color: "black" }}>
+											<StatCard
+												title="Profile Completion %"
+												image={UserImgUrl}
+												count={this.state.percentage}
+											/>
+										</Link>
 									</div>
 								</div>
 							</div>

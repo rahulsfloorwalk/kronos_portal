@@ -33,6 +33,12 @@ from django.contrib.auth import get_user_model
 from django.utils.http import  urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.translation import gettext_lazy as _
 from django.utils.encoding import force_bytes, force_text
+from questionnaire.models import Question,Section,SectionProofTag
+from answer.models import Answer
+from audit.models import AuditCycleProofTagList
+from audit_store.models import AuditStore
+from answer.models import ReportSection
+from attachment.models import Attachment
 
 
 UserModel = get_user_model()
@@ -67,6 +73,59 @@ def get_auditor_dashboard_data(user_id):
         'auditor_stats': auditor_stats
     }
     return result
+
+   
+def get_report_completion_percentage(audit_store_id):
+    audit_store = AuditStore.objects.get(id=audit_store_id)
+    audit_cycle = audit_store.audit.audit_cycle
+    questions = Question.objects.filter(section__audit_cycle=audit_cycle)
+
+    total_questions_count = 0 
+    attended_questions_count = 0
+
+    sections = Section.objects.filter(audit_cycle=audit_cycle, hide_comment=False)
+    total_questions_count = len(questions) + sections.count() + 1 # Considering report_summary as one point
+
+    proof_tags = AuditCycleProofTagList.objects.filter(audit_cycle=audit_cycle)
+
+    if audit_store.report_summary is not None and audit_store.report_summary.strip() != '':
+        attended_questions_count += 1  
+
+    if proof_tags.exists():
+        audit_cycle_proof_tags = proof_tags
+        if audit_cycle_proof_tags.exists():
+            proof = SectionProofTag.objects.filter(audit_cycle_proof_tag__in=audit_cycle_proof_tags, is_required=True)
+            if proof.exists():
+                total_questions_count += proof.count()
+                
+                section_ids = proof.values_list('section__id', flat=True)
+                
+                section_proof_tags = SectionProofTag.objects.filter(section__id__in=section_ids, audit_cycle_proof_tag__in=audit_cycle_proof_tags)
+                
+                section_attachments = Attachment.objects.filter(
+                proof_tag__section_proof_tag__in=section_proof_tags,
+                status=Attachment.ATTACHED,
+                audit_stores__id=audit_store_id
+                ).distinct('proof_tag')
+                if section_attachments.exists():
+                    attended_questions_count += len(section_attachments)
+
+    for section in sections:
+        report_sections = ReportSection.objects.filter(section=section, audit_store=audit_store_id)
+        for report_section in report_sections:
+            if report_section.auditor_comment is not None and report_section.auditor_comment.strip():
+                attended_questions_count += 1
+
+    for question in questions:
+        queryset = Answer.objects.filter(question=question, audit_store=audit_store_id)
+        if question.optional_comment_required and question.question_type == 'MUTEX':
+            if queryset.exists() and queryset.first().answer_comment:
+                attended_questions_count += 1
+        elif queryset.exists():
+            attended_questions_count += 1
+    report_completion_percentage = int((attended_questions_count / total_questions_count) * 100)
+
+    return (report_completion_percentage)
 
 # @atomic
 # def forgot_password(request):
@@ -203,8 +262,6 @@ def password_reset_confirm(request, uidb64, token):
         user.save()
         response = {'detail': 'Password Changed'}
         status = 200
-        print(password)
-        print(user.password)
         return response, status
     else:
         response = {'detail': 'Invalid token or user not found'}

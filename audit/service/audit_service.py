@@ -186,7 +186,8 @@ def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
         distance=geo.get_distance_from_lat1_lon1_and_lat2_lon2(lat1,lon1,lat2,lon2)
         nearDis.append({'distance':distance,'id':i.id})
     sorted_data = sorted(nearDis, key=lambda x: x["distance"])
-    nearest_three = sorted_data[:5]
+    # nearest_three = sorted_data[:5]
+    nearest_three = sorted_data 
     for i in nearest_three:
         audit_count = Audit.objects.get(id=i.get('id')).count
         if audit_count > 1:

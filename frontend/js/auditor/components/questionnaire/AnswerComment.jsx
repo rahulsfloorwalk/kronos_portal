@@ -6,8 +6,8 @@ import Alert from "react-s-alert";
 import { connect } from "react-redux";
 
 import { submitAnswerComment } from "../../actions/answer.js";
-import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
-import { ClientID } from "../../../constants.js";
+// import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+// import { ClientID } from "../../../constants.js";
 class __AnswerComment extends Component {
 
 	static propTypes = {
@@ -80,23 +80,21 @@ class __AnswerComment extends Component {
 		if(this.props.editable && this.props.required || this.props.ans && this.props.question_marks){
 			return (
 				<div>
-					<GrammarlyEditorPlugin clientId={ClientID}>
-						<input
-							className="form-control"
-							style={
-								(this.props.showErrors && this.props.required && !this.state.answer_comment) || this.state.comment_error || this.state.error
-									?
-									{border: "solid 1px #a94442"}
-									: null
-							}
-							value={this.state.answer_comment}
-							onChange={this.commentChanged}
-							onBlur={this.onBlur}
-							placeholder="Comment"
-							// minLength="30"
-						/>
-						{this.state.comment_error ? <span style={{color:"red"}}>{this.state.comment_error}</span> : null}
-					</GrammarlyEditorPlugin>
+					<input
+						className="form-control"
+						style={
+							(this.props.showErrors && this.props.required && !this.state.answer_comment) || this.state.comment_error || this.state.error
+								?
+								{border: "solid 1px #a94442"}
+								: null
+						}
+						value={this.state.answer_comment}
+						onChange={this.commentChanged}
+						onBlur={this.onBlur}
+						placeholder="Comment"
+						// minLength="30"
+					/>
+					{this.state.comment_error ? <span style={{color:"red"}}>{this.state.comment_error}</span> : null}
 				</div>
 			);
 		} else {
