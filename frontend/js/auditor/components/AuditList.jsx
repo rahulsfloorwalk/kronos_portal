@@ -65,7 +65,8 @@ class AuditRow extends React.Component{
 		else if( this.props.application.status === "APPROVED"){
 			redirectButton = <div style={{paddingTop: "0.5rem"}}><button type="button" className="btn btn-primary" onClick={this.FillReportClicked} >Fill Report</button></div>;
 			// redirectButton = <button type="button" className="btn btn-primary" onClick={this.FillReportClicked} >Fill Report</button>;
-			auditDate =  <span> <br /> Your <b className="text-success" >approved</b> audit date is <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. Don&#39;t forget to conduct the audit!</span>;
+			// auditDate =  <span> <br /> Your <b className="text-success" >approved</b> audit date is <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. Don&#39;t forget to conduct the audit!</span>;
+			auditDate =  <span> <br /> Your <b className="text-success" >approved</b> audit date is <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. Please, view and understand audit details to complete audit successfully.</span>;
 			textLabel = <div style={{paddingTop: "0.5rem"}}><ApplicationStatusLabel status={this.props.application.status}/></div>;
 		}
 		else if( this.props.application.status === "WITHDRAWN"){
@@ -75,8 +76,14 @@ class AuditRow extends React.Component{
 		} else {
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		}
-		let fees = this.props.audit.earnings_per_audit ? <span>Flat: <big><b>₹ {this.props.audit.earnings_per_audit}</b></big>, </span> : "";
-		let reimb = this.props.audit.reimbursement ? <span>Reimbursement upto: <big><b>₹ {this.props.audit.reimbursement}</b></big></span> : "";
+		let fees = this.props.audit.earnings_per_audit ? <span>fees: <big><b>₹ {this.props.audit.earnings_per_audit}</b></big></span> : <span>Fees: <big><b>₹ 0</b></big></span>;
+		let reimb = this.props.audit.reimbursement ? <span>Reimbursement upto: <big><b>₹ {this.props.audit.reimbursement}</b></big></span> : <span>Reimbursement upto: <big><b>₹ 0</b></big></span>;
+
+		let fees_reimb = (
+			<div style={{display:"flex",flexDirection:"column"}}>
+				{fees}{reimb}
+			</div>
+		);
 		return (
 			// <div className="row">
 			// 	<div className="col-sm-3">
@@ -108,7 +115,7 @@ class AuditRow extends React.Component{
 					</colgroup>
 					<tbody>
 						<tr className="even-row">
-							<td className="text-left" style={{ border: "none",borderRadius: "5px"  }}>Store Name:</td>
+							<td className="text-right" style={{ border: "none",borderRadius: "5px"}}>Store Name:</td>
 							<td style={{ border: "none",borderRadius: "5px" }}>
 								<b>
 									<p><big>{this.props.audit.store.name}, {this.props.audit.store.city.name}</big></p>
@@ -117,8 +124,8 @@ class AuditRow extends React.Component{
 							</td>
 						</tr>
 						<tr className="odd-row">
-							<td className="text-left">Earnings:</td>
-							<td className="truncateStyle1"><p>{fees}{reimb}</p></td>
+							<td className="text-right">Earnings:</td>
+							<td className="truncateStyle1">{fees_reimb}</td>
 						</tr>
 						<tr className="even-row">
 							<td className="text-left" colSpan="2" style={{ whiteSpace: "pre-wrap" }}>
@@ -258,6 +265,12 @@ class AuditList extends Component{
 		let valueStyle = {fontSize: "1.5em"};
 		let eligibilityStyle = {fontSize: "1.5rem"};
 		const support_button = this.props.auditCycle.support_page_link ? <a href={this.props.auditCycle.support_page_link} target="_blank" rel="noopener noreferrer" className="btn btn-primary"><span style={{animation: "blink 1s linear infinite",fontWeight:"bold"}}>Need support for {this.props.auditCycle.client.auditor_display_name}?</span></a> : null;
+
+		function formatDate(inputDate) {
+			const [year, month, day] = inputDate.split("-");
+			const result = day+"-"+month+"-"+year;
+			return result;
+		}
 		return (
 			<div>
 				<div className="row pull-right">
@@ -296,26 +309,31 @@ class AuditList extends Component{
 							</div>
 							<div className="col-sm-8">
 								<p>
-									<span style={labelStyle} className="text-muted">Eligibility</span><br/>
+									<span style={labelStyle} className="text-muted">Eligibility</span>
 									{/* <span style={valueStyle}><b>{this.state.eligibility ? this.state.eligibility : "N/A" }</b></span> */}
 									{/* <span style={eligibilityStyle}>{this.state.audit_alignment_factors ? this.state.audit_alignment_factors : "N/A" }</span> */}
 									{/* <span style={eligibilityStyle}>{this.state.audit_alignment_factors? this.state.audit_alignment_factors.split(/(\b\w+:)/g).map((part, index) =>	index % 2 === 1 ? <span style={{ fontWeight: "bold" }}>{part}</span> : part	): "N/A"}</span> */}
-									<span style={eligibilityStyle}>{this.state.audit_alignment_factors
-										? this.state.audit_alignment_factors
-											.split(/(\b\w+:)/g)
-											.map((part, index) => {
-												if (index % 2 === 1 && part.includes("_")) {
-													part = part.replace(/_/g, " ");
+									<span style={eligibilityStyle}>
+										{this.state.audit_alignment_factors
+											? this.state.audit_alignment_factors .split(/(\b\w+:)/g) .map((part, index) => {
+												if (index % 2 === 1) {
+													if (! part.trim().startsWith("_") ) {
+														part = <span><br />{part.replace(/_/g, " ")}</span>;
+													}
 													return <span style={{ fontWeight: "bold" }}>{part}</span>;
-												} else if (index % 2 === 1) {
-													const containsOnlyOneWord = /^\w+$/.test(part.trim());
-													return containsOnlyOneWord ? part : <span style={{ fontWeight: "bold" }}>{part}</span>;
+												}
+												if(index % 2 === 0){
+													const dateAvailabilityMatch = part.match(/(\d{4}-\d{2}-\d{2}) - (\d{4}-\d{2}-\d{2})/);
+													if(dateAvailabilityMatch){
+														let date = dateAvailabilityMatch.input.split(",")[0];
+														let startDate = formatDate(date.split(" ")[1]);
+														let endDate = formatDate(date.split(" ")[3]);
+														part = " " + startDate + " - " + endDate;
+													}
 												}
 												return part;
-											})
-										: "N/A"}
+											}) : "N/A"}
 									</span>
-
 								</p>
 							</div>
 							<div className="col-sm-12">

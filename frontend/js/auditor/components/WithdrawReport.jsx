@@ -59,7 +59,8 @@ class WithdrawReport extends React.Component{
 		return (
 			<Modal modalTitle="Withdraw the Audit?" onClose={this.closeModal}>
 				<form onSubmit={this.onSubmit}>
-					<p>Are you sure you want to <b>Withdraw</b> audit of <b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> - {this.props.auditStore.audit.store.name} ?</p>
+					{/* <p>Are you sure you want to <b>Withdraw</b> audit of <b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> - {this.props.auditStore.audit.store.name} ?</p> */}
+					<p>Are you sure you want to <b>Withdrawn</b> the <b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> - {this.props.auditStore.audit.store.name} audit ?</p>
 					<FormInput type="text" label="Reason:" value={this.state.message} name="message" placeholder="Please enter reason for audit withdraw" onChange={this.fieldChanged}/>
 					<div className="form-group">
 						<button type="submit" className="btn btn-primary">Yes</button>

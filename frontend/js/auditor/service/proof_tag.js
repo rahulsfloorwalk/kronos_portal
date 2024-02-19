@@ -14,3 +14,12 @@ export function saveAttachmentTag(attachmentId, proof_tag_id){
 		contentType: "application/json"
 	});
 }
+
+export function saveNotAvailableTag( proof_tag_id,prooftagTextareaValue){
+	return $.ajax({
+		url: url.api_base_path + "auditor/proof_notavailable",
+		type: "POST",
+		data: JSON.stringify({proof_tag_id: proof_tag_id,prooftagTextareaValue: prooftagTextareaValue}),
+		contentType: "application/json"
+	});
+}

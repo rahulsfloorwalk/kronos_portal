@@ -59,7 +59,7 @@ class ReportConcern extends React.Component{
 			this.props.dispatch(submitConcern(this.props.params.auditStoreId, this.state.message.trim())).then(()=>{
 				this.setState({
 					message: "",
-					success_message : "Thank you for your concern, We will get back to you soon."
+					success_message : "Thank you for highlighting your concern, our team will work on solving your concern."
 				});
 				this.setLoading(false);
 				setTimeout(this.closeModal, 3000);

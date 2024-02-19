@@ -47,9 +47,9 @@ export default class AuditCycleDashBoard extends Component{
 			);
 		});
 		return (
-			<div className="table-responsive">
+			<div className="table-responsive" style={{ maxHeight: "800px", overflowY: "auto" }}>
 				<table className="table table-hover table-striped table-bordered table-condensed">
-					<thead>
+					<thead style={{ position: "sticky", top: 0, zIndex: 1, backgroundColor: "#fff" }}>
 						<tr>
 							<th rowSpan="2">Client</th>
 							<th colSpan="3" className="text-center">Application Status</th>

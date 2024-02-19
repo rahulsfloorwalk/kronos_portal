@@ -5,6 +5,7 @@ import * as ReactRedux from "react-redux";
 // import { orderKeys } from "../../react_utils.js";
 // import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment , moveAttachmentToSection } from "../service/attachment.js";
 import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment } from "../service/attachment.js";
+// import { fetchproofTags, saveAttachmentTag, saveNotAvailableTag } from "../service/proof_tag.js";
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
 import { Paperclip } from "../../components/Icons.jsx";
@@ -288,13 +289,20 @@ class AttachmentUploadBox extends React.Component {
 	};
 
 	saveProoftagModalData = () => {
-		// Save the textarea value here
+		// console.log("Data when Prooftag Modal:", this.state);
 		if(this.state.prooftagTextareaValue && this.state.selectedProoftag){
 			this.setState({
 				showProoftagModal: false,
 				prooftagModalText: this.state.prooftagTextareaValue,
 				prooftagModalTagId : this.state.selectedProoftag,
 			});
+			// saveNotAvailableTag(this.state.prooftagModalTagId, this.state.selectedProoftag)
+			// .then(response => {
+			//     console.log("Attachment tag saved successfully:", response);
+			// })
+			// .catch(error => {
+			//     console.error("Error saving attachment tag:", error);
+			// });
 		}else{
 			this.setState({prooftagModalTextError:"Fields can not be empty"});
 		}
@@ -303,9 +311,9 @@ class AttachmentUploadBox extends React.Component {
 	handleProoftagSelect = (value) => {
 		this.setState({ selectedProoftag: value });
 	};
-
 	renderProoftagModal() {
 		const { prooftagTextareaValue, proof_tags, selectedProoftag } = this.state;
+		const filteredProofTags = proof_tags.filter(tag => !tag.is_required);
 
 		return (
 			<div className="modal" tabIndex="-1" role="dialog" style={{ display: this.state.showProoftagModal ? "block" : "none" }}>
@@ -322,7 +330,7 @@ class AttachmentUploadBox extends React.Component {
 								<label htmlFor="prooftagSelect">Select Proof Tag</label>
 								<select className="form-control" id="prooftagSelect" value={selectedProoftag} onChange={(e) => this.handleProoftagSelect(e.target.value)}>
 									<option value="">Select Proof Tag</option>
-									{proof_tags.map(tag => (
+									{filteredProofTags.map(tag => (
 										<option key={tag.id} value={tag.id}>{tag.proof_tag}</option>
 									))}
 								</select>
@@ -400,7 +408,7 @@ class AttachmentUploadBox extends React.Component {
 		// let openModalButton;
 		// if(this.props.auditStore.status === "ACKNOWLEDGED"){
 		// 	openModalButton = <button onClick={this.handleProoftagButtonClick} type="button" className="btn btn-default">
-		// 	Open Prooftag Modal
+		// 		Open Prooftag Modal
 		// 	</button>;
 		// }
 		const attachment_tags = this.state.attachments.map((value)=> value.proof_tag);

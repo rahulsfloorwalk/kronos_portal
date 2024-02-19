@@ -27,6 +27,7 @@ class Dashboard extends React.Component {
 		auditorStats: PropTypes.shape({ }),
 		firstName: PropTypes.string,
 		lastName: PropTypes.string,
+		gender: PropTypes.string,
 		phone: PropTypes.string,
 		city: PropTypes.shape({
 			id: PropTypes.number,
@@ -74,6 +75,7 @@ class Dashboard extends React.Component {
 									<ProfileCard
 										firstName={this.props.firstName}
 										lastName={this.props.lastName}
+										gender={this.props.gender}
 										city={this.props.city.name}
 										phone={this.props.phone}
 									/>
@@ -91,8 +93,17 @@ class Dashboard extends React.Component {
 									<div className="col-md-6">
 										<Link to="/audit" style={{ color: "black" }}>
 											<StatCard
-												title="All Opportunities"
+												title="View Opportunities"
 												image={oppotunitiesImgUrl} count={stats.available_audits}/>
+										</Link>
+									</div>
+									<div className="col-md-6" style={{ marginBottom: "15px" }}>
+										<Link to="/details" style={{ color: "black" }}>
+											<StatCard
+												title="Profile Completion %"
+												image={UserImgUrl}
+												count={this.state.percentage}
+											/>
 										</Link>
 									</div>
 									<div className="col-md-6">
@@ -123,15 +134,6 @@ class Dashboard extends React.Component {
 												image={moneyImgUrl} count={stats.pending_payment}/>
 										</Link>
 									</div>
-									<div className="col-md-6" style={{ marginBottom: "15px" }}>
-										<Link to="/details" style={{ color: "black" }}>
-											<StatCard
-												title="Profile Completion %"
-												image={UserImgUrl}
-												count={this.state.percentage}
-											/>
-										</Link>
-									</div>
 								</div>
 							</div>
 						</div>
@@ -156,6 +158,7 @@ var mapStoreToProps = function(store){
 	return {
 		firstName: store.profileInfo.first_name,
 		lastName: store.profileInfo.last_name,
+		gender: store.profileInfo.gender,
 		city: store.profileInfo.city || {},
 		phone: store.profileInfo.mobile_number,
 		auditorStats: store.auditorStats,
