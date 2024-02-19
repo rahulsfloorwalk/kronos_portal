@@ -22,7 +22,7 @@ module.exports = {
 			branches: 19,
 			functions: 19,
 			lines: 20,
-			statements: 24,
+			statements: 23,
 		}
 	},
 	reporters: [

@@ -9,13 +9,14 @@ import { momentDateFormat }  from "../../../config.js";
 import { fetchAuditStores } from "../actions/audit_store.js";
 import { fetchProfileInfo } from "../actions/profile_info.js";
 
-import ExpandableDetails from "../../components/ExpandableDetails.jsx";
+// import ExpandableDetails from "../../components/ExpandableDetails.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 import Loading from "../../components/Loading.jsx";
 
 import { auditStorePropType } from "../prop_types";
+import ExpandableDetailsReport from "./ExpandableDetailsReport.jsx";
 
 class AuditStoreRow extends React.Component {
 	static propTypes = {
@@ -29,16 +30,23 @@ class AuditStoreRow extends React.Component {
 
 		let withdrawButton , auditStoreStatusLabel, withdrawMessage, viewButton, concernButton;
 		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
-		const fees = earnings_per_audit ? <b>Fees: ₹ {earnings_per_audit}, </b> : "";
+		// const fees = earnings_per_audit ? <b>Fees: ₹ {earnings_per_audit}, </b> : "";
+		// const reimbursement = this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement;
+		// const reimb = reimbursement ? <span><b>Reimbursement upto: ₹ {reimbursement}</b></span> : "";
+
+		const fees = (earnings_per_audit || earnings_per_audit === 0) ? <span><b>Fees:</b> ₹ {earnings_per_audit} </span> : <span><b>Fees:</b> ₹ 0 </span>;
 		const reimbursement = this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement;
-		const reimb = reimbursement ? <span>Reimbursement upto: <b>₹ {reimbursement}</b></span> : "";
+		// const reimb = reimbursement ? <span><b>, Reimbursement upto:</b> ₹ {reimbursement}</span> : "";
+		const reimb = (reimbursement || reimbursement === 0) ? <span><b>, Reimbursement upto:</b> ₹ {reimbursement}</span> : <span><b>, Reimbursement upto:</b> ₹ 0</span>;
+
+
 
 		let inlineBlockStyle = {
 			display: "inline-block",
 			marginBottom: "10px",
 		};
 
-		if((this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED") && this.props.auditStore.get_date_diff <= -2){
+		if((this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED") && this.props.auditStore.get_date_diff <= -1){
 			withdrawButton = (<Link to={`audit_store/${this.props.auditStore.id}/withdraw`} className="btn btn-default">Withdraw</Link>);
 		}
 		if(this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED"){
@@ -66,7 +74,7 @@ class AuditStoreRow extends React.Component {
 		// }
 		return (
 			<div className="panel panel-default">
-				<div className="panel-body">
+				<div className="panel-body" style={{ marginTop:"-25px"}}>
 					<h3 className="d-flex align-items-center" style={{ display: "flex", alignItems: "center" }}>
 						<b style={{ marginRight: "10px" }}>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> - {this.props.auditStore.audit.store.name}
 						&nbsp;
@@ -74,10 +82,13 @@ class AuditStoreRow extends React.Component {
 							<span className="btn btn-success">
 								Submited
 							</span>
-						) : (
-							<div className="d-flex align-items-center mt-3">
+						) :  this.props.auditStore.status !== "AUDITOR_WITHDRAWN" && (
+							<div className="d-flex align-items-center mt-3 ">
 								<Link to={`/audit_store/${this.props.auditStore.id}/section`} style={{ display: "flex", alignItems: "center", marginTop: "18px", textDecoration: "none" }}>
-									<div className="progress" style={{ width: "100px", marginLeft: "10px" }}>
+									{/* <div className="" style={{ marginLeft: "10px",marginBottom: "22px" }}> */}
+									<span style={{ color: "black", fontSize: "15px",marginBottom: "15px",marginLeft: "15px" }}>Report Completion %:-</span>
+									{/* </div> */}
+									<div className="progress" style={{ width: "80px", marginLeft: "10px" }}>
 										<div className="progress-bar bg-primary" role="progressbar" style={{ width: `${this.props.auditStore.completion_percentage}%`, backgroundColor: this.props.auditStore.completion_percentage === 100 ? "#28a745" : " " }} aria-valuenow={this.props.auditStore.completion_percentage} aria-valuemin="0" aria-valuemax="100">
 											{this.props.auditStore.completion_percentage}%
 										</div>
@@ -89,13 +100,13 @@ class AuditStoreRow extends React.Component {
 						{revertMessage}
 					</h3>
 					<div>
-						{auditStoreStatusLabel}
+						<b> Audit Status : </b> {auditStoreStatusLabel}
 						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
 						<div style={inlineBlockStyle}>
-							<b>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</b>
+							<b>Audit Date : {moment(this.props.auditStore.audit_date).format(momentDateFormat)}</b>
 						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
 						</div>
-						<div style={inlineBlockStyle}>
+						<div>
 							{<span>{fees}{reimb}</span>}
 						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
 						</div>
@@ -104,10 +115,11 @@ class AuditStoreRow extends React.Component {
 						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
 						</div>
 						<div style={inlineBlockStyle}>
-							<ExpandableDetails details={<div>
+							<ExpandableDetailsReport details={<div>
 								<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
 								<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
-							</div>}/>
+							</div>}
+							auditStoreId={this.props.auditStore.id}/>
 						</div>
 					</div>
 					<p><b>Address:</b> {this.props.auditStore.audit.store.address}</p>

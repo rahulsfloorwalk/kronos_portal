@@ -51,6 +51,8 @@ from answer.models import ReportSection
 from datetime import datetime, timedelta
 import registration.service.auditor as auditor_service
 from manager.viewss.auditor import AuditorSerializer
+from manager.models import ProofTag
+from django.db import IntegrityError
 
 
 # Get the current date
@@ -688,7 +690,8 @@ class PaymentView(APIView):
         'GET': [GROUP_NAME_AUDITOR],
     }
     def get(self, request, format=None):
-        payments, total_count = payment_service.get_payment_list_by_user(request.user.id, request.GET.get('is_load_more'), request.GET.get('last_total_count'))
+        status = request.GET.get('status')
+        payments, total_count = payment_service.get_payment_list_by_user(request.user.id,status,request.GET.get('is_load_more'), request.GET.get('last_total_count'))
         return Response({'payments': PaymentSerializer(payments, many=True).data, 'total_count': total_count})
     
 class PaymentStatusView(APIView):
@@ -699,8 +702,8 @@ class PaymentStatusView(APIView):
     def get(self,request,format=None):
         user=request.user
         status = request.GET.get('status')
-        payments = payment_service.get_payment_status_wise_list_by_user(user,status)
-        return Response({'payments': PaymentSerializer(payments, many=True).data},status=200)
+        payments, total_count = payment_service.get_payment_status_wise_list_by_user(user,status, request.GET.get('is_load_more'), request.GET.get('last_total_count'))
+        return Response({'payments': PaymentSerializer(payments, many=True).data, 'total_count': total_count})
 
 
 class PaymentSummaryView(APIView):
@@ -834,7 +837,50 @@ class AttachmentIdProofTagView(APIView):
     def post(self, request, attachment_id):
         attachment = attachment_auditor_service.save_attachment_proof_tag(attachment_id, request.data['proof_tag_id'])
         return Response(AttachmentSerializer(attachment).data)
+    
+    
 
+# class ProofTagNotAvailableView(APIView):
+#     permission_classes = [HasGroupPermission]
+#     required_groups = {
+#         'POST': [GROUP_NAME_AUDITOR]
+#     }
+
+#     def post(self, request):
+#         data = request.data
+#         prooftag = data.get('proof_tag_id')
+#         description = data.get('prooftagTextareaValue')
+
+#         print("rrrrrr", description)
+      
+#         try:
+#             # Convert proof_tag_id to integer if necessary
+#             prooftag = int(prooftag)
+#         except (TypeError, ValueError):
+#             return Response({'error': 'Invalid proof_tag_id'}, status=400)
+      
+#         prooftag = audit_cycle_proof_tag.find_by_id(prooftag)
+#         print("prooftag", prooftag.id)
+#         print("userid", request.user.id)
+
+#         if prooftag is None:
+#             return Response({'error': 'ProofTag does not exist'}, status=404)
+        
+#         # data['prooftag'] = prooftag.id 
+#         data['user'] = request.user.id
+#         serializer = AuditProoftagSerializer(data=data)
+#         print("serializer",serializer)
+        
+#         if serializer.is_valid():
+#             try:
+#                 serializer.validated_data['prooftag_id'] = prooftag.id
+#                 audit_prooftag = serializer.save()
+#                 return Response(AuditProoftagSerializer(audit_prooftag).data, status=200)
+#             except IntegrityError as e:
+#                 return Response({'error': str(e)}, status=400)
+#         else:
+#             return Response(serializer.errors, status=400)
+        
 class ProfileInfoPronounsView(APIView):
     permission_classes = [HasGroupPermission]
     authentication_classes = [TokenAuthentication, SessionAuthentication]

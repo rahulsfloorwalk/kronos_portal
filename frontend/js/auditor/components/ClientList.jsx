@@ -63,8 +63,10 @@ class AuditCycleRow extends Component{
 						<tr>
 							<td className="text-right">Earnings:</td>
 							<td className="truncateStyle1">
-								{ this.props.fees ? <span>upto <b>₹ {this.props.fees}</b>, </span> : null }
-								{ this.props.reimbursement ? <span>Reimbursement upto <b>₹ {this.props.reimbursement}</b></span> : null }
+								{/* { this.props.fees ? <span>upto <b>₹ {this.props.fees}</b>, </span> : null }
+								{ this.props.reimbursement ? <span>Reimbursement upto <b>₹ {this.props.reimbursement}</b></span> : null } */}
+
+								Fees: <b>₹ {this.props.fees !== null ? this.props.fees : 0}</b>, Reimbursement: <b>₹ {this.props.reimbursement !== null ? this.props.reimbursement : 0}</b>
 							</td>
 						</tr>
 					</tbody>
@@ -172,9 +174,9 @@ class ClientList extends Component{
 		let auditCycles = [];
 		let auditCycleExtra = {};
 		for(let id in this.props.audits) {
-			if (auditCycles.length === 5) {
-				break; // Break out of the loop if we have collected 5 items
-			}
+			// if (auditCycles.length === 5) {
+			// 	break; // Break out of the loop if we have collected 5 items
+			// }
 			let ac = auditCycles.filter(ac => ac.id === this.props.audits[id].audit_cycle.id);
 			if(ac.length === 0){
 				auditCycleExtra[this.props.audits[id].audit_cycle.id] = {

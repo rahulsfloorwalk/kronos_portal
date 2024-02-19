@@ -16,6 +16,7 @@ import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 
 import { pay, fail} from "../service/payment.js";
 import { findPaymentsByAuditCycleId, payAllPendingPaymentsForAuditCycle } from "../service/payment.js";
+import Modal from "../../components/Modal.jsx";
 
 export class PaymentRow extends React.Component{
 
@@ -104,7 +105,8 @@ export default class AuditCyclePaymentList extends React.Component{
 			payments: [],
 			start_date: "",
 			end_date: "",
-			filter_error: ""
+			filter_error: "",
+			modalShow: false,
 		};
 	}
 
@@ -159,7 +161,8 @@ export default class AuditCyclePaymentList extends React.Component{
 		});
 
 		this.setState({
-			payments: statePayments
+			payments: statePayments,
+			errorMessage: "",
 		});
 	};
 
@@ -199,7 +202,25 @@ export default class AuditCyclePaymentList extends React.Component{
 		});
 		this.reloadData();
 	};
+	modalclose = () => {
+		this.setState({modalShow:false});
+	};
+	handlePendingPaymentClick = () => {
+		const { auditCycleId } = this.props.params;
+		const apiEndpoint = `${url.api_base_path}manager/audit_cycle/${auditCycleId}/payment/pending/xlsx?start_date=${this.state.start_date}&end_date=${this.state.end_date}`;
 
+		fetch(apiEndpoint)
+			.then((response) => {
+				if (response.status === 200) {
+					window.location.href = apiEndpoint;
+				} else if (response.status === 400) {
+					response.text().then((errorText) => {
+						this.setState({errorMessage:errorText});
+					});
+					this.setState({ modalShow: true });
+				}
+			});
+	};
 	render(){
 
 		let rows = this.state.payments.map( p => (<PaymentRow payment={p} key={p.id} onChange={this.paymentChanged} onFail={this.paymentFailed}/>));
@@ -232,9 +253,12 @@ export default class AuditCyclePaymentList extends React.Component{
 				<h3 className="page-header">
 					<b>₹</b> Payments
 					<span className="pull-right">
-						<a className="btn btn-default" href={url.api_base_path + `manager/audit_cycle/${this.props.params.auditCycleId}/payment/pending/xlsx?start_date=${this.state.start_date}&end_date=${this.state.end_date}`}>
+						{/* <a className="btn btn-default" href={url.api_base_path + `manager/audit_cycle/${this.props.params.auditCycleId}/payment/pending/xlsx?start_date=${this.state.start_date}&end_date=${this.state.end_date}`}>
 							<Download/> Pending Payment List
-						</a>
+						</a> */}
+						<button className="btn btn-default" onClick={this.handlePendingPaymentClick}>
+							<Download /> Pending Payment List
+						</button>
 						<button className="btn btn-default" onClick={this.payAllPendingPayments}>Pay All Pending</button>
 					</span>
 				</h3>
@@ -260,8 +284,17 @@ export default class AuditCyclePaymentList extends React.Component{
 				</div>
 				{table}
 				{this.props.children}
+				{this.state.modalShow &&
+				<Modal modalTitle="Payment Alert" onClose={this.modalclose}>
+					<div>
+						<p>There was an error.</p>
+						<p>{this.state.errorMessage}</p>
+					</div>
+				</Modal>
+				}
 			</div>
 		);
 	}
+
 }
 

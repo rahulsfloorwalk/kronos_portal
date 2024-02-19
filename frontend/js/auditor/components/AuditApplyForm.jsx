@@ -109,7 +109,7 @@ class AuditApplyForm extends React.Component {
 			eDate=SevenDaysLaterDate;
 		}
 		return (
-			<Modal modalTitle={`Apply for Audit at ${this.props.audit.store.city.name}`} onClose={hashHistory.goBack}>
+			<Modal modalTitle={`Please select your preferable date for the ${this.props.audit.store.city.name} audit:`} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<p className="text-center">

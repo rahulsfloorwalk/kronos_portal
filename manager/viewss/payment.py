@@ -86,10 +86,18 @@ class PendingPaymentXlsxView(APIView):
     def get(self, request, audit_cycle_id, format=None):
         start_date = request.GET.get('start_date', '')
         end_date = request.GET.get('end_date', '')
-        report, name = payment_service.find_new_pending_xlsx_for_audit_cycle(audit_cycle_id, start_date, end_date)
-        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
-        return response
+        report, name = payment_service.find_new_pending_xlsx_for_audit_cycle(audit_cycle_id, start_date, end_date)        
+    #     # response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    #     # response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+    #     # return response
+
+        if isinstance(report, str):
+            error_message = report
+            return HttpResponse(error_message, status=400, content_type='text/plain')
+        else:
+            response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+            return response
 
 
 class PaymentIdPayView(APIView):

@@ -28,33 +28,63 @@ def payment_concern(payment_id, user_id, message):
     send_payment_concern_email.delay(account_email, payment.audit_store.id, user_id, message)
     return payment
 
-def get_payment_list_by_user(user_id, is_load_more, last_total_count):
-    payments = find_by_user(user_id)
+# def get_payment_list_by_user(user_id, is_load_more, last_total_count):
+#     payments = find_by_user(user_id)
+#     total_count = payments.count()
+#     if is_load_more:
+#         start = int(last_total_count)
+#         end = int(last_total_count) + 20
+#         payment_obj_slice = payments[start:end]
+#     else:
+#         payment_obj_slice = payments[0:20]
+#     return payment_obj_slice, total_count
+
+def get_payment_list_by_user(user_id,status, is_load_more, last_total_count):
+    if not status:
+        status = 'ALL'
+    valid_statuses = ('PAID', 'PENDING', 'FAILED', 'ALL')
+    status = status if status in valid_statuses else 'ALL'
+
+    payments = Payment.objects.filter(user=user_id)
+    if status != 'ALL':
+        payments = payments.filter(status=status)
+
     total_count = payments.count()
+
     if is_load_more:
         start = int(last_total_count)
-        end = int(last_total_count) + 20
+        end = start + 20
         payment_obj_slice = payments[start:end]
     else:
-        payment_obj_slice = payments[0:20]
-    return payment_obj_slice, total_count
+        payment_obj_slice = payments[:20]
 
-def get_payment_status_wise_list_by_user(user, status):
-    if status == 'PAID':
-        payments = Payment.objects.filter(user=user, status='PAID')
-    elif status == 'PENDING':
-        payments = Payment.objects.filter(user=user, status='PENDING')
-    elif status == 'FAILED':
-        payments = Payment.objects.filter(user=user, status='FAILED')
-    elif status == 'ALL':
-        payments = Payment.objects.filter(user=user)
+    if not payment_obj_slice:
+        return "No data available", total_count
+
+    return payment_obj_slice,total_count
+
+def get_payment_status_wise_list_by_user(user, status, is_load_more, last_total_count):
+    valid_statuses = ('PAID', 'PENDING', 'FAILED', 'ALL')
+    status = status if status in valid_statuses else 'ALL'
+
+    payments = Payment.objects.filter(user=user)
+    if status != 'ALL':
+        payments = payments.filter(status=status)
+
+    total_count = payments.count()
+
+    if is_load_more:
+        start = int(last_total_count)
+        end = start + 1
+        payment_obj_slice = payments[start:end]
     else:
-        payments = Payment.objects.filter(user=user)
+        payment_obj_slice = payments[:1]
 
-    if not payments:
-        return "No data available"
-    
-    return payments
+    if not payment_obj_slice:
+        return "No data available", total_count
+
+    return payment_obj_slice,total_count
+
 
 def get_payment_summary_by_user(user_id):
     payments = find_by_user(user_id)

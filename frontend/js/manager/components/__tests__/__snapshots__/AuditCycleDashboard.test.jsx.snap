@@ -18,11 +18,26 @@ exports[`<AuditCycleDashboard/> is rendered correctly when the data are loading 
 exports[`<AuditCycleDashboard/> is rendered correctly when the data is successfully loaded 1`] = `
 <div
   className="table-responsive"
+  style={
+    Object {
+      "maxHeight": "800px",
+      "overflowY": "auto",
+    }
+  }
 >
   <table
     className="table table-hover table-striped table-bordered table-condensed"
   >
-    <thead>
+    <thead
+      style={
+        Object {
+          "backgroundColor": "#fff",
+          "position": "sticky",
+          "top": 0,
+          "zIndex": 1,
+        }
+      }
+    >
       <tr>
         <th
           rowSpan="2"

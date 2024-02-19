@@ -243,6 +243,13 @@ def find_new_pending_xlsx_for_audit_cycle(audit_cycle_id, start_date="", end_dat
         pending_payments = find_pending_by_audit_cycle(audit_cycle_id).filter(audit_store__audit_date__range=(start_date, end_date))
     else:
         pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
+    
+    audit_store_ids = pending_payments.values_list('audit_store_id', flat=True)
+    duplicate_audit_store_ids = [audit_store_id for audit_store_id in set(audit_store_ids) if len([payment for payment in pending_payments if payment.audit_store_id == audit_store_id]) > 1]
+    if duplicate_audit_store_ids:
+        error_message = "Error: Audit Store ID {} have multiple pending payments.".format(', '.join(map(str, duplicate_audit_store_ids)))
+        return error_message , None
+
     consilidated_payments = consolidate_by_user(pending_payments)
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
     client = audit_cycle.client.name

@@ -65,7 +65,8 @@ class AuditStoreDetails extends React.Component {
 		var promise = this.props.dispatch(acknowledgeAuditStore(this.props.params.auditStoreId));
 		promise.then(() => {
 			this.setState({
-				submitMessage : "You have agreed to conduct the audit. Audit is now in progress.",
+				// submitMessage : "You have agreed to conduct the audit. Audit is now in progress.",
+				submitMessage : "You have agreed to complete the audit. Please proceed with audit, your audit is now under progress.",
 				submitStatus: "success",
 			});
 		},(err) => {
@@ -104,8 +105,7 @@ class AuditStoreDetails extends React.Component {
 					</button>
 				&nbsp;
 				&nbsp;
-					{/* <big>I have read the <b>instructions</b>, <b>questionnaire</b> and agree to conduct the audit.</big> */}
-					<big>Click on the <b>Agree</b> button and start filling out the <b>Report.</b></big>
+					<big>Click on <b>Agree</b> button if you are ready to conduct the audit and have understood <b>audit guidelines</b> and <b>questionnaire</b> thoroughly.</big>
 				</span>);
 			if(this.props.auditStore.get_date_diff > 0){
 				performAuditButton = (
@@ -164,62 +164,108 @@ class AuditStoreDetails extends React.Component {
 				</div>
 				<h2 className="page-header"><b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> [Report ID: {this.props.params.auditStoreId}]</h2>
 				<div className="row">
-					<div className="col-md-5">
-						<div className="panel panel-default">
-							<table className="table table-striped">
-								<tbody>
-									<tr>
-										<td className="text">Type:</td>
-										<th>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</th>
-									</tr>
-									<tr>
-										<td className="text">Store Name:</td>
-										<th>{this.props.auditStore.audit.store.name}</th>
-									</tr>
-									<tr>
-										<td className="text">Phone:</td>
-										<th>{this.props.auditStore.audit.store.phone}</th>
-									</tr>
-									<tr>
-										<td className="text">Address:</td>
-										<th>{this.props.auditStore.audit.store.address}</th>
-									</tr>
-									<tr>
-										<td className="text">Fees:</td>
-										<th>{<span>{fees}{reimb}</span>}</th>
-									</tr>
-									<tr>
-										<td className="text">Audit Date:</td>
-										<th>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</th>
-									</tr>
-									<tr>
-										<td className="text">Status:</td>
-										<th>{<AuditStoreStatusLabel status={this.props.auditStore.status}/>}
-										</th>
-									</tr>
-									<tr>
-										<td className="text">Contacts:</td>
-										<th>{mngr_cntct}</th>
-									</tr>
-									{this.state.guideline && this.state.guideline ?
-										<tr>
-											<td className="text-right">PDF Guideline:</td>
-											<th><button className="btn btn-primary sm" onClick={this.openPDFInNewTab}>Open Guideline</button></th>
-										</tr>
-										: null}
-								</tbody>
-							</table>
-						</div>
-					</div>
-					<div className="col-md-7">
-						<td className="text-right"style={{ fontSize: "16px", }}><b> Guidelines:-</b></td>
-						{ !(! this.props.auditStore.audit.post_approval_description && ! this.props.auditStore.audit.audit_cycle.post_approval_description) ?
-							<div className="panel-body" style={{ marginTop: "-20px" }}>
-								<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
-								<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
+					{!this.state.guideline ?
+						<div>
+							<div className="col-md-5">
+								<div className="panel panel-default">
+									<table className="table table-striped">
+										<tbody>
+											<tr>
+												<td className="text">Type:</td>
+												<th>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</th>
+											</tr>
+											<tr>
+												<td className="text">Store Name:</td>
+												<th>{this.props.auditStore.audit.store.name}</th>
+											</tr>
+											<tr>
+												<td className="text">Phone:</td>
+												<th>{this.props.auditStore.audit.store.phone}</th>
+											</tr>
+											<tr>
+												<td className="text">Address:</td>
+												<th>{this.props.auditStore.audit.store.address}</th>
+											</tr>
+											<tr>
+												<td className="text">Fees:</td>
+												<th>{<span>{fees}{reimb}</span>}</th>
+											</tr>
+											<tr>
+												<td className="text">Audit Date:</td>
+												<th>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</th>
+											</tr>
+											<tr>
+												<td className="text">Status:</td>
+												<th>{<AuditStoreStatusLabel status={this.props.auditStore.status}/>}
+												</th>
+											</tr>
+											<tr>
+												<td className="text">Manager Contacts:</td>
+												<th>{mngr_cntct}</th>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
-							: null }
-					</div>
+							<div className="col-md-7">
+								<td className="text-right"style={{ fontSize: "16px", }}><b> Guidelines:-</b></td>
+								{ !(! this.props.auditStore.audit.post_approval_description && ! this.props.auditStore.audit.audit_cycle.post_approval_description) ?
+									<div className="panel-body" style={{ marginTop: "-20px" }}>
+										<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
+										<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
+									</div>
+									: null }
+							</div>
+						</div>
+						:
+						<div className="col-md-12">
+							<div className="panel panel-default">
+								<table className="table table-striped">
+									<tbody>
+										<tr>
+											<td className="text">Type:</td>
+											<th>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</th>
+										</tr>
+										<tr>
+											<td className="text">Store Name:</td>
+											<th>{this.props.auditStore.audit.store.name}</th>
+										</tr>
+										<tr>
+											<td className="text">Phone:</td>
+											<th>{this.props.auditStore.audit.store.phone}</th>
+										</tr>
+										<tr>
+											<td className="text">Address:</td>
+											<th>{this.props.auditStore.audit.store.address}</th>
+										</tr>
+										<tr>
+											<td className="text">Fees:</td>
+											<th>{<span>{fees}{reimb}</span>}</th>
+										</tr>
+										<tr>
+											<td className="text">Audit Date:</td>
+											<th>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</th>
+										</tr>
+										<tr>
+											<td className="text">Status:</td>
+											<th>{<AuditStoreStatusLabel status={this.props.auditStore.status}/>}
+											</th>
+										</tr>
+										<tr>
+											<td className="text">Manager Contacts:</td>
+											<th>{mngr_cntct}</th>
+										</tr>
+										{this.state.guideline && this.state.guideline ?
+											<tr>
+												<td className="text">PDF Guideline:</td>
+												<th><button className="btn btn-primary sm" onClick={this.openPDFInNewTab}>Open Guideline</button></th>
+											</tr>
+											: null}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					}
 					<div className="col-md-6">
 					</div>
 

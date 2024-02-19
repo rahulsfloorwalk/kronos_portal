@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from client.models import MPClientProfileInfo
+from client.models import MPClientProfileInfo,Client
 from manager.models import MPSolution
 from client.models import MPOrder
 from django.contrib.auth.models import User
@@ -37,7 +37,16 @@ class MpCustomerView(APIView):
     }
     def get(self,request):
         customers = MPClientProfileInfo.objects.all()
-        return Response(MPClientProfileSerializer(customers,many=True).data)
+        # return Response(MPClientProfileSerializer(customers,many=True).data)
+        filtered_customers = []
+        for customer in customers:
+            user = customer.user
+            clients = Client.objects.filter(email=user.email, is_active=True)
+            if clients.exists():
+                filtered_customers.append(customer)
+        serialized_data = MPClientProfileSerializer(filtered_customers, many=True).data
+        return Response(serialized_data)
+    
 class MpCountsView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups={
