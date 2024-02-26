@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router";
 
 import dpUrl from "../../../img/dp.png";
-import dpFemaleUrl from "../../../img/dp_female.png";
+import dpFemaleUrl from "../../../img/dp2_female.png";
 
 export default class ProfileCard extends React.Component {
 	static propTypes = {

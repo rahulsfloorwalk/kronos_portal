@@ -20,7 +20,7 @@ exports[`<AuditCycleDashboard/> is rendered correctly when the data is successfu
   className="table-responsive"
   style={
     Object {
-      "maxHeight": "800px",
+      "maxHeight": "580px",
       "overflowY": "auto",
     }
   }

@@ -292,17 +292,16 @@ class AttachmentUploadBox extends React.Component {
 		// console.log("Data when Prooftag Modal:", this.state);
 		if(this.state.prooftagTextareaValue && this.state.selectedProoftag){
 			this.setState({
-				showProoftagModal: false,
 				prooftagModalText: this.state.prooftagTextareaValue,
 				prooftagModalTagId : this.state.selectedProoftag,
 			});
-			// saveNotAvailableTag(this.state.prooftagModalTagId, this.state.selectedProoftag)
-			// .then(response => {
-			//     console.log("Attachment tag saved successfully:", response);
-			// })
-			// .catch(error => {
-			//     console.error("Error saving attachment tag:", error);
-			// });
+			// saveNotAvailableTag(this.state.selectedProoftag,this.state.prooftagTextareaValue,this.props.auditStoreId)
+			// 	.then(response => {
+			// 		this.setState({showProoftagModal: false});
+			// 	})
+			// 	.catch(error => {
+			// 		console.error("Error saving attachment tag:", error);
+			// 	});------->profftag not available
 		}else{
 			this.setState({prooftagModalTextError:"Fields can not be empty"});
 		}
@@ -410,7 +409,7 @@ class AttachmentUploadBox extends React.Component {
 		// 	openModalButton = <button onClick={this.handleProoftagButtonClick} type="button" className="btn btn-default">
 		// 		Open Prooftag Modal
 		// 	</button>;
-		// }
+		// }-------------->prooftag not abvailable
 		const attachment_tags = this.state.attachments.map((value)=> value.proof_tag);
 
 		const proof_tag_list = [];
@@ -486,7 +485,7 @@ class AttachmentUploadBox extends React.Component {
 					<div className="col-md-8">
 						<h3 style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", gap: "1rem" }}>
 							<Paperclip /> Attachments {uploadButton}
-							{/* {openModalButton} */}
+							{/* {openModalButton} ------------->prooftag not available*/}
 						</h3>
 						<div style={{ clear: "both" }}></div>
 						<div>{dragandDropBox}</div>

@@ -15,11 +15,11 @@ export function saveAttachmentTag(attachmentId, proof_tag_id){
 	});
 }
 
-export function saveNotAvailableTag( proof_tag_id,prooftagTextareaValue){
+export function saveNotAvailableTag( proof_tag_id,prooftagTextareaValue,auditStoreId){
 	return $.ajax({
 		url: url.api_base_path + "auditor/proof_notavailable",
 		type: "POST",
-		data: JSON.stringify({proof_tag_id: proof_tag_id,prooftagTextareaValue: prooftagTextareaValue}),
+		data: JSON.stringify({proof_tag_id: proof_tag_id,prooftagTextareaValue: prooftagTextareaValue,audit_store_id:auditStoreId}),
 		contentType: "application/json"
 	});
 }

@@ -5,18 +5,18 @@ import { Link } from "react-router";
 
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
-
 import { fetchAuditStores } from "../actions/audit_store.js";
 import { fetchProfileInfo } from "../actions/profile_info.js";
 
 // import ExpandableDetails from "../../components/ExpandableDetails.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
-import MarkdownViewer from "../../components/MarkdownViewer.jsx";
+// import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 import Loading from "../../components/Loading.jsx";
 
 import { auditStorePropType } from "../prop_types";
-import ExpandableDetailsReport from "./ExpandableDetailsReport.jsx";
+// import ExpandableDetailsReport from "./ExpandableDetailsReport.jsx";
+import "./../../../css/bs_overrides.scss";
 
 class AuditStoreRow extends React.Component {
 	static propTypes = {
@@ -25,26 +25,23 @@ class AuditStoreRow extends React.Component {
 	render() {
 		let revertMessage = null;
 		if (this.props.auditStore.report_revert_count > 0) {
-			revertMessage = <h4 style={{marginLeft: "10px"}}><b>(Reverted)</b></h4>;
+			revertMessage = (<b style = {{fontSize:"2rem"}}> (Reverted)</b>);
 		}
 
 		let withdrawButton , auditStoreStatusLabel, withdrawMessage, viewButton, concernButton;
 		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
-		// const fees = earnings_per_audit ? <b>Fees: ₹ {earnings_per_audit}, </b> : "";
-		// const reimbursement = this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement;
-		// const reimb = reimbursement ? <span><b>Reimbursement upto: ₹ {reimbursement}</b></span> : "";
 
-		const fees = (earnings_per_audit || earnings_per_audit === 0) ? <span><b>Fees:</b> ₹ {earnings_per_audit} </span> : <span><b>Fees:</b> ₹ 0 </span>;
+		const fees = (earnings_per_audit || earnings_per_audit === 0) ? <span>Fees : <b> ₹ {earnings_per_audit}</b> </span> : <span>Fees : <b> ₹ 0 </b></span>;
 		const reimbursement = this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement;
 		// const reimb = reimbursement ? <span><b>, Reimbursement upto:</b> ₹ {reimbursement}</span> : "";
-		const reimb = (reimbursement || reimbursement === 0) ? <span><b>, Reimbursement upto:</b> ₹ {reimbursement}</span> : <span><b>, Reimbursement upto:</b> ₹ 0</span>;
+		const reimb = (reimbursement || reimbursement === 0) ? <span> Reimbursement upto : <b> ₹ {reimbursement}</b></span> : <span> Reimbursement upto : <b> ₹ 0</b></span>;
 
 
 
-		let inlineBlockStyle = {
-			display: "inline-block",
-			marginBottom: "10px",
-		};
+		// let inlineBlockStyle = {
+		// 	display: "inline-block",
+		// 	marginBottom: "10px",
+		// };
 
 		if((this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED") && this.props.auditStore.get_date_diff <= -1){
 			withdrawButton = (<Link to={`audit_store/${this.props.auditStore.id}/withdraw`} className="btn btn-default">Withdraw</Link>);
@@ -52,6 +49,12 @@ class AuditStoreRow extends React.Component {
 		if(this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED"){
 			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/report_concern`} className="btn btn-danger">Having Trouble?</Link>);
 		}
+
+		// if (this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW" || this.props.auditStore.status === "COMPLETED" || this.props.auditStore.status === "ACCEPTED" || this.props.auditStore.status === "FAILED" || this.props.auditStore.status === "REJECTED" ){
+		// 	auditStoreStatusLabel = (<AuditStoreStatusLabel status={this.props.auditStore.status}/>);
+		// 	withdrawMessage = (<span><b>Your Audit has been {this.props.auditStore.status}.</b></span>);
+		// 	viewButton = (<Link className="btn btn-default" style={{ pointerEvents: "none" }} disabled>View Report</Link>);
+		// }
 
 		if (this.props.auditStore.status === "AUDITOR_WITHDRAWN" ){
 			auditStoreStatusLabel = (<AuditStoreStatusLabel status="WITHDRAWN"/>);
@@ -64,17 +67,10 @@ class AuditStoreRow extends React.Component {
 				viewButton = (<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-success">View Report</Link>);
 			}
 		}
-		// let completionPercentage;
-		// if (this.props.auditStore.completion_percentage !== undefined) {
-		// 	completionPercentage = (
-		// 		<div>
-		// 			{this.props.auditStore.completion_percentage} / 100     {/*uncomment when not use percentage bar*/}
-		// 		</div>
-		// 	);
-		// }
+
 		return (
 			<div className="panel panel-default">
-				<div className="panel-body" style={{ marginTop:"-25px"}}>
+				{/* <div className="panel-body" style={{ marginTop:"-25px"}}>
 					<h3 className="d-flex align-items-center" style={{ display: "flex", alignItems: "center" }}>
 						<b style={{ marginRight: "10px" }}>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> - {this.props.auditStore.audit.store.name}
 						&nbsp;
@@ -85,9 +81,7 @@ class AuditStoreRow extends React.Component {
 						) :  this.props.auditStore.status !== "AUDITOR_WITHDRAWN" && (
 							<div className="d-flex align-items-center mt-3 ">
 								<Link to={`/audit_store/${this.props.auditStore.id}/section`} style={{ display: "flex", alignItems: "center", marginTop: "18px", textDecoration: "none" }}>
-									{/* <div className="" style={{ marginLeft: "10px",marginBottom: "22px" }}> */}
 									<span style={{ color: "black", fontSize: "15px",marginBottom: "15px",marginLeft: "15px" }}>Report Completion %:-</span>
-									{/* </div> */}
 									<div className="progress" style={{ width: "80px", marginLeft: "10px" }}>
 										<div className="progress-bar bg-primary" role="progressbar" style={{ width: `${this.props.auditStore.completion_percentage}%`, backgroundColor: this.props.auditStore.completion_percentage === 100 ? "#28a745" : " " }} aria-valuenow={this.props.auditStore.completion_percentage} aria-valuemin="0" aria-valuemax="100">
 											{this.props.auditStore.completion_percentage}%
@@ -111,7 +105,7 @@ class AuditStoreRow extends React.Component {
 						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
 						</div>
 						<div style={inlineBlockStyle}>
-							<AuditTypeLabel auditType={this.props.auditStore.audit.audit_cycle.type}/>
+						<b> Audit Type : </b> <AuditTypeLabel auditType={this.props.auditStore.audit.audit_cycle.type}/>
 						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
 						</div>
 						<div style={inlineBlockStyle}>
@@ -129,7 +123,70 @@ class AuditStoreRow extends React.Component {
 					{withdrawMessage}
 					&nbsp;&nbsp;
 					{concernButton}
-					{/* <div style={{ display: "inline-block", verticalAlign: "bottom"}}>{completionPercentage} <b>Completion Percentage</b></div>  percentage bar */}
+				</div> */}
+				<div className="report_box_main">
+					<div className="report_box_heading" >
+						<div className="report_client_detail">
+							<h3>
+								<b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> - {this.props.auditStore.audit.store.name}
+							</h3>
+							<p><b>Address:</b> {this.props.auditStore.audit.store.address}</p>
+						</div>
+						<div className="all_buttons">{revertMessage} {viewButton} &nbsp;&nbsp; {withdrawButton} {withdrawMessage} &nbsp;&nbsp; {concernButton} </div>
+					</div>
+					<div>
+						<div className="reportbox">
+							<div className="report_smallbox_width">
+								<div >
+									<span>Audit Status : </span>
+									{auditStoreStatusLabel}
+								</div>
+								<div>
+									<span>Audit Date : </span>
+									<b>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</b>
+								</div>
+
+							</div>
+							<div className="report_smallbox_width">
+								<div> {fees} </div>
+								<div> {reimb} </div>
+							</div>
+							<div className="report_smallbox_width_progress">
+								<div className="submitted_report">
+									{this.props.auditStore.status !== "AUDITOR_WITHDRAWN" ? (
+										<div className="d-flex">
+											<Link to={`/audit_store/${this.props.auditStore.id}/section`} style={{ display: "flex", marginTop: "10px", textDecoration: "none", color: "black",marginLeft: "10px" }}>
+												<span>Report Completion % : </span>
+												<div className="progress" style={{ width: "100px", marginLeft: "10px" }}>
+													<div className="progress-bar bg-primary" role="progressbar" style={{ width: `${this.props.auditStore.completion_percentage}%`, backgroundColor: this.props.auditStore.completion_percentage === 100 ? "#28a745" : " " }} aria-valuenow={this.props.auditStore.completion_percentage} aria-valuemin="0" aria-valuemax="100">
+														{this.props.auditStore.completion_percentage}%
+													</div>
+												</div>
+											</Link>
+										</div>
+									) :(
+										<div className="d-flex">
+											<Link style={{ display: "flex", marginTop: "10px", textDecoration: "none",color: "black",marginLeft: "10px" }}>
+												<span>Report Completion % : </span>
+												<div className="progress" style={{ width: "100px", marginLeft: "10px" }}>
+													<div className="progress-bar bg-primary" role="progressbar" style={{ width: `${this.props.auditStore.completion_percentage}%`, backgroundColor: this.props.auditStore.completion_percentage === 100 ? "#28a745" : " " }} aria-valuenow={this.props.auditStore.completion_percentage} aria-valuemin="0" aria-valuemax="100">
+														{this.props.auditStore.completion_percentage}%
+													</div>
+												</div>
+											</Link>
+										</div>)}
+								</div>
+								<div style={{marginLeft:"20px"}}>
+									<span>Audit Type : </span>
+									<AuditTypeLabel auditType={this.props.auditStore.audit.audit_cycle.type}/>
+								</div>
+							</div>
+							<div className="report_smallbox_width">
+								<div> {fees} </div>
+								<div> {reimb} </div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		);
@@ -172,9 +229,7 @@ class AuditStoreList extends React.Component {
 			if(rows.length > 0){
 				return (
 					<div>
-						<h2 className="page-header">
-								Your Audits
-						</h2>
+						<h2 className="page-header"> Your Audits </h2>
 						{rows}
 						{this.props.children}
 					</div>

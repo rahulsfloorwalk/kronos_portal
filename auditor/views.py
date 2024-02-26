@@ -53,6 +53,8 @@ import registration.service.auditor as auditor_service
 from manager.viewss.auditor import AuditorSerializer
 from manager.models import ProofTag
 from django.db import IntegrityError
+# from rest_framework.permissions import AllowAny
+from auditor.serializers import AuditProoftagSerializer
 
 
 # Get the current date
@@ -840,47 +842,39 @@ class AttachmentIdProofTagView(APIView):
     
     
 
-# class ProofTagNotAvailableView(APIView):
-#     permission_classes = [HasGroupPermission]
-#     required_groups = {
-#         'POST': [GROUP_NAME_AUDITOR]
-#     }
+class ProofTagNotAvailableView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+    def post(self,request):
+        prooftag = request.data.get('proof_tag_id')
+        description = request.data.get('prooftagTextareaValue')
+        user_id = request.user.id
+        audit_store_id = request.data.get('audit_store_id') 
 
-#     def post(self, request):
-#         data = request.data
-#         prooftag = data.get('proof_tag_id')
-#         description = data.get('prooftagTextareaValue')
+        try:
+            prooftag = int(prooftag)
+        except (TypeError, ValueError):
+            return Response({'error': 'Invalid proof_tag_id'}, status=404)
+        
+        prooftag = audit_cycle_proof_tag.find_by_id(prooftag)
+        if prooftag is None:
+            return Response({'error': 'ProofTag does not exist'}, status=404)
 
-#         print("rrrrrr", description)
-      
-#         try:
-#             # Convert proof_tag_id to integer if necessary
-#             prooftag = int(prooftag)
-#         except (TypeError, ValueError):
-#             return Response({'error': 'Invalid proof_tag_id'}, status=400)
-      
-#         prooftag = audit_cycle_proof_tag.find_by_id(prooftag)
-#         print("prooftag", prooftag.id)
-#         print("userid", request.user.id)
+        data = {
+            'audit_cycle_prooftag_list': prooftag.id,
+            'prooftagTextareaValue': description,
+            'user': user_id,
+            'audit_store_id':audit_store_id
+        }
+        serializer = AuditProoftagSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Data saved successfully"}, status=200)
+        
+        return Response(status=400)
 
-#         if prooftag is None:
-#             return Response({'error': 'ProofTag does not exist'}, status=404)
-        
-#         # data['prooftag'] = prooftag.id 
-#         data['user'] = request.user.id
-#         serializer = AuditProoftagSerializer(data=data)
-#         print("serializer",serializer)
-        
-#         if serializer.is_valid():
-#             try:
-#                 serializer.validated_data['prooftag_id'] = prooftag.id
-#                 audit_prooftag = serializer.save()
-#                 return Response(AuditProoftagSerializer(audit_prooftag).data, status=200)
-#             except IntegrityError as e:
-#                 return Response({'error': str(e)}, status=400)
-#         else:
-#             return Response(serializer.errors, status=400)
-        
 class ProfileInfoPronounsView(APIView):
     permission_classes = [HasGroupPermission]
     authentication_classes = [TokenAuthentication, SessionAuthentication]

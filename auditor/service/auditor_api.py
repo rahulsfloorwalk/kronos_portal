@@ -281,6 +281,112 @@ def set_password(request):
     status=200
     return response,status
 
+
+def sign_up_auditor_app(request):
+    to_check_email = request.POST.get("username")
+    try:
+        validate_email(to_check_email)
+    except ValidationError:
+        response = {'detail': 'Please enter a valid email'}
+        status = 400
+        return response, status
+
+    if to_check_email:
+        to_check_email = to_check_email.strip().lower()
+
+    if not len(request.POST.get("phone")) == 10:
+        response = {'detail': 'Phone number should be 10 digit'}
+        status = 400
+        return response, status
+
+    if request.GET.get("referred_by"):
+        if not AdditionalInfo.objects.filter(referral_code=request.POST.get("referred_by").lower()).exists():
+            response = {'detail': 'a user with this referral code does not exist. Please enter valid referral code or leave blank.'}
+            status = 400
+            return response, status
+
+    if not profile_info_service.mobile_number_pattern.match(request.POST.get("phone")):
+        response = {'detail': 'invalid phone number'}
+        status = 400
+        return response, status
+
+    if mobile_number_service.mobile_number_exists(request.POST.get("phone")):
+        response = {'detail': 'a user with this phone number already exists'}
+        status = 400
+        return response, status
+
+    try:
+        user = User.objects.get(email__iexact=to_check_email)
+        group_name = user.groups.get()
+        if group_name.name != "Auditor":
+            response = {'details': 'User is Already Registered as a {}!! Please use Alternate Email'.format(group_name.name)}
+            status = 200
+        else:
+            response = {'details': 'User is Already Registered !! Please Login'}
+            status = 200
+        profile_info = ProfileInfo.objects.get(user=user)
+    except User.DoesNotExist:
+        user = User()
+        user.email = request.POST.get("username")
+        user.phone = request.POST.get("phone")
+        user.username = str.lower(request.POST.get("username"))
+        user.set_password(request.POST.get("password"))
+        user.save()
+        user.groups.add(Group.objects.get(name=GROUP_NAME_AUDITOR))
+        user.save()
+
+        profile_info = ProfileInfo(user_id=user.id, mobile_number=user.phone)
+        profile_info.save()
+
+        # Move the creation of profile_info above this point
+        additional_info = AdditionalInfo(user_id=user.id)
+        additional_info.referred_by = request.GET.get("referred_by")
+        additional_info.save()
+
+        prefs = Preferences(user_id=user.id)
+        prefs.agreement_accepted = True
+        prefs.pp_accepted = True
+        prefs.save()
+
+    # Move this block below the creation of profile_info
+    try:
+        additional_info = AdditionalInfo.objects.get(user=user)
+        additional_info.referral_code = generate_ref_code(user.email, profile_info.mobile_number)
+        additional_info.save()
+    except IntegrityError:
+        _logger.error("Collision for referral code unresolved for user %s. Skipping generation of referral code",
+                      user.email)
+        pass
+
+    auth_data = {}
+    auth_data['email'] = request.POST.get("username")
+
+    otp = generate_otp()
+    otp_verification = OTPVerification()
+    otp_verification.user = user
+    otp_verification.otp = otp
+    otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+    otp_verification.save()
+    message = get_template('registration/market_place/otp_verification.html').render({
+        'otp': otp,
+        'email': user.email,
+        **registration_context(),
+    })
+
+    msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
+    msg.content_subtype = 'html'
+
+    if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+        msg.send()
+        _logger.info("verification email sent to user : %s", user.email)
+    else:
+        _logger.info("verification email disabled. skipping email for user : %s", user.email)
+        _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
+
+    response = {'detail': 'Auditor Registered Successfully. Please Check Email for OTP Verification...', 'user': user.id, 'email': user.email}
+    status = 200
+    return response, status
+
 def sign_up_auditor(request):
     to_check_email = request.POST.get("username")
     # for key, value in request.POST.items():

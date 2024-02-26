@@ -74,13 +74,13 @@ class ProofTag(Model):
             self.created_at = timezone.now()
         self.modified_at = timezone.now()
         return super(ProofTag, self).save(*args, **kwargs)
-
-# class AuditProoftag(Model):
-#     id = AutoField(db_column='id', primary_key=True)
-#     proof_tag_id = ForeignKey(ProofTag, db_column='proof_tag_id', blank=True,null=True)
-#     # audit_cycle = ForeignKey(AuditCycle, related_name='audit_cycle', db_column='audit_cycle_id', blank=True)
-#     prooftagTextareaValue = CharField(db_column='prooftagTextareaValue', max_length=5000, blank=True,null=True)
-#     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT,null=True,blank=True)
+    
+class AuditProoftagNotAvailable(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    audit_cycle_prooftag_list = IntegerField(db_column='audit_cycle_prooftag_list', blank=True,null=True) #audit_auditcycleprooftaglist
+    prooftagTextareaValue = CharField(db_column='prooftagTextareaValue', max_length=5000, blank=True,null=True)
+    user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+    audit_store_id = IntegerField(db_column='audit_store_id', blank=True,null=True)
 
 
 class ManagerPermissions(Model):
