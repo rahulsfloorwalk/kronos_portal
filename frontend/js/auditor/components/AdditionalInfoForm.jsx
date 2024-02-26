@@ -268,9 +268,9 @@ class AdditionalInfoForm extends React.Component {
 						</div>
 					</div>
 					<div className="row">
-						<div className="col-sm-6">
+						{/* <div className="col-sm-6">
 							<FormInput label="MSPA certification code" icon_tag={true} type="text" value={this.state.mspa_code} name="mspa_code" onChange={this.inputChanged} errors={this.props.errors.mspa_code}/>
-						</div>
+						</div> */}
 						<div className="col-sm-6">
 							<label>Languages Known <span className="text-danger">(✳)</span></label>
 							<Select

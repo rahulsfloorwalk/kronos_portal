@@ -8,6 +8,12 @@ country["IN"] = "India"
 country["NZ"] = "New Zealand"
 country["SG"] = "Singapore"
 country["US"] = "United States"
+country["CA"] = "Canada"
+country["UE"] = "United Arab Emirates"
+country["MY"] = "Malaysia"
+country["NG"] = "Nigeria"
+country["CH"] = "Switzerland"
+country["TH"] = "Thailand"
 
 
 def get_country_django_choices():

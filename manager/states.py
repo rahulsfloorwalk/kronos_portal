@@ -49,6 +49,32 @@ states["AU-SA"] = "South Australia"
 states["AU-TA"] = "Tasmania"
 states["AU-VI"] = "Victoria"
 states["AU-WA"] = "Western Australia"
+states["AU-BB"] = "Brisbane"
+states["AU-MB"] = "Melbourne"
+states["AU-SN"] = "Sydney"
+
+# Canada States
+states["CA-OT"] = "Ontario"
+states["CA-MT"] = "Montreal"
+states["CA-OW"] = "Otawa"
+
+# Dubai States
+states["UE-DB"] = "Dubai"
+
+# Malaysia States
+states["MY-KL"] = "Kuala Lampur"
+states["MY-JB"] = "Johor Bahru"
+
+
+# Nigeria States
+states["NG-LG"] = "Lagos"
+
+# Switzerland States
+states["CH-WT"] = "Winterthur"
+
+# Thailand States
+states["TH-BK"] = "Bangkok"
+
 
 # Singapore States
 states["SG-NA"] = "Singapore"
@@ -124,6 +150,7 @@ states["US-WA"] = "Washington"
 states["US-WV"] = "West Virginia"
 states["US-WI"] = "Wisconsin"
 states["US-WY"] = "Wyoming"
+states["US-IV"] = "Irvine"
 
 
 def get_django_choices():

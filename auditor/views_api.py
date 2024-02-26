@@ -19,7 +19,7 @@ from rest_framework.permissions import AllowAny,IsAuthenticated
 class SignUpAPI(View):
     @atomic
     def post(self, request):
-        response, status = auditor_service_api.sign_up_auditor(request)
+        response, status = auditor_service_api.sign_up_auditor_app(request)
         return JsonResponse(response, status=status)
 
 

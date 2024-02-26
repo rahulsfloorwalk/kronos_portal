@@ -24,7 +24,7 @@ from agency.models import Agency
 from kronos.utils import find_payment_due_date, get_difference_between_date
 from client.service.client_manager import get_manager_info_list_by_audit_store_obj
 from auditor.service.auditor_api import get_report_completion_percentage
-# from manager.models import AuditProoftag
+from manager.models import AuditProoftagNotAvailable
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -373,7 +373,7 @@ class AuditorSerializer(ModelSerializer):
 class AuditApplicationSerializer(ModelSerializer):
     audit_store = serializers.SerializerMethodField()
     def get_audit_store(self, obj):
-        audit_stores = obj.audit.audit_stores.all()
+        audit_stores = obj.audit.audit_stores.filter(status="ASSIGNED")
         if audit_stores.exists():
             return audit_stores[0].id
         return None
@@ -547,10 +547,11 @@ class AttachmentSerializer(ModelSerializer):
         read_only_fields = fields
 
 
-# class AuditProoftagSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = AuditProoftag
-#         fields = ['id', 'proof_tag_id', 'prooftagTextareaValue', 'user']
+class AuditProoftagSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), default=serializers.CurrentUserDefault())
+    class Meta:
+        model = AuditProoftagNotAvailable
+        fields = '__all__'
 
 
 class AttachmentDeSerializer(Serializer):

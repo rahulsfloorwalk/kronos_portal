@@ -73,7 +73,7 @@ urlpatterns = ([
     url(r'attachment/(?P<audit_store_id>[0-9]+)/arrange_attachment$', views.AuditStoreIdArrangeAttachment.as_view(), name='arrange_attachment_by_proof_tags'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag$', views.AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),
 
-    # url(r'proof_notavailable$', views.ProofTagNotAvailableView.as_view(), name='proof_tag_not_available_view'),
+    url(r'proof_notavailable$', views.ProofTagNotAvailableView.as_view(), name='proof_tag_not_available_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list$', views.AttachmentProofTagList.as_view(), name='attachment_proof_tag_list'),
     url(r'auditor_self/(?P<user_id>[0-9]+)/deactivate$', views.AuditorSelfDeactivateView.as_view(), name="auditor_self_id_deactivate_view"),

@@ -664,7 +664,27 @@ $progress_bar_bg_lighten_pct : 5%;
     border-radius: 5px;
     margin-bottom: 5px;
   }
-
+  @media screen and (max-width: 600px) {
+	.drop-zone{
+		width: 300px;
+		min-height: 120px;
+		padding: 25px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		font-family: "Quicksand", sans-serif;
+		font-weight: 500;
+		font-size: 16px;
+		cursor: pointer;
+		color: #cccccc;
+		border: 4px dashed gray;
+		border-radius: 10px;
+		margin-bottom: 20px;
+	  
+	}
+}
   //---------------------------------------------------
   .audit_list_detail_box{
 	width: 30%;
@@ -701,4 +721,84 @@ $progress_bar_bg_lighten_pct : 5%;
 	.audit_list_detail_box{
 		width: 90%;
 	}	
+}
+// ----------------------------------------------------------------------------------
+.report_box_main{
+	padding-bottom: 20px;
+}
+.reportbox{
+	display: flex;
+	justify-content: space-between;
+}
+.report_smallbox_width_progress{
+	width: 25%;
+	border-right: 1px solid #ddd;
+	display: flex;
+	flex-direction: column;
+}
+.submitted_report{
+	padding: 10px;
+	padding-right: 1rem;
+	width: 100%;
+}
+.success_btn_report{
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+.report_smallbox_width{
+	width: 25%;
+	border-right: 1px solid #ddd;
+	display: flex;
+	flex-direction: column;
+	gap: 2.5rem;
+	padding-top: 20px;
+	padding-right: 5rem;
+	padding-left: 20px;
+}
+.report_box_heading{
+	border-bottom: 1px solid #ddd;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px;
+}
+.report_box_heading_text{
+	color: gray;
+	font-size: 1.7rem;
+}
+.report_client_detail{
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+@media screen and (max-width: 700px) {
+	.reportbox{
+		flex-direction: column;
+	}
+	.report_smallbox_width{
+		width: 100%;
+		border-right: 0px solid #ddd;
+		border-bottom: 1px solid #ddd;
+		padding-bottom: 2rem;
+		gap: 1rem;
+	}
+	.report_smallbox_width_progress{
+		width: 100%;
+		border-right: 0px solid #ddd;
+		border-bottom: 1px solid #ddd;
+		padding-bottom: 2rem;
+	}
+	.report_box_main{
+		box-shadow: 0px 0px 5px rgb(169, 169, 169);
+		padding-bottom: 0px;
+		}
+	.all_buttons * {
+			margin-top: 10px;
+		}
+	}
+@media screen and (max-width: 600px) {
+	.report_box_heading{
+		flex-direction: column;
+		align-items: flex-start;
+	}
 }

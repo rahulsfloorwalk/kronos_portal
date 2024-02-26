@@ -8749,7 +8749,7 @@
       "pk":826,
       "fields":{
          "name":"Sydney",
-         "state":"AU-NS",
+         "state":"AU-SN",
          "lat":"-33.861481",
          "lon":"151.205475",
          "country":"AU"
@@ -8760,7 +8760,7 @@
       "pk":827,
       "fields":{
          "name":"South Melbourne",
-         "state":"AU-VI",
+         "state":"AU-MB",
          "lat":"-37.833333",
          "lon":"144.966667",
          "country":"AU"
@@ -8771,7 +8771,7 @@
       "pk":828,
       "fields":{
          "name":"Brisbane",
-         "state":"AU-QL",
+         "state":"AU-BB",
          "lat":"-27.47101",
          "lon":"153.024292",
          "country":"AU"
@@ -13776,7 +13776,7 @@
       "pk":1283,
       "fields":{
          "name":"Irvine",
-         "state":"US-CA",
+         "state":"US-IV",
          "lat":"33.6772",
          "lon":"-117.7738",
          "country":"US"
@@ -23174,6 +23174,105 @@
          "lat":"27.5954811",
          "lon":"78.0540352", 
          "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":2138,
+      "fields":{
+         "name":"Ontario",
+         "state":"CA-OT",
+         "lat":"48.5297",
+         "lon":"-81.3772", 
+         "country":"CA"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":2139,
+      "fields":{
+         "name":"Montreal",
+         "state":"CA-MT",
+         "lat":"45.508888",
+         "lon":"-73.561668", 
+         "country":"CA"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":2140,
+      "fields":{
+         "name":"Otawa",
+         "state":"CA-OW",
+         "lat":"45.424721",
+         "lon":"-75.695000", 
+         "country":"CA"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":2141,
+      "fields":{
+         "name":"Dubai",
+         "state":"UE-DB",
+         "lat":"25.276987",
+         "lon":"55.296249", 
+         "country":"UE"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":2142,
+      "fields":{
+         "name":"Kuala Lampur",
+         "state":"MY-kl",
+         "lat":"3.140853",
+         "lon":"101.693207", 
+         "country":"MY"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":2143,
+      "fields":{
+         "name":"Johor Bahru",
+         "state":"MY-JB",
+         "lat":"1.548591",
+         "lon":"103.750108", 
+         "country":"MY"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":2144,
+      "fields":{
+         "name":"Lagos",
+         "state":"NG-LG",
+         "lat":"6.465422",
+         "lon":"3.406448", 
+         "country":"NG"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":2145,
+      "fields":{
+         "name":"Winterthur",
+         "state":"CH-WT",
+         "lat":"47.506618",
+         "lon":"8.760553", 
+         "country":"CH"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":2146,
+      "fields":{
+         "name":"Bangkok",
+         "state":"TH-BK",
+         "lat":"13.736717",
+         "lon":"100.523186", 
+         "country":"TH"
       }
    }
 ]
