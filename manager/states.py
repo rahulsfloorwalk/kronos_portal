@@ -40,7 +40,7 @@ states["IN-UT"] = "Uttarakhand"
 states["IN-UP"] = "Uttar Pradesh"
 states["IN-WB"] = "West Bengal"
 
-# Australian States
+# Australian States.
 states["AU-CT"] = "Australian Capital Territory"
 states["AU-NS"] = "New South Wales"
 states["AU-NT"] = "Northern Territory"
