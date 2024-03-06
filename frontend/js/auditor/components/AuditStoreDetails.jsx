@@ -209,9 +209,9 @@ class AuditStoreDetails extends React.Component {
 							</div>
 							<div className="col-md-7">
 								<td className="text-right"style={{ fontSize: "16px", }}><b> Guidelines:-</b></td>
-								{ !(! this.props.auditStore.audit.post_approval_description && ! this.props.auditStore.audit.audit_cycle.post_approval_description) ?
+								{ this.props.auditStore.audit.audit_cycle.post_approval_description ?
 									<div className="panel-body" style={{ marginTop: "-20px" }}>
-										<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
+										{/* <MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/> */}
 										<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
 									</div>
 									: null }
@@ -267,6 +267,14 @@ class AuditStoreDetails extends React.Component {
 						</div>
 					}
 					<div className="col-md-6">
+					</div>
+					<div className="col-md-12">
+						<td className="text-right"style={{ fontSize: "16px", }}><b> Audit Notes :-</b></td>
+						{ ( this.props.auditStore.audit.post_approval_description ) ?
+							<div className="panel-body" style={{ marginTop: "-20px" }}>
+								<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
+							</div>
+							: null }
 					</div>
 
 				</div>
