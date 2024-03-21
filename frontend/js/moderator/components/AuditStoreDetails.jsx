@@ -7,7 +7,7 @@ import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 
 import moment from "moment";
-import { momentDateFormat }  from "../../../config.js";
+import { momentDateFormat } from "../../../config.js";
 
 import { findById, qaOk, fail, unsubmit, submit, setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment } from "../service/audit_store.js";
 
@@ -24,8 +24,9 @@ import AuditStoreSections from "./AuditStoreSections.jsx";
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 import ReportSummary from "./ReportSummary.jsx";
 import { fetchproofTags } from "../service/proof_tag.js";
+import { FetchGuidlineByAuditStoreModerator } from "../service/audit_store.js";
 
-export default class AuditStoreDetails extends React.Component{
+export default class AuditStoreDetails extends React.Component {
 	static propTypes = {
 		params: PropTypes.shape({
 			auditStoreId: PropTypes.string.isRequired,
@@ -36,7 +37,7 @@ export default class AuditStoreDetails extends React.Component{
 		}).isRequired,
 	};
 
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
 			auditStore: null,
@@ -44,10 +45,11 @@ export default class AuditStoreDetails extends React.Component{
 			auditDateSuccess: false,
 			auditDateError: false,
 			errorMessage: "",
-			display:"none",
+			display: "none",
 			reason: "",
 			errMsg: "",
-			proof_tags: []
+			proof_tags: [],
+			guideline: "",
 		};
 	}
 	setAuditStore = (auditStore) => {
@@ -55,15 +57,16 @@ export default class AuditStoreDetails extends React.Component{
 			auditStore
 		});
 	};
-	componentDidMount(){
+	componentDidMount() {
 		findById(this.props.params.auditStoreId).then(this.setAuditStore);
+		FetchGuidlineByAuditStoreModerator(this.props.params.auditStoreId).then((guideline) => this.setState({ guideline: guideline }));
 	}
-	componentWillReceiveProps(nextProps){
+	componentWillReceiveProps(nextProps) {
 		findById(nextProps.params.auditStoreId).then(this.setAuditStore);
 	}
 	qaOkButtonClicked = () => {
 		qaOk(this.props.params.auditStoreId).then(this.setAuditStore, (err) => {
-			if(err.responseJSON && err.responseJSON.non_field_errors){
+			if (err.responseJSON && err.responseJSON.non_field_errors) {
 				this.setState({
 					errorMessage: err.responseJSON.non_field_errors[0]
 				});
@@ -77,24 +80,24 @@ export default class AuditStoreDetails extends React.Component{
 		submit(this.props.params.auditStoreId).then(this.setAuditStore);
 	};
 	showModal = () => {
-		fetchproofTags(this.state.auditStore.audit.audit_cycle.id).then((proof_tags)=>{
+		fetchproofTags(this.state.auditStore.audit.audit_cycle.id).then((proof_tags) => {
 			this.setState({
-				proof_tags:proof_tags,
-				display:"block"
+				proof_tags: proof_tags,
+				display: "block"
 			});
 		});
 	};
 
 	hideModal = () => {
-		this.setState({ display:"none", errMsg: "" });
+		this.setState({ display: "none", errMsg: "" });
 	};
 	submit_hideModal = () => {
-		if (this.state.reason === ""){
-			this.setState({errMsg: "Please enter reason"});
+		if (this.state.reason === "") {
+			this.setState({ errMsg: "Please enter reason" });
 		}
-		else{
+		else {
 			this.unSubmitButtonClicked();
-			this.setState({ display:"none" });
+			this.setState({ display: "none" });
 		}
 	};
 
@@ -111,7 +114,7 @@ export default class AuditStoreDetails extends React.Component{
 
 	unSubmitButtonClicked = () => {
 		let missing_proofs = [];
-		$(".revert_tags input:checked").each(function() {
+		$(".revert_tags input:checked").each(function () {
 			let val = $(this).attr("value");
 			missing_proofs.push(val);
 		});
@@ -122,26 +125,26 @@ export default class AuditStoreDetails extends React.Component{
 			});
 	};
 	auditDateChanged = (momentDate) => {
-		this.setState({auditDateLoading: true});
+		this.setState({ auditDateLoading: true });
 		//FIXME: momentDate#format is not a function
 		setAuditDate(this.state.auditStore.id, momentDate.format("YYYY-MM-DD")).then((auditStore) => {
 			this.setAuditStore(auditStore);
-			this.setState({auditDateSuccess: true, auditDateError: false});
+			this.setState({ auditDateSuccess: true, auditDateError: false });
 		}, () => {
-			this.setState({auditDateSuccess: false, auditDateError: true});
+			this.setState({ auditDateSuccess: false, auditDateError: true });
 		}).always(() => {
-			this.setState({auditDateLoading: false});
+			this.setState({ auditDateLoading: false });
 		});
 	};
-	setModeratorStatus = (e) =>{
-		setAuditModeratorStatus(this.props.params.auditStoreId,e.target.value).then((auditStore) => {
+	setModeratorStatus = (e) => {
+		setAuditModeratorStatus(this.props.params.auditStoreId, e.target.value).then((auditStore) => {
 			this.setState({
 				auditStore
 			});
 		});
 	};
 	setModeratorComment = (e) => {
-		setAuditModeratorComment(this.props.params.auditStoreId,e.target.value);
+		setAuditModeratorComment(this.props.params.auditStoreId, e.target.value);
 	};
 	openCheckPoint = () => {
 		document.getElementsByClassName("main")[0].style.marginRight = "250px";
@@ -155,7 +158,7 @@ export default class AuditStoreDetails extends React.Component{
 	};
 	saveCheckPoints = () => {
 		let check_points_list = [];
-		$(".sidebar input:checked").each(function() {
+		$(".sidebar input:checked").each(function () {
 			let val = $(this).attr("value");
 			check_points_list.push(val);
 		});
@@ -169,19 +172,22 @@ export default class AuditStoreDetails extends React.Component{
 			location.reload();
 		});
 	};
-
-	render(){
-		if(! this.state.auditStore){
-			return <Loading/>;
+	openPDFInNewTab = () => {
+		const { guideline } = this.state;
+		window.open(guideline, "_blank");
+	};
+	render() {
+		if (!this.state.auditStore) {
+			return <Loading />;
 		}
-		var paddingStyle={
-			paddingBottom:"2%"
+		var paddingStyle = {
+			paddingBottom: "2%"
 		};
 		var faultyReportMessageStyle = {
-			fontSize:"16px",
-			color:"red",
-			paddingRight:"5px",
-			paddingTop:"1%"
+			fontSize: "16px",
+			color: "red",
+			paddingRight: "5px",
+			paddingTop: "1%"
 		};
 		const modalStyle = {
 			display: this.state.display,
@@ -196,25 +202,25 @@ export default class AuditStoreDetails extends React.Component{
 		};
 
 		let faultyReportMessage = null;
-		if(this.state.auditStore.find_faulty_report_count > 0){
+		if (this.state.auditStore.find_faulty_report_count > 0) {
 			faultyReportMessage = (<span style={faultyReportMessageStyle} className="pull-right">{this.state.auditStore.find_faulty_report_count} Repeated Attachment Found</span>);
 		}
 		let auditDateElement = moment(this.state.auditStore.audit_date).format(momentDateFormat);
 
 		let failButton, qaOkButton, unSubmitButton, submitButton;
-		if (this.state.auditStore.status === "ACKNOWLEDGED"){
+		if (this.state.auditStore.status === "ACKNOWLEDGED") {
 			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">Force Submit</button>);
 		}
-		if(this.state.auditStore.status === "ASSIGNED" || this.state.auditStore.status === "ACKNOWLEDGED" || this.state.auditStore.status === "SUBMITTED"){
+		if (this.state.auditStore.status === "ASSIGNED" || this.state.auditStore.status === "ACKNOWLEDGED" || this.state.auditStore.status === "SUBMITTED") {
 			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-default pull-right">Fail</button>);
 		}
-		if(this.state.auditStore.status === "SUBMITTED"){
-			if(this.state.auditStore.user.agencyuser){
+		if (this.state.auditStore.status === "SUBMITTED") {
+			if (this.state.auditStore.user.agencyuser) {
 				unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-default">
 					Revert to Auditor
 				</button>);
 			}
-			else{
+			else {
 				unSubmitButton = (<button onClick={this.showModal} type="button" className="btn btn-default">
 					Revert to Auditor
 				</button>);
@@ -224,9 +230,9 @@ export default class AuditStoreDetails extends React.Component{
 			let hasAuditDateError = this.state.auditDateError ? "has-error" : "";
 			let hasAuditDateSuccess = this.state.auditDateSuccess ? "has-success" : "";
 			auditDateElement = (<div className={"input-group " + hasAuditDateError + hasAuditDateSuccess}>
-				<span className="input-group-addon"><Calendar/></span>
+				<span className="input-group-addon"><Calendar /></span>
 				<Datetime
-					inputProps={{className:"form-control"}}
+					inputProps={{ className: "form-control" }}
 					disabled={this.state.auditDateLoading}
 					timeFormat={false}
 					dateFormat={momentDateFormat}
@@ -248,17 +254,17 @@ export default class AuditStoreDetails extends React.Component{
 		let refresh_report_button;
 
 		var check_points = this.state.auditStore.check_points;
-		if(editable){
+		if (editable) {
 			var check_point_row = [];
-			for (let i in check_points){
-				if(check_points[i]["value"]){
+			for (let i in check_points) {
+				if (check_points[i]["value"]) {
 					check_point_row.push(<li key={i}><label><input type="checkbox" value={i} defaultChecked /><span>{check_points[i]["checkpoint"]}</span></label></li>);
 				}
-				else{
+				else {
 					check_point_row.push(<li key={i}><label><input type="checkbox" value={i} /><span>{check_points[i]["checkpoint"]}</span></label></li>);
 				}
 			}
-			if(check_point_row.length !=0){
+			if (check_point_row.length != 0) {
 				checkpointButton = (<button className="btn btn-danger checkpoint" onClick={this.openCheckPoint}>CheckPoints</button>);
 				sidebarElement = (
 					<div className="sidebar">
@@ -267,17 +273,17 @@ export default class AuditStoreDetails extends React.Component{
 						<ul>
 							{check_point_row}
 						</ul>
-						<br/>
-						<br/>
-						<br/>
-						<br/>
-						<br/>
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
 					</div>
 				);
 			}
 		}
 
-		if (editable){
+		if (editable) {
 			selectElement = (
 				<select className="form-control" onChange={this.setModeratorStatus} value={this.state.auditStore.moderator_status}>
 					<option value="">Select Status</option>
@@ -296,7 +302,7 @@ export default class AuditStoreDetails extends React.Component{
 			);
 			refresh_report_button = <button className="btn btn-primary pull-right" onClick={this.arrangeAttachmentByProofTag}>Refresh Report</button>;
 		}
-		else{
+		else {
 			selectElement = (
 				<select className="form-control" onChange={this.setModeratorStatus} value={this.state.auditStore.moderator_status} disabled>
 					<option value="">Select Status</option>
@@ -317,24 +323,29 @@ export default class AuditStoreDetails extends React.Component{
 			);
 		}
 		let auditorRatingElement;
-		if (this.state.auditStore.user.profileinfo){
+		if (this.state.auditStore.user.profileinfo) {
 			auditorRatingElement = (<tr>
 				<td className="text-right">Auditor Rating:</td>
 				<th>
-					<StarRating rating={this.state.auditStore.user.profileinfo.avg_auditor_rating}/> (<Link to={`${this.props.location.pathname}/auditor_rate`}>change</Link>)
+					<StarRating rating={this.state.auditStore.user.profileinfo.avg_auditor_rating} /> (<Link to={`${this.props.location.pathname}/auditor_rate`}>change</Link>)
 				</th>
 			</tr>);
 		}
 
 		var proof_tag_rows = [];
-		for (let i of this.state.proof_tags){
+		for (let i of this.state.proof_tags) {
 			proof_tag_rows.push(
 				<div className="col-sm-6 col-md-4" key={i.id}>
-					<label style={{fontSize:"14px",marginBottom:"10px"}}><input type="checkbox" className="revert_proof" value={i.id} style={{verticalAlign:"bottom",width:"20px",height:"20px"}} /><span> {i.proof_tag}</span></label>
+					<label style={{ fontSize: "14px", marginBottom: "10px" }}><input type="checkbox" className="revert_proof" value={i.id} style={{ verticalAlign: "bottom", width: "20px", height: "20px" }} /><span> {i.proof_tag}</span></label>
 				</div>
 			);
 		}
-
+		const manager_info_list = this.state.auditStore.manager_info_list;
+		let mngr_cntct = "";
+		if (manager_info_list && manager_info_list.length > 0) {
+			const contactString = manager_info_list.map(manager => `${manager.name} (${manager.mobile})`).join(", ");
+			mngr_cntct = <span><b>{contactString}</b></span>;
+		}
 		return (
 			<div className="main">
 				{/*
@@ -347,117 +358,236 @@ export default class AuditStoreDetails extends React.Component{
 				{checkpointButton}
 				<h2 className="page-header">
 					{failButton}
-					<File/> Audit Report - {this.state.auditStore.id}
+					<File /> Audit Report - {this.state.auditStore.id}
 					{faultyReportMessage}
 				</h2>
 				<div className="row">
-					<div className="col-md-6">
-						<div className="panel panel-default">
-							<div className="panel-heading">
-								<h4 className="panel-title">Audit Details</h4>
-							</div>
-							<table className="table table-striped">
-								<tbody>
-									<tr>
-										<td className="text-right">Client:</td>
-										<th>{this.state.auditStore.audit.audit_cycle.client.name}</th>
-									</tr>
-									<tr>
-										<td className="text-right">Store:</td>
-										<td>
-											<b>{this.state.auditStore.audit.store.name}</b><br/>
-											<small>{this.state.auditStore.audit.store.address}</small>
-										</td>
-									</tr>
-									<tr>
+					{!this.state.guideline ?
+						<div>
+							<div className="col-md-6">
+								<div className="panel panel-default">
+									<div className="panel-heading">
+										<h4 className="panel-title">Audit Details</h4>
+									</div>
+									<table className="table table-striped">
+										<tbody>
+											<tr>
+												<td className="text-right">Client:</td>
+												<th>{this.state.auditStore.audit.audit_cycle.client.name}</th>
+											</tr>
+											<tr>
+												<td className="text-right">Store:</td>
+												<td>
+													<b>{this.state.auditStore.audit.store.name}</b><br />
+													<small>{this.state.auditStore.audit.store.address}</small>
+												</td>
+											</tr>
+											<tr>
 
-										<td className="text-right">Address:</td>
-										<th>{`${this.state.auditStore.audit.store.address}, ${this.state.auditStore.audit.store.city.name}`}</th>
-									</tr>
-									<tr>
-										<td className="text-right">Type:</td>
-										<th><AuditTypeLabel auditType={this.state.auditStore.audit.audit_cycle.type}/></th>
-									</tr>
-									<tr>
-										<td className="text-right">Audit Fees:</td>
-										<th>
-											₹ {this.state.auditStore.earnings_per_audit || this.state.auditStore.audit.earnings_per_audit} (<Link to={`${this.props.location.pathname}/earnings_per_audit`}>change</Link>)
-										</th>
-									</tr>
-									<tr>
-										<td className="text-right">Reimbursement upto:</td>
-										<th>
-											₹ {this.state.auditStore.reimbursement || this.state.auditStore.audit.reimbursement} (<Link to={`${this.props.location.pathname}/reimbursement`}>change</Link>)
-										</th>
-									</tr>
-									<tr>
-										<td className="text-right">Auditor:</td>
-										<td>
-											<AuditorNameDisplay user={this.state.auditStore.user}/>
-											( <Envelope/> {auditorEmailLink})
-										</td>
-									</tr>
-									<tr>
-										<td className="text-right">Certification Score:</td>
-										<td><b>{this.state.auditStore.user.profileinfo.certification_score ? this.state.auditStore.user.profileinfo.certification_score : "NA" }</b></td>
-									</tr>
-									<tr>
-										<td className="text-right">Audit Date:</td>
-										<th>{auditDateElement}</th>
-									</tr>
-									<tr>
-										<td className="text-right">Status:</td>
-										<th><AuditStoreStatusLabel status={this.state.auditStore.status}/>&nbsp;&nbsp;{this.state.auditStore.instant_assigned ? <span><i>(Instant Assigned)</i></span>:null}&nbsp;&nbsp;{this.state.auditStore.auto_assigned ? <span><i>(Auto Assigned)</i></span>:null}</th>
-									</tr>
-									<tr style={this.state.auditStore.report_revert_count>0 ? {color: "red"}: null}>
-										<td className="text-right">Report Revert Count:</td>
-										<th>{this.state.auditStore.report_revert_count}</th>
-									</tr>
-									<tr>
-										<td className="text-right">QA Report Rating:</td>
-										<th>
-											<AuditStoreRating rating={this.state.auditStore.qa_rating}/> (<Link to={`${this.props.location.pathname}/rate`}>change</Link>)
-										</th>
-									</tr>
-									{auditorRatingElement}
-								</tbody>
-							</table>
-							<div className="panel-footer text-right">
-								{errorMessageElement}
-								{submitButton}&nbsp;{unSubmitButton}&nbsp;{qaOkButton}
+												<td className="text-right">Address:</td>
+												<th>{`${this.state.auditStore.audit.store.address}, ${this.state.auditStore.audit.store.city.name}`}</th>
+											</tr>
+											<tr>
+												<td className="text-right">Type:</td>
+												<th><AuditTypeLabel auditType={this.state.auditStore.audit.audit_cycle.type} /></th>
+											</tr>
+											<tr>
+												<td className="text-right">Audit Fees:</td>
+												<th>
+													₹ {this.state.auditStore.earnings_per_audit || this.state.auditStore.audit.earnings_per_audit} (<Link to={`${this.props.location.pathname}/earnings_per_audit`}>change</Link>)
+												</th>
+											</tr>
+											<tr>
+												<td className="text-right">Reimbursement upto:</td>
+												<th>
+													₹ {this.state.auditStore.reimbursement || this.state.auditStore.audit.reimbursement} (<Link to={`${this.props.location.pathname}/reimbursement`}>change</Link>)
+												</th>
+											</tr>
+											<tr>
+												<td className="text-right">Auditor:</td>
+												<td>
+													<AuditorNameDisplay user={this.state.auditStore.user} />
+													( <Envelope /> {auditorEmailLink})
+												</td>
+											</tr>
+											<tr>
+												<td className="text-right">Certification Score:</td>
+												<td><b>{this.state.auditStore.user.profileinfo.certification_score ? this.state.auditStore.user.profileinfo.certification_score : "NA"}</b></td>
+											</tr>
+											<tr>
+												<td className="text-right">Audit Date:</td>
+												<th>{auditDateElement}</th>
+											</tr>
+											<tr>
+												<td className="text-right">Status:</td>
+												<th><AuditStoreStatusLabel status={this.state.auditStore.status} />&nbsp;&nbsp;{this.state.auditStore.instant_assigned ? <span><i>(Instant Assigned)</i></span> : null}&nbsp;&nbsp;{this.state.auditStore.auto_assigned ? <span><i>(Auto Assigned)</i></span> : null}</th>
+											</tr>
+											<tr style={this.state.auditStore.report_revert_count > 0 ? { color: "red" } : null}>
+												<td className="text-right">Report Revert Count:</td>
+												<th>{this.state.auditStore.report_revert_count}</th>
+											</tr>
+											<tr>
+												<td className="text-right">QA Report Rating:</td>
+												<th>
+													<AuditStoreRating rating={this.state.auditStore.qa_rating} /> (<Link to={`${this.props.location.pathname}/rate`}>change</Link>)
+												</th>
+											</tr>
+											<tr>
+												<td className="text-right">Manager Contacts:</td>
+												<th>{mngr_cntct}</th>
+											</tr>
+											{auditorRatingElement}
+										</tbody>
+									</table>
+									<div className="panel-footer text-right">
+										{errorMessageElement}
+										{submitButton}&nbsp;{unSubmitButton}&nbsp;{qaOkButton}
+									</div>
+								</div>
+							</div>
+							<div className="col-md-6">
+								<div className="row" style={paddingStyle}>
+									<div className="col-md-6">
+										<label>Moderator Report Status : </label>
+										{selectElement}
+									</div>
+									<div className="col-md-6">
+										<label>Moderator Comment : </label>
+										{textareaElement}
+									</div>
+								</div>
+
+								<div className="panel panel-default">
+									<div className="panel-body">
+										<MarkdownViewer markdown={this.state.auditStore.audit.audit_cycle.post_approval_description || ""} />
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div className="col-md-6">
-						<div className="row" style={paddingStyle}>
+						:
+						<div>
 							<div className="col-md-6">
-								<label>Moderator Report Status : </label>
-								{selectElement}
+								<div className="panel panel-default">
+									<div className="panel-heading">
+										<h4 className="panel-title">Audit Details</h4>
+									</div>
+									<table className="table table-striped">
+										<tbody>
+											<tr>
+												<td className="text-right">Client:</td>
+												<th>{this.state.auditStore.audit.audit_cycle.client.name}</th>
+											</tr>
+											<tr>
+												<td className="text-right">Store:</td>
+												<td>
+													<b>{this.state.auditStore.audit.store.name}</b><br />
+													<small>{this.state.auditStore.audit.store.address}</small>
+												</td>
+											</tr>
+											<tr>
+
+												<td className="text-right">Address:</td>
+												<th>{`${this.state.auditStore.audit.store.address}, ${this.state.auditStore.audit.store.city.name}`}</th>
+											</tr>
+											<tr>
+												<td className="text-right">Type:</td>
+												<th><AuditTypeLabel auditType={this.state.auditStore.audit.audit_cycle.type} /></th>
+											</tr>
+											<tr>
+												<td className="text-right">Audit Fees:</td>
+												<th>
+													₹ {this.state.auditStore.earnings_per_audit || this.state.auditStore.audit.earnings_per_audit} (<Link to={`${this.props.location.pathname}/earnings_per_audit`}>change</Link>)
+												</th>
+											</tr>
+											<tr>
+												<td className="text-right">Reimbursement upto:</td>
+												<th>
+													₹ {this.state.auditStore.reimbursement || this.state.auditStore.audit.reimbursement} (<Link to={`${this.props.location.pathname}/reimbursement`}>change</Link>)
+												</th>
+											</tr>
+											<tr>
+												<td className="text-right">Auditor:</td>
+												<td>
+													<AuditorNameDisplay user={this.state.auditStore.user} />
+													( <Envelope /> {auditorEmailLink})
+												</td>
+											</tr>
+											<tr>
+												<td className="text-right">Certification Score:</td>
+												<td><b>{this.state.auditStore.user.profileinfo.certification_score ? this.state.auditStore.user.profileinfo.certification_score : "NA"}</b></td>
+											</tr>
+											<tr>
+												<td className="text-right">Audit Date:</td>
+												<th>{auditDateElement}</th>
+											</tr>
+											<tr>
+												<td className="text-right">Status:</td>
+												<th><AuditStoreStatusLabel status={this.state.auditStore.status} />&nbsp;&nbsp;{this.state.auditStore.instant_assigned ? <span><i>(Instant Assigned)</i></span> : null}&nbsp;&nbsp;{this.state.auditStore.auto_assigned ? <span><i>(Auto Assigned)</i></span> : null}</th>
+											</tr>
+											<tr style={this.state.auditStore.report_revert_count > 0 ? { color: "red" } : null}>
+												<td className="text-right">Report Revert Count:</td>
+												<th>{this.state.auditStore.report_revert_count}</th>
+											</tr>
+											<tr>
+												<td className="text-right">QA Report Rating:</td>
+												<th>
+													<AuditStoreRating rating={this.state.auditStore.qa_rating} /> (<Link to={`${this.props.location.pathname}/rate`}>change</Link>)
+												</th>
+											</tr>
+											<tr>
+												<td className="text-right">Manager Contacts:</td>
+												<th>{mngr_cntct}</th>
+											</tr>
+											{auditorRatingElement}
+											{this.state.guideline && this.state.guideline ?
+												<tr>
+													<td className="text-right">PDF Guideline:</td>
+													<th><button className="btn btn-primary sm" onClick={this.openPDFInNewTab}>Open Guideline</button></th>
+												</tr>
+												: null}
+										</tbody>
+									</table>
+									<div className="panel-footer text-right">
+										{errorMessageElement}
+										{submitButton}&nbsp;{unSubmitButton}&nbsp;{qaOkButton}
+									</div>
+								</div>
 							</div>
 							<div className="col-md-6">
-								<label>Moderator Comment : </label>
-								{textareaElement}
+								<div className="row" style={paddingStyle}>
+									<div className="col-md-6">
+										<label>Moderator Report Status : </label>
+										{selectElement}
+									</div>
+									<div className="col-md-6">
+										<label>Moderator Comment : </label>
+										{textareaElement}
+									</div>
+								</div>
 							</div>
 						</div>
-
-						<div className="panel panel-default">
-							<div className="panel-body">
+					}
+					<div className="col-md-12">
+						<td className="text-right"style={{ fontSize: "16px",paddingLeft: "10px" }}><b> Audit Notes :-</b></td>
+						{ ( this.state.auditStore.audit.post_approval_description ) ?
+							<div className="panel-body" style={{ marginTop: "-20px" }}>
 								<MarkdownViewer markdown={this.state.auditStore.audit.post_approval_description || ""}/>
-								<MarkdownViewer markdown={this.state.auditStore.audit.audit_cycle.post_approval_description || ""}/>
 							</div>
-						</div>
+							: null }
 					</div>
 				</div>
+
 				{refresh_report_button}
-				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable}/>
-				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary}/>
-				<AuditStoreSections auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore}/>
+
+				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable} />
+				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} />
+				<AuditStoreSections auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore} />
 				{this.props.children}
 
 				{sidebarElement}
 
 				<div className="modal" tabIndex="-1" style={modalStyle}>
-					<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideModal}/>
+					<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideModal} />
 					<div className="modal-dialog" style={modalDialogStyle}>
 						<div className="modal-content">
 							<div className="modal-header">
@@ -467,11 +597,11 @@ export default class AuditStoreDetails extends React.Component{
 							<div className="modal-body">
 								Please Enter reason for reverting the audit to auditor
 								<textarea rows="5" className="form-control" value={this.state.reason} onChange={this.reasonChanged} onBlur={this.onBlur} />
-								<span style={{color:"red"}}>{this.state.errMsg}</span>
+								<span style={{ color: "red" }}>{this.state.errMsg}</span>
 								{proof_tag_rows.length > 0 ?
 									<div>
-										<br/>
-										<p><b>Select missing proofs</b></p><hr/>
+										<br />
+										<p><b>Select missing proofs</b></p><hr />
 										<div className="row revert_tags">
 											{proof_tag_rows}
 										</div>

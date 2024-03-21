@@ -8,6 +8,7 @@ import answer.service.answer_moderator as answer_moderator_service
 from . import service as attachment_service
 import audit_store.service as audit_store_service_section
 from answer.service import report_section as report_section_service
+from audit_store.models import AuditStore
 
 def find_by_audit_store_for_moderator(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id_for_moderator(audit_store_id, user_id)
@@ -101,3 +102,8 @@ def rotate_image_attachment_by_id(attachment_id, user_id, angle):
         raise AppLogicError("cannot rotate attachment now")
 
     return attachment_service.rotate(attachment_id, angle)
+
+
+def find_attachment_by_audit_store_id(audit_store_id:int):
+    audit_store = AuditStore.objects.get(id=audit_store_id)
+    return attachment_service.find_by_audit_cycle_id(audit_store.audit.audit_cycle.id)

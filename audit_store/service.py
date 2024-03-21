@@ -62,6 +62,7 @@ def find_by_audit_cycle_distinct_user(audit_cycle_id):
 
 def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, start_date, end_date,is_load_more,last_total_count):
     total_audit_count = 0
+    audit_store_list_obj_slice = []
     if status != "" and last_audit_id != "":
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id, audit_stores__status=status) \
             .order_by('id', 'store__city__name', 'store__name','count') \
