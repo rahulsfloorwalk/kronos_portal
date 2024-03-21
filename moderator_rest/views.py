@@ -420,6 +420,16 @@ class AttachmentIdProofTagView(APIView):
         return Response(AttachmentSerializer(attachment).data)
 
 
+class AuditGuidelinesByAuditStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_grooups = {
+        'GET': [GROUP_NAME_MODERATOR]
+    }
+    def get(self,request,audit_store_id,format=None):
+        attachment = attachment_service.find_attachment_by_audit_store_id(audit_store_id)
+        return Response(attachment)
+
+
 class SectionView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

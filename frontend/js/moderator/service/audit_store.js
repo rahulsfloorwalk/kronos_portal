@@ -159,3 +159,7 @@ export function setReportSummary(audit_store_id, report_summary){
 export function arrangeAttachment(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/arrange_attachment`);
 }
+
+export function FetchGuidlineByAuditStoreModerator(auditStoreId){
+	return $.get(url.api_base_path + `moderator/audit_store/${auditStoreId}/guildlines`);
+}

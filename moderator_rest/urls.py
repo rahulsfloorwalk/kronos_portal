@@ -7,7 +7,7 @@ from .views import SectionView, ReportSectionView, AnswerView
 from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtainedView, NotApplicableView, AnswerNotApplicableView, AnswerCommentView, AnswerRevertMessageView, SectionRevertMessageView
 from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditView, AuditStoreIdReportSummaryView
 from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorCommentView, AuditStoreIdCheckPoints
-from .views import AttachmentProofTagList, AttachmentIdProofTagView
+from .views import AttachmentProofTagList, AttachmentIdProofTagView,AuditGuidelinesByAuditStore
 from .views import AttachmentIdRotateView
 from .views import AuditStoreIdArrangeAttachment
 from .views import ClientView
@@ -42,6 +42,9 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', AnswerView.as_view(), name='answer_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', AuditStoreAttachmentView.as_view(), name='audit_store_attachment_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_summary$', AuditStoreIdReportSummaryView.as_view(), name='audit_store_id_report_summary_view'),
+
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/guildlines$', AuditGuidelinesByAuditStore.as_view(), name='audit_guidelines_by_audit_store'),
+
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/audit_date$', AuditStoreIdAuditDateView.as_view(), name='audit_store_id_audit_date_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/moderator_status$', AuditStoreIdModeratorStatusView.as_view(), name='audit_store_id_moderator_status_view'),

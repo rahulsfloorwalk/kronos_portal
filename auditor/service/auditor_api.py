@@ -74,6 +74,26 @@ def get_auditor_dashboard_data(user_id):
     }
     return result
 
+
+def get_auditor_dashboard_data_for_app(user_id):
+    profile_info = profile_info_service.find_profile_info_by_user_id(user_id)
+
+    if profile_info is not None and profile_info.first_name.strip():
+        auditor_stats = stats.getAuditorStats(user_id)
+        result = {
+            'auditor_info': {
+                'first_name': profile_info.first_name,
+                'last_name': profile_info.last_name,
+                'mobile_number': profile_info.mobile_number,
+                'city': profile_info.city.name if profile_info.city else "",
+                'email': profile_info.user.email
+            },
+            'auditor_stats': auditor_stats
+        }
+        return result
+    else:
+        return {"result": "Please fill personal information"}, 200
+   
    
 def get_report_completion_percentage(audit_store_id):
     audit_store = AuditStore.objects.get(id=audit_store_id)
@@ -541,13 +561,14 @@ def login_auditor(request):
             login(request,user,backend='registration.backend.CaseInsensitiveModelBackend1')
             token, created = Token.objects.get_or_create(user=user)
 
-            result = auditor_api.get_auditor_dashboard_data(user.id)
+            result = auditor_api.get_auditor_dashboard_data_for_app(user.id)
             response = {'detail': 'Login Successfully', 'token': token.key, 'auditor_dashboard_data': result}
             status = 200
     else:
         response = {'detail': 'Username or Password incorrect'}
         status = 400
     return response, status
+
 
 
 @atomic

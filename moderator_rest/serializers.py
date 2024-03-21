@@ -3,6 +3,8 @@ from rest_framework.serializers import CharField
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from auditor.service.profile_info_service import get_avg_auditor_rating_by_user
+from client.service.client_manager import get_manager_info_list_by_audit_store_obj
+
 
 from registration.models import MobileNumber
 from agency.models import Agency, AgencyUser
@@ -159,6 +161,12 @@ class AuditSerializerWithoutApplications(ModelSerializer):
 
 
 class AuditStoreSerializer(ModelSerializer):
+      
+    manager_info_list = SerializerMethodField()
+    def get_manager_info_list(self, audit_store_obj):
+        manager_info = get_manager_info_list_by_audit_store_obj(audit_store_obj)
+        return [{'name': info.get('name', ''), 'mobile': info.get('mobile', '')} for info in manager_info]
+    
     audit = AuditSerializerWithoutApplications()
     user = UserSerializer()
     class Meta:
@@ -179,7 +187,8 @@ class AuditStoreSerializer(ModelSerializer):
             'moderator_comment',
             'find_faulty_report_count',
             'check_points',
-            'report_revert_count'
+            'report_revert_count',
+            'manager_info_list'
         )
         read_only_fields = fields
 
