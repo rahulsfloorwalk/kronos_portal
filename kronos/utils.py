@@ -149,6 +149,34 @@ with open("./datasets/pincode.json") as pincode_file:
     pincode_list = json.load(pincode_file)
     __logger.info("loaded %d pincodes", len(pincode_list))
 
+with open("./datasets/belgium_&_poland_pincode.json") as BE_PL_pincode_file:
+    BE_PL_pincode_list = json.load(BE_PL_pincode_file)
+    print("loaded %d pincodes" % len(BE_PL_pincode_list))
+
+with open("./datasets/france_&_nigeria_pincode.json") as FR_NG_pincode_file:
+    FR_NG_pincode_list = json.load(FR_NG_pincode_file)
+    __logger.info("loaded %d pincodes", len(FR_NG_pincode_list))
+
+with open("./datasets/germany_&_kenya_pincode.json") as DE_KE_pincode_file:
+    DE_KE_pincode_list = json.load(DE_KE_pincode_file)
+    __logger.info("loaded %d pincodes", len(DE_KE_pincode_list))
+
+with open("./datasets/japan_&_malaysia_pincode.json") as JP_MY_pincode_file:
+    JP_MY_pincode_list = json.load(JP_MY_pincode_file)
+    __logger.info("loaded %d pincodes", len(JP_MY_pincode_list))
+
+with open("./datasets/netherland_&_Czech_pincode.json") as NL_CZ_pincode_file:
+    NL_CZ_pincode_list = json.load(NL_CZ_pincode_file)
+    __logger.info("loaded %d pincodes", len(NL_CZ_pincode_list))
+
+with open("./datasets/spain_&_england_pincode.json") as ES_GB_pincode_file:
+    ES_GB_pincode_list = json.load(ES_GB_pincode_file)
+    __logger.info("loaded %d pincodes", len(ES_GB_pincode_list))
+
+with open("./datasets/thailand_&_canada_&_switzerland_pincode.json") as TH_CA_CH_pincode_file:
+    TH_CA_CH_pincode_list = json.load(TH_CA_CH_pincode_file)
+    __logger.info("loaded %d pincodes", len(TH_CA_CH_pincode_list))
+
 with open("./datasets/dialcode.json") as dialcode_file:
     dialcode_list = json.load(dialcode_file)
     __logger.info("loaded %d dialcodes", len(dialcode_list))
@@ -156,12 +184,55 @@ with open("./datasets/dialcode.json") as dialcode_file:
 with open("./datasets/audio_transcription_language_code.json") as language_code_file:
     language_code_list = json.load(language_code_file)
     __logger.info("loaded %d langugae_code", len(language_code_list))
+  
+def get_lat_lon_from_pincode(pincode, country_code):
+    if country_code == 'BE' or country_code == 'PL':
+        if pincode in BE_PL_pincode_list:
+            return BE_PL_pincode_list[pincode]
+        else:
+            return "Pincode " + str(pincode) + " not found in pincode_list"
+    elif country_code == 'FR' or country_code == 'NG':
+        if pincode in FR_NG_pincode_list:
+            return FR_NG_pincode_list[pincode]
+        else:
+            return "Pincode " + str(pincode) + " not found in pincode_list"
+    elif country_code == 'DE' or country_code == 'KE':
+        if pincode in DE_KE_pincode_list:
+            return DE_KE_pincode_list[pincode]
+        else:
+            return "Pincode " + str(pincode) + " not found in pincode_list"
+    elif country_code == 'JP' or country_code == 'MY':
+        if pincode in JP_MY_pincode_list:
+            return JP_MY_pincode_list[pincode]
+        else:
+            return "Pincode " + str(pincode) + " not found in pincode_list"
+    elif country_code == 'NL' or country_code == 'CZ':
+        if pincode in NL_CZ_pincode_list:
+            return NL_CZ_pincode_list[pincode]
+        else:
+            return "Pincode " + str(pincode) + " not found in pincode_list"
+    elif country_code == 'ES' or country_code == 'GB':
+        if pincode in ES_GB_pincode_list:
+            return ES_GB_pincode_list[pincode]
+        else:
+            return "Pincode " + str(pincode) + " not found in pincode_list"
+    elif country_code == 'TH' or country_code == 'CA' or country_code == 'CH':
+        if pincode in TH_CA_CH_pincode_list:
+            return TH_CA_CH_pincode_list[pincode]
+        else:
+            return "Pincode " + str(pincode) + " not found in pincode_list"
+    else:    
+        if pincode in pincode_list:
+            return pincode_list[pincode]
+        else:
+            return None
 
-def get_lat_lon_from_pincode(pincode):
-    if pincode in pincode_list:
-        return pincode_list[pincode]
-    else:
-        return None
+
+# def get_lat_lon_from_pincode(pincode):
+#     if pincode in pincode_list:
+#         return pincode_list[pincode]
+#     else:
+#         return None
 
 def validate_ifsc(ifsc_code):
     return len(ifsc_code) is 11 and str.upper(ifsc_code) in ifsc_list

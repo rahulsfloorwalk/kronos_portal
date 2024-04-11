@@ -72,9 +72,11 @@ def get_user_details_for_payment(payment):
         try:
             user_details['ifsc'] = payment.user.bankinfo.ifsc_code.upper()
             user_details['account_number'] = payment.user.bankinfo.account_number
+            user_details['paypal'] = payment.user.bankinfo.paypal.upper()
         except BankInfo.DoesNotExist:
             user_details['ifsc'] = ''
             user_details['account_number'] = ''
+            user_details['paypal'] = ''
     elif user.groups.filter(name=GROUP_NAME_AGENCY).exists():
         user_details['name'] = payment.user.agencyuser.agency.account_holder_name
         user_details['ifsc'] = payment.user.agencyuser.agency.ifsc_code.upper()
@@ -319,6 +321,7 @@ def get_datarow_for_payment(payment, payment_reason):
         payment.user.email,
         payment.user.id,
         "FWTRANSFER00" + str(payment.id),
+        user_details['paypal'],
     ]
     return datarow
 
@@ -328,7 +331,7 @@ def get_fieldnames():
                   'IFSC Code',
                   'Payout Amount', 'Payout Mode', 'Payout Narration',
                   'Notes',
-                  'Phone Number', 'Email ID', 'Contact Reference ID', 'Payout Reference ID']
+                  'Phone Number', 'Email ID', 'Contact Reference ID', 'Payout Reference ID','Paypal ID']
     return fieldnames
 
 

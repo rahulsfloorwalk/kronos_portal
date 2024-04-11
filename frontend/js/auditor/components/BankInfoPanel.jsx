@@ -8,11 +8,29 @@ import { pointerStyle } from "../../styles.js";
 import { Pencil, Check, Warning } from "../../components/Icons.jsx";
 
 import { fetchBankInfo } from "../actions/bank_info.js";
+import { fetchProfileInfo } from "../actions/profile_info.js";
 
-class BankInfoPanelBase extends React.Component{
+class BankInfoPanelBase extends React.Component {
 	static propTypes = {
 		dispatch: PropTypes.func.isRequired,
 		bankInfo: PropTypes.object.isRequired,
+		profileInfo: PropTypes.shape({
+			id: PropTypes.number,
+			date_of_birth: PropTypes.string,
+			first_name: PropTypes.string,
+			last_name: PropTypes.string,
+			gender: PropTypes.string,
+			education: PropTypes.string,
+			address: PropTypes.string,
+			marital_status: PropTypes.string,
+			pincode: PropTypes.string,
+			city: PropTypes.shape({
+				name: PropTypes.string,
+				country: PropTypes.string,
+			}),
+			is_complete: PropTypes.bool,
+			mobile_number: PropTypes.string,
+		}),
 	};
 
 	constructor(props) {
@@ -20,31 +38,34 @@ class BankInfoPanelBase extends React.Component{
 		this.state = {
 			hover: false,
 			expanded: false,
+			profileInfo: {}
 		};
 	}
 
 	toggleExpand = () => {
-		this.setState({expanded: !this.state.expanded});
+		this.setState({ expanded: !this.state.expanded });
 	};
 
 	setHover = (hover) => this.setState(prevState => Object.assign({}, prevState, { hover }));
 
-	componentDidMount(){
+	componentDidMount() {
 		this.props.dispatch(fetchBankInfo());
+		this.props.dispatch(fetchProfileInfo());
 	}
 
-	render(){
+	render() {
 		let panelClass = this.props.bankInfo.is_complete ? "panel-success-hoverable" : "panel-default";
-		let panelIcon = this.props.bankInfo.is_complete ? <Check/> : <Warning/>;
-		if(this.props.bankInfo.is_complete){
+		let panelIcon = this.props.bankInfo.is_complete ? <Check /> : <Warning />;
+		if (this.props.bankInfo.is_complete) {
 			panelClass = this.props.bankInfo.is_valid ? panelClass : "panel-danger";
-			panelIcon = this.props.bankInfo.is_valid ? panelIcon : <Warning/>;
+			panelIcon = this.props.bankInfo.is_valid ? panelIcon : <Warning />;
 		}
 
+		let profileInfoId = this.props.profileInfo && this.props.profileInfo.id;
 		return (
 			<div className={"panel " + panelClass}>
 				<div className="panel-heading" onMouseEnter={() => this.setHover(true)} onMouseLeave={() => this.setHover(false)} style={pointerStyle} onClick={this.toggleExpand}>
-					{this.state.expanded || !this.props.bankInfo.is_complete || !this.props.bankInfo.is_valid ? <Link to="details/bank/edit" className="btn btn-default pull-right"><Pencil/> Edit</Link> : null }
+					{this.state.expanded || !this.props.bankInfo.is_complete || !this.props.bankInfo.is_valid ? <Link to="details/bank/edit" className="btn btn-default pull-right"><Pencil /> Edit</Link> : null}
 					<h4>{panelIcon} Payment Details</h4>
 				</div>
 				{ this.state.expanded || !this.props.bankInfo.is_complete || !this.props.bankInfo.is_valid ?
@@ -52,25 +73,52 @@ class BankInfoPanelBase extends React.Component{
 						<colgroup>
 							<col style={{width:"40%"}}/>
 						</colgroup>
-						<tbody>
-							<tr><td colSpan={2}>All audit fees and reimbursements will be transferred to this account. Please ensure these details are accurate and up to date.</td></tr>
-							<tr><td className="text-right text-muted" style={{"width":"40%"}}>Bank Name:</td><th>{ this.props.bankInfo.bank_name_from_ifsc }</th></tr>
-							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>
-							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Account Number:</td><th>{ this.props.bankInfo.account_number }</th></tr>
-							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>IFSC Code:</td><th>{ this.props.bankInfo.ifsc_code }</th></tr>
-							<tr className={this.props.bankInfo.pan_number && !this.props.bankInfo.is_pan_card_valid ? "danger" : "" }>
-								<td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Pan Number:</td>
-								<th>{ this.props.bankInfo.pan_number }</th>
-							</tr>
-						</tbody>
+						{/* {this.props.profileInfo.id? */}
+						{profileInfoId?
+							this.props.profileInfo.city  && this.props.profileInfo.city.country !=="IN" ?
+								(
+									<tbody>
+										<tr><td colSpan={2}>All audit fees and reimbursements will be transferred to this account. Please ensure these details are accurate and up to date.</td></tr>
+										<tr><td className="text-right text-muted" style={{"width":"40%"}}>Paypal ID:</td><th>{ this.props.bankInfo.paypal }</th></tr>
+									</tbody>
+								)
+								:
+								(
+									<tbody>
+										<tr><td colSpan={2}>All audit fees and reimbursements will be transferred to this account. Please ensure these details are accurate and up to date.</td></tr>
+										<tr><td className="text-right text-muted" style={{"width":"40%"}}>Bank Name:</td><th>{ this.props.bankInfo.bank_name_from_ifsc }</th></tr>
+										<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>
+										<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Account Number:</td><th>{ this.props.bankInfo.account_number }</th></tr>
+										<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>IFSC Code:</td><th>{ this.props.bankInfo.ifsc_code }</th></tr>
+										<tr className={this.props.bankInfo.pan_number && !this.props.bankInfo.is_pan_card_valid ? "danger" : "" }>
+											<td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Pan Number:</td>
+											<th>{ this.props.bankInfo.pan_number }</th>
+										</tr>
+									</tbody>
+								)
+							:
+							(
+								<tbody>
+									<tr><td colSpan={2}>All audit fees and reimbursements will be transferred to this account. Please ensure these details are accurate and up to date.</td></tr>
+									<tr><td className="text-right text-muted" style={{"width":"40%"}}>Bank Name:</td><th>{ this.props.bankInfo.bank_name_from_ifsc }</th></tr>
+									<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>
+									<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Account Number:</td><th>{ this.props.bankInfo.account_number }</th></tr>
+									<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>IFSC Code:</td><th>{ this.props.bankInfo.ifsc_code }</th></tr>
+									<tr className={this.props.bankInfo.pan_number && !this.props.bankInfo.is_pan_card_valid ? "danger" : "" }>
+										<td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Pan Number:</td>
+										<th>{ this.props.bankInfo.pan_number }</th>
+									</tr>
+								</tbody>
+							)
+						}
 					</table>
 					: null }
-				{ this.props.bankInfo.is_complete && !this.props.bankInfo.is_valid ?
+				{this.props.bankInfo.is_complete && !this.props.bankInfo.is_valid ?
 					<div className="panel-footer">
 						<b className="">Payments will not be processed until valid details are provided.</b>
 					</div>
-					: null }
-				{ this.props.bankInfo.is_complete ? null :
+					: null}
+				{this.props.bankInfo.is_complete ? null :
 					<div className="panel-footer">
 						<p className="text-danger"><b>Please complete your payment information.</b></p>
 					</div>
@@ -80,9 +128,10 @@ class BankInfoPanelBase extends React.Component{
 	}
 }
 
-var mapStoreToProps = function(store){
+var mapStoreToProps = function (store) {
 	return {
-		bankInfo: store.bankInfo
+		bankInfo: store.bankInfo,
+		profileInfo: store.profileInfo,
 	};
 };
 

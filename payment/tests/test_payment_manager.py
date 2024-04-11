@@ -73,12 +73,13 @@ class PaymentManagerTestCase(TestCase):
 
     def test_get_user_details_for_payment_for_auditor_user(self):
         audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)
-        mommy.make(BankInfo, user=self.auditor_user, account_holder_name="foobar", account_number="123454321", ifsc_code="SBIN0001")
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name="foobar", account_number="123454321", ifsc_code="SBIN0001",paypal="fw@paypal.in")
         payment = mommy.make(Payment, audit_store=audit_store, status=Payment.PENDING, user=self.auditor_user)
         user_details = payment_service.get_user_details_for_payment(payment)
         self.assertEqual('foo bar', user_details['name'])
         self.assertEqual('123454321', user_details['account_number'])
         self.assertEqual('SBIN0001', user_details['ifsc'])
+        self.assertEqual('fw@paypal.in', user_details['paypal'])
 
     def test_get_user_details_for_payment_for_agency_user(self):
         audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED, user=self.agency_user)

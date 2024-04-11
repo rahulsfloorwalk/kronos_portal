@@ -144,6 +144,11 @@ class ProfileInfo(Model, CompletableMixin):
     def get_pincode(self):
         return self.pincode
 
+    def get_country(self):
+        if self.city is not None:
+            return self.city.country
+        return None
+
     is_complete_attrs = [
         "first_name",
         "last_name",
@@ -354,6 +359,7 @@ class BankInfo(Model, CompletableMixin):
     account_number = CharField(db_column='account_number', max_length=20, blank=True, validators=[numericValidator])
     ifsc_code = CharField(db_column='ifsc_code', max_length=20, blank=True)
     pan_number = CharField(db_column='pan_number', max_length=10, blank=True)
+    paypal = CharField(db_column='paypal', max_length=30, blank=True, null=True)
 
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
@@ -530,7 +536,8 @@ class AuditApplication(Model):
     def distance(self):
         audit_store_pincode = self.audit.get_pincode_audit()
         auditor_pincode = self.profileinfo.get_pincode()
-        distance = geo.calculate_distance_from_pincode(audit_store_pincode, auditor_pincode)
+        country_code = self.profileinfo.get_country()
+        distance = geo.calculate_distance_from_pincode(audit_store_pincode, auditor_pincode,country_code)
         return distance
     def is_super_auditor(self):
         return self.profileinfo.is_super_auditor

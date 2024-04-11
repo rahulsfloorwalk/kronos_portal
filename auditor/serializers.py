@@ -228,6 +228,7 @@ class BankInfoSerializer(ModelSerializer):
             'is_pan_card_valid',
           #  'is_ifsc_code_valid',
             'is_complete',
+            'paypal'
         )
         read_only_fields = ('id', 'user_id')
 
@@ -254,9 +255,16 @@ class BankInfoSerializer(ModelSerializer):
     def validate(self, data):
         account_number = data.get('account_number', None)
         ifsc_code = data.get('ifsc_code', None)
-        if account_number and ifsc_code:
-            if self.context.get('current_user') is None:
-                raise TypeError("missing keyword argument 'current_user'")
+        paypal = data.get('paypal')
+
+        if account_number and ifsc_code and paypal is None:
+            profile_info = ProfileInfo.objects.get(user=self.context.get('current_user'))
+            if profile_info.city is not None and profile_info.city.country is not None and profile_info.city.country != "IN":
+                    return data
+        
+        # if account_number and ifsc_code:
+        #     if self.context.get('current_user') is None:
+        #         raise TypeError("missing keyword argument 'current_user'")
 
             user_id = self.context.get('current_user').id
             exists = BankInfo.objects.filter(account_number = account_number, ifsc_code = ifsc_code).exclude(user_id = user_id).exists()
@@ -265,7 +273,8 @@ class BankInfoSerializer(ModelSerializer):
                 raise ValidationError('Bank account details already exists')
         return data
 
-    def deserialize(self):
+
+    def deserialize(self,user):
         if self.context.get('current_user') is None:
             raise TypeError("missing keyword argument 'current_user'")
 
@@ -275,12 +284,30 @@ class BankInfoSerializer(ModelSerializer):
             bank_info = BankInfo()
             bank_info.user_id = self.context.get('current_user').id
 
-        # bank_info.bank_name = self.validated_data.get('bank_name', bank_info.bank_name)
-        bank_info.account_holder_name = self.validated_data.get('account_holder_name', bank_info.account_holder_name)
-        bank_info.account_number = self.validated_data.get('account_number', bank_info.account_number)
-        bank_info.ifsc_code = self.validated_data.get('ifsc_code', bank_info.ifsc_code)
-        bank_info.pan_number = self.validated_data.get('pan_number', bank_info.pan_number)
+        # bank_info.account_holder_name = self.validated_data.get('account_holder_name', bank_info.account_holder_name)
+        # bank_info.account_number = self.validated_data.get('account_number', bank_info.account_number)
+        # bank_info.ifsc_code = self.validated_data.get('ifsc_code', bank_info.ifsc_code)
+        # bank_info.pan_number = self.validated_data.get('pan_number', bank_info.pan_number)
+        # bank_info.paypal = self.validated_data.get('pan_number', bank_info.paypal)
 
+        # return bank_info
+
+        profile_info = ProfileInfo.objects.get(user=user)
+        if profile_info.city is not None and profile_info.city.country != "IN":
+            if not bank_info.account_number:
+                bank_info.account_holder_name = 'John Doe'
+                bank_info.account_number = '1234567890'
+                bank_info.ifsc_code = 'ABCDE1234F'
+                bank_info.pan_number = 'ABCFG1234H'
+                # bank_info.paypal = self.validated_data.get('paypal', bank_info.paypal)
+        else:
+            bank_info.account_holder_name = self.validated_data.get('account_holder_name', bank_info.account_holder_name)
+            bank_info.account_number = self.validated_data.get('account_number', bank_info.account_number)
+            bank_info.ifsc_code = self.validated_data.get('ifsc_code', bank_info.ifsc_code)
+            bank_info.pan_number = self.validated_data.get('pan_number', bank_info.pan_number)
+
+        bank_info.paypal = self.validated_data.get('paypal', bank_info.paypal)
+        bank_info.save()
         return bank_info
 
 

@@ -134,14 +134,13 @@ def delete(audit_id):
         raise AppLogicError("audit cannot be delete now") from e
 
 def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
-    try:
-        city = City.objects.get(pk=city_id)
-    except City.DoesNotExist as e:
-        raise ObjectNotFound from e
-    
+
+    city = City.objects.get(pk=city_id)
+    country_code = city.country
+
     if pincode is not None:
-        lat1=geo.get_lat_lon_from_pincode(pincode).get('lat')
-        lon1=geo.get_lat_lon_from_pincode(pincode).get('lon')
+        lat1=geo.get_lat_lon_from_pincode(pincode,country_code).get('lat')
+        lon1=geo.get_lat_lon_from_pincode(pincode,country_code).get('lon')
     else:
         lat1=city.lat
         lon1=city.lon
@@ -171,13 +170,13 @@ def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
     nearDis=[]
     for i in available_audits:
         if i.store.pincode:
-            if geo.get_lat_lon_from_pincode(i.store.pincode):
-                lat2=geo.get_lat_lon_from_pincode(i.store.pincode).get('lat')
-                lon2=geo.get_lat_lon_from_pincode(i.store.pincode).get('lon')
+            if geo.get_lat_lon_from_pincode(i.store.pincode,country_code):
+                lat2=geo.get_lat_lon_from_pincode(i.store.pincode,country_code).get('lat')
+                lon2=geo.get_lat_lon_from_pincode(i.store.pincode,country_code).get('lon')
         elif i.store.address and re.findall("\d{6}", i.store.address):
-            if geo.get_lat_lon_from_pincode(pincode).get('lat') and geo.get_lat_lon_from_pincode(pincode).get('lon'):
-                lat2=geo.get_lat_lon_from_pincode(pincode).get('lat')
-                lon2=geo.get_lat_lon_from_pincode(pincode).get('lon')
+            if geo.get_lat_lon_from_pincode(pincode,country_code).get('lat') and geo.get_lat_lon_from_pincode(pincode,country_code).get('lon'):
+                lat2=geo.get_lat_lon_from_pincode(pincode,country_code).get('lat')
+                lon2=geo.get_lat_lon_from_pincode(pincode,country_code).get('lon')
         elif i.store.city_id:
             city = City.objects.get(pk=i.store.city_id)
             if city:

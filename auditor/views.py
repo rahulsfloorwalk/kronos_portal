@@ -112,7 +112,7 @@ class BankInfoView(APIView):
     def post(self, request):
         bank_info_s = BankInfoSerializer(data=request.data, context={'current_user': request.user})
         bank_info_s.is_valid(raise_exception=True)
-        bank_info = bank_info_s.deserialize()
+        bank_info = bank_info_s.deserialize(request.user.id)
         bank_info = bank_info_service.save(bank_info)
         return Response(BankInfoSerializer(bank_info).data)
 

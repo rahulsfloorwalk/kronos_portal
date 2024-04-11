@@ -20,8 +20,10 @@ import { findAuditStoresByAuditCycleNew, getUserList } from "../service/audit_st
 import { acceptAllReports } from "../service/audit_store.js";
 import { findModerators } from "../service/moderator.js";
 import { getAuditStoreStatus } from "../../utils.js";
+import { findAuditStoresByAuditCycleReportList } from "../service/audit_store.js";
 
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
+import "../../../css/bs_overrides.scss";
 
 const moderatorPropShape = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -150,7 +152,9 @@ class AuditStoreList extends Component{
 		totalAuditStoreCount: 0,
 		loadMoreLoader: false,
 		start_date: "",
-		end_date: ""
+		end_date: "",
+		visibleReports: [],
+		auditReportRows: [],
 	};
 
 	setLoading = (loading) => {
@@ -172,6 +176,12 @@ class AuditStoreList extends Component{
 		});
 	};
 	componentDidMount(){
+		// let lastAuditId="";
+		// let status="";
+		// let userId= "";
+		// let start_date = "";
+		// let end_date = "";
+		// findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId, status, userId, start_date, end_date})
 		this.reloadReports(this.props.params.auditCycleId);
 		findModerators().then((moderators) => {
 			this.setState({ moderators });
@@ -179,6 +189,9 @@ class AuditStoreList extends Component{
 		getUserList(this.props.params.auditCycleId).then((userList) => {
 			this.setState({ userList });
 		});
+		// findAuditStoresByAuditCycleList(this.props.params.auditCycleId,{lastAuditId, status, userId, start_date, end_date}).then((result)=>{
+		// 	console.log("storessss",result)
+		// })
 	}
 	componentWillReceiveProps(nextProps){
 		if(nextProps.params.auditCycleId !== this.props.params.auditCycleId || (nextProps.location.state && nextProps.location.state.reload)){
@@ -334,7 +347,42 @@ class AuditStoreList extends Component{
 		});
 		this.reloadReports(this.props.params.auditCycleId);
 	};
-
+	// toggleAuditReportsVisibility(reportId) {
+	// 	this.setState(prevState =>
+	// 	({
+	// 		visibleReports: prevState.visibleReports.includes(reportId)
+	// 			? prevState.visibleReports.filter(id => id !== reportId)
+	// 			: [...prevState.visibleReports, reportId]
+	// 	}),
+	// 	 () =>
+	// 	 {	// Call the function only if the report is being opened
+	// 		if (this.state.visibleReports.includes(reportId)) {
+	// 			findAuditStoresByAuditCycleReportList(this.props.params.auditCycleId, reportId).then((result) => {
+	// 				console.log("3511111", result.audit_reports);
+	// 				this.setState({auditReportRows:result.audit_reports})
+	// 			});
+	// 		}
+	// 	}
+	// 	);
+	// }
+	toggleAuditReportsVisibility(reportId) {
+		if (!this.state.visibleReports.includes(reportId)) {
+			findAuditStoresByAuditCycleReportList(this.props.params.auditCycleId, reportId)
+				.then((result) => {
+					const updatedAuditReportRows = { ...this.state.auditReportRows };
+					updatedAuditReportRows[reportId] = result.audit_reports;
+					this.setState({
+						auditReportRows: updatedAuditReportRows,
+						visibleReports: [...this.state.visibleReports, reportId]
+					});
+				});
+		} else {
+			// If the report is already visible, simply toggle its visibility
+			this.setState(prevState => ({
+				visibleReports: prevState.visibleReports.filter(id => id !== reportId)
+			}));
+		}
+	}
 	render(){
 		let rows = [];
 		let loadMoreButton;
@@ -346,24 +394,24 @@ class AuditStoreList extends Component{
 		if(reports.length > 0){
 			for(let report of reports){
 				let audit_report_rows = [];
-				if(report.reports.length > 0){
+				if (this.state.visibleReports.includes(report.id)) {
 					audit_report_rows.push(
-						<AuditStoreTable auditStores={report.reports}
+						<AuditStoreTable auditStores={this.state.auditReportRows[report.id] || []}
 							key={report.id}
 							onUpdate={this.auditStoreUpdated}
-							moderators={this.state.moderators}/>
+							moderators={this.state.moderators} />
 					);
 				}
-				if(audit_report_rows.length > 0){
-					rows.push(
-						<div className="panel panel-default table-responsive" key={report.id}>
-							<div className="panel-heading">
-								<b>{report.store_name}</b>, {report.store_address}, {report.store_city} <span className="pull-right"><b>[Audit Count - {report.store_audit_count}]</b></span>
-							</div>
+				rows.push(
+					<div className="panel panel-default table-responsive" key={report.id}>
+						<div className="panel-heading" onClick={() => this.toggleAuditReportsVisibility(report.id)} style={{cursor:"pointer"}}>
+							<b>{report.store_name}</b>, {report.store_address}, {report.store_city} <span className="pull-right"><b>[Audit Count - {report.store_audit_count}]</b></span>
+						</div>
+						<div className={`panel-body ${this.state.visibleReports.includes(report.id) ? "" : "hidden"}`}>
 							{audit_report_rows}
 						</div>
-					);
-				}
+					</div>
+				);
 			}
 			if(reports.length !== this.state.totalAuditStoreCount){
 				loadMoreButton = (<button className="btn btn-default" onClick={this.loadMoreReports}>
