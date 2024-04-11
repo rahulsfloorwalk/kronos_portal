@@ -58,9 +58,9 @@ def get_distance_from_lat1_lon1_and_lat2_lon2(lat1,lon1,lat2,lon2):
     distance = round(R * c, 2)
     return distance
 
-def calculate_distance_from_pincode(pincode1, pincode2):
-    lat_lon1 = get_lat_lon_from_pincode(pincode1)
-    lat_lon2 = get_lat_lon_from_pincode(pincode2)
+def calculate_distance_from_pincode(pincode1, pincode2,country_code):
+    lat_lon1 = get_lat_lon_from_pincode(pincode1,country_code)
+    lat_lon2 = get_lat_lon_from_pincode(pincode2,country_code)
     if lat_lon1 and lat_lon2:
         distance = get_distance_from_lat_lon(lat_lon1,lat_lon2)
         distance = distance

@@ -15,6 +15,8 @@ from audit_store import service as audit_store_service
 from audit_store import service_manager
 from ..service import moderator as moderator_service
 from auditor.service import profile_info_service
+from rest_framework.permissions import AllowAny,IsAuthenticated
+
 
 from attachment.service import set_attachment_by_proof_tag
 
@@ -57,6 +59,36 @@ class AuditStoreByAuditCycleNew(APIView):
                                                                    request.GET.get('userId'),
                                                                    request.GET.get('start_date'),
                                                                    request.GET.get('end_date'),
+                                                                   request.GET.get('is_load_more'),
+                                                                   request.GET.get('last_total_count'))
+        return Response(audit_stores)
+
+class AuditStoreListByAuditCycle(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, audit_cycle_id, format=None):
+        audit_stores = audit_store_service.find_audit_store_by_audit_cycle_id(audit_cycle_id,
+                                                                   request.GET.get('lastAuditId'),
+                                                                   request.GET.get('status'),
+                                                                   request.GET.get('userId'),
+                                                                   request.GET.get('start_date'),
+                                                                   request.GET.get('end_date'),
+                                                                   request.GET.get('is_load_more'),
+                                                                   request.GET.get('last_total_count'))
+        return Response(audit_stores)
+
+class AuditListByAuditCycleAuditStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, audit_cycle_id,audit_store_id, format=None):
+        audit_stores = audit_store_service.find_audit_by_audit_cycle_audit_store_id(audit_cycle_id,audit_store_id,
+                                                                   request.GET.get('userId'),
                                                                    request.GET.get('is_load_more'),
                                                                    request.GET.get('last_total_count'))
         return Response(audit_stores)

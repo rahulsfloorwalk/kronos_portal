@@ -9,6 +9,7 @@ import FormInput from "../../components/FormInput.jsx";
 import SaveButton from "../../components/SaveButton.jsx";
 import Modal from "../../components/Modal.jsx";
 import Loading from "../../components/Loading.jsx";
+import { _fetchProfileInfo } from "../actions/profile_info.js";
 
 export class BankInfoForm extends React.Component {
 
@@ -27,12 +28,16 @@ export class BankInfoForm extends React.Component {
 			errors: {},
 			loading: true,
 			saving: false,
+			profileInfo: {},
 		};
 	}
 
 	componentDidMount() {
 		this.setLoading(true);
 		this.props.dispatch(fetchBankInfo()).always(() => this.setLoading(false));
+		_fetchProfileInfo().then(result => {
+			this.setState({ profileInfo: result });
+		});
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -72,16 +77,43 @@ export class BankInfoForm extends React.Component {
 				{ this.state.loading ?
 					<Loading/>
 					:
-					<form onSubmit={this.onSubmit}>
-						{ typeof(this.state.errors.non_field_errors) != "undefined" ?
-							<p className="text-danger">{this.state.errors.non_field_errors}</p>
-							: null}
-						<FormInput label="Account Holder Name" required_mark={true} maxLength="40" type="text" value={this.state.form.account_holder_name} name="account_holder_name" onChange={this.inputChanged} errors={this.state.errors.account_holder_name} readOnly={this.state.saving}/>
-						<FormInput label="Account Number" required_mark={true} maxLength="20" type="text" value={this.state.form.account_number} name="account_number" onChange={this.inputChanged} errors={this.state.errors.account_number} readOnly={this.state.saving}/>
-						<FormInput label="IFSC Code" required_mark={true} maxLength="11" type="text" value={this.state.form.ifsc_code} name="ifsc_code" onChange={this.inputChanged} errors={this.state.errors.ifsc_code} readOnly={this.state.saving}/>
-						<FormInput label="Pan Number" required_mark={true} maxLength="10" type="text" value={this.state.form.pan_number} name="pan_number" onChange={this.inputChanged} errors={this.state.errors.pan_number} readOnly={this.state.saving}/>
-						<SaveButton/>
-					</form>
+					Object.entries(this.state.profileInfo).length>0 ?
+						this.state.profileInfo.city && this.state.profileInfo.city.country !=="IN" ?
+							(
+								<form onSubmit={this.onSubmit}>
+									{ typeof(this.state.errors.non_field_errors) != "undefined" ?
+										<p className="text-danger">{this.state.errors.non_field_errors}</p>
+										: null}
+									<FormInput label="Paypal Link" required_mark={true} maxLength="40" type="text" value={this.state.form.paypal} name="paypal" onChange={this.inputChanged} errors={this.state.errors.paypal} readOnly={this.state.saving}/>
+									<SaveButton/>
+								</form>
+							)
+							:
+							(
+								<form onSubmit={this.onSubmit}>
+									{ typeof(this.state.errors.non_field_errors) != "undefined" ?
+										<p className="text-danger">{this.state.errors.non_field_errors}</p>
+										: null}
+									<FormInput label="Account Holder Name" required_mark={true} maxLength="40" type="text" value={this.state.form.account_holder_name} name="account_holder_name" onChange={this.inputChanged} errors={this.state.errors.account_holder_name} readOnly={this.state.saving}/>
+									<FormInput label="Account Number" required_mark={true} maxLength="20" type="text" value={this.state.form.account_number} name="account_number" onChange={this.inputChanged} errors={this.state.errors.account_number} readOnly={this.state.saving}/>
+									<FormInput label="IFSC Code" required_mark={true} maxLength="11" type="text" value={this.state.form.ifsc_code} name="ifsc_code" onChange={this.inputChanged} errors={this.state.errors.ifsc_code} readOnly={this.state.saving}/>
+									<FormInput label="Pan Number" required_mark={true} maxLength="10" type="text" value={this.state.form.pan_number} name="pan_number" onChange={this.inputChanged} errors={this.state.errors.pan_number} readOnly={this.state.saving}/>
+									<SaveButton/>
+								</form>
+							)
+						:
+						(
+							<form onSubmit={this.onSubmit}>
+								{ typeof(this.state.errors.non_field_errors) != "undefined" ?
+									<p className="text-danger">{this.state.errors.non_field_errors}</p>
+									: null}
+								<FormInput label="Account Holder Name" required_mark={true} maxLength="40" type="text" value={this.state.form.account_holder_name} name="account_holder_name" onChange={this.inputChanged} errors={this.state.errors.account_holder_name} readOnly={this.state.saving}/>
+								<FormInput label="Account Number" required_mark={true} maxLength="20" type="text" value={this.state.form.account_number} name="account_number" onChange={this.inputChanged} errors={this.state.errors.account_number} readOnly={this.state.saving}/>
+								<FormInput label="IFSC Code" required_mark={true} maxLength="11" type="text" value={this.state.form.ifsc_code} name="ifsc_code" onChange={this.inputChanged} errors={this.state.errors.ifsc_code} readOnly={this.state.saving}/>
+								<FormInput label="Pan Number" required_mark={true} maxLength="10" type="text" value={this.state.form.pan_number} name="pan_number" onChange={this.inputChanged} errors={this.state.errors.pan_number} readOnly={this.state.saving}/>
+								<SaveButton/>
+							</form>
+						)
 				}
 			</Modal>
 		);

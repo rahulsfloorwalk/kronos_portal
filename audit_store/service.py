@@ -165,6 +165,130 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, star
     return {'audit_store_list': audit_store_list_obj_slice, 'total_audit_count': total_audit_count}
 
 
+def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, user_id, start_date, end_date,is_load_more,last_total_count):
+    total_audit_count = 0
+    audit_store_list_obj_slice = []
+    if status != "" and last_audit_id != "":
+        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id, audit_stores__status=status) \
+            .order_by('id', 'store__city__name', 'store__name','count') \
+            .select_related('store__name', 'store__address', 'store__city__name') \
+            .values('id', 'store__name', 'store__address', 'store__city__name','count')
+    elif status != "":
+        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, audit_stores__status=status).order_by('id', 'store__city__name', 'store__name') \
+            .select_related('store__name', 'store__address', 'store__city__name') \
+            .values('id', 'store__name', 'store__address', 'store__city__name','count') \
+            .distinct('id')
+        total_audit_count = audit_list_obj.count()
+    elif last_audit_id != "":
+        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id).order_by('id', 'store__city__name', 'store__name') \
+            .select_related('store__name', 'store__address', 'store__city__name') \
+            .values('id', 'store__name', 'store__address', 'store__city__name','count')
+    else:
+        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id).order_by('id', 'store__city__name', 'store__name') \
+            .select_related('store__name', 'store__address', 'store__city__name') \
+            .values('id', 'store__name', 'store__address', 'store__city__name','count')
+        total_audit_count = audit_list_obj.count()
+    if user_id != "":
+        audit_list_obj = audit_list_obj.filter(audit_stores__user__id=user_id).distinct('id')
+        total_audit_count = audit_list_obj.count()
+    audit_list = audit_list_obj[0:100]
+    if audit_list_obj.filter(count__gte=50):
+        audit_list = audit_list_obj[0:2]
+    if audit_list_obj.filter(count__gte=20):
+        audit_list = audit_list_obj[0:5]
+    if audit_list_obj.filter(count__gte=10):
+        audit_list = audit_list_obj[0:10]
+    if audit_list_obj.filter(count__gte=2):
+        audit_list = audit_list_obj[0:50]
+    audit_id_list = [audit['id'] for audit in audit_list]
+
+    if start_date !="" and end_date !="":
+        audit_store_obj = AuditStore.objects.filter(audit__id__in=audit_id_list, audit_date__range=[start_date, end_date]) \
+            .values('id', 'status', 'auto_assigned','instant_assigned','audit_date','report_revert_count', 'audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number','user__profileinfo__certification_score', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
+    else:
+        audit_store_obj = AuditStore.objects.filter(audit__id__in=audit_id_list) \
+            .values('id', 'status','auto_assigned','instant_assigned', 'audit_date','report_revert_count','audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number','user__profileinfo__certification_score', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
+    if user_id != "":
+        audit_store_obj = audit_store_obj.filter(user = user_id)
+    if status != "":
+        audit_store_obj = audit_store_obj.filter(status = status)
+    audit_store_list = []
+    for audit in audit_list:
+        audit_store_dict = {}
+        audit_report_list = []
+        audit_store_dict['id'] = audit['id']
+        audit_store_dict['store_name'] = audit['store__name']
+        audit_store_dict['store_address'] = audit['store__address']
+        audit_store_dict['store_city'] = audit['store__city__name']
+        audit_store_dict['store_audit_count'] = audit['count']
+       
+        # audit_store_dict['reports'] = audit_report_list
+        audit_store_list.append(audit_store_dict)
+        if is_load_more:
+            start  = int(last_total_count)
+            end = int(last_total_count) + 20
+            audit_store_list_obj_slice = audit_store_list[start:end]
+        else:
+            audit_store_list_obj_slice = audit_store_list[0:20]
+    return {'audit_store_list': audit_store_list_obj_slice, 'total_audit_count': total_audit_count}
+
+
+def find_audit_by_audit_cycle_audit_store_id(audit_cycle_id, audit_store_id,user_id,is_load_more,last_total_count):
+    audit_reports = []
+    total_audit_count = 0
+
+    audit_store_obj = AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle_id, audit__id=audit_store_id)
+    total_audit_count = audit_store_obj.count()
+
+    for audit_report in audit_store_obj:
+        audit_report_dict = {}
+        audit_report_dict['id'] = audit_report.id
+        audit_report_dict['status'] = audit_report.status
+        audit_report_dict['auto_assigned'] = audit_report.auto_assigned
+        audit_report_dict['instant_assigned'] = audit_report.instant_assigned
+        audit_report_dict['audit_date'] = audit_report.audit_date
+        audit_report_dict['report_revert_count'] = audit_report.report_revert_count
+
+        # audit_report_obj = AuditStore.objects.get(pk=audit_report['id'])
+        users_with_perms = get_users_with_perms(audit_report, attach_perms=True)
+        moderator = [user.id for user, perms in users_with_perms.items() if "moderator_manage" in perms]
+        audit_report_dict['assigned_to_moderator'] = moderator
+        if audit_report.user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+        # if audit_report['user__groups__name'] == GROUP_NAME_AUDITOR:
+            audit_report_dict['user'] = {
+                'id': audit_report.user.id,
+                'email': audit_report.user.email,
+                'profileinfo': {
+                    'first_name': audit_report.user.profileinfo.first_name,
+                    'last_name': audit_report.user.profileinfo.last_name,
+                    'mobile_number': audit_report.user.profileinfo.mobile_number,
+                    'certification_score': audit_report.user.profileinfo.certification_score
+                },
+                'agencyuser': None,
+                'mobile_numbers': []
+            }
+        else:
+            audit_report_dict['user'] = {
+                'id': audit_report.user.id,
+                'email': audit_report.user.email,
+                'agencyuser': {'full_name': audit_report.user.agencyuser.full_name},
+                'profileinfo': None,
+                'mobile_numbers': [{
+                    'mobile_number': num.mobile_number,
+                    'is_verified': num.is_verified
+                } for num in audit_report.user.mobile_numbers.all()]
+            }
+
+        audit_reports.append(audit_report_dict)
+        if is_load_more:
+            start  = int(last_total_count)
+            end = int(last_total_count) + 20
+            audit_reports = audit_reports[start:end]
+        else:
+            audit_reports = audit_reports[0:20]
+    return {'audit_reports': audit_reports, 'total_audit_count': total_audit_count}
+
+
 def find_by_id_for_auditor(audit_store_id, user_id):
     try:
         return AuditStore.objects.get(
