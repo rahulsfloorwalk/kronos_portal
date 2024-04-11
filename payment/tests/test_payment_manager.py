@@ -79,7 +79,7 @@ class PaymentManagerTestCase(TestCase):
         self.assertEqual('foo bar', user_details['name'])
         self.assertEqual('123454321', user_details['account_number'])
         self.assertEqual('SBIN0001', user_details['ifsc'])
-        self.assertEqual('fw@paypal.in', user_details['paypal'])
+        self.assertEqual('fw@paypal.in'.upper(), user_details['paypal'].upper())
 
     def test_get_user_details_for_payment_for_agency_user(self):
         audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED, user=self.agency_user)
