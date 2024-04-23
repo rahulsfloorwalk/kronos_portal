@@ -350,7 +350,7 @@ class AuditStoreDetails extends React.Component {
 								</div>
 							</div>
 							<div className="form-group">
-								<label className="control-label">Please rate your experience with audit training and understanding the questionnaire.</label>
+								<label className="control-label">Rate us on co-ordinating with our team for any understanding</label>
 								<div className="star-rating star-rating-lg">
 									<input type="radio" id="5-stars" name="rating" onChange={() => this.ratingSelected(5)} checked={this.state.rating === 5}/>
 									<label htmlFor="5-stars" className="star">&#9733;</label>
