@@ -19,7 +19,7 @@ from auditor.serializers import AttachmentSerializer
 from auditor.serializers import AuditStoreSerializer
 from auditor.serializers import NotificationSerializer
 from auditor.serializers import PaymentSerializer
-from auditor.serializers import ProfileInfoSerializer, AdditionalInfoDeSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer,AppliedAuditSerializer, PreferencesSerializer
+from auditor.serializers import ProfileInfoSerializer, AdditionalInfoDeSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer,AppliedAuditSerializer, PreferencesSerializer,ReportFeedbackByAuditorSerializer,ReportFeedbackByAuditorDeserializer
 from auditor.serializers import ResolutionSerializer,OccupationSerializer,DistanceSerializer,CarCostSerializer
 from auditor.serializers import ReportSectionSerializer, ReportSectionDeSerializer
 from auditor.serializers import ReferralSerializer
@@ -46,7 +46,7 @@ from auditor.service import bank_info_service
 from audit.service import audit_cycle_proof_tag
 from manager.service import instance_approved_application
 # from .serializers import AuditCycleProoftagListSerializer
-from audit_store.models import AuditStore
+from audit_store.models import AuditStore,ReportFeedbackByAuditor
 from answer.models import ReportSection
 from datetime import datetime, timedelta
 import registration.service.auditor as auditor_service
@@ -55,6 +55,7 @@ from manager.models import ProofTag
 from django.db import IntegrityError
 # from rest_framework.permissions import AllowAny
 from auditor.serializers import AuditProoftagSerializer
+from django.shortcuts import get_object_or_404
 
 
 # Get the current date
@@ -97,6 +98,25 @@ class AdditionalInfoView(APIView):
         additional_info.save()
         return Response(AdditionalInfoSerializer(additional_info).data)
 
+class AuditReportFeedback(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+    def get(self,request, audit_store_id,format=None):
+        additional_info = additional_info_service.find_report_feedback_by_user_id(request.user.id)
+        # report_feedback = ReportFeedbackByAuditor.objects.get(user=request.user.id, audit_store__id=audit_store_id)
+        report_feedback = get_object_or_404(ReportFeedbackByAuditor, user=request.user.id, audit_store__id=audit_store_id)
+        return Response(ReportFeedbackByAuditorSerializer(report_feedback).data)
+
+    def post(self, request,audit_store_id):
+        report_feedback_ds= ReportFeedbackByAuditorDeserializer(data=request.data, context={'current_user': request.user,'audit_store_id': audit_store_id})
+        report_feedback_ds.is_valid(raise_exception=True)
+        report_feedback = report_feedback_ds.deserialize()
+        report_feedback.save()
+        return Response(ReportFeedbackByAuditorSerializer(report_feedback).data)
 
 class BankInfoView(APIView):
     permission_classes = [HasGroupPermission]

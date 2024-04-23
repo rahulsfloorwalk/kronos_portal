@@ -1,5 +1,5 @@
 from registration.service import auditor as auditor_service
-
+from audit_store.models import AuditStore,ReportFeedbackByAuditor
 from ..models import AdditionalInfo
 
 def find_additional_info_by_user_id(user_id):
@@ -8,3 +8,12 @@ def find_additional_info_by_user_id(user_id):
         return AdditionalInfo.objects.get(user_id=user.id)
     except AdditionalInfo.DoesNotExist as e:
         return AdditionalInfo(user_id=user.id)
+    
+def find_report_feedback_by_user_id(user_id):
+    try:
+        user = auditor_service.find_auditor_by_id(user_id)
+        return ReportFeedbackByAuditor.objects.filter(user_id=user.id).first()
+    except ReportFeedbackByAuditor.DoesNotExist:
+        return ReportFeedbackByAuditor(user_id=user.id)
+
+

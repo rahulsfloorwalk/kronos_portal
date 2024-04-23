@@ -172,3 +172,7 @@ export function arrangeAttachment(auditStoreId){
 export function FetchGuidlineByAuditStore(auditStoreId){
 	return $.get(url.api_base_path + `auditor/audit_store/${auditStoreId}/guildline`);
 }
+
+export function FetchFeedbackByAuditStore(auditStoreId){
+	return $.get(url.api_base_path + `auditor/audit_store/${auditStoreId}/report_feedback`);
+}
