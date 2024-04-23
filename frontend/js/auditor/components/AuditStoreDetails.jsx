@@ -6,7 +6,7 @@ import Alert from "react-s-alert";
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 
-import { fetchAuditStore, acknowledgeAuditStore, submitAuditStore, arrangeAttachment,FetchGuidlineByAuditStore } from "../actions/audit_store.js";
+import { fetchAuditStore, acknowledgeAuditStore, submitAuditStore, arrangeAttachment,FetchGuidlineByAuditStore, FetchFeedbackByAuditStore } from "../actions/audit_store.js";
 
 import Loading from "../../components/Loading.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
@@ -19,6 +19,12 @@ import SectionList from "./questionnaire/SectionList.jsx";
 
 import { getAuditType } from "../../utils.js";
 import { auditStorePropType } from "../prop_types";
+// import { saveReportModal } from "../service/report_section.js";
+import Modal from "../../components/Modal.jsx";
+import SaveButton from "../../components/SaveButton.jsx";
+// import FormInput from "../../components/FormInput.jsx";
+import { saveReportModal } from "../service/report_section.js";
+// import FormSelect from "../../components/FormSelect.jsx";
 
 class AuditStoreDetails extends React.Component {
 	static propTypes = {
@@ -34,12 +40,22 @@ class AuditStoreDetails extends React.Component {
 		submitMessage : "",
 		submitStatus: "",
 		showErrors: false,
-		guideline:""
+		guideline:"",
+		submitModalOpen: false,
+		submitModalform:"",
 	};
 
 	componentDidMount() {
 		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
 		FetchGuidlineByAuditStore(this.props.params.auditStoreId).then((guideline)=> this.setState({guideline:guideline}));
+
+		FetchFeedbackByAuditStore(this.props.params.auditStoreId).then((report_feedback) => {
+			this.setState({
+				understanding_rating: report_feedback.audit_understanding,
+				rating: report_feedback.coordination,
+				submitModalform : report_feedback.portal_accessibility
+			});
+		});
 	}
 
 	submitButtonClicked = () => {
@@ -51,6 +67,7 @@ class AuditStoreDetails extends React.Component {
 				submitStatus: "success",
 			});
 			Alert.success("Report submitted successfully");
+			this.setState({ submitModalOpen: true});
 		},(err) => {
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
@@ -90,6 +107,32 @@ class AuditStoreDetails extends React.Component {
 	openPDFInNewTab = () => {
 		const { guideline } = this.state;
 		window.open(guideline, "_blank");
+	};
+	inputChanged = (e) => {
+		this.setState({
+			// submitModalform: Object.assign({}, this.state.submitModalform, {
+			// 	[e.target.name] : e.target.value,
+			// })
+			submitModalform: e.target.value
+		});
+	};
+
+	onSubmit = (e) => {
+		e.preventDefault();
+		const { auditStoreId } = this.props.params;
+		saveReportModal(auditStoreId, this.state.understanding_rating,this.state.rating,this.state.submitModalform).then(() => {
+			// Handle success if needed;
+		});
+		// .catch((error) => {
+		// 	// Handle error if needed
+		// });
+		this.setState({submitModalOpen:false});
+	};
+	ratingSelected = (rating) => {
+		this.setState({rating});
+	};
+	understandingRatingSelected = (understanding_rating) => {
+		this.setState({understanding_rating});
 	};
 	render() {
 		if(! this.props.auditStore){
@@ -284,6 +327,50 @@ class AuditStoreDetails extends React.Component {
 				<SectionList auditStoreId={this.props.params.auditStoreId} showErrors={this.state.showErrors} editable={this.isReportEditable()} auditStore={this.props.auditStore}/>
 				{buttonPanel}
 				{this.props.children}
+				{this.state.submitModalOpen ?
+					<Modal modalTitle="Please rate your experience with us" onClose={()=>this.setState({submitModalOpen:false})}>
+						<div className="form-group"><big><i>fields marked <b className="text-danger">✳</b> must be filled to apply to audits</i></big></div>
+
+						<form onSubmit={this.onSubmit}>
+							{/* <FormInput label="Audit Guidelines & Questionnaire understanding" type="number" value={this.state.submitModalform.audit_understanding} name="audit_understanding" onChange={this.inputChanged} /> */}
+
+							<div className="form-group">
+								<label className="control-label">Please rate your experience with audit training and understanding the questionnaire :</label>
+								<div className="star-rating star-rating-lg">
+									<input type="radio" id="understanding_5-stars" name="understanding_rating" onChange={() => this.understandingRatingSelected(5)} checked={this.state.understanding_rating === 5}/>
+									<label htmlFor="understanding_5-stars" className="star">&#9733;</label>
+									<input type="radio" id="understanding_4-stars" name="understanding_rating" onChange={() => this.understandingRatingSelected(4)} checked={this.state.understanding_rating === 4}/>
+									<label htmlFor="understanding_4-stars" className="star">&#9733;</label>
+									<input type="radio" id="understanding_3-stars" name="understanding_rating" onChange={() => this.understandingRatingSelected(3)} checked={this.state.understanding_rating === 3}/>
+									<label htmlFor="understanding_3-stars" className="star">&#9733;</label>
+									<input type="radio" id="understanding_2-stars" name="understanding_rating" onChange={() => this.understandingRatingSelected(2)} checked={this.state.understanding_rating === 2}/>
+									<label htmlFor="understanding_2-stars" className="star">&#9733;</label>
+									<input type="radio" id="understanding_1-star" name="understanding_rating" onChange={() => this.understandingRatingSelected(1)} checked={this.state.understanding_rating === 1}/>
+									<label htmlFor="understanding_1-star" className="star">&#9733;</label>
+								</div>
+							</div>
+							<div className="form-group">
+								<label className="control-label">Please rate your experience with audit training and understanding the questionnaire.</label>
+								<div className="star-rating star-rating-lg">
+									<input type="radio" id="5-stars" name="rating" onChange={() => this.ratingSelected(5)} checked={this.state.rating === 5}/>
+									<label htmlFor="5-stars" className="star">&#9733;</label>
+									<input type="radio" id="4-stars" name="rating" onChange={() => this.ratingSelected(4)} checked={this.state.rating === 4}/>
+									<label htmlFor="4-stars" className="star">&#9733;</label>
+									<input type="radio" id="3-stars" name="rating" onChange={() => this.ratingSelected(3)} checked={this.state.rating === 3}/>
+									<label htmlFor="3-stars" className="star">&#9733;</label>
+									<input type="radio" id="2-stars" name="rating" onChange={() => this.ratingSelected(2)} checked={this.state.rating === 2}/>
+									<label htmlFor="2-stars" className="star">&#9733;</label>
+									<input type="radio" id="1-star" name="rating" onChange={() => this.ratingSelected(1)} checked={this.state.rating === 1}/>
+									<label htmlFor="1-star" className="star">&#9733;</label>
+								</div>
+							</div>
+							<textarea rows="3" maxLength="5096" className="form-control" name="Any other feedback " value={this.state.submitModalform} onChange={this.inputChanged} placeholder="Any other feedback" />
+							<SaveButton />
+						</form>
+
+					</Modal>
+					:
+					null}
 			</div>
 		);
 	}

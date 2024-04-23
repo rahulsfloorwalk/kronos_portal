@@ -6,11 +6,12 @@ from rest_framework import serializers
 from notifications.models import Notification
 
 from registration.models import GROUP_NAME_AUDITOR
+from django.utils import timezone
 
 from manager.models import City, ProofTag
 from audit.models import Audit, AuditCycle, AuditCycleProofTagList
 from client.models import Client, Store
-from audit_store.models import AuditStore
+from audit_store.models import AuditStore,ReportFeedbackByAuditor
 from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
 from questionnaire.models import Section, Question
 from answer.models import Answer, ReportSection
@@ -23,7 +24,7 @@ from agency.models import Agency
 # from kronos.utils import validate_ifsc, validate_pan
 from kronos.utils import find_payment_due_date, get_difference_between_date
 from client.service.client_manager import get_manager_info_list_by_audit_store_obj
-from auditor.service.auditor_api import get_report_completion_percentage
+from auditor.service.auditor_api import get_report_completion_percentage,get_section_completion_percentage
 from manager.models import AuditProoftagNotAvailable
 
 class CitySerializer(ModelSerializer):
@@ -108,8 +109,42 @@ class ProfileInfoDeSerializer(ModelSerializer):
 
         # profile_info.save()
         return profile_info
+    
+class ReportFeedbackByAuditorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportFeedbackByAuditor
+        fields = ('audit_understanding', 'coordination', 'portal_accessibility')
 
+class ReportFeedbackByAuditorDeserializer(serializers.Serializer):
+    audit_understanding = serializers.CharField(max_length=4096)
+    coordination = serializers.CharField(max_length=4096)
+    portal_accessibility = serializers.CharField(max_length=4096)
 
+    def deserialize(self):
+        current_user = self.context.get('current_user')
+        audit_store_id = self.context.get('audit_store_id')
+
+        if current_user is None:
+            raise TypeError("missing keyword argument 'current_user'")
+        if audit_store_id is None:
+            raise TypeError("missing keyword argument 'audit_store_id'")
+
+        try:
+            report_feedback = ReportFeedbackByAuditor.objects.get(user=current_user, audit_store_id=audit_store_id)
+        except ReportFeedbackByAuditor.DoesNotExist:
+            report_feedback = ReportFeedbackByAuditor(user=current_user, audit_store_id=audit_store_id)
+        
+        report_feedback.audit_understanding = self.validated_data.get('audit_understanding', report_feedback.audit_understanding)
+        report_feedback.coordination = self.validated_data.get('coordination', report_feedback.coordination)
+        report_feedback.portal_accessibility = self.validated_data.get('portal_accessibility', report_feedback.portal_accessibility)
+        
+        # Set created_at field automatically if it's not set yet
+        if not report_feedback.created_at:
+            report_feedback.created_at = timezone.now()
+        
+        return report_feedback
+    
+    
 class AdditionalInfoSerializer(ModelSerializer):
     class Meta:
         model = AdditionalInfo
@@ -400,10 +435,9 @@ class AuditorSerializer(ModelSerializer):
 class AuditApplicationSerializer(ModelSerializer):
     audit_store = serializers.SerializerMethodField()
     def get_audit_store(self, obj):
-        audit_stores = obj.audit.audit_stores.filter(status="ASSIGNED")
-        if audit_stores.exists():
-            return audit_stores[0].id
-        return None
+        # audit_stores = obj.audit.audit_stores.filter(status="ASSIGNED")
+        audit_store = obj.audit.audit_stores.filter(status__in=['ACKNOWLEDGED', 'ASSIGNED']).first()
+        return audit_store.id if audit_store else None
     
     class Meta:
         model = AuditApplication
@@ -520,8 +554,14 @@ class AnswerDeSerializer(ModelSerializer):
         validators=[]
 
 class AnswerSerializer(serializers.ModelSerializer):
+    # completion_percentage = SerializerMethodField()
     question_data = serializers.JSONField(source='question.question_data', read_only=True)
     max_marks = serializers.IntegerField(source='question.max_marks',read_only=True)
+
+    # def get_completion_percentage(self, answer_obj):
+    #     # Call the get_report_completion_percentage function to fetch completion percentage for the audit store
+    #     completion_percentage = get_section_completion_percentage(answer_obj.audit_store_id,answer_obj.question_id)
+    #     return completion_percentage
     class Meta:
         model = Answer
         fields = (
@@ -534,10 +574,18 @@ class AnswerSerializer(serializers.ModelSerializer):
             'get_answer_text_list',
             'max_marks',
             'question_data'
+            # 'completion_percentage'
         )
         read_only_fields = fields
 
 class ReportSectionSerializer(ModelSerializer):
+    # completion_percentage = SerializerMethodField()
+    
+    # def get_completion_percentage(self, report_section_obj):
+    #     # Call the get_section_completion_percentage function to fetch completion percentage for the audit store
+    #     completion_percentage = get_section_completion_percentage(report_section_obj.audit_store_id, report_section_obj.section.id)
+    #     return completion_percentage
+    
     class Meta:
         model = ReportSection
         fields = (

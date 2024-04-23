@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
 from django.db.models import QuerySet, Q, Sum
-from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField, IntegerField, BooleanField
+from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField, IntegerField, BooleanField, PositiveSmallIntegerField
 from django.db.models import PROTECT
 from django.db.transaction import atomic
 
@@ -683,3 +683,27 @@ class ReportFollowUpLog(Model):
             self.created_at = timezone.now()
         self.modified_at = timezone.now()
         return super(ReportFollowUpLog, self).save(*args, **kwargs)
+    
+class ReportFeedbackByAuditor(Model):
+    FIVE = 5
+    FOUR = 4
+    THREE = 3
+    TWO = 2
+    ONE = 1
+
+    RATING = (
+        (FIVE, 5),
+        (FOUR, 4),
+        (THREE, 3),
+        (TWO, 2),
+        (ONE, 1),
+    )
+
+    id = AutoField(db_column='id',primary_key=True)
+    user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+    audit_store = ForeignKey(AuditStore, db_column='audit_store_id', on_delete=PROTECT)
+    audit_understanding = PositiveSmallIntegerField(db_column='audit_understanding',choices=RATING)
+    coordination  = PositiveSmallIntegerField(db_column='coordination', choices=RATING)
+    portal_accessibility = CharField(db_column='portal_accessibility', max_length=5096, blank=True, null=True)
+
+    created_at = DateTimeField(db_column="created_at")

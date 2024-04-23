@@ -190,37 +190,37 @@ def get_lat_lon_from_pincode(pincode, country_code):
         if pincode in BE_PL_pincode_list:
             return BE_PL_pincode_list[pincode]
         else:
-            return "Pincode " + str(pincode) + " not found in pincode_list"
+            return None
     elif country_code == 'FR' or country_code == 'NG':
         if pincode in FR_NG_pincode_list:
             return FR_NG_pincode_list[pincode]
         else:
-            return "Pincode " + str(pincode) + " not found in pincode_list"
+            return None
     elif country_code == 'DE' or country_code == 'KE':
         if pincode in DE_KE_pincode_list:
             return DE_KE_pincode_list[pincode]
         else:
-            return "Pincode " + str(pincode) + " not found in pincode_list"
+            return None
     elif country_code == 'JP' or country_code == 'MY':
         if pincode in JP_MY_pincode_list:
             return JP_MY_pincode_list[pincode]
         else:
-            return "Pincode " + str(pincode) + " not found in pincode_list"
+            return None
     elif country_code == 'NL' or country_code == 'CZ':
         if pincode in NL_CZ_pincode_list:
             return NL_CZ_pincode_list[pincode]
         else:
-            return "Pincode " + str(pincode) + " not found in pincode_list"
+            return None
     elif country_code == 'ES' or country_code == 'GB':
         if pincode in ES_GB_pincode_list:
             return ES_GB_pincode_list[pincode]
         else:
-            return "Pincode " + str(pincode) + " not found in pincode_list"
+            return None
     elif country_code == 'TH' or country_code == 'CA' or country_code == 'CH':
         if pincode in TH_CA_CH_pincode_list:
             return TH_CA_CH_pincode_list[pincode]
         else:
-            return "Pincode " + str(pincode) + " not found in pincode_list"
+            return None
     else:    
         if pincode in pincode_list:
             return pincode_list[pincode]
