@@ -1191,7 +1191,6 @@ class AuditCycleDetailView(APIView):
         else:
             return JsonResponse({'error': 'No audit cycles found for this client.'})
 
-
 class StoreSearchView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -1208,21 +1207,42 @@ class StoreSearchView(APIView):
         name = request.query_params.get('name')
         city = request.query_params.get('city')
         state = request.query_params.get('state')
+        country = request.query_params.get('country')
         status = request.query_params.get('status')
 
-        if not (name or city or state or status):
-            return Response({'error': 'At least one of the parameters (name, city, state, status) is required.'}, status=404)
+        if not (name or city or state or country or status):
+            return Response({'error': 'At least one of the parameters (name, city, state, country, status) is required.'}, status=404)
 
         queryset = Store.objects.filter(client=client)
         store_count = len(queryset)
 
-        if city and state:
+        if city and state and country:
+            if name:
+                queryset = queryset.filter(city__country__icontains=country,city__state__icontains=state,city__name__icontains=city,name__istartswith=name)
+            else:
+                queryset = queryset.filter(city__state__icontains=state,city__name__icontains=city)
+        
+        elif country and state:
+            if name:
+                queryset = queryset.filter(city__country__icontains=country,city__state__icontains=state,name__istartswith=name)
+            else:
+                queryset = queryset.filter(city__country__icontains=country,city__state__icontains=state)            
+
+        elif city and country:
+            if name:
+                queryset = queryset.filter(city__country__icontains=country,city__name__icontains=city,name__istartswith=name)
+            else:
+                queryset = queryset.filter(city__country__icontains=country,city__name__icontains=city)
+
+        elif city and state:
             if name:
                 queryset = queryset.filter(city__state__icontains=state,city__name__icontains=city,name__istartswith=name)
             else:
                 queryset = queryset.filter(city__state__icontains=state,city__name__icontains=city)
         elif state and name:
             queryset = queryset.filter(city__state__icontains=state,name__istartswith=name)
+        elif country and name:
+            queryset = queryset.filter(city__country__icontains=country,name__istartswith=name)
         elif city and name:
             queryset = queryset.filter(city__name__icontains=city,name__istartswith=name)
         elif name:
@@ -1231,6 +1251,8 @@ class StoreSearchView(APIView):
             queryset = queryset.filter(city__name__icontains=city)
         elif state:
             queryset = queryset.filter(city__state__icontains=state)
+        elif country:
+            queryset = queryset.filter(city__country__icontains=country)
         elif status :
             if status.upper() == 'ALL':
                 queryset = Store.objects.filter(client=client)
@@ -1244,16 +1266,53 @@ class StoreSearchView(APIView):
         serializer = StoreSerializer(queryset, many=True).data
 
         # return Response(serializer.data, status=200)
-
         # serializer = StoreSerializer(queryset, many=True).data
         # paginator = self.pagination_class()
         # stores = paginator.paginate_queryset(serializer,request)
-        
         response_data = {
             "data":serializer,
             "store_count": store_count
         }
         return Response(response_data, status=200)
+
+class ClientStoreCountryListView(APIView):
+    def get(self, request):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return Response({'error': 'Client not found for this user.'}, status=404)
+
+        client_stores = Store.objects.filter(client=client)
+        country_code = request.query_params.get('country_code')
+        countries = {}
+        # states = set()
+        states = {}
+        cities = set()
+
+        if country_code:
+            client_stores = client_stores.filter(client=client,city__country=country_code)     
+
+        for country in client_stores:
+            country_code = country.city.country
+            country_name=country.city.country_name()
+            state_name = country.city.state_name()
+            state_code = country.city.state  
+            city_name = country.city.name         
+
+            countries[country_code] = country_name
+            # states.add(state_name)
+            states[state_code] = state_name
+            cities.add(city_name)
+
+        # states_list = list(states)
+
+        response_data = {
+            'countries': countries,
+            'states': states,
+            'cities': cities,
+        }
+        return Response(response_data)    
 
 class ClientStoreLocationsListView(APIView):
     def get(self, request):

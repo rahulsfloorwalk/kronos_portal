@@ -14,9 +14,6 @@ import re
 from django.db.models import Model, QuerySet, CharField, AutoField, EmailField, ForeignKey,DateField, OneToOneField, DateTimeField, BooleanField, DecimalField,IntegerField,NullBooleanField
 # from audit.models import AuditCycle
 
-
-
-
 class City(Model):
 
     TIER_1 = '1'
@@ -45,6 +42,9 @@ class City(Model):
 
     def state_name(self):
         return states.states.get(self.state)
+
+    def country_name(self):
+        return country.country.get(self.country)
 
     class Meta:
         ordering = ['name']

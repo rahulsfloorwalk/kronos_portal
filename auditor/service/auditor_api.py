@@ -148,61 +148,67 @@ def get_report_completion_percentage(audit_store_id):
     return (report_completion_percentage)
 
    
-def get_section_completion_percentage(audit_store_id, question_id):
-    question = Question.objects.get(id=question_id)
-    questions = Question.objects.filter(section_id=question.section.id)
-    report_section = ReportSection.objects.get(section=question.section.id,audit_store = audit_store_id)
+# def get_section_completion_status(audit_store_id, question_id):
+#     question = Question.objects.get(id=question_id)
+#     questions = Question.objects.filter(section_id=question.section.id)
+#     report_section = ReportSection.objects.get(section=question.section.id, audit_store=audit_store_id)
 
-    section = Section.objects.get(id=question.section.id)
+#     section = Section.objects.get(id=question.section.id)
 
-    question_ids = set(questions.values_list('id', flat=True))
+#     proof_tags = AuditCycleProofTagList.objects.filter(audit_cycle=section__audit_cycle)
 
-    # Check if all questions with optional comments have non-empty answer comments
-    for question_id in question_ids:
-        question_obj = Question.objects.filter(id=question_id, optional_comment_required=True).first()
-        if question_obj:
-            answered_question = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).first()
-            if not answered_question or not answered_question.answer_comment.strip():
-                return False
-        else:
-            answered_question_ids = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).values_list('question_id', flat=True)
-            if question_id not in answered_question_ids:
-                return False 
-            answered_question = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).first()
-            if answered_question.answer_text is None or answered_question.answer_text.strip() == '':
-                return False
+
+#     question_ids = set(questions.values_list('id', flat=True))
+
+#     # Check if all questions with optional comments have non-empty answer comments
+#     for question_id in question_ids:
+#         question_obj = Question.objects.filter(id=question_id, optional_comment_required=True).first()
+#         if question_obj:
+#             answered_question = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).first()
+#             if not answered_question or not answered_question.answer_comment.strip():
+#                 return False
+#         else:
+#             answered_question_ids = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).values_list('question_id', flat=True)
+#             if question_id not in answered_question_ids:
+#                 return False 
+#             answered_question = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).first()
+#             if answered_question.answer_text is None or answered_question.answer_text.strip() == '':
+#                 return False
+
+#     return True
    
-def get_section_summary_status(audit_store_id, section_id):
+   
+# def get_section_summary_status(audit_store_id, section_id):
     
-    question = Question.objects.get(id=question_id)
-    questions = Question.objects.filter(section_id=question.section.id)
-    report_section = ReportSection.objects.get(section=question.section.id,audit_store = audit_store_id)
+#     question = Question.objects.get(id=question_id)
+#     questions = Question.objects.filter(section_id=question.section.id)
+#     report_section = ReportSection.objects.get(section=question.section.id,audit_store = audit_store_id)
 
-    section = Section.objects.get(id=question.section.id)
+#     section = Section.objects.get(id=question.section.id)
 
-    question_ids = set(questions.values_list('id', flat=True))
+#     question_ids = set(questions.values_list('id', flat=True))
 
-    # Check if all questions with optional comments have non-empty answer comments
-    for question_id in question_ids:
-        question_obj = Question.objects.filter(id=question_id, optional_comment_required=True).first()
-        if question_obj:
-            answered_question = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).first()
-            if not answered_question or not answered_question.answer_comment.strip():
-                return False
-        else:
-            answered_question_ids = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).values_list('question_id', flat=True)
-            if question_id not in answered_question_ids:
-                return False 
-            answered_question = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).first()
-            if answered_question.answer_text is None or answered_question.answer_text.strip() == '':
-                return False
+#     # Check if all questions with optional comments have non-empty answer comments
+#     for question_id in question_ids:
+#         question_obj = Question.objects.filter(id=question_id, optional_comment_required=True).first()
+#         if question_obj:
+#             answered_question = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).first()
+#             if not answered_question or not answered_question.answer_comment.strip():
+#                 return False
+#         else:
+#             answered_question_ids = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).values_list('question_id', flat=True)
+#             if question_id not in answered_question_ids:
+#                 return False 
+#             answered_question = Answer.objects.filter(question_id=question_id, audit_store_id=audit_store_id).first()
+#             if answered_question.answer_text is None or answered_question.answer_text.strip() == '':
+#                 return False
 
             
-    # Check if auditor_comment is filled for ReportSection related to the questions
-    if section.hide_comment == False:
-        if not report_section.auditor_comment or not report_section.auditor_comment.strip():
-            return False  # Auditor comment is required but not provided
-    return True
+#     # Check if auditor_comment is filled for ReportSection related to the questions
+#     if section.hide_comment == False:
+#         if not report_section.auditor_comment or not report_section.auditor_comment.strip():
+#             return False  # Auditor comment is required but not provided
+#     return True
 
 # @atomic
 # def forgot_password(request):

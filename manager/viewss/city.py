@@ -36,7 +36,8 @@ class StateView(APIView):
 
 
 class CountryView(APIView):
-    permission_classes = [HasGroupPermission]
+    # permission_classes = [HasGroupPermission]
+    permission_classes = [AllowAny]
     required_groups = {
         'GET': [GROUP_NAME_MANAGER]
     }
@@ -45,7 +46,7 @@ class CountryView(APIView):
 
 
 class StateViewByCountryId(APIView):
-    permission_classes = [HasGroupPermission]
+    permission_classes = [AllowAny]
     required_groups = {
         'GET': [GROUP_NAME_MANAGER]
     }

@@ -24,7 +24,7 @@ from agency.models import Agency
 # from kronos.utils import validate_ifsc, validate_pan
 from kronos.utils import find_payment_due_date, get_difference_between_date
 from client.service.client_manager import get_manager_info_list_by_audit_store_obj
-from auditor.service.auditor_api import get_report_completion_percentage,get_section_completion_percentage
+from auditor.service.auditor_api import get_report_completion_percentage
 from manager.models import AuditProoftagNotAvailable
 
 class CitySerializer(ModelSerializer):
@@ -554,14 +554,14 @@ class AnswerDeSerializer(ModelSerializer):
         validators=[]
 
 class AnswerSerializer(serializers.ModelSerializer):
-    # completion_percentage = SerializerMethodField()
+    # section_completion_status = SerializerMethodField()
     question_data = serializers.JSONField(source='question.question_data', read_only=True)
     max_marks = serializers.IntegerField(source='question.max_marks',read_only=True)
 
-    # def get_completion_percentage(self, answer_obj):
+    # def get_section_completion_status(self, answer_obj):
     #     # Call the get_report_completion_percentage function to fetch completion percentage for the audit store
-    #     completion_percentage = get_section_completion_percentage(answer_obj.audit_store_id,answer_obj.question_id)
-    #     return completion_percentage
+    #     section_completion_status = get_section_completion_status(answer_obj.audit_store_id,answer_obj.question_id)
+    #     return section_completion_status
     class Meta:
         model = Answer
         fields = (
@@ -573,18 +573,18 @@ class AnswerSerializer(serializers.ModelSerializer):
             'answer_comment',
             'get_answer_text_list',
             'max_marks',
-            'question_data'
-            # 'completion_percentage'
+            'question_data',
+            # 'section_completion_status'
         )
         read_only_fields = fields
 
 class ReportSectionSerializer(ModelSerializer):
-    # completion_percentage = SerializerMethodField()
+    # section_completion_status = SerializerMethodField()
     
-    # def get_completion_percentage(self, report_section_obj):
+    # def get_section_completion_status(self, report_section_obj):
     #     # Call the get_section_completion_percentage function to fetch completion percentage for the audit store
-    #     completion_percentage = get_section_completion_percentage(report_section_obj.audit_store_id, report_section_obj.section.id)
-    #     return completion_percentage
+    #     section_completion_status = get_section_completion_status(report_section_obj.audit_store_id, report_section_obj.section.id)
+    #     return section_completion_status
     
     class Meta:
         model = ReportSection
@@ -593,7 +593,8 @@ class ReportSectionSerializer(ModelSerializer):
             'audit_store',
             'section',
             'revert_message',
-            'auditor_comment'
+            'auditor_comment',
+            # 'section_completion_status'
         )
         read_only_fields = fields
 

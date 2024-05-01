@@ -43,6 +43,7 @@ class AuditStoreDetails extends React.Component {
 		guideline:"",
 		submitModalOpen: false,
 		submitModalform:"",
+		reportErrorfield:"",
 	};
 
 	componentDidMount() {
@@ -120,14 +121,33 @@ class AuditStoreDetails extends React.Component {
 	onSubmit = (e) => {
 		e.preventDefault();
 		const { auditStoreId } = this.props.params;
-		saveReportModal(auditStoreId, this.state.understanding_rating,this.state.rating,this.state.submitModalform).then(() => {
-			// Handle success if needed;
+		if (!this.state.understanding_rating || !this.state.rating || !this.state.submitModalform) {
+			// Alert.error("Please fill in all required fields.", { timeout: 5000 });
+			this.setState({reportErrorfield: "Please fill in all required fields."});
+			let timeout = setTimeout(() => {
+				this.setState({reportErrorfield: ""});
+			}, 3000);
+			return ()=> clearTimeout(timeout);
+		}
+		saveReportModal(auditStoreId, this.state.understanding_rating, this.state.rating, this.state.submitModalform).then(() => {
+			this.setState({ submitModalOpen: false });
+		}).catch((error) => {
+			console.error("Error saving report modal:", error);
 		});
-		// .catch((error) => {
-		// 	// Handle error if needed
-		// });
-		this.setState({submitModalOpen:false});
 	};
+
+	// onSubmit = (e) => {
+	// 	e.preventDefault();
+	// 	const { auditStoreId } = this.props.params;
+	// 	saveReportModal(auditStoreId, this.state.understanding_rating,this.state.rating,this.state.submitModalform).then(() => {
+	// 		// Handle success if needed;
+	// 	});
+	// 	// .catch((error) => {
+	// 	// 	// Handle error if needed
+	// 	// });
+	// 	this.setState({submitModalOpen:false});
+	// };
+
 	ratingSelected = (rating) => {
 		this.setState({rating});
 	};
@@ -329,13 +349,13 @@ class AuditStoreDetails extends React.Component {
 				{this.props.children}
 				{this.state.submitModalOpen ?
 					<Modal modalTitle="Please rate your experience with us" onClose={()=>this.setState({submitModalOpen:false})}>
-						<div className="form-group"><big><i>fields marked <b className="text-danger">✳</b> must be filled to apply to audits</i></big></div>
-
+						{/* <div className="form-group"><big><i>fields marked <b className="text-danger">✳</b> must be filled to apply to audits</i></big></div> */}
+						<div className="form-group"><big><i>Rate your Audit completion journey with FloorWalk on the basis of:</i></big></div>
 						<form onSubmit={this.onSubmit}>
 							{/* <FormInput label="Audit Guidelines & Questionnaire understanding" type="number" value={this.state.submitModalform.audit_understanding} name="audit_understanding" onChange={this.inputChanged} /> */}
 
 							<div className="form-group">
-								<label className="control-label">Please rate your experience with audit training and understanding the questionnaire :</label>
+								<label className="control-label">Audit Guidelines & Questionnaire understanding :</label>
 								<div className="star-rating star-rating-lg">
 									<input type="radio" id="understanding_5-stars" name="understanding_rating" onChange={() => this.understandingRatingSelected(5)} checked={this.state.understanding_rating === 5}/>
 									<label htmlFor="understanding_5-stars" className="star">&#9733;</label>
@@ -350,7 +370,7 @@ class AuditStoreDetails extends React.Component {
 								</div>
 							</div>
 							<div className="form-group">
-								<label className="control-label">Rate us on co-ordinating with our team for any understanding</label>
+								<label className="control-label">Coordination with FloorWalk Team :</label>
 								<div className="star-rating star-rating-lg">
 									<input type="radio" id="5-stars" name="rating" onChange={() => this.ratingSelected(5)} checked={this.state.rating === 5}/>
 									<label htmlFor="5-stars" className="star">&#9733;</label>
@@ -365,6 +385,7 @@ class AuditStoreDetails extends React.Component {
 								</div>
 							</div>
 							<textarea rows="3" maxLength="5096" className="form-control" name="Any other feedback " value={this.state.submitModalform} onChange={this.inputChanged} placeholder="Any other feedback" />
+							{this.state.reportErrorfield ? <p style={{color:"red",fontSize :"14px", margin :"10px"}}>{this.state.reportErrorfield}</p> : null}
 							<SaveButton />
 						</form>
 
