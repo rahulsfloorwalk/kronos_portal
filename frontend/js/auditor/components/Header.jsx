@@ -8,6 +8,7 @@ import NavLink from "../../components/NavLink.jsx";
 import { File,Flag, User, Inbox, LogOut, Tasks, Star } from "../../components/Icons.jsx";
 
 import floorwalkLogoUrl from "../../../img/logo_500x268.png";
+import GoogleTranslateWidget from "./GoogleTranslateWidget.jsx";
 
 class Header extends React.Component {
 	render() {
@@ -41,6 +42,10 @@ class Header extends React.Component {
 							<a style={pointerStyle} onClick={() => this._logoutForm && this._logoutForm.submit()}>
 								<LogOut/> Logout
 							</a>
+						</li>
+						<li style={{marginTop: "15px"}}>
+							<GoogleTranslateWidget />
+
 						</li>
 					</ul>
 				</div>
