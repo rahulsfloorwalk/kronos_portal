@@ -62,6 +62,7 @@ class CitySerializer(ModelSerializer):
             'state',
             'country',
             'state_name',
+            'country_name',
             'lat',
             'lon',
             'gmaps_url',

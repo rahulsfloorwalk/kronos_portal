@@ -436,7 +436,9 @@ class AuditApplicationSerializer(ModelSerializer):
     audit_store = serializers.SerializerMethodField()
     def get_audit_store(self, obj):
         # audit_stores = obj.audit.audit_stores.filter(status="ASSIGNED")
-        audit_store = obj.audit.audit_stores.filter(status__in=['ACKNOWLEDGED', 'ASSIGNED']).first()
+        # audit_store = obj.audit.audit_stores.filter(status__in=['ACKNOWLEDGED', 'ASSIGNED']).first()
+        audit_store = obj.audit.audit_stores.filter( user_id=obj.profileinfo.user.id, status__in=['ACKNOWLEDGED', 'ASSIGNED'] ).first()
+
         return audit_store.id if audit_store else None
     
     class Meta:
