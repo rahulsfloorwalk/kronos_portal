@@ -508,6 +508,7 @@ class MPOrder(Model):
     describe = CharField(db_column='describe',blank=True,max_length=16384,null=True)
     user = ForeignKey(User, on_delete=PROTECT,db_column='user_id')
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
+    country_code = CharField(db_column='country_code', max_length=20, blank=True,null=True)
     payment_status = CharField(db_column='payment_status', max_length=20, choices=PAYMENT_STATUS_CHOICES, blank=True, null=True)
     alignment_factors = JSONField(db_column='alignment_factors', default=list, blank=True,null=True)
     store = JSONField(db_column='stores', default=list, blank=True,null=True)

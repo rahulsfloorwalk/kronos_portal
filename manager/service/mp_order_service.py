@@ -189,6 +189,14 @@ def update_order(data,order):
         order.category = category
     if data.get('no_of_response'):
         order.no_of_response = data.get('no_of_response')
+        solution_price_INR = order.solution.price_INR
+        solution_price_USD = order.solution.price_USD
+        country_code = order.country_code
+        if country_code == "IN":
+            order.price = solution_price_INR * order.no_of_response 
+        else:
+            order.price = solution_price_USD * order.no_of_response
+
     if data.get('describe'):
         order.describe=data.get('describe')
     if data.get('status'):
@@ -225,12 +233,17 @@ def add_order(data,user_id):
     order.category = category
     order.status=data.get('status')
     order.user=user
-    
-    solution_price = int(solution.price)
+    order.country_code=data.get('country_code')
+
+    solution_price_INR = int(solution.price_INR)
+    solution_price_USD = int(solution.price_USD)
     no_of_response = int(data.get('no_of_response'))
 
-    order.price = solution_price * no_of_response 
-  
+    country_code = data.get('country_code')
+    if country_code == "IN":
+        order.price = solution_price_INR * no_of_response 
+    else:
+        order.price = solution_price_USD * no_of_response
     store=[]
     if data.get('store'):
         for i in data['store']:

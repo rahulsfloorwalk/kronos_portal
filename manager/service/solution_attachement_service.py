@@ -73,7 +73,8 @@ def find_solution_details_by_solution_id(solution_id):
         'id':solution.id,
         'name':solution.name,
         'url_structure':solution.url_structure,
-        'price':solution.price,
+        'price_INR':solution.price_INR,
+        'price_USD':solution.price_USD,
         'tax':{
             'id':solution.tax.id,
             'name':solution.tax.name,

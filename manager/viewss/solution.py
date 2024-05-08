@@ -21,7 +21,8 @@ class SolutionDeSerializer(ModelSerializer):
             'id',
             'name',
             'url_structure',
-            'price',
+            'price_INR',
+            'price_USD',
             'audit_type',
             'tax',
             'overview',
@@ -39,7 +40,8 @@ class SolutionDeSerializer(ModelSerializer):
             solution = MPSolution()
         solution.name = self.validated_data.get('name', solution.name)
         solution.url_structure = self.validated_data.get('url_structure', solution.url_structure)
-        solution.price = self.validated_data.get('price', solution.price)
+        solution.price_INR = self.validated_data.get('price_INR', solution.price_INR)
+        solution.price_USD = self.validated_data.get('price_USD', solution.price_USD)
         solution.audit_type = self.validated_data.get('audit_type', solution.audit_type)
         solution.tax = self.validated_data.get('tax', solution.tax_id)
         solution.overview = self.validated_data.get('overview', solution.overview)
