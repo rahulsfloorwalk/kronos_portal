@@ -50,7 +50,8 @@ def get_popular_solutions():
                 'id':i.id,
                 'name':i.name,
                 'url_structure':i.url_structure,
-                'price':i.price,
+                'price_INR':i.price_INR,
+                'price_USD':i.price_USD,
                 'tax':{
                     'id':i.tax.id,
                     'name':i.tax.name,
@@ -112,7 +113,8 @@ def get_solutions():
                 'id':i.id,
                 'name':i.name,
                 'url_structure':i.url_structure,
-                'price':i.price,
+                'price_INR':i.price_INR,
+                'price_USD':i.price_USD,
                 'tax':{
                     'id':i.tax.id,
                     'name':i.tax.name,
@@ -148,7 +150,8 @@ def get_solution_by_id(solution_id):
         'id':solution.id,
         'name':solution.name,
         'url_structure':solution.url_structure,
-        'price':solution.price,
+        'price_INR':solution.price_INR,
+        'price_USD':solution.price_USD,
         'audit_type':solution.audit_type,
         'tax':{
             'id':solution.tax.id,

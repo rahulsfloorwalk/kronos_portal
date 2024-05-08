@@ -13,7 +13,8 @@ class AllSolutionRow extends React.Component {
 			id: PropTypes.number,
 			name: PropTypes.string,
 			url_structure: PropTypes.string,
-			price: PropTypes.number,
+			price_INR: PropTypes.number,
+			price_USD: PropTypes.number,
 			overview: PropTypes.string,
 			how_it_work: PropTypes.string,
 			execution_time: PropTypes.string,
@@ -49,7 +50,8 @@ class AllSolutionRow extends React.Component {
 				<td>{this.props.solution.name}</td>
 				<td>{this.props.solution.url_structure}</td>
 				<td>{categoryNames}</td>
-				<td>{this.props.solution.price}</td>
+				<td>{this.props.solution.price_INR}</td>
+				<td>{this.props.solution.price_USD}</td>
 				<td>
 					<span >
 						<Link
@@ -226,7 +228,8 @@ export default class AllSolutionList extends React.Component {
 								<th>Solution Name</th>
 								<th>URL Structure</th>
 								<th>Category</th>
-								<th>Price</th>
+								<th>Price (INR)</th>
+								<th>Price (USD)</th>
 								<th>Action</th>
 								<th>Others</th>
 							</tr>

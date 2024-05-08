@@ -73,7 +73,7 @@ class OrderSerializer(ModelSerializer):
     solution = SolutionSerializer()
     class Meta:
         model=MPOrder
-        fields=('id','no_of_response','solution','user','status','category','created_at','modified_at')
+        fields=('id','no_of_response','solution','user','status','category','created_at','modified_at','country_code')
 
 class AdminOrderSerializer(ModelSerializer):
     user_email = serializers.CharField(source='user.email')
@@ -238,8 +238,13 @@ class MpPaymentView(APIView):
             order = get_object_or_404(MPOrder, id=order_id)
             tax_rate = order.solution.tax.rate
             tax_amount = (tax_rate / 100) * order.price
+            order_country_code = order.country_code
+            if order_country_code == "IN":
+                order_currency = 'INR'
+            else:
+                order_currency = "USD"
             order_amount = int((order.price + tax_amount) * 100)
-            order_currency = 'INR'
+            # order_currency = 'INR'
             order_id = order.id
             order_receipt = 'order_receipt_{}'.format(order_id)
             notes = {'note_key': 'note_value'}
@@ -269,10 +274,11 @@ class MpPaymentView(APIView):
             order.solution = solution
             order.category = category
             order.status = request.data.get('status')
-            solution_price = int(solution.price)
-            no_of_response = int(request.data.get('no_of_response'))
+            # solution_price = int(solution.price)
+            order_amount = int(order.price )
+            # no_of_response = int(request.data.get('no_of_response'))
 
-            order.price = solution_price * no_of_response
+            order.price = order_amount
 
             store = []
             if request.data.get('store'):
@@ -340,7 +346,7 @@ class MpPaymentCompleteView(APIView):
         client = Client.objects.get(email=user.email)
         client.is_active = True
         client.save()
-        solution_details= MPSolutionOtherDetails.objects.get(solution=order.solution)
+        solution_details = MPSolutionOtherDetails.objects.get(solution=order.solution)
 
         questionnaire_data = {
             'name': solution_details.solution.audit_type,
@@ -417,6 +423,12 @@ def create_audit_cycle(client, order, solution_details,transaction,add_questionn
 
         start_date = transaction.payment_success_date.date()
         end_date = start_date + timedelta(days=10)
+        order_cuntry_code = order.country_code
+        if order_cuntry_code == 'IN':
+            solution_price = solution_details.solution.price_INR
+        else:
+            solution_price = solution_details.solution.price_USD
+
         audit_cycle_data = {
             'name': name,
             'status': 'ACTIVE',
@@ -434,7 +446,7 @@ def create_audit_cycle(client, order, solution_details,transaction,add_questionn
             'order': order.id,
             'audit_alignment_factors':order.alignment_factors,
             'questionnaire_type':add_questionnaire_type_id,
-            'charge_per_audit':solution_details.solution.price
+            'charge_per_audit':solution_price
         }
         
         audit_cycle_ds = MPAuditCycleDeSerializer(data=audit_cycle_data)
@@ -705,7 +717,8 @@ class MPReportsSolutionSerializer(ModelSerializer):
         fields = (
             'id',
             'name',
-            'price',
+            'price_INR',
+            'price_USD',
         )
         read_only_fields = fields
 
@@ -715,7 +728,7 @@ class MPReportsOrderSerializer(ModelSerializer):
     class Meta:
         model=MPOrder
         # exclude = ('attachments',) 
-        fields=('id','solution','category','category_name','no_of_response','status')         
+        fields=('id','solution','category','category_name','no_of_response','status','country_code')         
 
 class OrderReportListView(APIView):
     permission_classes = [HasGroupPermission]
@@ -794,7 +807,7 @@ class MPOrderSerializer(ModelSerializer):
     class Meta:
         model=MPOrder
         # exclude = ('attachments',) 
-        fields=('id','solution','category','category_name','user','price','no_of_response','describe','status','alignment_factors','store','attachments_data','created_at','modified_at')
+        fields=('id','solution','category','category_name','user','price','no_of_response','describe','status','alignment_factors','store','attachments_data','created_at','modified_at','country_code')
     def get_attachments_data(self, obj):
         attachments = obj.attachments.all()
         attachments_data = []
@@ -814,7 +827,7 @@ class MPOrderRepotsSerializer(ModelSerializer):
     solution = SolutionSerializer()
     class Meta:
         model=MPOrder
-        fields=('id','solution','user','price','no_of_response','describe','status','created_at','modified_at','payment_status')
+        fields=('id','solution','user','price','no_of_response','describe','status','created_at','modified_at','payment_status','country_code')
     
 class CustomAuditCycleSerializer(ModelSerializer):
     questionnaire_type = QuestionnaireTypeSerializer()
@@ -1021,13 +1034,31 @@ class MPAuditByAuditCycle(APIView):
     def calculate_store_average_scores(self, audits):
         store_audit_scores = []
 
+        # for audit in audits:
+        #     store_reports = AuditStore.objects.filter(audit=audit)
+        #     if store_reports:
+        #         total_percentage = sum(report.audit_store_percentage for report in store_reports)
+        #         average_percentage = total_percentage / len(store_reports)
+        #     else:
+        #         average_percentage = 0
+
+        #     store_audit_scores.append({
+        #         'store_id': audit.store.id,
+        #         'store_name': audit.store.name,
+        #         'average_percentage': average_percentage,
+        #     })
+
         for audit in audits:
             store_reports = AuditStore.objects.filter(audit=audit)
-            if store_reports:
-                total_percentage = sum(report.audit_store_percentage for report in store_reports)
-                average_percentage = total_percentage / len(store_reports)
-            else:
-                average_percentage = 0
+            total_percentage = 0
+            report_count = 0
+
+            for report in store_reports:
+                if report.audit_store_percentage is not None:
+                    total_percentage += report.audit_store_percentage
+                    report_count += 1
+
+            average_percentage = total_percentage / report_count if report_count > 0 else 0
 
             store_audit_scores.append({
                 'store_id': audit.store.id,

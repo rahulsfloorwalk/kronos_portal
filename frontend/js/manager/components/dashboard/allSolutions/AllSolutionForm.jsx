@@ -37,7 +37,8 @@ export default class AllSolutionForm extends React.Component {
 		solution: {
 			name: "",
 			url_structure: "",
-			price: 0,
+			price_INR: 0,
+			price_USD: 0,
 			category: [],
 			tax: "",
 			audit_type:"",
@@ -175,9 +176,15 @@ export default class AllSolutionForm extends React.Component {
 					</div>
 					<div className="row">
 						<div className="col-md-6">
-							<FormInput label="Price" type="text" value={this.state.solution.price} name="price" onChange={this.fieldChanged} errors={this.state.errors.price} placeholder="Price" />
+							<FormInput label="Price (INR)" type="text" value={this.state.solution.price_INR} name="price_INR" onChange={this.fieldChanged} errors={this.state.errors.price_INR} placeholder="Price in INR" />
 						</div>
 						<div className="col-md-6">
+							<FormInput label="Price (USD)" type="text" value={this.state.solution.price_USD} name="price_USD" onChange={this.fieldChanged} errors={this.state.errors.price_USD} placeholder="Price in USD" />
+						</div>
+
+					</div>
+					<div className="row">
+						<div className="col-md-12">
 							<FormSelect label="Audit Type" value={this.state.solution.audit_type} name="audit_type" onChange={this.fieldChanged} errors={this.state.errors.audit_type}>
 								<option value=""></option>
 								<option value="WALKIN">{getAuditType("WALKIN")}</option>

@@ -11,6 +11,8 @@ import floorwalkLogoUrl from "../../../img/logo_500x300.png";
 
 import { fetchUser } from "../service/user.js";
 
+import GoogleTranslateWidget from "../../auditor/components/GoogleTranslateWidget.jsx";
+
 export default class Header extends React.Component {
 	static propTypes = {
 		location: PropTypes.shape({
@@ -95,6 +97,11 @@ export default class Header extends React.Component {
 							:
 							null
 						}
+
+						<li style={{marginTop: "15px"}}>
+							<GoogleTranslateWidget />
+						</li>
+
 						<li>
 							<a style={pointerStyle} onClick={() => this._logoutForm && this._logoutForm.submit()}>
 								<LogOut/> Logout
