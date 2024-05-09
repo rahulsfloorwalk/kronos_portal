@@ -72,7 +72,10 @@ def get_user_details_for_payment(payment):
         try:
             user_details['ifsc'] = payment.user.bankinfo.ifsc_code.upper()
             user_details['account_number'] = payment.user.bankinfo.account_number
-            user_details['paypal'] = payment.user.bankinfo.paypal.upper()
+            if payment.user.bankinfo.paypal is not None:
+                user_details['paypal'] = payment.user.bankinfo.paypal.upper()
+            else:
+                user_details['paypal'] = ''
         except BankInfo.DoesNotExist:
             user_details['ifsc'] = ''
             user_details['account_number'] = ''
