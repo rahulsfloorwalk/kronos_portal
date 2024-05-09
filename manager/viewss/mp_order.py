@@ -395,6 +395,20 @@ def create_questionnaire_type(questionnaire_data):
         return (add_questionnaire_type.instance.id)
     
 
+# def get_last_audit_cycle_number(client):
+#     last_audit_cycle = AuditCycle.objects.filter(client=client).order_by('-id').first()
+
+#     if last_audit_cycle:
+#         my_list = last_audit_cycle.name.split(' ')
+        
+#         if len(my_list) >= 4:
+#             if my_list[-1].startswith('(') and my_list[-1].endswith(')'):
+#                 my_list[-1] = my_list[-1][1:-1]
+#             last_number = my_list[3]
+#             return last_number
+#     else:
+#         return None
+
 def get_last_audit_cycle_number(client):
     last_audit_cycle = AuditCycle.objects.filter(client=client).order_by('-id').first()
 
@@ -405,13 +419,20 @@ def get_last_audit_cycle_number(client):
             if my_list[-1].startswith('(') and my_list[-1].endswith(')'):
                 my_list[-1] = my_list[-1][1:-1]
             last_number = my_list[3]
-            return last_number
+            
+            try:
+                last_numbers = int(last_number)
+                return last_number
+            except ValueError:
+                # Handle the case where last_number is not a valid integer
+                return None
     else:
-        return 0
+        return None
+
 def create_audit_cycle(client, order, solution_details,transaction,add_questionnaire_type_id):
         last_audit_cycle_number = get_last_audit_cycle_number(client)
         if last_audit_cycle_number is not None:
-             new_audit_cycle_number = int(last_audit_cycle_number) + 1
+            new_audit_cycle_number = int(last_audit_cycle_number) + 1
         else:
             new_audit_cycle_number = 1 
 
