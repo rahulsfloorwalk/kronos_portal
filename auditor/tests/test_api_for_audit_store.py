@@ -67,7 +67,7 @@ class AuditStoreIdSubmitTestCase(APITestCase):
             status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
             audit__audit_cycle=self.audit_cycle,
-            report_summary="Summary",
+            report_summary="Summary Lorem Lorem Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum nec justo id sollicitudin. Quisque et lectus velit consectetur adipiscing elit. Vivamus condimentum nec justo id sollicitudin. Quisque et lectus velit.",
             report_summary_original="Summary"
         )
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
 from django.db.models import QuerySet, Q, Sum
-from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField, IntegerField, BooleanField, PositiveSmallIntegerField
+from django.db.models import Model, CharField, AutoField, DateField,FloatField, ForeignKey, DateTimeField, IntegerField, BooleanField, PositiveSmallIntegerField
 from django.db.models import PROTECT
 from django.db.transaction import atomic
 
@@ -177,6 +177,8 @@ class AuditStore(Model):
     auto_assigned = BooleanField(db_column='auto_assigned', default=False)
     instant_assigned = BooleanField(db_column='instant_assigned', default=False)
     report_revert_count = IntegerField(db_column='report_revert_count',default=0 , blank=True,null=True)
+    sentiment_text = CharField(db_column="sentiment_text", max_length=100, blank=True, null=True)
+    sentiment_score = FloatField(db_column="sentiment_score",blank=True, null=True)
     objects = AuditStoreQuerySet.as_manager()
 
     class Meta:

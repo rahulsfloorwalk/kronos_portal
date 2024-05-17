@@ -16,11 +16,19 @@ import json
 from registration.mixins import HasGroupPermission
 from rest_framework.permissions import AllowAny,IsAuthenticated
 
-class SignUpAPI(View):
+class AppSignUpAPI(APIView):
+    permission_classes=[AllowAny]
     @atomic
-    def post(self, request):
-        response, status = auditor_service_api.sign_up_auditor_app(request)
+    def post(self,request):
+        response,status = auditor_service_api.sign_up_auditor_app(request)
         return JsonResponse(response, status=status)
+    
+class AppVerfifyEmailByOtp(APIView):
+    permission_classes=[AllowAny]
+    @atomic
+    def post(self,request):
+        response , status = auditor_service_api.verify_by_otp_and_login(request)
+        return JsonResponse(response,status=status)   
 
 
 class LoginAPI(APIView):

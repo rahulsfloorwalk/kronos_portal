@@ -55460,5 +55460,1798 @@
        "lon": "3.59",
        "country": "NG"
      }
-   }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5073,
+      "fields": {
+        "name": "Dhaka",
+        "state": "BD-81",
+        "lat": 23.729,
+        "lon": 90.4112,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5074,
+      "fields": {
+        "name": "Faridpur",
+        "state": "BD-81",
+        "lat": 23.55,
+        "lon": 89.7833,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5075,
+      "fields": {
+        "name": "Gazipur",
+        "state": "BD-81",
+        "lat": 23.9874,
+        "lon": 90.4052,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5076,
+      "fields": {
+        "name": "Gopalganj",
+        "state": "BD-81",
+        "lat": 23.2328,
+        "lon": 90.4242,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5077,
+      "fields": {
+        "name": "Kishoreganj",
+        "state": "BD-81",
+        "lat": 24.3394,
+        "lon": 90.7603,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5078,
+      "fields": {
+        "name": "Madaripur",
+        "state": "BD-81",
+        "lat": 23.1691,
+        "lon": 90.2258,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5079,
+      "fields": {
+        "name": "Manikganj",
+        "state": "BD-81",
+        "lat": 23.8473,
+        "lon": 89.8707,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5080,
+      "fields": {
+        "name": "Munshiganj",
+        "state": "BD-81",
+        "lat": 23.4608,
+        "lon": 90.3835,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5081,
+      "fields": {
+        "name": "Narayanganj",
+        "state": "BD-81",
+        "lat": 23.7197,
+        "lon": 90.5634,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5082,
+      "fields": {
+        "name": "Narshingdi",
+        "state": "BD-81",
+        "lat": 23.9282,
+        "lon": 90.6994,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5083,
+      "fields": {
+        "name": "Rajbari",
+        "state": "BD-81",
+        "lat": 23.7187,
+        "lon": 89.6105,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5084,
+      "fields": {
+        "name": "Shariatpur",
+        "state": "BD-81",
+        "lat": 23.2578,
+        "lon": 90.3152,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5085,
+      "fields": {
+        "name": "Tangail",
+        "state": "BD-81",
+        "lat": 24.3551,
+        "lon": 90.0386,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5086,
+      "fields": {
+        "name": "Bagherhat",
+        "state": "BD-82",
+        "lat": 22.6953,
+        "lon": 89.7194,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5087,
+      "fields": {
+        "name": "Chuadanga",
+        "state": "BD-82",
+        "lat": 23.7144,
+        "lon": 88.8957,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5088,
+      "fields": {
+        "name": "Jessore",
+        "state": "BD-82",
+        "lat": 23.1586,
+        "lon": 89.2586,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5089,
+      "fields": {
+        "name": "Jinaidaha",
+        "state": "BD-82",
+        "lat": 23.451,
+        "lon": 89.1023,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5090,
+      "fields": {
+        "name": "Khulna",
+        "state": "BD-82",
+        "lat": 22.8404,
+        "lon": 89.5392,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5091,
+      "fields": {
+        "name": "Kustia",
+        "state": "BD-82",
+        "lat": 23.9368,
+        "lon": 89.127,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5092,
+      "fields": {
+        "name": "Magura",
+        "state": "BD-82",
+        "lat": 23.3824,
+        "lon": 89.4612,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5093,
+      "fields": {
+        "name": "Meherpur",
+        "state": "BD-82",
+        "lat": 23.7431,
+        "lon": 88.685,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5094,
+      "fields": {
+        "name": "Narail",
+        "state": "BD-82",
+        "lat": 23.1404,
+        "lon": 89.6383,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5095,
+      "fields": {
+        "name": "Satkhira",
+        "state": "BD-82",
+        "lat": 22.6297,
+        "lon": 89.1474,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5096,
+      "fields": {
+        "name": "Bogra",
+        "state": "BD-83",
+        "lat": 24.806,
+        "lon": 89.3138,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5097,
+      "fields": {
+        "name": "Joypurhat",
+        "state": "BD-83",
+        "lat": 25.0971,
+        "lon": 89.1033,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5098,
+      "fields": {
+        "name": "Naogaon",
+        "state": "BD-83",
+        "lat": 24.9317,
+        "lon": 88.6882,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5099,
+      "fields": {
+        "name": "Natore",
+        "state": "BD-83",
+        "lat": 24.3519,
+        "lon": 89.0462,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5100,
+      "fields": {
+        "name": "Chapinawabganj",
+        "state": "BD-83",
+        "lat": 24.5992,
+        "lon": 88.2939,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5101,
+      "fields": {
+        "name": "Pabna",
+        "state": "BD-83",
+        "lat": 24.0034,
+        "lon": 89.2493,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5102,
+      "fields": {
+        "name": "Rajshahi",
+        "state": "BD-83",
+        "lat": 24.3644,
+        "lon": 88.6049,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5103,
+      "fields": {
+        "name": "Sirajganj",
+        "state": "BD-83",
+        "lat": 24.6494,
+        "lon": 88.9346,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5104,
+      "fields": {
+        "name": "Bandarban",
+        "state": "BD-84",
+        "lat": 21.839,
+        "lon": 92.3415,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5105,
+      "fields": {
+        "name": "Brahmanbaria",
+        "state": "BD-84",
+        "lat": 24.0402,
+        "lon": 91.0117,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5106,
+      "fields": {
+        "name": "Chandpur",
+        "state": "BD-84",
+        "lat": 23.2453,
+        "lon": 90.7281,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5107,
+      "fields": {
+        "name": "Chittagong",
+        "state": "BD-84",
+        "lat": 22.3455,
+        "lon": 91.8342,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5108,
+      "fields": {
+        "name": "Comilla",
+        "state": "BD-84",
+        "lat": 23.3484,
+        "lon": 91.0583,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5109,
+      "fields": {
+        "name": "Cox\u2019s Bazar",
+        "state": "BD-84",
+        "lat": 21.4397,
+        "lon": 92.0096,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5110,
+      "fields": {
+        "name": "Feni",
+        "state": "BD-84",
+        "lat": 22.9511,
+        "lon": 91.4669,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5111,
+      "fields": {
+        "name": "Khagrachari",
+        "state": "BD-84",
+        "lat": 23.0222,
+        "lon": 91.9808,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5112,
+      "fields": {
+        "name": "Lakshmipur",
+        "state": "BD-84",
+        "lat": 23.4167,
+        "lon": 91.1167,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5113,
+      "fields": {
+        "name": "Noakhali",
+        "state": "BD-84",
+        "lat": 22.8062,
+        "lon": 91.1495,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5114,
+      "fields": {
+        "name": "Rangamati",
+        "state": "BD-84",
+        "lat": 22.4934,
+        "lon": 92.2359,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5115,
+      "fields": {
+        "name": "Barguna",
+        "state": "BD-85",
+        "lat": 22.3114,
+        "lon": 90.0993,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5116,
+      "fields": {
+        "name": "Barishal",
+        "state": "BD-85",
+        "lat": 22.7435,
+        "lon": 90.4393,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5117,
+      "fields": {
+        "name": "Bhola",
+        "state": "BD-85",
+        "lat": 22.5703,
+        "lon": 90.6885,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5118,
+      "fields": {
+        "name": "Jhalokathi",
+        "state": "BD-85",
+        "lat": 22.72,
+        "lon": 90.2048,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5119,
+      "fields": {
+        "name": "Patuakhali",
+        "state": "BD-85",
+        "lat": 22.245,
+        "lon": 90.3693,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5120,
+      "fields": {
+        "name": "Pirojpur",
+        "state": "BD-85",
+        "lat": 22.4686,
+        "lon": 90.0342,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5121,
+      "fields": {
+        "name": "Hobiganj",
+        "state": "BD-86",
+        "lat": 24.3331,
+        "lon": 91.4339,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5122,
+      "fields": {
+        "name": "Moulvibazar",
+        "state": "BD-86",
+        "lat": 24.5268,
+        "lon": 91.8135,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5123,
+      "fields": {
+        "name": "Sunamganj",
+        "state": "BD-86",
+        "lat": 24.9212,
+        "lon": 91.4475,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5124,
+      "fields": {
+        "name": "Sylhet",
+        "state": "BD-86",
+        "lat": 24.9328,
+        "lon": 91.8739,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5125,
+      "fields": {
+        "name": "Dinajpur",
+        "state": "BD-87",
+        "lat": 25.5223,
+        "lon": 88.9504,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5126,
+      "fields": {
+        "name": "Gaibandha",
+        "state": "BD-87",
+        "lat": 25.5496,
+        "lon": 89.5502,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5127,
+      "fields": {
+        "name": "Kurigram",
+        "state": "BD-87",
+        "lat": 25.7244,
+        "lon": 89.6004,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5128,
+      "fields": {
+        "name": "Lalmonirhat",
+        "state": "BD-87",
+        "lat": 26.1669,
+        "lon": 89.1228,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5129,
+      "fields": {
+        "name": "Nilphamari",
+        "state": "BD-87",
+        "lat": 26.0297,
+        "lon": 88.917,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5130,
+      "fields": {
+        "name": "Panchagarh",
+        "state": "BD-87",
+        "lat": 26.0631,
+        "lon": 88.6224,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5131,
+      "fields": {
+        "name": "Rangpur",
+        "state": "BD-87",
+        "lat": 25.7317,
+        "lon": 89.2762,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5132,
+      "fields": {
+        "name": "Thakurgaon",
+        "state": "BD-87",
+        "lat": 25.9152,
+        "lon": 88.1013,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5133,
+      "fields": {
+        "name": "Jamalpur",
+        "state": "BD-H",
+        "lat": 24.9197,
+        "lon": 89.9481,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5134,
+      "fields": {
+        "name": "Mymensingh",
+        "state": "BD-H",
+        "lat": 24.7192,
+        "lon": 90.6501,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5135,
+      "fields": {
+        "name": "Netrakona",
+        "state": "BD-H",
+        "lat": 24.8644,
+        "lon": 90.8339,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5136,
+      "fields": {
+        "name": "Sherpur",
+        "state": "BD-H",
+        "lat": 25.0929,
+        "lon": 90.0827,
+        "country": "BD"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5137,
+      "fields": {
+        "name": "Matale",
+        "state": "LK-29",
+        "lat": 7.4698,
+        "lon": 80.6217,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5138,
+      "fields": {
+        "name": "Nuwara Eliya",
+        "state": "LK-29",
+        "lat": 7.0142,
+        "lon": 80.5897,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5139,
+      "fields": {
+        "name": "Anuradhapura",
+        "state": "LK-30",
+        "lat": 8.3565,
+        "lon": 80.4173,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5140,
+      "fields": {
+        "name": "Polonnaruwa",
+        "state": "LK-30",
+        "lat": 7.9397,
+        "lon": 81.0027,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5141,
+      "fields": {
+        "name": "Kurunegala",
+        "state": "LK-32",
+        "lat": 7.4863,
+        "lon": 80.3623,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5142,
+      "fields": {
+        "name": "Puttalam",
+        "state": "LK-32",
+        "lat": 7.5758,
+        "lon": 79.7953,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5143,
+      "fields": {
+        "name": "Kegalle",
+        "state": "LK-33",
+        "lat": 7.2523,
+        "lon": 80.3436,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5144,
+      "fields": {
+        "name": "Ratnapura",
+        "state": "LK-33",
+        "lat": 6.6828,
+        "lon": 80.3992,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5145,
+      "fields": {
+        "name": "Galle",
+        "state": "LK-34",
+        "lat": 6.0367,
+        "lon": 80.217,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5146,
+      "fields": {
+        "name": "Hambantota",
+        "state": "LK-34",
+        "lat": 6.1241,
+        "lon": 81.1185,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5147,
+      "fields": {
+        "name": "Matara",
+        "state": "LK-34",
+        "lat": 5.9485,
+        "lon": 80.5353,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5148,
+      "fields": {
+        "name": "Badulla",
+        "state": "LK-35",
+        "lat": 6.9895,
+        "lon": 81.0557,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5149,
+      "fields": {
+        "name": "Moneragala",
+        "state": "LK-35",
+        "lat": 6.3424,
+        "lon": 80.7847,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5150,
+      "fields": {
+        "name": "Colombo",
+        "state": "LK-36",
+        "lat": 6.9392,
+        "lon": 79.8436,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5151,
+      "fields": {
+        "name": "Gampaha",
+        "state": "LK-36",
+        "lat": 6.9911,
+        "lon": 80.1197,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5152,
+      "fields": {
+        "name": "Kalutara",
+        "state": "LK-36",
+        "lat": 6.5831,
+        "lon": 79.9593,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5153,
+      "fields": {
+        "name": "Ampara",
+        "state": "LK-37",
+        "lat": 7.2975,
+        "lon": 81.682,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5154,
+      "fields": {
+        "name": "Batticaloa",
+        "state": "LK-37",
+        "lat": 7.7102,
+        "lon": 81.6924,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5155,
+      "fields": {
+        "name": "Trincomalee",
+        "state": "LK-37",
+        "lat": 8.5711,
+        "lon": 81.2335,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5156,
+      "fields": {
+        "name": "Jaffna",
+        "state": "LK-38",
+        "lat": 9.6684,
+        "lon": 80.0074,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5157,
+      "fields": {
+        "name": "Mannar",
+        "state": "LK-38",
+        "lat": 8.9833,
+        "lon": 79.9,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5158,
+      "fields": {
+        "name": "Mullaitivu",
+        "state": "LK-38",
+        "lat": 9.1762,
+        "lon": 80.5686,
+        "country": "LK"
+      }
+    },
+    {
+      "model": "manager.city",
+      "pk": 5159,
+      "fields": {
+        "name": "Vavuniya",
+        "state": "LK-38",
+        "lat": 8.7514,
+        "lon": 80.4971,
+        "country": "LK"
+      }
+    } ,
+   {
+     "model": "manager.city",
+     "pk": 5160,
+     "fields": {
+       "name": "Bhojpur",
+       "state": "NP-1",
+       "lat": 27.1712,
+       "lon": 87.0506,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5161,
+     "fields": {
+       "name": "Dhankuta",
+       "state": "NP-1",
+       "lat": 26.9833,
+       "lon": 87.3333,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5162,
+     "fields": {
+       "name": "Ilam",
+       "state": "NP-1",
+       "lat": 26.9118,
+       "lon": 87.9236,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5163,
+     "fields": {
+       "name": "Jhapa",
+       "state": "NP-1",
+       "lat": 26.5455,
+       "lon": 88.0775,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5164,
+     "fields": {
+       "name": "Morang",
+       "state": "NP-1",
+       "lat": 26.6585,
+       "lon": 87.2718,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5165,
+     "fields": {
+       "name": "Okhaldhunga",
+       "state": "NP-1",
+       "lat": 27.3166,
+       "lon": 86.5047,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5166,
+     "fields": {
+       "name": "Panchthar",
+       "state": "NP-1",
+       "lat": 27.1245,
+       "lon": 87.8874,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5167,
+     "fields": {
+       "name": "Sankhuwasabha",
+       "state": "NP-1",
+       "lat": 27.6467,
+       "lon": 87.2976,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5168,
+     "fields": {
+       "name": "Solukhumbu",
+       "state": "NP-1",
+       "lat": 27.6999,
+       "lon": 86.7412,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5169,
+     "fields": {
+       "name": "Sunsari",
+       "state": "NP-1",
+       "lat": 26.6612,
+       "lon": 87.3076,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5170,
+     "fields": {
+       "name": "Taplejung",
+       "state": "NP-1",
+       "lat": 27.3543,
+       "lon": 87.6645,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5171,
+     "fields": {
+       "name": "Terhathum",
+       "state": "NP-1",
+       "lat": 27.1322,
+       "lon": 87.4547,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5172,
+     "fields": {
+       "name": "Udayapur",
+       "state": "NP-1",
+       "lat": 26.7934,
+       "lon": 86.822,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5173,
+     "fields": {
+       "name": "Bara",
+       "state": "NP-2",
+       "lat": 27.0037,
+       "lon": 85.0262,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5174,
+     "fields": {
+       "name": "Dhanusa",
+       "state": "NP-2",
+       "lat": 26.8419,
+       "lon": 85.4167,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5175,
+     "fields": {
+       "name": "Mahottari",
+       "state": "NP-2",
+       "lat": 26.6486,
+       "lon": 85.8008,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5176,
+     "fields": {
+       "name": "Parsa",
+       "state": "NP-2",
+       "lat": 27.0386,
+       "lon": 84.8672,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5177,
+     "fields": {
+       "name": "Rautahat",
+       "state": "NP-2",
+       "lat": 26.7616,
+       "lon": 85.2718,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5178,
+     "fields": {
+       "name": "Saptari",
+       "state": "NP-2",
+       "lat": 26.6466,
+       "lon": 86.7427,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5179,
+     "fields": {
+       "name": "Sarlahi",
+       "state": "NP-2",
+       "lat": 26.9595,
+       "lon": 85.5594,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5180,
+     "fields": {
+       "name": "Siraha",
+       "state": "NP-2",
+       "lat": 26.7174,
+       "lon": 86.2417,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5181,
+     "fields": {
+       "name": "Baglung",
+       "state": "NP-4",
+       "lat": 28.2714,
+       "lon": 83.5873,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5182,
+     "fields": {
+       "name": "Gorkha",
+       "state": "NP-4",
+       "lat": 28.2954,
+       "lon": 84.872,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5183,
+     "fields": {
+       "name": "Kaski",
+       "state": "NP-4",
+       "lat": 28.2096,
+       "lon": 83.9856,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5184,
+     "fields": {
+       "name": "Lamjung",
+       "state": "NP-4",
+       "lat": 28.1275,
+       "lon": 84.405,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5185,
+     "fields": {
+       "name": "Manang",
+       "state": "NP-4",
+       "lat": 28.6693,
+       "lon": 84.231,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5186,
+     "fields": {
+       "name": "Mustang",
+       "state": "NP-4",
+       "lat": 28.8006,
+       "lon": 83.768,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5187,
+     "fields": {
+       "name": "Myagdi",
+       "state": "NP-4",
+       "lat": 28.368,
+       "lon": 83.5786,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5188,
+     "fields": {
+       "name": "Nawalpur",
+       "state": "NP-4",
+       "lat": 27.6912,
+       "lon": 84.4186,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5189,
+     "fields": {
+       "name": "Parbat",
+       "state": "NP-4",
+       "lat": 28.2237,
+       "lon": 83.6725,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5190,
+     "fields": {
+       "name": "Syangja",
+       "state": "NP-4",
+       "lat": 28.0798,
+       "lon": 83.8105,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5191,
+     "fields": {
+       "name": "Tanahu",
+       "state": "NP-4",
+       "lat": 27.9564,
+       "lon": 84.2655,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5192,
+     "fields": {
+       "name": "Bhaktapur",
+       "state": "NP-3",
+       "lat": 27.671,
+       "lon": 85.4298,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5193,
+     "fields": {
+       "name": "Chitwan",
+       "state": "NP-3",
+       "lat": 27.5291,
+       "lon": 84.3542,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5194,
+     "fields": {
+       "name": "Dhading",
+       "state": "NP-3",
+       "lat": 27.8777,
+       "lon": 84.8993,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5195,
+     "fields": {
+       "name": "Dolakha",
+       "state": "NP-3",
+       "lat": 27.6603,
+       "lon": 86.0655,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5196,
+     "fields": {
+       "name": "Kavrepalanchok",
+       "state": "NP-3",
+       "lat": 27.6226,
+       "lon": 85.53,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5197,
+     "fields": {
+       "name": "Kathmandu",
+       "state": "NP-3",
+       "lat": 27.7172,
+       "lon": 85.324,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5198,
+     "fields": {
+       "name": "Lalitpur",
+       "state": "NP-3",
+       "lat": 27.6666,
+       "lon": 85.325,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5199,
+     "fields": {
+       "name": "Makwanpur",
+       "state": "NP-3",
+       "lat": 27.4198,
+       "lon": 85.0322,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5200,
+     "fields": {
+       "name": "Nuwakot",
+       "state": "NP-3",
+       "lat": 27.9239,
+       "lon": 85.1306,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5201,
+     "fields": {
+       "name": "Ramechhap",
+       "state": "NP-3",
+       "lat": 27.3257,
+       "lon": 86.062,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5202,
+     "fields": {
+       "name": "Rasuwa",
+       "state": "NP-3",
+       "lat": 28.1335,
+       "lon": 85.3211,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5203,
+     "fields": {
+       "name": "Sindhuli",
+       "state": "NP-3",
+       "lat": 27.2546,
+       "lon": 85.9713,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5204,
+     "fields": {
+       "name": "Sindhupalchok",
+       "state": "NP-3",
+       "lat": 27.9575,
+       "lon": 85.7027,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5205,
+     "fields": {
+       "name": "Arghakhanchi",
+       "state": "NP-5",
+       "lat": 27.9985,
+       "lon": 83.2108,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5206,
+     "fields": {
+       "name": "Banke",
+       "state": "NP-5",
+       "lat": 28.05,
+       "lon": 81.6167,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5207,
+     "fields": {
+       "name": "Bardiya",
+       "state": "NP-5",
+       "lat": 28.3,
+       "lon": 81.2333,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5208,
+     "fields": {
+       "name": "Dang",
+       "state": "NP-5",
+       "lat": 28.0,
+       "lon": 82.5,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5209,
+     "fields": {
+       "name": "Gulmi",
+       "state": "NP-5",
+       "lat": 28.0795,
+       "lon": 83.2518,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5210,
+     "fields": {
+       "name": "Kapilvastu",
+       "state": "NP-5",
+       "lat": 27.5667,
+       "lon": 83.05,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5211,
+     "fields": {
+       "name": "Palpa",
+       "state": "NP-5",
+       "lat": 27.8724,
+       "lon": 83.5447,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5212,
+     "fields": {
+       "name": "Pyuthan",
+       "state": "NP-5",
+       "lat": 28.3,
+       "lon": 82.4667,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5213,
+     "fields": {
+       "name": "Rolpa",
+       "state": "NP-5",
+       "lat": 28.386,
+       "lon": 82.4626,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5214,
+     "fields": {
+       "name": "Rukum (West)",
+       "state": "NP-5",
+       "lat": 28.6277,
+       "lon": 82.3207,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5215,
+     "fields": {
+       "name": "Rupandehi",
+       "state": "NP-5",
+       "lat": 27.5,
+       "lon": 83.45,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5216,
+     "fields": {
+       "name": "Dolpa",
+       "state": "NP-6",
+       "lat": 28.9667,
+       "lon": 82.9167,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5217,
+     "fields": {
+       "name": "Humla",
+       "state": "NP-6",
+       "lat": 29.9768,
+       "lon": 81.8245,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5218,
+     "fields": {
+       "name": "Jumla",
+       "state": "NP-6",
+       "lat": 29.2744,
+       "lon": 82.1835,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5219,
+     "fields": {
+       "name": "Karnali",
+       "state": "NP-6",
+       "lat": 29.2786,
+       "lon": 81.608,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5220,
+     "fields": {
+       "name": "Mugu",
+       "state": "NP-6",
+       "lat": 29.6287,
+       "lon": 82.3346,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5221,
+     "fields": {
+       "name": "Salyan",
+       "state": "NP-6",
+       "lat": 28.3755,
+       "lon": 82.1634,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5222,
+     "fields": {
+       "name": "Achham",
+       "state": "NP-7",
+       "lat": 29.0386,
+       "lon": 81.2519,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5223,
+     "fields": {
+       "name": "Baitadi",
+       "state": "NP-7",
+       "lat": 29.5192,
+       "lon": 80.5792,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5224,
+     "fields": {
+       "name": "Bajhang",
+       "state": "NP-7",
+       "lat": 29.6869,
+       "lon": 81.25,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5225,
+     "fields": {
+       "name": "Bajura",
+       "state": "NP-7",
+       "lat": 29.2969,
+       "lon": 80.5897,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5226,
+     "fields": {
+       "name": "Doti",
+       "state": "NP-7",
+       "lat": 29.8475,
+       "lon": 80.57,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5227,
+     "fields": {
+       "name": "Kailali",
+       "state": "NP-7",
+       "lat": 28.8389,
+       "lon": 80.8997,
+       "country": "NP"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5228,
+     "fields": {
+       "name": "Balochistan",
+       "state": "PK-BA",
+       "lat": 28.5838,
+       "lon": 66.829,
+       "country": "PK"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5229,
+     "fields": {
+       "name": "Khyber Pakhtunkhwa",
+       "state": "PK-KP",
+       "lat": 35.9268,
+       "lon": 71.5265,
+       "country": "PK"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5230,
+     "fields": {
+       "name": "Punjab",
+       "state": "PK-PB",
+       "lat": 34.1256,
+       "lon": 73.1265,
+       "country": "PK"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5231,
+     "fields": {
+       "name": "Sindh",
+       "state": "PK-SD",
+       "lat": 28.0184,
+       "lon": 69.6236,
+       "country": "PK"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5232,
+     "fields": {
+       "name": "Azad Jammu and Kashmir",
+       "state": "PK-AK",
+       "lat": 32.9023,
+       "lon": 74.2962,
+       "country": "PK"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5233,
+     "fields": {
+       "name": "Gilgit Baltistan",
+       "state": "PK-GB",
+       "lat": 35.3399,
+       "lon": 74.8677,
+       "country": "PK"
+     }
+   },
+   {
+     "model": "manager.city",
+     "pk": 5234,
+     "fields": {
+       "name": "Federal Capital (Islamabad)",
+       "state": "PK-IS",
+       "lat": 33.7215,
+       "lon": 73.0433,
+       "country": "PK"
+     }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5235,
+      "fields": {
+        "name": "Kandy",
+        "state": "LK-29",
+        "lat": 7.2955,
+        "lon": 80.6356,
+        "country": "LK"
+      }
+    }
  ]

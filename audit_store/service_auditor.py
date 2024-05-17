@@ -73,6 +73,10 @@ def submit_report(audit_store_id, user_id):
     user = auditor_service.find_auditor_by_id(user_id)
     if user != audit_store.user:
         raise AppLogicError("Report cannot be submitted by user")
+    if not audit_store.report_summary or not audit_store.report_summary.strip():
+        raise AppLogicError("Please fill report summary before submitting")
+    if len(audit_store.report_summary.strip()) < 150:
+        raise AppLogicError("Report summary should be at least 150 characters")
     if not audit_store.is_submittable_for_auditor():
         raise AppLogicError("Please complete all answers and all section summaries before submitting")
     if not audit_store.check_auditor_comment_len():

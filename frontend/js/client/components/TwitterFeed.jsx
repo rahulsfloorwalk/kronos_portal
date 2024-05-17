@@ -74,6 +74,7 @@ class TwitterData extends Component{
 		handle: PropTypes.shape({
 			id: PropTypes.number,
 		}),
+		selectedTwitterHandle: PropTypes.number,
 	};
 
 	constructor(props){
@@ -82,6 +83,10 @@ class TwitterData extends Component{
 			loading: false,
 			error: false,
 			tweets: [],
+			expandedSummaries: {},
+			visibleNegativeSummariesCount: 2,
+			visibleNeutralSummariesCount: 2,
+			visiblePositiveSummariesCount: 2,
 		};
 	}
 

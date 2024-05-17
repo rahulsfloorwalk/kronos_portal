@@ -12,6 +12,9 @@ import floorwalkLogoUrl from "../../../img/logo_500x300.png";
 import { fetchUser } from "../service/user.js";
 
 import GoogleTranslateWidget from "../../auditor/components/GoogleTranslateWidget.jsx";
+import bookiconimg from "../../../img/bookmark-with-star.jpg";
+
+
 
 export default class Header extends React.Component {
 	static propTypes = {
@@ -81,9 +84,15 @@ export default class Header extends React.Component {
 						{ this.state.clientUser.is_client_admin ?
 							<NavLink to="/upcoming"><Time/> Upcoming Audits</NavLink>
 							: "" }
-						{ this.state.clientUser.is_client_admin ?
+						{/* { this.state.clientUser.is_client_admin ?
 							<NavLink to="/twitter"><Retweet/> Twitter</NavLink>
-							: null }
+							: null } */}
+						{this.state.clientUser.is_client_admin ?
+							<li style={{position:"relative"}} className="navbar-nav nav">
+								<NavLink to="/aiinsights"> <Retweet  /> AI Insights<span style={{marginRight: "8px"}}></span></NavLink>
+								<img src={bookiconimg} alt="" style={{width:"16px",position:"absolute",top:0,right:0,mixBlendMode:"multiply"}}/>
+							</li>
+							: null}
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						{ this.state.clientUser.is_client_admin ?

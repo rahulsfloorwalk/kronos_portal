@@ -44,7 +44,7 @@ class AuditStoreAuditorServiceTestCase(TestCase):
             status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
             audit__audit_cycle=self.audit_cycle,
-            report_summary='Foobar',
+            report_summary="Summary LoremLorem Lorem Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum nec justo id sollicitudin. Quisque et lectus velit consectetur adipiscing elit. Vivamus condimentum nec justo id sollicitudin. Quisque et lectus velit",
             report_summary_original='Foobar',
         )
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
@@ -86,15 +86,45 @@ class AuditStoreAuditorServiceTestCase(TestCase):
         with self.assertRaises(ObjectNotFound):
             service_auditor.submit_report(audit_store.id, auditor.id)
 
-    def test_submit_report_raise_when_report_is_not_submittable(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user,
-                                 audit__audit_cycle=self.audit_cycle)
+    # def test_submit_report_raise_when_report_is_not_submittable(self):
+    #     audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user,
+    #                             audit__audit_cycle=self.audit_cycle,report_summary="Summary Lorem Lorem Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum nec justo id sollicitudin. Quisque et lectus velit consectetur adipiscing elit. Vivamus condimentum nec justo id sollicitudin. Quisque et lectus velit")
+
+    #     section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
+    #     for i in range(3):
+    #         section_recipe.make()
+
+    #     with self.assertRaisesRegex(AppLogicError, "Please complete all answers and all section summaries before submitting"):
+    #         service_auditor.submit_report(audit_store.id, self.auditor_user.id)
+
+    def test_submit_report_raises_for_multiple_conditions(self):
+    # Scenario 1: Report summary is too short
+        audit_store_short_summary = mommy.make(
+            AuditStore,
+            status=AuditStore.ACKNOWLEDGED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle,
+            report_summary="Short summary"
+        )
+
+        with self.assertRaisesRegex(AppLogicError, "Report summary should be at least 150 characters"):
+            service_auditor.submit_report(audit_store_short_summary.id, self.auditor_user.id)
+
+        # Scenario 2: Incomplete answers or section summaries
+        audit_store_incomplete_sections = mommy.make(
+            AuditStore,
+            status=AuditStore.ACKNOWLEDGED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle,
+            report_summary="Summary " + "Lorem ipsum " * 20  # Make it 150+ characters
+        )
+
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
         for i in range(3):
             section_recipe.make()
 
         with self.assertRaisesRegex(AppLogicError, "Please complete all answers and all section summaries before submitting"):
-            service_auditor.submit_report(audit_store.id, self.auditor_user.id)
+            service_auditor.submit_report(audit_store_incomplete_sections.id, self.auditor_user.id)
 
     def test_submit_report_changes_report_status(self):
         audit_store = self.create_submittable_report()

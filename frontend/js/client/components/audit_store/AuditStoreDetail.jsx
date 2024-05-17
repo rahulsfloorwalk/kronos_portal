@@ -18,6 +18,7 @@ import Loading from "../../../components/Loading.jsx";
 import Alert from "react-s-alert";
 
 import AuditStoreDetailsBox from "./AuditStoreDetailsBox.jsx";
+import ReportSectionBox from "./ReportSectionBox.jsx";
 import SectionList from "./SectionList.jsx";
 import SectionTotalsBox from "./SectionTotalsBox.jsx";
 import ActionReportBox from "./ActionReportBox.jsx";
@@ -335,6 +336,7 @@ export default class AuditStoreDetail extends React.Component {
 				}
 				<ActionReportBox actionPlan={this.state.actionPlan}/>
 				<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
+				<ReportSectionBox auditStore={this.state.auditStore}/>
 				<SectionList auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode || this.state.report_display == "block"}/>
 				{ printMode ?
 					<AttachmentPrintRenderer auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections}/>

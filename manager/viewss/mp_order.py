@@ -409,25 +409,44 @@ def create_questionnaire_type(questionnaire_data):
 #     else:
 #         return None
 
+# def get_last_audit_cycle_number(client):
+#     last_audit_cycle = AuditCycle.objects.filter(client=client).order_by('-id').first()
+
+#     if last_audit_cycle:
+#         my_list = last_audit_cycle.name.split(' ')
+        
+#         if len(my_list) >= 4:
+#             if my_list[-1].startswith('(') and my_list[-1].endswith(')'):
+#                 my_list[-1] = my_list[-1][1:-1]
+#             last_number = my_list[3]
+            
+#             try:
+#                 last_numbers = int(last_number)
+#                 return last_number
+#             except ValueError:
+#                 # Handle the case where last_number is not a valid integer
+#                 return None
+#     else:
+#         return None
+    
 def get_last_audit_cycle_number(client):
     last_audit_cycle = AuditCycle.objects.filter(client=client).order_by('-id').first()
 
     if last_audit_cycle:
         my_list = last_audit_cycle.name.split(' ')
         
-        if len(my_list) >= 4:
-            if my_list[-1].startswith('(') and my_list[-1].endswith(')'):
-                my_list[-1] = my_list[-1][1:-1]
-            last_number = my_list[3]
-            
+        # Check if my_list contains at least one element and if the last element is a number in brackets
+        if my_list and my_list[-1].startswith('(') and my_list[-1].endswith(')'):
+            last_number_str = my_list[-1][1:-1]
             try:
-                last_numbers = int(last_number)
-                return last_number
+                last_number = int(last_number_str)
+                return last_number 
             except ValueError:
-                # Handle the case where last_number is not a valid integer
-                return None
-    else:
-        return None
+                # Handle the case where the number in brackets is not valid
+                return None 
+        else:
+            return None
+    return None  
 
 def create_audit_cycle(client, order, solution_details,transaction,add_questionnaire_type_id):
         last_audit_cycle_number = get_last_audit_cycle_number(client)

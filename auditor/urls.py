@@ -81,7 +81,8 @@ urlpatterns = ([
 
 
     # API for android App
-    url(r'app/signup_api_app$', views_api.SignUpAPI.as_view(), name="signup_api_app"),
+    url(r'app/signup_api_app$', views_api.AppSignUpAPI.as_view(), name="app_signup_api_app"),
+    url(r'app/verify_email_by_otp$', views_api.AppVerfifyEmailByOtp.as_view(), name="mp_verify_email_by_otp"),
     url(r'app/login_api$', views_api.LoginAPI.as_view(), name="login_api"),
     url(r'app/logout_api$', views_api.LogoutAPI.as_view(), name="logout_api"),
 
