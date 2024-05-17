@@ -524,6 +524,45 @@ states["CZ-90"] = "Zlinsky kraj"
 # Kenya state
 states["KE-KE"] = "Kenya"
 
+#Bangladesh
+states["BD-81"] = "Dhaka Division"
+states["BD-82"] = "Khulna Division"
+states["BD-83"] = "Rājshāhi Division"
+states["BD-84"] = "Chittagong"
+states["BD-85"] = "Barisal Division"
+states["BD-86"] = "Sylhet Division"
+states["BD-87"] = "Rangpur Division"
+states["BD-H"] = "Dhaka Division"
+
+#Shrilanka
+states["LK-29"] = "Central Province"
+states["LK-30"] = "North Central Province"
+states["LK-32"] = "North Western Province"
+states["LK-33"] = "Sabaragamuwa Province"
+states["LK-34"] = "Southern Province"
+states["LK-35"] = "Province of Uva"
+states["LK-36"] = "Western Province"
+states["LK-37"] = "Eastern Province"
+states["LK-38"] = "Northern Province"
+
+#Nepal
+states["NP-1"] = "Mechi"
+states["NP-2"] = "Janakpur"
+states["NP-4"] = "Gandaki"
+states["NP-3"] = "Bagmati"
+states["NP-5"] = "Lumbini"
+states["NP-6"] = "Karnali"
+states["NP-7"] = "Seti"
+
+# Pakistan
+states["PK-BA"] = "Balochistan"
+states["PK-KP"] = "Khyber Pakhtunkhwa"
+states["PK-PB"] = "Punjab"
+states["PK-SD"] = "Sindh"
+states["PK-AK"] = "Azad Jammu and Kashmir"
+states["PK-GB"] = "Gilgit Baltistan"
+states["PK-IS"] = "Federal Capital (Islamabad)"
+
 
 def get_django_choices():
     choices = []

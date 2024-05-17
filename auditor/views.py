@@ -973,7 +973,7 @@ class ProfileInfoDistanceView(APIView):
         'GET':[GROUP_NAME_AUDITOR]
     }
     def get(self,request, format=None):
-        all_distance_info = [{'value':choice[0], 'lable':choice[1]} for choice in DistanceSerializer.DISTANCE]
+        all_distance_info = [{'value':choice[0], 'label':choice[1]} for choice in DistanceSerializer.DISTANCE]
         return Response(all_distance_info)
 
 class ProfileInfoIndustryView(APIView):
@@ -993,7 +993,7 @@ class ProfileInfoCarCostView(APIView):
         'GET':[GROUP_NAME_AUDITOR]
     }
     def get(self,request,format=None):
-        all_car_cost_info = [{'value':choice[0], 'lable': choice[1]} for choice in CarCostSerializer.CAR_COST]
+        all_car_cost_info = [{'value':choice[0], 'label': choice[1]} for choice in CarCostSerializer.CAR_COST]
         return Response(all_car_cost_info)
     
 class ProfileInfoResolutionView(APIView):
@@ -1003,7 +1003,7 @@ class ProfileInfoResolutionView(APIView):
         'GET': [GROUP_NAME_AUDITOR]
     }
     def get(self, request, format=None):
-        all_resolution_info = [{'value':choice[0],'lable':choice[1]} for choice in ResolutionSerializer.RESOLUTION]
+        all_resolution_info = [{'value':choice[0],'label':choice[1]} for choice in ResolutionSerializer.RESOLUTION]
         return Response(all_resolution_info)
 
 

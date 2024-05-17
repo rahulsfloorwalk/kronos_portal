@@ -7,8 +7,65 @@ from kronos.exceptions import AppLogicError, ObjectNotFound
 from social.models import TwitterFeed, TwitterHandle
 from tweepy import OAuthHandler, API, TweepError
 from textblob import TextBlob
+from audit_store.models import AuditStore
+from rest_framework.response import Response
+from rest_framework import status
+
 
 _logger = logging.getLogger(__name__)
+
+# def get_handles_for_reportsummary_by_client(client_id):
+#     audit_store_ids = AuditStore.objects.filter(audit__audit_cycle__client=client_id).values_list('audit__audit_cycle__id', flat=True).distinct()
+#     audit_stores = AuditStore.objects.filter(audit__audit_cycle__id__in=audit_store_ids).distinct('audit__audit_cycle__id')
+#     return audit_stores
+
+def get_handles_for_reportsummary_by_client(client_id):
+    audit_store_ids = AuditStore.objects.filter( audit__audit_cycle__client=client_id ).values_list('audit__audit_cycle__id', flat=True).distinct()
+    audit_stores = AuditStore.objects.filter( audit__audit_cycle__id__in=audit_store_ids, report_summary__isnull=False, report_summary__gt='' ).distinct('audit__audit_cycle__id')
+
+    for store in audit_stores:
+        reports = get_tweets(store)
+
+        for report in reports:
+            sentiment_score = report.get('sentiment', {}).get('score') 
+            sentiment_text = report.get('sentiment', {}).get('text') 
+
+            if 'id' in report:
+                audit_store_instance = AuditStore.objects.get(id=report['id'])
+                audit_store_instance.sentiment_score = sentiment_score
+                audit_store_instance.sentiment_text = sentiment_text
+                audit_store_instance.save()
+    return audit_stores
+
+def get_tweets(store):
+    reports = []
+    fetched_reports = AuditStore.objects.filter(id=store.id)
+    for audit_store in fetched_reports:
+        parsed_report = {
+            'id': audit_store.id,
+            'text': audit_store.report_summary,
+            'sentiment': get_tweet_sentiment(audit_store.report_summary)
+        }
+        reports.append(parsed_report)
+
+    return reports
+
+def get_tweet_sentiment(report_summary):
+    sentiment = {}
+    analysis = TextBlob(get_clean_tweet(report_summary))
+    score = analysis.sentiment.polarity
+    sentiment['score'] = score
+    if score > 0:
+        sentiment['text'] = 'Positive'
+    elif score == 0:
+        sentiment['text'] = 'Neutral'
+    else:
+        sentiment['text'] = 'Negative'
+
+    return sentiment
+
+def get_clean_tweet(tweet):
+    return ' '.join(re.sub(r"(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split())
 
 def save_handle_for_client(client_id, handle):
     twitter_handle = TwitterHandle()
@@ -26,6 +83,34 @@ def get_handle_by_client_and_id(client_id, twitter_handle_id):
         return TwitterHandle.objects.get(client_id=client_id, pk=twitter_handle_id)
     except TwitterHandle.DoesNotExist as e:
         raise ObjectNotFound from e
+
+def get_report_summary_handle_by_client_and_id(client_id, audit_cycle_id):
+    try:
+        # return AuditStore.objects.filter(audit__audit_cycle__client=client_id, audit__audit_cycle__id=audit_cycle_id)
+        return AuditStore.objects.filter( audit__audit_cycle__client=client_id, audit__audit_cycle__id=audit_cycle_id, report_summary__isnull=False, report_summary__gt='')
+
+    except TwitterHandle.DoesNotExist as e:
+        raise ObjectNotFound from e
+        
+
+def get_feeds_for_report_summary_client_and_handle(client_id, audit_cycle_id):
+    report_handle = get_report_summary_handle_by_client_and_id(client_id, audit_cycle_id)
+    # report_feeds = AuditStore.objects.filter(id=report_handle)
+
+    for store in report_handle:
+        reports = get_tweets(store)
+
+        for report in reports:
+            sentiment_score = report.get('sentiment', {}).get('score') 
+            sentiment_text = report.get('sentiment', {}).get('text') 
+
+            if 'id' in report:
+                audit_store_instance = AuditStore.objects.get(id=report['id'])
+                audit_store_instance.sentiment_score = sentiment_score
+                audit_store_instance.sentiment_text = sentiment_text
+                audit_store_instance.save()
+    return report_handle
+
 
 def get_feeds_for_client_and_handle(client_id, twitter_handle_id):
     twitter_handle = get_handle_by_client_and_id(client_id, twitter_handle_id)

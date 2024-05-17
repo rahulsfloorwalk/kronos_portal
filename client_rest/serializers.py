@@ -124,11 +124,15 @@ class AuditStoreSerializer(ModelSerializer):
         fields = (
             'id',
             'audit_date',
+            'submit_at',
             'audit',
             'color',
             'attribute_data',
+            'report_summary',
             # 'percentage',
-            'audit_store_percentage'
+            'audit_store_percentage',
+            'sentiment_score',
+            'sentiment_text'
         )
         read_only_fields = fields
 

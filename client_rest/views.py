@@ -676,7 +676,26 @@ class TwitterHandlesView(APIView):
     }
     def get(self, request, format=None):
         handles = twitter_client.get_handles_for_client(request.user.clientuser.client_id)
-        return Response(TwitterHandleSerializer(handles, many=True).data)
+        return Response(handles)
+
+class ReportSummaryHandlesView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        client_id = request.user.clientuser.client_id
+        handles = twitter_client.get_handles_for_reportsummary_by_client(client_id)
+        return Response(AuditStoreSerializer(handles, many=True).data)
+
+class SummaryAuditCycle(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        twitter_feeds = twitter_client.get_feeds_for_report_summary_client_and_handle(request.user.clientuser.client_id, audit_cycle_id)
+        return Response(AuditStoreSerializer(twitter_feeds, many=True).data)
 
 class TwitterFeedView(APIView):
     permission_classes = [HasGroupPermission]
@@ -685,7 +704,7 @@ class TwitterFeedView(APIView):
     }
     def get(self, request, twitter_handle_id, format=None):
         twitter_feeds = twitter_client.get_feeds_for_client_and_handle(request.user.clientuser.client_id, twitter_handle_id)
-        return Response(TwitterFeedSerializer(twitter_feeds, many=True).data)
+        return Response(AuditStoreSerializer(twitter_feeds, many=True).data)
 
 class QuestionnaireTypesByClient(APIView):
     permission_classes = [HasGroupPermission]

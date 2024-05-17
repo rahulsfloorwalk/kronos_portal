@@ -24,6 +24,7 @@ import StorePerformanceStoreList from "./StorePerformanceStoreList.jsx";
 import ActionReports from "./ActionReports.jsx";
 
 import EmailNotification from "./EmailNotification.jsx";
+import AIinsights from "./AIinsights.jsx";
 
 const IndexComponent = () => null;
 
@@ -50,6 +51,7 @@ const Routes = () => (<Router history={hashHistory}>
 			<Route path="audit_cycle/:audit_cycle_id/section/:section_id/percentage/:percentage/store_list" component={StorePerformanceStoreList}/>
 		</Route>
 		<Route path="/twitter" component={TwitterFeed}/>
+		<Route path="/aiinsights" component={AIinsights}/>
 		<Route path="/action_reports" component={ActionReports}/>
 		<Route path="/email_notification" component={EmailNotification}/>
 	</Route>

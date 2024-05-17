@@ -153,6 +153,14 @@ with open("./datasets/belgium_&_poland_pincode.json") as BE_PL_pincode_file:
     BE_PL_pincode_list = json.load(BE_PL_pincode_file)
     print("loaded %d pincodes" % len(BE_PL_pincode_list))
 
+with open("./datasets/bangladesh_&_shrilanka_&nepal_pincode.json") as BD_LK_NP_pincode_file:
+    BD_LK_NP_pincode_list = json.load(BD_LK_NP_pincode_file)
+    print("loaded %d pincodes" % len(BD_LK_NP_pincode_list))
+
+with open("./datasets/pakistan.json") as PK_pincode_file:
+    PK_pincode_list = json.load(PK_pincode_file)
+    print("loaded %d pincodes" % len(PK_pincode_list))
+
 with open("./datasets/france_&_nigeria_pincode.json") as FR_NG_pincode_file:
     FR_NG_pincode_list = json.load(FR_NG_pincode_file)
     __logger.info("loaded %d pincodes", len(FR_NG_pincode_list))
@@ -194,6 +202,16 @@ def get_lat_lon_from_pincode(pincode, country_code):
     elif country_code == 'FR' or country_code == 'NG':
         if pincode in FR_NG_pincode_list:
             return FR_NG_pincode_list[pincode]
+        else:
+            return None
+    elif country_code == 'PK':
+        if pincode in PK_pincode_list:
+            return PK_pincode_list[pincode]
+        else:
+            return None
+    elif country_code == 'BD' or country_code == 'LK' or country_code == 'NP':
+        if pincode in BD_LK_NP_pincode_list:
+            return BD_LK_NP_pincode_list[pincode]
         else:
             return None
     elif country_code == 'DE' or country_code == 'KE':
