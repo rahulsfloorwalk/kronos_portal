@@ -95,7 +95,7 @@ def get_feeds_for_report_summary_client_and_handle(client_id, audit_cycle_id):
                     sentiment_text = report.get('sentiment', {}).get('text') 
                     audit_store_instance.sentiment_score = sentiment_score
                     audit_store_instance.sentiment_text = sentiment_text
-                    audit_store_instance.save()  
+                    audit_store_instance.save()    
 
     return report_handle
 
