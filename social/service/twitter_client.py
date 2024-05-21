@@ -23,18 +23,6 @@ def get_handles_for_reportsummary_by_client(client_id):
     audit_store_ids = AuditStore.objects.filter( audit__audit_cycle__client=client_id ).values_list('audit__audit_cycle__id', flat=True).distinct()
     audit_stores = AuditStore.objects.filter( audit__audit_cycle__id__in=audit_store_ids, report_summary__isnull=False, report_summary__gt='' ).distinct('audit__audit_cycle__id')
 
-    for store in audit_stores:
-        reports = get_tweets(store)
-
-        for report in reports:
-            sentiment_score = report.get('sentiment', {}).get('score') 
-            sentiment_text = report.get('sentiment', {}).get('text') 
-
-            if 'id' in report:
-                audit_store_instance = AuditStore.objects.get(id=report['id'])
-                audit_store_instance.sentiment_score = sentiment_score
-                audit_store_instance.sentiment_text = sentiment_text
-                audit_store_instance.save()
     return audit_stores
 
 def get_tweets(store):
@@ -98,17 +86,17 @@ def get_feeds_for_report_summary_client_and_handle(client_id, audit_cycle_id):
     # report_feeds = AuditStore.objects.filter(id=report_handle)
 
     for store in report_handle:
-        reports = get_tweets(store)
+        if not store.sentiment_score and not store.sentiment_text:
+            reports = get_tweets(store)
+            for report in reports:
+                if 'id' in report:
+                    audit_store_instance = AuditStore.objects.get(id=report['id'])
+                    sentiment_score = report.get('sentiment', {}).get('score') 
+                    sentiment_text = report.get('sentiment', {}).get('text') 
+                    audit_store_instance.sentiment_score = sentiment_score
+                    audit_store_instance.sentiment_text = sentiment_text
+                    audit_store_instance.save()    
 
-        for report in reports:
-            sentiment_score = report.get('sentiment', {}).get('score') 
-            sentiment_text = report.get('sentiment', {}).get('text') 
-
-            if 'id' in report:
-                audit_store_instance = AuditStore.objects.get(id=report['id'])
-                audit_store_instance.sentiment_score = sentiment_score
-                audit_store_instance.sentiment_text = sentiment_text
-                audit_store_instance.save()
     return report_handle
 
 
@@ -120,7 +108,7 @@ def get_feeds_for_client_and_handle(client_id, twitter_handle_id):
     else:
         raise ObjectNotFound("handle not found")
 
-def save_tweets_for_handle(twitter_handle):
+def save_tweets_for_handle(twitter_handle): 
     try:
         twitter_client = TwitterClient()
     except TweepError as e:
