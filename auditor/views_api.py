@@ -35,7 +35,7 @@ class LoginAPI(APIView):
     permission_classes = [AllowAny]
     @atomic
     def post(self, request):
-        response, status_code = auditor_service_api.login_auditor(request)
+        response, status_code = auditor_service_api.log_in_app(request)
         return Response(response, status=status_code)
 
 class LogoutAPI(APIView):
