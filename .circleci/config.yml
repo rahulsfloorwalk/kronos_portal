@@ -50,6 +50,8 @@ commands:
           command: |
             python3 -m venv venv
             . venv/bin/activate
+            pip install --upgrade pip
+            pip install --trusted-host pypi.python.org amqp==2.1.4
             pip install -r requirements.txt
 
       - save_cache:
