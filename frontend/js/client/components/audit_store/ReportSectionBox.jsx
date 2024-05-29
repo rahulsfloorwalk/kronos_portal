@@ -9,7 +9,7 @@ import { File } from "../../../components/Icons.jsx";
 const ReportSectionBox = (props) => {
 	return (<div className="panel panel-default">
 		<div className="panel-heading">
-			<h4 className="panel-title"><File/> Report Section</h4>
+			<h4 className="panel-title"><File/> Report Summary</h4>
 		</div>
 		<table className="table table-striped">
 			<tbody>

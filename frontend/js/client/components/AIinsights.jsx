@@ -11,6 +11,7 @@ import Loading from "../../components/Loading.jsx";
 import { ArrowUp, ArrowDown, Minus } from "../../components/Icons.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 import "../../../css/bs_overrides.scss";
+import { Link } from "react-router";
 
 export default class AIinsights extends Component {
 	constructor(props) {
@@ -35,7 +36,8 @@ export default class AIinsights extends Component {
 		this.setLoading(true);
 		fetchReportSummaryClientHandles().then((handles) => {
 			this.setState({
-				selectedTwitterHandle: handles[0].audit.audit_cycle.id,
+				// selectedTwitterHandle: handles[0].audit.audit_cycle.id,
+				selectedTwitterHandle: handles.sort((a, b) => b.audit.audit_cycle.id - a.audit.audit_cycle.id)[0].audit.audit_cycle.id,
 			});
 			this.setState({ handles });
 		}).always(() => this.setLoading(false));
@@ -52,7 +54,7 @@ export default class AIinsights extends Component {
 			return <Loading />;
 		}
 		if (this.state.error) {
-			return (<Jumbotron heading="Error getting Twitter feeds." para="" />);
+			return (<Jumbotron heading="Error getting Reports feeds." para="" />);
 		}
 		if (this.state.handles.length === 0) {
 			return (<Jumbotron heading="Please Contact FloorWalk team to get this feature" para="" />);
@@ -61,7 +63,10 @@ export default class AIinsights extends Component {
 			<div>
 				<select className="form-control input-lg" style={{ width: "400px", display: "inline-block" }} name="selectedTwitterHandle" value={this.state.selectedTwitterHandle} onChange={this.twitterHandleChanged}>
 					{/* { this.state.handles.map((h) => <option value={h.id} key={h.id}>{h.twitter_handle}</option>) } */}
-					{this.state.handles.length > 0 && this.state.handles.map((h) => <option value={h.audit.audit_cycle.id} key={h.id}>{h.audit.audit_cycle.name}</option>)}
+					{/* <option value="" >Select Audit Cycle</option> */}
+					{this.state.handles.length > 0 && this.state.handles
+						.sort((a, b) => b.audit.audit_cycle.id - a.audit.audit_cycle.id)
+						.map((h) => <option value={h.audit.audit_cycle.id} key={h.id}>{h.audit.audit_cycle.name}</option>)}
 				</select>
 				<hr />
 				{this.state.selectedTwitterHandle &&
@@ -171,8 +176,11 @@ class TwitterData extends Component {
 
 		return (
 			<div className="ai_summary_box" key={index}>
-				<div className="ai_header_box">
-					<p>{summary.audit.audit_cycle.name}</p>
+				<div className="ai_header_box" style={{ position: "relative" }}>
+					<p>{summary.audit.audit_cycle.name}
+						{/* <a href="yourUrl" className="btn btn-primary btn-sm" style={{ position: 'absolute', right: 0 }}>View Report</a> */}
+						<Link to={`/audit_store/${summary.id}`} className="btn btn-primary btn-sm" style={{ position: "absolute", right: 0, padding: "4px 8px", fontSize: "1.2rem" }}>View Report</Link>
+					</p>
 					<p>{summary.audit.store.name}</p>
 				</div>
 				<p>{isExpanded ? reportSummary : truncatedSummary} {reportSummary.length > 100 && (
@@ -192,11 +200,11 @@ class TwitterData extends Component {
 		}
 
 		if (this.state.error) {
-			return (<Jumbotron heading="Twitter feed is not active for your account." para="" />);
+			return (<Jumbotron heading="Reports feed is not active for your account." para="" />);
 		}
 
 		if (this.state.tweets && this.state.tweets.length === 0) {
-			return (<Jumbotron heading="No tweets for this handle available" para="" />);
+			return (<Jumbotron heading="No Reports for this handle available" para="" />);
 		}
 
 		const positiveTweetCount = this.state.tweets.filter(t => t.sentiment_score > 0).length;

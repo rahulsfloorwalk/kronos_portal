@@ -720,6 +720,50 @@ def login_auditor(request):
 
 
 
+def log_in_app(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+    user = authenticate(username,password)
+    if user:
+        if not user.otpverification.is_verified:
+            otp = generate_otp()
+            otp_verification=OTPVerification.objects.get(user_id=user.id)
+            otp_verification.otp = otp
+            otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+            otp_verification.save()
+            message = get_template('registration/market_place/otp_verification.html').render({
+                'otp': otp,
+                'email': user.email,
+                **registration_context(),
+            })
+
+            msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
+            msg.content_subtype = 'html'
+
+            if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+                msg.send()
+                _logger.info("verification email sent to user : %s", user.email)
+            else:
+                _logger.info("verification email disabled. skipping email for user : %s", user.email)
+                _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
+            
+            response={'details': 'OTP is Shared On Your Email !!','user':user.id,'email':user.email}
+            status= 200
+        else:
+            login(request,user,backend='registration.backend.CaseInsensitiveModelBackend1')
+            token, created = Token.objects.get_or_create(user=user)
+            result = auditor_api.get_auditor_dashboard_data_for_app(user.id)
+            response = {'detail': 'Login Successfully','token':token.key,'auditor_dashboard_data': result}
+            status = 200
+            
+    else:
+        response = {'detail': 'Username or Password incorrect'}
+        status = 400
+    return response, status
+
+
+
+
 @atomic
 def verify_otp_for_forgot_password(request):
     otp = request.get('otp') 
