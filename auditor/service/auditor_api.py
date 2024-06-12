@@ -725,7 +725,10 @@ def log_in_app(request):
     password = request.data.get("password")
     user = authenticate(username,password)
     if user:
-        if not user.otpverification.is_verified:
+        otp_verification_exists = OTPVerification.objects.filter(user_id=user.id,is_verified=True).exists()
+        verification_exists = Verification.objects.filter(user_id=user.id,is_verified=True).exists()
+        # if not user.otpverification.is_verified :
+        if not otp_verification_exists and not verification_exists:
             otp = generate_otp()
             otp_verification=OTPVerification.objects.get(user_id=user.id)
             otp_verification.otp = otp

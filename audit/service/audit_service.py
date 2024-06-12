@@ -139,11 +139,23 @@ def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
     country_code = city.country
 
     if pincode is not None:
-        lat1=geo.get_lat_lon_from_pincode(pincode,country_code).get('lat')
-        lon1=geo.get_lat_lon_from_pincode(pincode,country_code).get('lon')
+        location = geo.get_lat_lon_from_pincode(pincode, country_code)
+        if location:
+            lat1 = location.get('lat')
+            lon1 = location.get('lon')
+        else:
+            lat1 = city.lat
+            lon1 = city.lon
     else:
-        lat1=city.lat
-        lon1=city.lon
+        lat1 = city.lat
+        lon1 = city.lon
+
+    # if pincode is not None:
+    #     lat1=geo.get_lat_lon_from_pincode(pincode,country_code).get('lat')
+    #     lon1=geo.get_lat_lon_from_pincode(pincode,country_code).get('lon')
+    # else:
+    #     lat1=city.lat
+    #     lon1=city.lon
     
     active_audits = Audit.objects.filter(
         count__gt = 0,
@@ -278,7 +290,8 @@ def find_applied_audits_by_auditor_id(user_id,is_load_more, last_total_count):
 def find_audits_for_auditor_limit(user_id,kms):
     auditor = auditor_service.find_auditor_by_id(user_id)
     if not auditor.profileinfo.is_complete():
-        raise AppLogicError("please complete your personal information to view audits")
+        # raise AppLogicError("please complete your personal information to view audits")
+        return ""
 
     if kms and int(kms) in [1,5,10,20,50,100]:
         pass

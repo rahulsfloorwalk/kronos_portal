@@ -192,27 +192,27 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
           <option
             value="1"
           >
-            Less than 1 LPA
+            Less than 1200 $
           </option>
           <option
             value="2"
           >
-            1 to 3 LPA
+            1200 $ to 3600 $
           </option>
           <option
             value="3"
           >
-            3 to 8 LPA
+            3600 $ to 9600 $
           </option>
           <option
             value="4"
           >
-            8 to 15 LPA
+            9600 $ to 18000 $
           </option>
           <option
             value="5"
           >
-            15+ LPA
+            18000 $ to 50000 $
           </option>
         </select>
       </div>
@@ -464,27 +464,27 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
           <option
             value="1"
           >
-            Less than 3 lacs
+            Less than 3600 $
           </option>
           <option
             value="2"
           >
-            3 lacs – 5 lacs
+            3600 $ – 6000 $
           </option>
           <option
             value="3"
           >
-            5 lacs – 10 lacs
+            6000 $ – 12000 $
           </option>
           <option
             value="4"
           >
-            10 lacs – 15 lacs
+            12000 $ – 18000 $
           </option>
           <option
             value="5"
           >
-            15 lacs and above
+            18000 $ and above
           </option>
         </select>
       </div>
@@ -541,7 +541,7 @@ exports[`<AuditorRow/> renders the list of auditors correctly 1`] = `
       Service
     </td>
     <td>
-      1 to 3 LPA
+      1200 $ to 3600 $
     </td>
     <td>
       

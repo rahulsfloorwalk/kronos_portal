@@ -49,6 +49,7 @@ export class ReportBrowser3 extends Component{
 	};
 
 	componentDidMount() {
+		localStorage.removeItem("selectedTwitterHandle");
 		this.props.fetchUser();
 		if(this.props.selectedAuditCycle){
 			this.props.fetchReportsByAuditCycleId(this.props.selectedAuditCycle.id);

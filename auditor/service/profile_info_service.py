@@ -46,36 +46,39 @@ def save_old_whatsapp_number(profile_info, old_whatsapp_number):
     mobile_history_log_obj.save()
 
 
-def set_mobile_number(profile_info, mobile_number):
+def set_mobile_number(profile_info, mobile_number,dial_code):
     """Performs basic validation and unique checks and sets the mobile_number if satisfied"""
     try:
-        minLengthValidator(mobile_number)
-        maxLengthValidator(mobile_number)
+        # minLengthValidator(mobile_number)
+        # maxLengthValidator(mobile_number)
         numericValidator(mobile_number)
-        if mobile_number_pattern.match(mobile_number):
-            profile_info.mobile_number = mobile_number
-            profile_info.save()
-            return profile_info.user
-        else:
-            raise AppLogicError("invalid mobile number")
+        # if mobile_number_pattern.match(mobile_number):
+            
+        profile_info.mobile_number = mobile_number
+        profile_info.dial_code = dial_code
+        profile_info.save()
+        return profile_info.user
+        # else:
+        #     raise AppLogicError("invalid mobile number")
     except ValidationError as e:
         raise AppLogicError("invalid mobile number") from e
     except IntegrityError as e:
         raise AppLogicError("an account with this mobile number already exists") from e
 
 
-def set_whatsapp_number(profile_info, whatsapp_number):
+def set_whatsapp_number(profile_info, whatsapp_number,whatsapp_dial_code):
     """Performs basic validation and unique checks and sets the whatsapp_number if satisfied"""
     try:
-        minLengthValidator(whatsapp_number)
-        maxLengthValidator(whatsapp_number)
+        # minLengthValidator(whatsapp_number)
+        # maxLengthValidator(whatsapp_number)
         numericValidator(whatsapp_number)
-        if mobile_number_pattern.match(whatsapp_number):
-            profile_info.whatsapp_number = whatsapp_number
-            profile_info.save()
-            return profile_info.user
-        else:
-            raise AppLogicError("Invalid whatsapp number")
+        # if mobile_number_pattern.match(whatsapp_number):
+        profile_info.whatsapp_number = whatsapp_number
+        profile_info.whatsapp_dial_code = whatsapp_dial_code
+        profile_info.save()
+        return profile_info.user
+        # else:
+        #     raise AppLogicError("Invalid whatsapp number")
     except ValidationError as e:
         raise AppLogicError("Invalid whatsapp number") from e
     except IntegrityError as e:
@@ -94,7 +97,7 @@ def set_mobile_number_for_manager(user_id, mobile_number):
     return profile_info.user
 
 
-def set_mobile_number_for_auditor(user_id, mobile_number):
+def set_mobile_number_for_auditor(user_id, mobile_number,dial_code):
     """Old Code for change mobile number if null in database"""
     """profile_info = find_profile_info_by_user_id(user_id)
     if not profile_info.mobile_number:
@@ -106,7 +109,7 @@ def set_mobile_number_for_auditor(user_id, mobile_number):
 
     profile_info = find_profile_info_by_user_id(user_id)
     old_mobile_number = profile_info.mobile_number
-    set_mobile_number(profile_info, mobile_number)
+    set_mobile_number(profile_info, mobile_number,dial_code)
 
     """Saving Old Mobile Number in MobileNumberHistoryLog Table"""
     save_old_mobile_number(profile_info, old_mobile_number)
@@ -115,10 +118,10 @@ def set_mobile_number_for_auditor(user_id, mobile_number):
     return profile_info
 
 
-def set_whatsapp_number_for_auditor(user_id, whatsapp_number):
+def set_whatsapp_number_for_auditor(user_id, whatsapp_number,whatsapp_dial_code):
     profile_info = find_profile_info_by_user_id(user_id)
     old_whatsapp_number = profile_info.whatsapp_number
-    set_whatsapp_number(profile_info, whatsapp_number)
+    set_whatsapp_number(profile_info, whatsapp_number,whatsapp_dial_code)
 
     """Saving Old Whatsapp Number in WhatsappNumberHistoryLog Table"""
     save_old_whatsapp_number(profile_info, old_whatsapp_number)

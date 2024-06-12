@@ -258,11 +258,11 @@ class ClientList extends Component{
 					<div style={{width: "100px", display: "inline-block"}}>
 						<FormSelect label="" value={this.state.kms} name="kms" onChange={this.inputChanged}>
 							<option value="1"> 1 km</option>
-							<option value="5"> 5 km</option>
-							<option value="10"> 10 km</option>
-							<option value="20"> 20 km</option>
-							<option value="50"> 50 km</option>
-							<option value="100"> 100 km</option>
+							<option value="5"> 5 kms</option>
+							<option value="10"> 10 kms</option>
+							<option value="20"> 20 kms</option>
+							<option value="50"> 50 kms</option>
+							<option value="100"> 100 kms</option>
 						</FormSelect>
 					</div>
 				</h2>

@@ -7,7 +7,7 @@ from django.conf import settings
 from django import forms
 from django.contrib.auth.models import User,Group
 from django.core.validators import validate_email
-from registration.models import Verification
+from registration.models import Verification , OTPVerification
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
 from auditor.models import ProfileInfo, AdditionalInfo
@@ -29,9 +29,10 @@ from payment.service.payment_beneficiary import create_beneficiary_id_for_user
 _logger = logging.getLogger(__name__)
 
 class SignUpForm(UserCreationForm):
-    phone = forms.CharField(min_length=10, max_length=10, required = True, validators=[numericValidator])
+    phone = forms.CharField( required = True, validators=[numericValidator])
     referred_by = forms.CharField(required=False, label='Referral Code (optional)')
     tos_accept = forms.BooleanField(required=True, label='Privacy Policy')
+    dial_code = forms.CharField(max_length=10, required=True)
 
     class Meta:
         model = User
@@ -63,6 +64,12 @@ class SignUpForm(UserCreationForm):
                 raise ValidationError("a user with referral code %(referred_by)s does not exist. Please enter valid referral code or leave blank.", params={"referred_by": self.cleaned_data["referred_by"]})
 
         return self.cleaned_data["referred_by"]
+    
+    def clean_dial_code(self):
+        dial_code = self.cleaned_data.get('dial_code')
+        if not dial_code:
+            raise forms.ValidationError("Dial code is required.")
+        return dial_code
 
     def save(self, commit = True):
         user = super(SignUpForm, self).save(commit = False)
@@ -73,7 +80,7 @@ class SignUpForm(UserCreationForm):
         user.groups.add(Group.objects.get(name=GROUP_NAME_AUDITOR))
         user.save()
 
-        profile_info = ProfileInfo(user_id=user.id, mobile_number=user.phone)
+        profile_info = ProfileInfo(user_id=user.id, mobile_number=user.phone, dial_code=self.cleaned_data["dial_code"])
         profile_info.save()
 
         additional_info = AdditionalInfo(user_id=user.id)
@@ -155,14 +162,38 @@ class AuditorAuthenticationForm(GroupAuthenticationForm):
         if not valid or not self.user_cache:
             return valid
 
-        try:
-            if not self.user_cache.verification.is_verified:
+        # try:
+        #     if not self.user_cache.verification.is_verified:
+        #         self.add_error(None, "Your account is not verified. Please check your email for the verification link.")
+        #         valid = False
+        # except Verification.DoesNotExist:
+        #     _logger.warn("User without verification found! : %s", self.user_cache)
+        #     self.add_error(None, "Your account is not verified. Please check your email for the verification link.")
+        #     valid = False
+
+        # Check if OTPVerification or Verification exists
+        otp_verification_exists = OTPVerification.objects.filter(user_id=self.user_cache.id).exists()
+        verification_exists = Verification.objects.filter(user_id=self.user_cache.id).exists()
+        
+        if verification_exists:
+            try:
+                if not self.user_cache.verification.is_verified:
+                    self.add_error(None, "Your account is not verified. Please check your email for the verification link.")
+                    valid = False
+            except Verification.DoesNotExist:
+                _logger.warn("User without verification found! : %s", self.user_cache)
                 self.add_error(None, "Your account is not verified. Please check your email for the verification link.")
                 valid = False
-        except Verification.DoesNotExist:
-            _logger.warn("User without verification found! : %s", self.user_cache)
-            self.add_error(None, "Your account is not verified. Please check your email for the verification link.")
-            valid = False
+        
+        if otp_verification_exists:
+            try:
+                if not self.user_cache.otpverification.is_verified:
+                    self.add_error(None, "Your OTP is not verified. Please check your email for the OTP.")
+                    valid = False
+            except OTPVerification.DoesNotExist:
+                _logger.warn("User without OTP verification found! : %s", self.user_cache)
+                self.add_error(None, "Your OTP is not verified. Please check your email for the OTP.")
+                valid = False
 
         return valid
 

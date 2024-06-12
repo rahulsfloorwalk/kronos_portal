@@ -29,6 +29,9 @@ export class StorePerformanceCount extends React.Component{
 		value_percentage: false,
 		loading: false
 	};
+	componentDidMount() {
+		localStorage.removeItem("selectedTwitterHandle");
+	}
 
 	componentWillReceiveProps(nextProps){
 		if(nextProps.selectedQuestionnaireType !== this.props.selectedQuestionnaireType){

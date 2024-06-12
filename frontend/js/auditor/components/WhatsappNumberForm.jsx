@@ -9,6 +9,9 @@ import FormInput from "../../components/FormInput.jsx";
 import { Save } from "../../components/Icons.jsx";
 import FormErrorList from "../../components/FormErrorList.jsx";
 import Modal from "../../components/Modal.jsx";
+import { fetchProfileInfo } from "../actions/dashboard.js";
+import FormSelect from "../../components/FormSelect.jsx";
+import { countryDialCodes } from "../../constants.js";
 
 
 class WhatsappNumberForm extends Component{
@@ -26,9 +29,15 @@ class WhatsappNumberForm extends Component{
 			whatsapp_number: "",
 			submitting: false,
 			errors: {},
+			dialcode: "+91",
 		};
 	}
-
+	componentDidMount() {
+		this.props.dispatch(fetchProfileInfo())
+			.then((profileInfo) => {
+				this.setState({ whatsapp_number: profileInfo.whatsapp_number, dialcode: profileInfo.whatsapp_dial_code ? profileInfo.whatsapp_dial_code : this.state.dialcode });
+			});
+	}
 	setSubmitting = (submitting) => {
 		this.setState((prevState) => Object.assign({}, prevState, { submitting }));
 	};
@@ -40,7 +49,7 @@ class WhatsappNumberForm extends Component{
 	onSubmit = (e) => {
 		e.preventDefault();
 		this.setSubmitting(true);
-		this.props.dispatch(setWhatsappNumber(this.state.whatsapp_number)).then(() => {
+		this.props.dispatch(setWhatsappNumber(this.state.whatsapp_number,this.state.dialcode)).then(() => {
 			this.props.router.push("/details");
 		}, (err) => {
 			this.setState({
@@ -54,12 +63,25 @@ class WhatsappNumberForm extends Component{
 			<Modal modalTitle="Update Whatsapp Number" onClose={this.props.router.goBack}>
 				<form onSubmit={this.onSubmit}>
 					{typeof(this.state.errors.non_field_errors) != "undefined" ? <FormErrorList errors={this.state.errors.non_field_errors}/> : null }
-					<FormInput label="Whatsapp Number (10-digit)" placeholder="__________"
-						maxLength="10" type="text" required={true}
-						value={this.state.whatsapp_number}
-						name="whatsapp_number" onChange={this.inputChanged}
-						errors={this.state.errors.whatsapp_number}
-						disabled={this.state.submitting}/>
+					<div className="row">
+						<div className="col-md-3">
+							<FormSelect label="Dial code" required_mark={true} name="dialcode" value={this.state.dialcode} onChange={this.inputChanged} disabled={this.state.submitting}>
+								{countryDialCodes.map(item => (
+									<option value={item.dialcode} key={item.id}>{item.name}</option>
+								))}
+
+							</FormSelect>
+						</div>
+						<div className="col-md-9">
+							<FormInput label="Whatsapp Number (10-digit)" placeholder=""
+								maxLength="20"
+								type="text" required={true}
+								value={this.state.whatsapp_number}
+								name="whatsapp_number" onChange={this.inputChanged}
+								errors={this.state.errors.whatsapp_number}
+								disabled={this.state.submitting}/>
+						</div>
+					</div>
 					<div className="form-group">
 						<button className="btn btn-lg btn-primary" disabled={this.state.submitting}>
 							{ !this.state.submitting ? <span><Save/> Save</span> : "saving..."}

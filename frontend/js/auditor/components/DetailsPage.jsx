@@ -28,6 +28,8 @@ class DetailsPage extends React.Component {
 		profileInfo: PropTypes.shape({
 			mobile_number: PropTypes.string,
 			whatsapp_number: PropTypes.string,
+			dial_code:  PropTypes.string,
+			whatsapp_dial_code:  PropTypes.string,
 			certification_score: PropTypes.string,
 			user_id: PropTypes.string,
 		}),
@@ -92,12 +94,12 @@ class DetailsPage extends React.Component {
 							<p>Email: <b>{this.props.user.email}</b></p>
 							<p>Mobile Number: &nbsp;
 								{ this.props.profileInfo.mobile_number ?
-									<b>{this.props.profileInfo.mobile_number} &nbsp;&nbsp; <Link to="/details/mobile_number/edit">Change</Link></b>
+									<b>{this.props.profileInfo.dial_code ? this.props.profileInfo.dial_code : ""}&nbsp;&nbsp;{this.props.profileInfo.mobile_number} &nbsp;&nbsp; <Link to="/details/mobile_number/edit">Change</Link></b>
 									: <Link to="/details/mobile_number/edit"><b className="text-danger">Please click here to update your Mobile Number.</b></Link> }
 							</p>
 							<p>Whatsapp Number: &nbsp;
 								{ this.props.profileInfo.whatsapp_number ?
-									<b>{this.props.profileInfo.whatsapp_number} &nbsp;&nbsp; <Link to="/details/whatsapp_number/edit">Change</Link></b>
+									<b>{this.props.profileInfo.whatsapp_dial_code ? this.props.profileInfo.whatsapp_dial_code : ""}&nbsp;&nbsp;{this.props.profileInfo.whatsapp_number} &nbsp;&nbsp; <Link to="/details/whatsapp_number/edit">Change</Link></b>
 									: <Link to="/details/whatsapp_number/edit"><b className="text-danger">Please click here to update your Whatsapp Number.</b></Link> }
 							</p>
 							<p>Password: <a href="/auth/password_change">Click here</a> to change your password.</p>
@@ -105,12 +107,12 @@ class DetailsPage extends React.Component {
 							<Link to="details/preferences/edit" className=""> change </Link>
 							<ul style={{"listStyleType":"none"}}>
 								<li>{this.state.preferences.receive_new_opportunities_email ? <Check/> : <Cross/>} on Email</li>
-								<li>{this.state.preferences.receive_new_opportunities_sms ? <Check/> : <Cross/>} on SMS</li>
+								{/* <li>{this.state.preferences.receive_new_opportunities_sms ? <Check/> : <Cross/>} on SMS</li> */}
 								<li>{this.state.preferences.receive_transactional_whatsapp_message ? <Check/> : <Cross/>} on Whatsapp</li>
 							</ul>
 							{/* <p className="text-muted"><small>If you want to change your mobile number or email, please contact us.</small></p> */}
-							<div className="panel-heading ">
-								<span className="pull-right ">
+							<div className="">
+								<span className="pull-left ">
 									{statusButton}
 								</span>
 							</div>

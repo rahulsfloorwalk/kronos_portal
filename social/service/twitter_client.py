@@ -8,22 +8,26 @@ from social.models import TwitterFeed, TwitterHandle
 from tweepy import OAuthHandler, API, TweepError
 from textblob import TextBlob
 from audit_store.models import AuditStore
-from rest_framework.response import Response
-from rest_framework import status
 
 
 _logger = logging.getLogger(__name__)
 
 # def get_handles_for_reportsummary_by_client(client_id):
-#     audit_store_ids = AuditStore.objects.filter(audit__audit_cycle__client=client_id).values_list('audit__audit_cycle__id', flat=True).distinct()
-#     audit_stores = AuditStore.objects.filter(audit__audit_cycle__id__in=audit_store_ids).distinct('audit__audit_cycle__id')
+#     audit_store_ids = AuditStore.objects.filter( audit__audit_cycle__client=client_id ).values_list('audit__audit_cycle__id', flat=True).distinct()
+#     audit_stores = AuditStore.objects.filter( audit__audit_cycle__id__in=audit_store_ids, report_summary__isnull=False, report_summary__gt='' ).distinct('audit__audit_cycle__id')
 #     return audit_stores
 
 def get_handles_for_reportsummary_by_client(client_id):
-    audit_store_ids = AuditStore.objects.filter( audit__audit_cycle__client=client_id ).values_list('audit__audit_cycle__id', flat=True).distinct()
-    audit_stores = AuditStore.objects.filter( audit__audit_cycle__id__in=audit_store_ids, report_summary__isnull=False, report_summary__gt='' ).distinct('audit__audit_cycle__id')
-
-    return audit_stores
+    # audit_cycles = AuditStore.objects.filter( audit__audit_cycle__client=client_id, report_summary__isnull=False, report_summary__gt='',status__in=['COMPLETED', 'ACCEPTED'] ).values( 'audit__audit_cycle__id', 'audit__audit_cycle__name' ).distinct()
+    audit_cycles = AuditStore.objects.filter( audit__audit_cycle__client=client_id, report_summary__isnull=False, report_summary__gt='').values( 'audit__audit_cycle__id', 'audit__audit_cycle__name' ).distinct()
+    formatted_audit_cycles = [
+        {
+            "id": cycle['audit__audit_cycle__id'],
+            "name": cycle['audit__audit_cycle__name']
+        }
+        for cycle in audit_cycles
+    ]
+    return formatted_audit_cycles
 
 def get_tweets(store):
     reports = []
@@ -32,13 +36,29 @@ def get_tweets(store):
         parsed_report = {
             'id': audit_store.id,
             'text': audit_store.report_summary,
-            'sentiment': get_tweet_sentiment(audit_store.report_summary)
+            'sentiment': get_tweet_sentiment(audit_store.report_summary),
         }
         reports.append(parsed_report)
 
     return reports
 
+
+
 def get_tweet_sentiment(report_summary):
+    # api_url = "https://api.example.com/sentiment-analysis"
+    # token = 12345
+    # headers = {'Authorization': 'Bearer {token}'} 
+    # payload = {'text': report_summary}
+    # try:
+    #     response = requests.post(api_url, headers=headers, json=payload)
+    #     if response.status_code == 200:
+    #         return response.json().get('sentiment')
+    #     else:
+    #         return "Unknown"
+    # except Exception as e:
+    #     print("Error:", e)
+    #     return "Unknown"
+
     sentiment = {}
     analysis = TextBlob(get_clean_tweet(report_summary))
     score = analysis.sentiment.polarity
@@ -79,8 +99,8 @@ def get_report_summary_handle_by_client_and_id(client_id, audit_cycle_id):
 
     except TwitterHandle.DoesNotExist as e:
         raise ObjectNotFound from e
-        
 
+   
 def get_feeds_for_report_summary_client_and_handle(client_id, audit_cycle_id):
     report_handle = get_report_summary_handle_by_client_and_id(client_id, audit_cycle_id)
     # report_feeds = AuditStore.objects.filter(id=report_handle)
