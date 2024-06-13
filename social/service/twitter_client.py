@@ -18,8 +18,8 @@ _logger = logging.getLogger(__name__)
 #     return audit_stores
 
 def get_handles_for_reportsummary_by_client(client_id):
-    # audit_cycles = AuditStore.objects.filter( audit__audit_cycle__client=client_id, report_summary__isnull=False, report_summary__gt='',status__in=['COMPLETED', 'ACCEPTED'] ).values( 'audit__audit_cycle__id', 'audit__audit_cycle__name' ).distinct()
-    audit_cycles = AuditStore.objects.filter( audit__audit_cycle__client=client_id, report_summary__isnull=False, report_summary__gt='').values( 'audit__audit_cycle__id', 'audit__audit_cycle__name' ).distinct()
+    audit_cycles = AuditStore.objects.filter( audit__audit_cycle__client=client_id, report_summary__isnull=False, report_summary__gt='',status__in=['COMPLETED', 'ACCEPTED'] ).values( 'audit__audit_cycle__id', 'audit__audit_cycle__name' ).distinct()
+    # audit_cycles = AuditStore.objects.filter( audit__audit_cycle__client=client_id, report_summary__isnull=False, report_summary__gt='').values( 'audit__audit_cycle__id', 'audit__audit_cycle__name' ).distinct()
     formatted_audit_cycles = [
         {
             "id": cycle['audit__audit_cycle__id'],
@@ -95,7 +95,7 @@ def get_handle_by_client_and_id(client_id, twitter_handle_id):
 def get_report_summary_handle_by_client_and_id(client_id, audit_cycle_id):
     try:
         # return AuditStore.objects.filter(audit__audit_cycle__client=client_id, audit__audit_cycle__id=audit_cycle_id)
-        return AuditStore.objects.filter( audit__audit_cycle__client=client_id, audit__audit_cycle__id=audit_cycle_id, report_summary__isnull=False, report_summary__gt='')
+        return AuditStore.objects.filter( audit__audit_cycle__client=client_id, audit__audit_cycle__id=audit_cycle_id, report_summary__isnull=False, report_summary__gt='',status__in=['COMPLETED', 'ACCEPTED'] )
 
     except TwitterHandle.DoesNotExist as e:
         raise ObjectNotFound from e
@@ -105,17 +105,17 @@ def get_feeds_for_report_summary_client_and_handle(client_id, audit_cycle_id):
     report_handle = get_report_summary_handle_by_client_and_id(client_id, audit_cycle_id)
     # report_feeds = AuditStore.objects.filter(id=report_handle)
 
-    for store in report_handle:
-        if not store.sentiment_score and not store.sentiment_text:
-            reports = get_tweets(store)
-            for report in reports:
-                if 'id' in report:
-                    audit_store_instance = AuditStore.objects.get(id=report['id'])
-                    sentiment_score = report.get('sentiment', {}).get('score') 
-                    sentiment_text = report.get('sentiment', {}).get('text') 
-                    audit_store_instance.sentiment_score = sentiment_score
-                    audit_store_instance.sentiment_text = sentiment_text
-                    audit_store_instance.save()    
+    # for store in report_handle:
+    #     if not store.sentiment_score and not store.sentiment_text and not store.sentiment_main_keywords and not store.sentiment_emotions:
+    #         reports = get_tweets(store)
+    #         for report in reports:
+    #             if 'id' in report:
+    #                 audit_store_instance = AuditStore.objects.get(id=report['id'])
+    #                 sentiment_score = report.get('sentiment', {}).get('score') 
+    #                 sentiment_text = report.get('sentiment', {}).get('text') 
+    #                 audit_store_instance.sentiment_score = sentiment_score
+    #                 audit_store_instance.sentiment_text = sentiment_text
+    #                 audit_store_instance.save()    
 
     return report_handle
 

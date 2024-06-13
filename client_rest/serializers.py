@@ -117,6 +117,27 @@ class AuditSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class SentimentDataSerializer(ModelSerializer):
+    audit = AuditSerializer()
+    class Meta:
+        model = AuditStore
+        fields = (
+            'id',
+            'audit_date',
+            'submit_at',
+            'audit',
+            'color',
+            'attribute_data',
+            'report_summary',
+            'audit_store_percentage',
+            'sentiment_main_keywords',
+            'sentiment_bullet_points',
+            'sentiment_emotions',
+            'sentiment_positive_words',
+            'sentiment_negative_words',
+            'sentiment_score',
+            'sentiment_text'
+        )
 class AuditStoreSerializer(ModelSerializer):
     audit = AuditSerializer()
     class Meta:

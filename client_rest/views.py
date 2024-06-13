@@ -46,7 +46,7 @@ from client_report.service import audit_cycle
 from client_report.service import store_marking as store_marking_service
 
 from social.service import twitter_client
-from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, CitySerializer
+from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, CitySerializer, SentimentDataSerializer
 from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
 from .serializers import ReportAttributeSerializer
@@ -703,6 +703,15 @@ class SummaryAuditCycle(APIView):
     def get(self, request, audit_cycle_id, format=None):
         twitter_feeds = twitter_client.get_feeds_for_report_summary_client_and_handle(request.user.clientuser.client_id, audit_cycle_id)
         return Response(AuditStoreSerializer(twitter_feeds, many=True).data)
+    
+class SentimentDataView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self,request,audit_store_id,format=None):
+        sentiment_data = AuditStore.objects.filter(id=audit_store_id)
+        return Response(SentimentDataSerializer(sentiment_data,many=True).data)
 
 class SentimentData(APIView):
     permission_classes = [AllowAny]
