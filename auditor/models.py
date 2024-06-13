@@ -122,9 +122,11 @@ class ProfileInfo(Model, CompletableMixin):
     marital_status = CharField(db_column='marital_status', max_length=1, choices=MARITAL_STATUS, blank=True)
     education = CharField(db_column='education', max_length=2, choices=EDUCATION, blank=True)
     household_income = PositiveSmallIntegerField(db_column='household_income', choices=INCOME, blank=True, null=True)
-    mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True, null=True,
+    dial_code = CharField(max_length=10, blank=True, null=True)
+    whatsapp_dial_code = CharField(max_length=10, blank=True, null=True)
+    mobile_number = CharField(db_column='mobile_number', max_length=20, blank=True, null=True,
                               validators=[numericValidator, minLengthValidator], unique=True)
-    whatsapp_number = CharField(db_column='whatsapp_number', max_length=10, blank=True, null=True, validators=[numericValidator, minLengthValidator], unique=True)
+    whatsapp_number = CharField(db_column='whatsapp_number', max_length=20, blank=True, null=True, validators=[numericValidator, minLengthValidator], unique=True)
     date_of_birth = DateField(db_column='dob', blank=True, null=True)
     address = CharField(db_column='address', max_length=300, blank=True)
     pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
@@ -282,26 +284,28 @@ class AdditionalInfo(Model, CompletableMixin):
 
     CAR_COST = (
         ("", ""),
-        (1, "<3 lacs"),
-        (2, "3 lacs – 5 lacs"),
-        (3, "5 lacs – 10 lacs"),
-        (4, "10 lacs – 15 lacs"),
-        (5, "15 lacs and above"),
+        (1, "<3600 $"),
+        (2, "3600 $ – 6000 $"),
+        (3, "6000 $ – 12000 $"),
+        (4, "12000 $ – 18000 $"),
+        (5, "18000 $ and above"),
     )
 
     NOT_ANSWERED = 0
     ONE = 1
     ONE_THREE = 2
-    THREE_EIGHT = 3
-    EIGHT_FIFTEEN = 4
-    FIFTEEN_PLUS = 5
+    THREE_NINE = 3
+    NINE_EIGHTEEN = 4
+    EIGHTEEN_FIFTY = 5
+    FIFTY_PLUS = 6
     INCOME = (
         (NOT_ANSWERED, "not answered"),
-        (ONE, "less than 1		 lpa"),
-        (ONE_THREE, "1 to 3 lpa"),
-        (THREE_EIGHT, "3 to 8 lpa"),
-        (EIGHT_FIFTEEN, "8 to 15 lpa"),
-        (FIFTEEN_PLUS, "15+ lpa"),
+        (ONE, "less than 1200 $	"),
+        (ONE_THREE, "1200 $ to 3600 lpa"),
+        (THREE_NINE, "3600 $ to 9600 lpa"),
+        (NINE_EIGHTEEN, "9600 $ to 18000 $"),
+        (EIGHTEEN_FIFTY, "18000 $ to 50000 $"),
+        (FIFTY_PLUS, "50000 $ + pa"),
     )
 
     id = AutoField(db_column='id', primary_key=True)
@@ -554,14 +558,14 @@ class AuditApplication(Model):
 
 class MobileNumberHistoryLog(Model):
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
-    mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True, null=True,
+    mobile_number = CharField(db_column='mobile_number', max_length=20, blank=True, null=True,
                               validators=[numericValidator, minLengthValidator])
     created_at = DateTimeField(db_column="created_at")
 
 
 class WhatsappNumberHistoryLog(Model):
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
-    whatsapp_number = CharField(db_column='whatsapp_number', max_length=10, blank=True, null=True, validators=[numericValidator, minLengthValidator])
+    whatsapp_number = CharField(db_column='whatsapp_number', max_length=20, blank=True, null=True, validators=[numericValidator, minLengthValidator])
     created_at = DateTimeField(db_column="created_at")
 
 

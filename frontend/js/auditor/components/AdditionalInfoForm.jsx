@@ -139,7 +139,7 @@ class AdditionalInfoForm extends React.Component {
 						</div>
 						{this.state.occupation != "STUDENT" ?
 							<div className="col-sm-6">
-								<FormSelect label="Income" required_mark={true} value={this.state.income} name="income" onChange={this.inputChanged} errors={this.props.errors.income}>
+								<FormSelect label="Income per annum" required_mark={true} value={this.state.income} name="income" onChange={this.inputChanged} errors={this.props.errors.income}>
 									<option value=""></option>
 									<option value="0">{getIncomeText("0")}</option>
 									<option value="1">{getIncomeText("1")}</option>
@@ -147,6 +147,7 @@ class AdditionalInfoForm extends React.Component {
 									<option value="3">{getIncomeText("3")}</option>
 									<option value="4">{getIncomeText("4")}</option>
 									<option value="5">{getIncomeText("5")}</option>
+									<option value="6">{getIncomeText("6")}</option>
 								</FormSelect>
 							</div>
 							: null }
@@ -154,11 +155,11 @@ class AdditionalInfoForm extends React.Component {
 							<FormSelect label="Distance you can travel for an Audit" required_mark={true} value={this.state.distance} name="distance" onChange={this.inputChanged} errors={this.props.errors.distance}>
 								<option value=""></option>
 								<option value="1">Upto 1 km</option>
-								<option value="5">Upto 5 km</option>
-								<option value="10">Upto 10 km</option>
-								<option value="20">Upto 20 km</option>
-								<option value="50">Upto 50 km</option>
-								<option value="100">Upto 100 km</option>
+								<option value="5">Upto 5 kms</option>
+								<option value="10">Upto 10 kms</option>
+								<option value="20">Upto 20 kms</option>
+								<option value="50">Upto 50 kms</option>
+								<option value="100">Upto 100 kms</option>
 							</FormSelect>
 						</div>
 						<div className="col-sm-6">
@@ -233,7 +234,7 @@ class AdditionalInfoForm extends React.Component {
 							<FormInput label="Model of your Car" required_mark={true} type="text" value={this.state.car_model} name="car_model" onChange={this.inputChanged} errors={this.props.errors.car_model} {...car_option}/>
 						</div>
 						<div className="col-sm-6">
-							<FormSelect label="Approx. price of car (INR)" required_mark={true} value={this.state.car_cost} name="car_cost" onChange={this.inputChanged} errors={this.props.errors.car_cost}>
+							<FormSelect label="Approx. price of car (USD)" required_mark={true} value={this.state.car_cost} name="car_cost" onChange={this.inputChanged} errors={this.props.errors.car_cost}>
 								<option value=""></option>
 								<option value="1">{getCarCost("1")}</option>
 								<option value="2">{getCarCost("2")}</option>

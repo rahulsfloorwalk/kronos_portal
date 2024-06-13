@@ -48,6 +48,7 @@ export default class StoreList2 extends Component{
 		});
 	};
 	componentDidMount() {
+		localStorage.removeItem("selectedTwitterHandle");
 		this.fetchStores();
 		fetchAuditCyclesYearList().then((audit_cycles)=>{
 			this.setState({

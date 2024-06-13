@@ -454,19 +454,22 @@ export function getIncomeText(income){
 		return "Not answered";
 	case "1":
 	case 1:
-		return "Less than 1 LPA";
+		return "Less than 1200 $";
 	case "2":
 	case 2:
-		return "1 to 3 LPA";
+		return "1200 $ to 3600 $";
 	case "3":
 	case 3:
-		return "3 to 8 LPA";
+		return "3600 $ to 9600 $";
 	case "4":
 	case 4:
-		return "8 to 15 LPA";
+		return "9600 $ to 18000 $";
 	case "5":
 	case 5:
-		return "15+ LPA";
+		return "18000 $ to 50000 $";
+	case "6":
+	case 6:
+		return "50000 $ + PA";
 	case "":
 	case null:
 	case undefined:
@@ -480,19 +483,19 @@ export function getCarCost(cost){
 	switch(cost){
 	case "1":
 	case 1:
-		return "Less than 3 lacs";
+		return "Less than 3600 $";
 	case "2":
 	case 2:
-		return "3 lacs – 5 lacs";
+		return "3600 $ – 6000 $";
 	case "3":
 	case 3:
-		return "5 lacs – 10 lacs";
+		return "6000 $ – 12000 $";
 	case "4":
 	case 4:
-		return "10 lacs – 15 lacs";
+		return "12000 $ – 18000 $";
 	case "5":
 	case 5:
-		return "15 lacs and above";
+		return "18000 $ and above";
 	case "":
 	case null:
 	case undefined:
@@ -726,48 +729,90 @@ export function getMonthName(value){
 
 export function getLanguageList(value){
 	switch(value){
-	case "Bodo":
-		return "Bodo";
-	case "Sanskrit":
-		return "Sanskrit";
-	case "Kashmiri":
-		return "Kashmiri";
-	case "Dogri":
-		return "Dogri";
-	case "Assamese":
-		return "Assamese";
-	case "Malayalam":
-		return "Malayalam";
-	case "Manipuri":
-		return "Manipuri";
-	case "Urdu":
-		return "Urdu";
-	case "Santali":
-		return "Santali";
-	case "Maithili":
-		return "Maithili";
-	case "Nepali":
-		return "Nepali";
-	case "Oriya":
-		return "Oriya";
-	case "Sindhu":
-		return "Sindhu";
-	case "Bangla":
-		return "Bangla";
-	case "Kannad":
-		return "Kannad";
 	case "English":
 		return "English";
 	case "Hindi":
 		return "Hindi";
-	case "Marathi":
-		return "Marathi";
-	case "Konkani":
-		return "Konkani";
+	case "Afrikaans":
+		return "Afrikaans";
+	case "Arabic":
+		return "Arabic";
+	case "Czech":
+		return "Czech";
+	case "Chinese":
+		return "Chinese";
+	case "Dutch":
+		return "Dutch";
+	case "French":
+		return "French";
+	case "German":
+		return "German";
+	case "Italian":
+		return "Italian";
+	case "Japanese":
+		return "Japanese";
+	case "Malay":
+		return "Malay";
+	case "Nepali":
+		return "Nepali";
+	case "Polish":
+		return "Polish";
+	case "Portuguese":
+		return "Portuguese";
+	case "Russian":
+		return "Russian";
+	case "Romanian":
+		return "Romanian";
+	case "Spanish":
+		return "Spanish";
+	case "Serbian":
+		return "Serbian";
+	case "Thai":
+		return "Thai";
+	case "Turkish":
+		return "Turkish";
+	case "Urdu":
+		return "Urdu";
+	case "Uzbek":
+		return "Uzbek";
+	case "Ukrainian":
+		return "Ukrainian";
+	case "Vietnamese":
+		return "Vietnamese";
+	case "Assamese":
+		return "Assamese";
+	case "Bodo":
+		return "Bodo";
+	case "Bangla":
+		return "Bangla";
+	case "Dogri":
+		return "Dogri";
 	case "Gujarati":
 		return "Gujarati";
+	case "Kashmiri":
+		return "Kashmiri";
+	case "Kannad":
+		return "Kannad";
+	case "Konkani":
+		return "Konkani";
+	case "Malayalam":
+		return "Malayalam";
+	case "Manipuri":
+		return "Manipuri";
+	case "Maithili":
+		return "Maithili";
+	case "Marathi":
+		return "Marathi";
+	case "Oriya":
+		return "Oriya";
 	case "Punjabi":
 		return "Punjabi";
+	case "Sindhu":
+		return "Sindhu";
+	case "Santali":
+		return "Santali";
+	case "Sanskrit":
+		return "Sanskrit";
 	case "Tamil":
 		return "Tamil";
 	case "Telugu":

@@ -42,6 +42,7 @@ class ActionReports extends React.Component{
 	};
 
 	componentDidMount() {
+		localStorage.removeItem("selectedTwitterHandle");
 		if(this.props.selectedAuditCycle){
 			this.getReportActionPlanList(this.props.selectedAuditCycle.id);
 		}

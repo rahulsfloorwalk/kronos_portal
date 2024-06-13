@@ -96,6 +96,8 @@ urlpatterns = ([
     url(r'report_summary/handles', views.ReportSummaryHandlesView.as_view(), name='report_summary_handles_view'),
     url(r'summary/audit_report/(?P<audit_cycle_id>[0-9]+)$', views.SummaryAuditCycle.as_view(), name="summary_audit_by_cycle"),
 
+    url(r'update_sentiment_data$', views.SentimentData.as_view(), name="update_sentiment_data"),
+
     url(r'audit_feedback_report_mail$', views.AuditFeedbackReportMail.as_view(), name="audit_feedback_report_mail"),
 
     # MarketPlace API

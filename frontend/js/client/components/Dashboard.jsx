@@ -41,6 +41,7 @@ export class Dashboard extends React.Component{
 	};
 
 	componentDidMount() {
+		localStorage.removeItem("selectedTwitterHandle");
 		this.props.fetchUser();
 	}
 

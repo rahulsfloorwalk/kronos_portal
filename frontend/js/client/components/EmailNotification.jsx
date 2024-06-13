@@ -24,6 +24,7 @@ class EmailNotification extends Component {
 	};
 
 	componentDidMount() {
+		localStorage.removeItem("selectedTwitterHandle");
 		this.setLoading(true);
 		getEmailNotification().then((client)=>{
 			this.setState({

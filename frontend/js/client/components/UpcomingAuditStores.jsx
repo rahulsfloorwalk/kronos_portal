@@ -29,6 +29,7 @@ export default class UpcomingAuditStores extends React.Component {
 	};
 
 	componentDidMount() {
+		localStorage.removeItem("selectedTwitterHandle");
 		this.setLoading(true);
 		fetchUpcomingAuditStores().then((auditStores) => {
 			let groupedAuditStores = {};

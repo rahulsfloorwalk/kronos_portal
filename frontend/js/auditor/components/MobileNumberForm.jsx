@@ -9,9 +9,12 @@ import FormInput from "../../components/FormInput.jsx";
 import { Save } from "../../components/Icons.jsx";
 import FormErrorList from "../../components/FormErrorList.jsx";
 import Modal from "../../components/Modal.jsx";
+import { fetchProfileInfo } from "../actions/dashboard.js";
+import FormSelect from "../../components/FormSelect.jsx";
+import { countryDialCodes } from "../../constants.js";
 
 
-class MobileNumberForm extends Component{
+class MobileNumberForm extends Component {
 	static propTypes = {
 		dispatch: PropTypes.func.isRequired,
 		router: PropTypes.shape({
@@ -20,15 +23,22 @@ class MobileNumberForm extends Component{
 		}).isRequired,
 	};
 
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
 			mobile_number: "",
 			submitting: false,
 			errors: {},
+			dialcode: "+91",
 		};
 	}
 
+	componentDidMount() {
+		this.props.dispatch(fetchProfileInfo())
+			.then((profileInfo) => {
+				this.setState({ mobile_number: profileInfo.mobile_number,dialcode: profileInfo.dial_code ? profileInfo.dial_code : this.state.dialcode});
+			});
+	}
 	setSubmitting = (submitting) => {
 		this.setState((prevState) => Object.assign({}, prevState, { submitting }));
 	};
@@ -40,7 +50,7 @@ class MobileNumberForm extends Component{
 	onSubmit = (e) => {
 		e.preventDefault();
 		this.setSubmitting(true);
-		this.props.dispatch(setMobileNumber(this.state.mobile_number)).then(() => {
+		this.props.dispatch(setMobileNumber(this.state.mobile_number, this.state.dialcode)).then(() => {
 			this.props.router.push("/details");
 		}, (err) => {
 			this.setState({
@@ -49,18 +59,31 @@ class MobileNumberForm extends Component{
 		}).always(() => this.setSubmitting(false));
 	};
 
-	render(){
+	render() {
 		return (
 			<Modal modalTitle="Update Mobile Number" onClose={this.props.router.goBack}>
 				<form onSubmit={this.onSubmit}>
 					{/* <p><big>You must have a registered mobile number in order to view available audits in your region</big></p> */}
-					<FormErrorList errors={this.state.errors.non_field_errors}/>
-					<FormInput label="Mobile Number (10-digit)" placeholder="__________"
-						maxLength="10" type="text" required={true}
-						value={this.state.mobile_number}
-						name="mobile_number" onChange={this.inputChanged}
-						errors={this.state.errors.mobile_number}
-						disabled={this.state.submitting}/>
+					<FormErrorList errors={this.state.errors.non_field_errors} />
+					<div className="row">
+						<div className="col-md-3">
+							<FormSelect label="Dial code" required_mark={true} name="dialcode" value={this.state.dialcode} onChange={this.inputChanged} disabled={this.state.submitting}>
+								{countryDialCodes.map(item => (
+									<option value={item.dialcode} key={item.id}>{item.name}</option>
+								))}
+
+							</FormSelect>
+						</div>
+						<div className="col-md-9">
+							<FormInput label="Mobile Number (10-digit)" placeholder=""
+								maxLength="20"
+								type="text" required={true}
+								value={this.state.mobile_number}
+								name="mobile_number" onChange={this.inputChanged}
+								errors={this.state.errors.mobile_number}
+								disabled={this.state.submitting} />
+						</div>
+					</div>
 					<div className="form-group">
 						<button className="btn btn-lg btn-primary" disabled={this.state.submitting}>
 							{ !this.state.submitting ? <span><Save/> Save</span> : "saving..."}

@@ -144,7 +144,7 @@ class MobileNumberView(APIView):
     }
 
     def post(self, request):
-        profile_info = profile_info_service.set_mobile_number_for_auditor(request.user.id, request.data.get('mobile_number'))
+        profile_info = profile_info_service.set_mobile_number_for_auditor(request.user.id, request.data.get('mobile_number'),request.data.get('dial_code'))
         return Response(ProfileInfoSerializer(profile_info).data)
 
 class WhatsappNumberView(APIView):
@@ -155,7 +155,7 @@ class WhatsappNumberView(APIView):
     }
 
     def post(self, request):
-        profile_info = profile_info_service.set_whatsapp_number_for_auditor(request.user.id, request.data.get('whatsapp_number'))
+        profile_info = profile_info_service.set_whatsapp_number_for_auditor(request.user.id, request.data.get('whatsapp_number'),request.data.get('whatsapp_dial_code'))
         return Response(ProfileInfoSerializer(profile_info).data)
 
 class CertificationMarksView(APIView):

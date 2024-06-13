@@ -4,9 +4,35 @@ import PropTypes from "prop-types";
 import FormSelect from "../../components/FormSelect.jsx";
 
 import { affectInputEventToComponent } from "../../react_utils.js";
+import { fetchProfileInfo} from "../actions/profile_info.js";
+import { fetchStatesByCountry, fetchCities, fetchCountries } from "../actions/location_info.js";
 
-import { fetchStatesByCountry, fetchCities } from "../actions/location_info.js";
+class __CountrySelector extends React.Component {
+	static propTypes = {
+		countries: PropTypes.object,
+	};
 
+	render() {
+		let countryOptions = [];
+		for( let c in this.props.countries){
+			countryOptions.push(<option key={c} value={c}>{this.props.countries[c]}</option>);
+		}
+		return (
+			<FormSelect label="Country" required_mark={true} name="country" {...this.props}>
+				<option value=""></option>
+				{countryOptions}
+			</FormSelect>
+		);
+	}
+}
+
+var mapStoreToPropsForCountrySelector = function(store){
+	return {
+		countries: store.countries,
+	};
+};
+
+var CountrySelector = ReactRedux.connect(mapStoreToPropsForCountrySelector)(__CountrySelector);
 /* State Selector begins */
 
 class __StateSelector extends React.Component {
@@ -20,7 +46,7 @@ class __StateSelector extends React.Component {
 			stateOptions.push(<option key={s} value={s}>{this.props.states[s]}</option>);
 		}
 		return (
-			<FormSelect label="Select State" name="state" {...this.props}>
+			<FormSelect label="State" required_mark={true} name="state" {...this.props}>
 				<option value=""></option>
 				{stateOptions}
 			</FormSelect>
@@ -61,7 +87,7 @@ class __CitySelector extends React.Component {
 			}
 		}
 		return (
-			<FormSelect label="Select City" name="city_id" {...this.props}>
+			<FormSelect label="City" required_mark={true} name="city_id" {...this.props}>
 				<option value=""></option>
 				{cityOptions}
 			</FormSelect>
@@ -93,12 +119,29 @@ class MoreAuditBox extends React.Component{
 			loading: false,
 			toggle_view: false,
 			error: "",
-			country: "IN"
+			// country: "IN"
 		};
 	}
 
 	componentDidMount(){
-		this.props.dispatch(fetchStatesByCountry(this.state.country));
+		// this.props.dispatch(fetchStatesByCountry(this.state.country));
+		this.setLoading(true);
+		Promise.all([
+			this.props.dispatch(fetchProfileInfo()),
+			this.props.dispatch(fetchCountries()),
+			// this.props.dispatch(fetchStates()),
+		]).then(([profileInfo] )=> {
+			this.setLoading(false);
+			this.setState(profileInfo);
+			if(profileInfo.city){
+				this.setState({
+					state: profileInfo.city.state,
+					country: profileInfo.city.country,
+				});
+				this.props.dispatch(fetchStatesByCountry(profileInfo.city.country)),
+				this.props.dispatch(fetchCities(profileInfo.city.state));
+			}
+		});
 	}
 
 	inputChanged = (e) => {
@@ -108,7 +151,20 @@ class MoreAuditBox extends React.Component{
 	setLoading = (loading) => {
 		this.setState((prevState) => Object.assign({}, prevState, { loading }));
 	};
-
+	myCountryChanged = (e) => {
+		this.inputChanged(e);
+		if(e.target.value){
+			this.props.dispatch(fetchStatesByCountry(e.target.value));
+			this.setState({
+				state: ""
+			});
+		} else {
+			this.setState({
+				state: "",
+				city_id: "",
+			});
+		}
+	};
 	myStateChanged = (e) => {
 		this.inputChanged(e);
 		if(e.target.value){
@@ -163,6 +219,9 @@ class MoreAuditBox extends React.Component{
 						</div>
 						<div className="col-md-12">
 							<p className="text-danger"><b>{this.state.error}{this.props.message}</b></p>
+						</div>
+						<div className="col-md-3">
+							<CountrySelector value={this.state.country} onChange={this.myCountryChanged} disabled={this.state.submitting}/>
 						</div>
 						<div className="col-md-3" style={{marginBottom:"10px"}}>
 							<StateSelector value={this.state.state} onChange={this.myStateChanged} disabled={this.state.submitting}/>

@@ -83,13 +83,13 @@ export function saveProfileInfo(profileInfo){
 	};
 }
 
-export function setMobileNumber(mobile_number){
+export function setMobileNumber(mobile_number,dial_code){
 	return function(dispatch){
 
 		let req = $.ajax({
 			type: "POST",
 			url: url.api_base_path + "auditor/mobile_number",
-			data: JSON.stringify({mobile_number}),
+			data: JSON.stringify({mobile_number,dial_code}),
 			contentType: "application/json"
 		});
 		req.then((profileInfo) => {
@@ -102,13 +102,13 @@ export function setMobileNumber(mobile_number){
 	};
 }
 
-export function setWhatsappNumber(whatsapp_number){
+export function setWhatsappNumber(whatsapp_number,whatsapp_dial_code){
 	return function(dispatch){
 
 		let req = $.ajax({
 			type: "POST",
 			url: url.api_base_path + "auditor/whatsapp_number",
-			data: JSON.stringify({whatsapp_number}),
+			data: JSON.stringify({whatsapp_number,whatsapp_dial_code}),
 			contentType: "application/json"
 		});
 		req.then((profileInfo) => {

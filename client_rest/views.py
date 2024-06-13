@@ -57,6 +57,13 @@ from .serializers import ReportActionPlanSerializer
 from client_report.service import improvable_questions
 from client_report.service import questionnaire_survey
 from django.db.transaction import atomic
+
+import json
+from django.http import JsonResponse
+from django.core.serializers import serialize
+from django.views.decorators.csrf import csrf_exempt
+from audit_store.models import AuditStore
+
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -685,8 +692,8 @@ class ReportSummaryHandlesView(APIView):
     }
     def get(self, request, format=None):
         client_id = request.user.clientuser.client_id
-        handles = twitter_client.get_handles_for_reportsummary_by_client(client_id)
-        return Response(AuditStoreSerializer(handles, many=True).data)
+        audit_cycles = twitter_client.get_handles_for_reportsummary_by_client(client_id)
+        return Response({"audit_cycle": audit_cycles})
 
 class SummaryAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -697,6 +704,63 @@ class SummaryAuditCycle(APIView):
         twitter_feeds = twitter_client.get_feeds_for_report_summary_client_and_handle(request.user.clientuser.client_id, audit_cycle_id)
         return Response(AuditStoreSerializer(twitter_feeds, many=True).data)
 
+class SentimentData(APIView):
+    permission_classes = [AllowAny]
+
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, format=None):
+        data = self.update_sentiment_data()
+        return JsonResponse(data)
+
+    def update_sentiment_data(self):
+        json_file_path = "./datasets/report_summary_sentiment_data.json"
+
+        try:
+            with open(json_file_path, "r", encoding="utf-8") as json_file:
+                data = json.load(json_file)
+
+                updated_count = 0
+                for row in data:
+                    audit_store_id = row.get("id")
+                    if audit_store_id and AuditStore.objects.filter(id=audit_store_id).exists():
+                        sentiment_main_keywords = row.get("sentiment_main_keywords", "")
+                        sentiment_bullet_points = row.get("sentiment_bullet_points", "")
+                        sentiment_emotions = row.get("sentiment_emotions", "")
+                        sentiment_positive_words = row.get("sentiment_positive_words", "")
+                        sentiment_negative_words = row.get("sentiment_negative_words", "")
+                        sentiment_score = row.get("sentiment_score", "")
+                        sentiment_score_result = row.get("sentiment_socre_result", "")
+
+                        AuditStore.objects.filter(id=audit_store_id).update(
+                            sentiment_main_keywords=sentiment_main_keywords,
+                            sentiment_bullet_points=sentiment_bullet_points,
+                            sentiment_emotions=sentiment_emotions,
+                            sentiment_positive_words=sentiment_positive_words,
+                            sentiment_negative_words=sentiment_negative_words,
+                            sentiment_score=sentiment_score,
+                            sentiment_text=sentiment_score_result
+                        )
+                        updated_count += 1
+
+                if updated_count > 0:
+                    response_data = {"message": "Sentiment data updated successfully", "updated_records_count": updated_count}
+                else:
+                    response_data = {"message": "No records updated"}
+
+                return response_data
+
+        except FileNotFoundError:
+            return {"error": "File not found"}
+
+        except KeyError as e:
+            return {"error": "KeyError: " + str(e)}
+
+        except Exception as e:
+            return {"error": str(e)}
+        
 class TwitterFeedView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

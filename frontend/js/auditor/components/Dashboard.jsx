@@ -32,6 +32,7 @@ class Dashboard extends React.Component {
 		city: PropTypes.shape({
 			id: PropTypes.number,
 			name: PropTypes.string,
+			country_name: PropTypes.string,
 		}),
 	};
 
@@ -76,7 +77,7 @@ class Dashboard extends React.Component {
 										firstName={this.props.firstName}
 										lastName={this.props.lastName}
 										gender={this.props.gender}
-										city={this.props.city.name}
+										city={this.props.city.country_name}
 										phone={this.props.phone}
 									/>
 								</div>

@@ -42,8 +42,8 @@
 					{% endif %}
 					{% csrf_token %}
 					<div class="form-group">
-						<label>Email Address or 10-digit Mobile Number</label>
-						{{ form.username | add_class:"form-control input-lg" | attr:"placeholder:name@example.com or 9876543210" }}
+						<label>Email Address : </label>
+						{{ form.username | add_class:"form-control input-lg" | attr:"placeholder:name@example.com" }}
 						<p class="help-block">
 						{{ form.username.errors }}
 						</p>

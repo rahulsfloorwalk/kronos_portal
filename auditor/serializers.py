@@ -40,8 +40,26 @@ class CitySerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class DashBoardCitySerializer(ModelSerializer):
+    country_name = SerializerMethodField()
+
+    def get_country_name(self, obj):
+        return obj.country_name()
+    class Meta:
+        model = City
+        fields = (
+            'id',
+            'name',
+            'state',
+            'country',
+            'country_name',
+            'lat',
+            'lon',
+        )
+        read_only_fields = fields
+
 class ProfileInfoSerializer(ModelSerializer):
-    city = CitySerializer()
+    city = DashBoardCitySerializer()
     class Meta:
         model = ProfileInfo
         fields = (
@@ -52,6 +70,8 @@ class ProfileInfoSerializer(ModelSerializer):
             'gender',
             'marital_status',
             'education',
+            'dial_code',
+            'whatsapp_dial_code',
             'mobile_number',
             'whatsapp_number',
             'date_of_birth',
