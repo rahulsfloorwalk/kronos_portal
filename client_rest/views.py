@@ -702,7 +702,7 @@ class SummaryAuditCycle(APIView):
     }
     def get(self, request, audit_cycle_id, format=None):
         twitter_feeds = twitter_client.get_feeds_for_report_summary_client_and_handle(request.user.clientuser.client_id, audit_cycle_id)
-        return Response(AuditStoreSerializer(twitter_feeds, many=True).data)
+        return Response(SentimentDataSerializer(twitter_feeds, many=True).data)
     
 class SentimentDataView(APIView):
     permission_classes = [HasGroupPermission]
@@ -735,22 +735,22 @@ class SentimentData(APIView):
                 for row in data:
                     audit_store_id = row.get("id")
                     if audit_store_id and AuditStore.objects.filter(id=audit_store_id).exists():
-                        sentiment_main_keywords = row.get("sentiment_main_keywords", "")
-                        sentiment_bullet_points = row.get("sentiment_bullet_points", "")
-                        sentiment_emotions = row.get("sentiment_emotions", "")
-                        sentiment_positive_words = row.get("sentiment_positive_words", "")
-                        sentiment_negative_words = row.get("sentiment_negative_words", "")
+                        main_keywords = row.get("main_keywords", {})
+                        bullet_points = row.get("bullet_points", {})
+                        sentiment_emotions = row.get("sentiment_emotions", {})
+                        sentiment_positive_words = row.get("sentiment_positive_words", {})
+                        sentiment_negative_words = row.get("sentiment_negative_words", {})
                         sentiment_score = row.get("sentiment_score", "")
-                        sentiment_score_result = row.get("sentiment_socre_result", "")
+                        sentiment_text = row.get("sentiment_text", "")
 
                         AuditStore.objects.filter(id=audit_store_id).update(
-                            sentiment_main_keywords=sentiment_main_keywords,
-                            sentiment_bullet_points=sentiment_bullet_points,
+                            main_keywords=main_keywords,
+                            bullet_points=bullet_points,
                             sentiment_emotions=sentiment_emotions,
                             sentiment_positive_words=sentiment_positive_words,
                             sentiment_negative_words=sentiment_negative_words,
                             sentiment_score=sentiment_score,
-                            sentiment_text=sentiment_score_result
+                            sentiment_text=sentiment_text
                         )
                         updated_count += 1
 

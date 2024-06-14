@@ -13,6 +13,10 @@ export function fetchClientReportSummaryFeedByHandle(audit_cycle_id){
 	return $.get( url.api_base_path + `client/summary/audit_report/${audit_cycle_id}`);
 }
 
+export function fetchSentimetModalData(auditid){
+	return $.get( url.api_base_path + `client/sentiment_data/${auditid}`);
+}
+
 export function fetchClientTwitterFeedByHandle(handle_id){
 	return $.get( url.api_base_path + `client/twitter/handles/${handle_id}/feed`);
 }
