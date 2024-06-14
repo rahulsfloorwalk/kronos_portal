@@ -25,7 +25,7 @@ import ActionReports from "./ActionReports.jsx";
 
 import EmailNotification from "./EmailNotification.jsx";
 import AIinsights from "./AIinsights.jsx";
-import AIinsightModal from "./AiinsightModal.jsx";
+import AiinsightModal from "./AiinsightModal.jsx";
 
 const IndexComponent = () => null;
 
@@ -53,7 +53,7 @@ const Routes = () => (<Router history={hashHistory}>
 		</Route>
 		<Route path="/twitter" component={TwitterFeed}/>
 		<Route path="aiinsights" component={AIinsights}>
-			<Route path="analysis/:summaryId" component={AIinsightModal}/>
+			<Route path="analysis/:summaryId" component={AiinsightModal}/>
 		</Route>
 		<Route path="/action_reports" component={ActionReports}/>
 		<Route path="/email_notification" component={EmailNotification}/>

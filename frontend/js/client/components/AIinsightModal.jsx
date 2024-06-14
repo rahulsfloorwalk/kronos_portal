@@ -24,7 +24,7 @@ const callbacks = {
 	getWordTooltip: null,
 };
 
-class AIinsightModal extends Component {
+class AiinsightModal extends Component {
 	static propTypes = {
 		params: PropTypes.shape({
 			summaryId: PropTypes.number,
@@ -158,4 +158,4 @@ class AIinsightModal extends Component {
 	}
 }
 
-export default AIinsightModal;
+export default AiinsightModal;
