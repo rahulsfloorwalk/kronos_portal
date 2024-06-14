@@ -55,6 +55,7 @@
 		"react-test-renderer": "^16.13.1",
 		"react-transition-group": "^1.2.1",
 		"react-twitter-widgets": "^1.4.1",
+		"react-wordcloud": "^1.2.7",
 		"react-youtube": "^7.9.0",
 		"reactour": "^1.9.0",
 		"recharts": "^2.0.10",

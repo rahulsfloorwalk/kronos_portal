@@ -13,8 +13,12 @@ import Jumbotron from "../../components/Jumbotron.jsx";
 import "../../../css/bs_overrides.scss";
 import { Link } from "react-router";
 import { hashHistory } from "react-router";
+import analysispic from "../../../img/analysis_pic.jpg";
 
 export default class AIinsights extends Component {
+	static propTypes = {
+		children: PropTypes.node,
+	};
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -66,17 +70,15 @@ export default class AIinsights extends Component {
 		return (
 			<div>
 				<select className="form-control input-lg" style={{ width: "400px", display: "inline-block" }} name="selectedTwitterHandle" value={this.state.selectedTwitterHandle} onChange={this.twitterHandleChanged}>
-					{/* { this.state.handles.map((h) => <option value={h.id} key={h.id}>{h.twitter_handle}</option>) } */}
-					{/* <option value="" >Select Audit Cycle</option> */}
 					{this.state.handles.length > 0 && this.state.handles
 						.sort((a, b) => b.id - a.id)
 						.map((h) => <option value={h.id} key={h.id}>{h.name}</option>)}
 				</select>
 				<hr />
 				{this.state.selectedTwitterHandle &&
-					// <TwitterData handle={this.state.handles.length>0 && this.state.handles.find(h => h.id === parseInt(this.state.selectedTwitterHandle))} />
 					<TwitterData handle={this.state.handles.length > 0 && this.state.handles.find(h => h.id === parseInt(this.state.selectedTwitterHandle))} selectedTwitterHandle={this.state.selectedTwitterHandle && this.state.selectedTwitterHandle} />
 				}
+				{this.props.children}
 			</div>
 		);
 	}
@@ -171,7 +173,7 @@ class TwitterData extends Component {
 	};
 
 	handleView = (id) => {
-		// this.props.history.push(`/audit_store/${id}`);
+		// this.props.history.push(/audit_store/${id});
 		hashHistory.push(`/audit_store/${id}`);
 		localStorage.setItem("selectedTwitterHandle", this.props.selectedTwitterHandle);
 	};
@@ -189,12 +191,9 @@ class TwitterData extends Component {
 					<div className="analyse_box">
 						<p>{summary.audit.audit_cycle.name}</p>
 						<div>
-							{/* <Link to={"/aiinsights/analysis"} >
+							<Link to={`/aiinsights/analysis/${summary.id}`} >
 								<img src={analysispic} alt="analysis_icon" style={{ width: "50px" }} />
-							</Link> */}
-							<Link
-								to={`/audit_store/${summary.id}`}
-								className="btn btn-primary btn-sm" style={{ padding: "4px 8px", fontSize: "1.2rem", marginLeft: "1rem" }}>View Report</Link>
+							</Link>
 						</div>
 					</div>
 					<p>{summary.audit.store.name}</p>
@@ -205,7 +204,10 @@ class TwitterData extends Component {
 					</span>
 				)}</p>
 
-				<p>{this.formatTimestamp(summary.audit_date)}</p>
+				<p style={{ position: "relative" }}>{this.formatTimestamp(summary.audit_date)}
+					<Link
+						to={`/audit_store/${summary.id}`}
+						style={{ padding: "4px 8px", fontSize: "1.2rem", marginLeft: "1rem", position: "absolute", right: 0 }}>View Report</Link></p>
 			</div>
 		);
 	};

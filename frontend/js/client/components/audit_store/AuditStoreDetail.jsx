@@ -28,6 +28,8 @@ import ImpactFactorBox from "./ImpactFactorBox.jsx";
 
 import floorwalkLogoUrl from "../../../../img/logo_500x300.png";
 import { fetchUser,findAllClientUser } from "../../service/user.js";
+import { Link } from "react-router";
+import analysispic from "../../../../img/analysis_pic.jpg";
 
 export default class AuditStoreDetail extends React.Component {
 	static propTypes = {
@@ -315,6 +317,12 @@ export default class AuditStoreDetail extends React.Component {
 						<Comment/> Write Action Plan
 					</button> : ""}
 					<File/> Audit Report
+					{!printMode && this.state.auditStore.report_summary ?
+						<Link to={`/aiinsights/analysis/${this.props.params.auditStoreId}`} >
+							<img src={analysispic} alt="analysis_icon" style={{ width: "50px" }} />
+						</Link>
+						: ""
+					}
 				</h2>
 				<div className="row">
 					<div className="col-md-6">

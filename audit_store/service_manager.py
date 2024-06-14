@@ -10,6 +10,9 @@ from audit.models import AuditCycle,Audit
 from attachment.service import set_attachment_by_audit_store, set_attachment_by_proof_tag
 from manager.serializers import AuditSerializer
 from client.models import MPOrder
+import requests
+import json
+
 def set_report_attribute_value(audit_store_id, json_id, option_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     manager_service.find_manager_by_user_id(user_id)
@@ -83,6 +86,40 @@ def pm_revert_report(audit_store_id, user_id):
     audit_store.pm_revert(by=user)
     return audit_store
 
+def get_sentiment_data(report_summary):
+    api_url = "http://api.floorwalk.in/text_analysis"
+    token = "12345"
+    payload = {
+        'token': token,
+        'text': report_summary,
+    }
+
+    try:
+        response = requests.post(api_url, data=payload)
+        if response.status_code == 200:
+            data = response.json()
+            keywords = data.get('keywords', {})
+            key_sentences = data.get('key_sentences', {}) 
+            emotions = data.get('emotions', {})
+            positive_words = data.get('positive_words', [])
+            negative_words = data.get('negative_words', [])
+            sentiment_score = data.get('sentiment_score', '')
+            sentiment_result = data.get('sentiment_result', '')
+            
+            return {
+                'keywords': keywords,
+                'key_sentences': key_sentences,
+                'emotions': emotions,
+                'positive_words': positive_words,
+                'negative_words': negative_words,
+                'sentiment_score': sentiment_score,
+                'sentiment_result': sentiment_result
+            }
+        else:
+            return {'error': 'Unknown'}
+    except Exception as e:
+        print("Error:", e)
+        return {'error': 'Unknown'}
 
 def complete_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
@@ -96,6 +133,21 @@ def complete_report(audit_store_id, user_id):
     audit_ids = audit_cycle.audits.values_list('id', flat=True)
     audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
 
+    try:
+        sentiment_data = get_sentiment_data(audit_store.report_summary)
+        audit_store.main_keywords = sentiment_data['keywords']
+        audit_store.bullet_points = sentiment_data['key_sentences']
+        audit_store.sentiment_emotions = sentiment_data['emotions']
+        audit_store.sentiment_positive_words = sentiment_data['positive_words']
+        audit_store.sentiment_negative_words = sentiment_data['negative_words']
+        audit_store.sentiment_score = sentiment_data['sentiment_score']
+        audit_store.sentiment_text = sentiment_data['sentiment_result']
+        audit_store.save()
+
+    except Exception as e:
+        print("Error in sentiment data: {}".format(e))
+        pass
+    
     mp_order = MPOrder.objects.get(id=audit_cycle.order.id) if audit_cycle.order else None
     if mp_order is not None:
         # store_ids = [audit_store.id for audit_store in audit_stores]
