@@ -92,6 +92,7 @@ def get_sentiment_data(report_summary):
     payload = {
         'token': token,
         'text': report_summary,
+        # 'text':report_summary
     }
 
     try:
