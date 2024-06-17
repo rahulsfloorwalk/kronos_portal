@@ -129,9 +129,11 @@ class TwitterData extends Component {
 	}
 
 	fetchTweets = (selectedTwitterHandleid) => {
+		this.setLoading(true);
 		fetchClientReportSummaryFeedByHandle(selectedTwitterHandleid).then((tweets) => {
 			this.setState({ tweets });
 			this.setState({ fullyLoaded: true });
+			this.setLoading(false);
 		});
 	};
 

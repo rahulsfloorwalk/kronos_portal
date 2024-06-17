@@ -319,7 +319,7 @@ export default class AuditStoreDetail extends React.Component {
 					<File/> Audit Report
 					{!printMode && this.state.auditStore.report_summary ?
 						<Link to={`/aiinsights/analysis/${this.props.params.auditStoreId}`} >
-							<img src={analysispic} alt="analysis_icon" style={{ width: "50px" }} />
+							<img src={analysispic} alt="analysis_icon" style={{ width: "50px" }} title="View AI insights" />
 						</Link>
 						: ""
 					}

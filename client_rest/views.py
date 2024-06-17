@@ -735,6 +735,7 @@ class SentimentData(APIView):
                 for row in data:
                     audit_store_id = row.get("id")
                     if audit_store_id and AuditStore.objects.filter(id=audit_store_id).exists():
+                        report_summary = row.get("report_summary", "")
                         main_keywords = row.get("main_keywords", {})
                         bullet_points = row.get("bullet_points", {})
                         sentiment_emotions = row.get("sentiment_emotions", {})
@@ -744,13 +745,14 @@ class SentimentData(APIView):
                         sentiment_text = row.get("sentiment_text", "")
 
                         AuditStore.objects.filter(id=audit_store_id).update(
+                            report_summary=report_summary,
                             main_keywords=main_keywords,
                             bullet_points=bullet_points,
                             sentiment_emotions=sentiment_emotions,
                             sentiment_positive_words=sentiment_positive_words,
                             sentiment_negative_words=sentiment_negative_words,
                             sentiment_score=sentiment_score,
-                            sentiment_text=sentiment_text
+                            sentiment_text=sentiment_text,
                         )
                         updated_count += 1
 
