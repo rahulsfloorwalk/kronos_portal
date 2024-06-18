@@ -910,6 +910,11 @@ $progress_bar_bg_lighten_pct : 5%;
 		width: "100%";
 		// background-color: #000;
 	}
+	.aiinsight_storedetail{
+		position: absolute;
+		top: 0;
+		left: 22rem;
+	}
 	@media screen and (max-width: 760px) {
 		.ai_modal_mainbox {
 			grid-template-columns: 1fr;
@@ -920,5 +925,22 @@ $progress_bar_bg_lighten_pct : 5%;
 		}
 		.word_cloud_box{
 			height: 100px;
+		}
+	}
+	@media screen and (max-width: 830px) {
+		.aiinsight_storedetail{
+         top: 4rem;
+		}
+	}
+	@media screen and (max-width: 450px) {
+		.aiinsight_storedetail{
+         top: 4rem;
+		 left: 20rem;
+		}
+	}
+	@media screen and (max-width: 410px) {
+		.aiinsight_storedetail{
+         top: 7rem;
+		 left: 20rem;
 		}
 	}

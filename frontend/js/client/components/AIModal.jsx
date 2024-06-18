@@ -22,6 +22,7 @@ const callbacks = {
 	onWordClick: null,
 	onWordMouseOver: null,
 	getWordTooltip: null,
+	getWordColor: (word) => word.color,
 };
 
 class AIModal extends Component {
@@ -97,13 +98,13 @@ class AIModal extends Component {
 		const positiveKeywords = sentiments.sentiment_positive_words || {};
 		const negativeKeywords = sentiments.sentiment_negative_words || {};
 		const emotionData = this.prepareEmotionData(sentiments.sentiment_emotions || {});
-		// const wordCloudData = [
-		//     ...this.renderPositiveKeywordsWordCloud(positiveKeywords),
-		//     ...this.renderNegativeKeywordsWordCloud(negativeKeywords)
-		// ];
-		const positiveWordCloudData = this.renderPositiveKeywordsWordCloud(positiveKeywords);
-		const negativeWordCloudData = this.renderNegativeKeywordsWordCloud(negativeKeywords);
-		const wordCloudData = [...positiveWordCloudData, ...negativeWordCloudData];
+		const wordCloudData = [
+			...this.renderPositiveKeywordsWordCloud(positiveKeywords),
+			...this.renderNegativeKeywordsWordCloud(negativeKeywords)
+		];
+		// const positiveWordCloudData = this.renderPositiveKeywordsWordCloud(positiveKeywords);
+		// const negativeWordCloudData = this.renderNegativeKeywordsWordCloud(negativeKeywords);
+		// const wordCloudData = [...positiveWordCloudData, ...negativeWordCloudData];
 
 		return (
 			<Modal modalTitle="Sentimental Analysis" size="modal-lg" onClose={hashHistory.goBack}>

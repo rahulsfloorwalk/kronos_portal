@@ -45,7 +45,10 @@ const Routes = () => (<Router history={hashHistory}>
 			<Route path="reports" component={StoreAuditStoreList}/>
 			<Route path="proof_comparison" component={ProofComparison}/>
 		</Route>
-		<Route path="/audit_store/:auditStoreId" component={AuditStoreDetail}/>
+		{/* <Route path="/audit_store/:auditStoreId" component={AuditStoreDetail}/> */}
+		<Route path="audit_store/:auditStoreId" component={AuditStoreDetail}>
+			<Route path="analysis/:summaryId" component={AIModal} />
+		</Route>
 		<Route path="/upcoming" component={UpcomingAuditStores}/>
 
 		<Route path="store_performance" component={StorePerformanceCount}>

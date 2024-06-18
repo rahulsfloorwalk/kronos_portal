@@ -33,6 +33,7 @@ import analysispic from "../../../../img/analysis_pic.jpg";
 
 export default class AuditStoreDetail extends React.Component {
 	static propTypes = {
+		children: PropTypes.node,
 		params: PropTypes.shape({
 			auditStoreId: PropTypes.string.isRequired,
 		}),
@@ -292,8 +293,10 @@ export default class AuditStoreDetail extends React.Component {
 		else{
 			submit_button_html = (<Loading/>);
 		}
+		const { auditStoreId } = this.props.params;
+		const summaryId = parseInt(auditStoreId, 10);
 		return (
-			<div className="audit_report">
+			<div className="audit_report" style={{position:"relative"}}>
 				<h2 className="page-header">
 					{ printMode ?
 						<button className="btn btn-default pull-right hidden-print" onClick={window.print}>
@@ -317,13 +320,20 @@ export default class AuditStoreDetail extends React.Component {
 						<Comment/> Write Action Plan
 					</button> : ""}
 					<File/> Audit Report
-					{!printMode && this.state.auditStore.report_summary ?
+					{/* {!printMode && this.state.auditStore.report_summary ?
 						<Link to={`/aiinsights/analysis/${this.props.params.auditStoreId}`} >
-							<img src={analysispic} alt="analysis_icon" style={{ width: "50px" }} />
+							<img src={analysispic} alt="analysis_icon" style={{ width: "50px" }} title="View AI insights" />
 						</Link>
 						: ""
-					}
+					} */}
 				</h2>
+				{!printMode && this.state.auditStore.report_summary ?
+					<Link to={`/audit_store/${auditStoreId}/analysis/${summaryId}`} className="aiinsight_storedetail">
+						<img src={analysispic} alt="analysis_icon" style={{ width: "50px" }} title="View AI insights"/>
+					</Link>
+					: ""
+				}
+				{this.props.children}
 				<div className="row">
 					<div className="col-md-6">
 						{ printMode || this.state.report_display == "block" ?
