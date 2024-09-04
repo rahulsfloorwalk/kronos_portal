@@ -3,7 +3,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework.serializers import Serializer, BooleanField, CharField
+from rest_framework.serializers import Serializer, BooleanField, CharField, ChoiceField
 from attachment.service import set_attachment_by_proof_tag
 from django.db.transaction import atomic
 import attachment.service_auditor as attachment_auditor_service
@@ -56,6 +56,7 @@ from django.db import IntegrityError
 # from rest_framework.permissions import AllowAny
 from auditor.serializers import AuditProoftagSerializer
 from django.shortcuts import get_object_or_404
+from auditor.models import AuditApplication
 
 
 # Get the current date
@@ -274,6 +275,26 @@ class AuditStoreIdReportSummaryView(APIView):
         report_summary = ds.validated_data['report_summary']
         audit_store = audit_store_auditor_service.set_report_summary(audit_store_id, request.user.id, report_summary)
         return Response(AuditStoreSerializer(audit_store).data)
+        
+class AuditStoreIdNpsSectionView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+
+    # class NpsSectionDeSerializer(Serializer):
+    #     nps_section = CharField(max_length=16348, allow_blank=True)
+
+    class NpsSectionDeSerializer(Serializer):
+        nps_section = ChoiceField(choices=AuditStore.NPS_RATING, required=False, allow_null=True, allow_blank=True )
+
+
+    def post(self, request, audit_store_id):
+        ds = self.NpsSectionDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        nps_section = ds.validated_data['nps_section']
+        audit_store = audit_store_auditor_service.set_nps_section(audit_store_id, request.user.id, nps_section)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 
 class AuditStoreView(APIView):
@@ -327,6 +348,9 @@ class AuditApplicationApplyView(APIView):
         audit_auto_approve = audit_cycle_audit_auto_approve_check_by_applictaion_id(application.id) 
         if str(request.data['audit_date']) == str(tomorrow_date) and audit_auto_approve:
             instance_approved_application.approved(application.id)
+            audit_application = AuditApplication.objects.get(id=application.id)
+            audit_application.report_exists = True
+            audit_application.save()
         return Response(AuditApplicationSerializer(application).data)
 
 class AuditApplicationCancelView(APIView):

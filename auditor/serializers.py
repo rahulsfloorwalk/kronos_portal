@@ -524,6 +524,7 @@ class AuditStoreSerializer(ModelSerializer):
             'audit_date',
             'audit',
             'report_summary',
+            'nps_section',
             'user',
             'get_date_diff',
             'max_attachment_limit',

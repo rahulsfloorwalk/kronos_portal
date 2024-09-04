@@ -63,6 +63,7 @@ export default class Header extends Component{
 							<NavLink to="/client"><King/> <span className="hidden-xs">Clients</span></NavLink>
 							<NavLink to="/auditor"><Pawn/> <span className="hidden-xs">Auditors</span></NavLink>
 							<NavLink to="/agency_user"><Rook/> <span className="hidden-xs">Agency</span></NavLink>
+							<NavLink to="/moderator/summary"><Knight/> <span className="hidden-xs">Moderators</span></NavLink>
 						</ul>
 					}
 					<ul className="nav navbar-nav navbar-right">

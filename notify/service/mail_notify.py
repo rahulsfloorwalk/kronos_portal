@@ -70,7 +70,11 @@ def notification_email_task(notif_id, message):
         _logger.info("skipping notification email with id %s to manager", notif_id)
         return notif.emailed
     elif notif.recipient.groups.filter(name=GROUP_NAME_AUDITOR).all():
-        to_email = notif.recipient.email
+        if notif.verb == verbs.AUDIT_APPLICATION_INSTANT_APPROVED:
+            to_email = ['rahul.solanki@floorwalk.in','pooja.satfale@floorwalk.in','sourabh@floorwalk.in']
+        else:
+            to_email = notif.recipient.email
+        # to_email = notif.recipient.email
         params = {
             **registration_context(),
         }
@@ -80,6 +84,12 @@ def notification_email_task(notif_id, message):
             subject = "Audit Application for {}".format(params['client'])
             params['html_template'] = 'notify/application_email.html'
             params['txt_template'] = 'notify/application_email.txt'
+
+        elif notif.verb == verbs.AUDIT_APPLICATION_INSTANT_APPROVED:
+            get_params_from_application(notif.action_object, params)
+            subject = "Audit Application Instant Approval Notification"
+            params['html_template'] = 'notify/instant_assign_email.html'
+            params['txt_template'] = 'notify/instant_assign_email.txt'
 
         elif notif.verb == verbs.AUDIT_APPLICATION_CANCELED:
             get_params_from_application(notif.action_object, params)

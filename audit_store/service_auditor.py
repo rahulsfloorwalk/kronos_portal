@@ -65,6 +65,15 @@ def set_report_summary(audit_store_id, user_id, report_summary):
         raise AppLogicError("Cannot set report summary of current audit store")
 
 
+@atomic
+def set_nps_section(audit_store_id, user_id, nps_section):
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
+    if audit_store.is_editable_by_auditor():
+        audit_store.set_nps_section(nps_section)
+        return audit_store
+    else:
+        raise AppLogicError("Cannot set NPS Section of current audit store")
+
 
 @atomic
 def submit_report(audit_store_id, user_id):
@@ -75,6 +84,12 @@ def submit_report(audit_store_id, user_id):
         raise AppLogicError("Report cannot be submitted by user")
     if not audit_store.report_summary or not audit_store.report_summary.strip():
         raise AppLogicError("Please fill report summary before submitting")
+    
+    if not isinstance(audit_store.nps_section, int):
+        raise AppLogicError("Please complete NPS Section before submitting")
+    if audit_store.nps_section not in range(1, 11):
+        raise AppLogicError("NPS Section rating should be between 1 and 10")
+    
     if len(audit_store.report_summary.strip()) < 150:
         raise AppLogicError("Report summary should be at least 150 characters")
     if not audit_store.is_submittable_for_auditor():

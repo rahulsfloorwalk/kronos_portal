@@ -180,6 +180,7 @@ urlpatterns = ([
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store_new$', audit_store_views.AuditStoreByAuditCycleNew.as_view(), name='audit_store_by_audit_cycle_new_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store_list$', audit_store_views.AuditStoreListByAuditCycle.as_view(), name='audit_store_list_by_audit_cycle_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store_city_list$', audit_store_views.AuditStoreCityListByAuditCycle.as_view(), name='audit_store_city_list_by_audit_cycle_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store/(?P<audit_store_id>[0-9]+)/audit_list$', audit_store_views.AuditListByAuditCycleAuditStore.as_view(), name='audit_list_by_audit_cycle_audit_store_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/user_list_for_reports_filter$', audit_store_views.UserListForReportsFilter.as_view(), name='user_list_for_reports_filter_view'),

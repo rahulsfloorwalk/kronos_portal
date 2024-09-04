@@ -1,0 +1,25 @@
+{% load markdown_deux_tags %}
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<h1>Audit Instant Assigned</h1>
+		<p>Hello </p>
+		<p>We have Instantly approved application <b>{{ name }}</b> to perform an audit at <b>{{ client }}</b> on <b>{{ audit_date }}</b>.</p>
+		<p>The audit details are as follows:</p>
+		<p><b>Store Name:</b> {{ store_name }}</p>
+		<p><b>Store Address:</b> {{ store_address }}</p>
+		<p><b>Audit Date:</b> {{ audit_date }}</p>
+		<a href="{{ kronos_base_url }}{% url 'registration:login' %}?next=/static/auditor/index.html%23/audit_store&ref=email_cta&utm_source=email_footer" target="_blank" style="text-decoration:underline;background-color:#ffffff;border:solid 1px #3498db;border-radius:5px;box-sizing:border-box;color:#3498db;cursor:pointer;display:inline-block;font-size:14px;font-weight:bold;margin:0;padding:12px 25px;text-decoration:none;background-color:#3498db;border-color:#3498db;color:#ffffff;">Click Here to Read Audit Guidelines</a>
+		{% comment %} <p><b>Note: It is mandatory to view the audit guidelines and questionnaire and agree to it before conducting the audit. It is also mandatory to submit report with valid audit proofs within 24 hours of audit completion. </b></p>
+		<p><b>Payment Terms</b>: Payment will be transferred into your bank account within 45 days after the completion of the <b>respective month of your report submission.</b> The status of the report can be seen on the portal in the audits section.</p> {% endcomment %}
+
+		<p>--</p>
+		<p>Thanks and regards,</p>
+		<p>FloorWalk Team</p>
+		<br>
+		<br>
+		<h6>Please note that this is system generated email. Do not reply to this email. For any queries, write to us at contactus@floorwalk.in</h6>
+	</body>
+</html>
