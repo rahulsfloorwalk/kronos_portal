@@ -25,7 +25,7 @@ const GTranslateWidget = () => {
 
 			document.body.appendChild(popupScript);
 		} else {
-			window.GTranslateWidget.translate(wrapperSelector);
+			window.GTranslateWidget && window.GTranslateWidget.translate(wrapperSelector);
 		}
 
 		return () => {

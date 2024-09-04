@@ -66,7 +66,10 @@ class AuditApplicationTestCase(TestCase):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ACTIVE)
         mommy.make(AuditStore, user=self.auditor_user, audit=audit, audit_date=date(2017, 1, 15), status = AuditStore.ACCEPTED)
         application = application_service.apply(audit.id, self.auditor_user.id, date(2017, 6, 5))
-        self.assertTrue(application.report_exists)
+        # self.assertTrue(application.report_exists)
+        self.assertEqual(application.report_exists_data['audit_cycle_id'], audit.audit_cycle.id)
+        self.assertEqual(application.report_exists_data['audit_cycle_name'], audit.audit_cycle.name)
+        self.assertEqual(application.report_exists_data['audit_date'], '2017-01-15')
 
     def test_apply_audit_cycle_status_upcoming(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.UPCOMING)

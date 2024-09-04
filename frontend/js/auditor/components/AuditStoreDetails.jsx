@@ -13,6 +13,7 @@ import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 
 import AttachmentUploadBox from "./AttachmentUploadBox.jsx";
 import ReportSummary from "./ReportSummary.jsx";
+import NpsSection from "./NpsSection.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
 import SectionList from "./questionnaire/SectionList.jsx";
@@ -345,6 +346,7 @@ class AuditStoreDetails extends React.Component {
 				<AttachmentUploadBox auditStoreId={this.props.params.auditStoreId} editable={this.isReportEditable()}/>
 				<ReportSummary audit_store_id={this.props.params.auditStoreId} report_summary={this.props.auditStore.report_summary} editable={this.isReportEditable()} showErrors={this.state.showErrors} />
 				<SectionList auditStoreId={this.props.params.auditStoreId} showErrors={this.state.showErrors} editable={this.isReportEditable()} auditStore={this.props.auditStore}/>
+				<NpsSection audit_store_id={this.props.params.auditStoreId} nps_section={this.props.auditStore.nps_section} editable={this.isReportEditable()} showErrors={this.state.showErrors} />
 				{buttonPanel}
 				{this.props.children}
 				{this.state.submitModalOpen ?

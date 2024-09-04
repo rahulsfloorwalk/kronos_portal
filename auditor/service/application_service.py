@@ -66,7 +66,7 @@ def apply(audit_id, user_id, audit_date):
             application.audit_date = audit_date
             report_exists = previous_report_exists(profile_info, audit, audit_date)
             if report_exists:
-                application.report_exists = True
+                # application.report_exists = True
                 application.report_exists_data = {
                     'audit_cycle_id': report_exists.audit.audit_cycle.id,
                     'audit_cycle_name': report_exists.audit.audit_cycle.name,

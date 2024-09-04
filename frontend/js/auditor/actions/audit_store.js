@@ -144,6 +144,28 @@ export function submitReportSummary(audit_store_id, report_summary){
 	};
 }
 
+export function submitNpsSection(audit_store_id, nps_section){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `auditor/audit_store/${audit_store_id}/nps_section`,
+			data: JSON.stringify({
+				nps_section
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(auditStore){
+			dispatch({
+				type: types.NPS_SECTION_POST,
+				status: "success",
+				auditStore,
+			});
+		});
+		//TODO: Handle error
+		return req;
+	};
+}
+
 export function submitConcern(auditStoreId, message){
 	return function(dispatch){
 		let req = $.ajax({

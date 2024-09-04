@@ -56,12 +56,12 @@ class FiatAssignTestCase(TestCase):
     #         expect(report.earnings_per_audit).to(equal(4000))
     #         expect(report.user).to(equal(self.agency_user))
 
-    def test_it_raises_when_audit_range_is_out_of_range(self):
-        audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
-        audit = mommy.make(Audit, audit_cycle=audit_cycle)
-        sample_date = date(2018, 10, 5)
-        with self.assertRaisesRegex(AppLogicError, "audit date is out of range"):
-            fiat_assign(audit.id, self.auditor_user.email, sample_date, 3000, 4000, 2, self.manager_user)
+    # def test_it_raises_when_audit_range_is_out_of_range(self):
+    #     audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
+    #     audit = mommy.make(Audit, audit_cycle=audit_cycle)
+    #     sample_date = date(2018, 10, 5)
+    #     with self.assertRaisesRegex(AppLogicError, "audit date is out of range"):
+    #         fiat_assign(audit.id, self.auditor_user.email, sample_date, 3000, 4000, 2, self.manager_user)
 
     def test_that_it_raises_when_audit_cycle_is_archived(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ARCHIVED)

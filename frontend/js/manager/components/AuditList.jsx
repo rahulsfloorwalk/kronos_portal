@@ -370,6 +370,9 @@ export class AuditList extends Component{
 	onHiddenFilterChanged = (e) => {
 		this.setState({selectedHiddenState: e.target.value});
 	};
+	onStatuaFilterChanged = (e) => {
+		this.setState({selectedStatuaState: e.target.value});
+	};
 
 	onPriorityFilterChanged = (e) => {
 		this.setState({selectedPriority: e.target.value});
@@ -496,6 +499,18 @@ export class AuditList extends Component{
 			.filter((a) => this.state.selectedCityId ? a.store.city.id === parseInt(this.state.selectedCityId) : true)
 			.filter((a) => this.state.selectedPriority ? a.store.priority === this.state.selectedPriority : true)
 			.filter((a) => this.state.selectedHiddenState !== "" ? "true" === this.state.selectedHiddenState === a.hidden : true)
+			.filter((a) => {
+				switch (this.state.selectedStatuaState) {
+				case "":
+					return true;
+				case "true":
+					return a.valid_report_count < a.count;
+				case "false":
+					return a.valid_report_count >= a.count;
+				default:
+					return true;
+				}
+			})
 			.map( a => <AuditRow key={a.id}
 				showAuditDate={showAuditDate}
 				showAuditFees={showAuditFees}
@@ -578,6 +593,13 @@ export class AuditList extends Component{
 									<option value="">All</option>
 									<option value="true">Hidden</option>
 									<option value="false">Visible</option>
+								</select>
+							</th>
+							<th className="text-right">
+								<select onChange={this.onStatuaFilterChanged} className="form-control">
+									<option value="">All</option>
+									<option value="true">Pending</option>
+									<option value="false">Completed</option>
 								</select>
 							</th>
 							<th>&nbsp;</th>

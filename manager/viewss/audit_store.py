@@ -74,10 +74,22 @@ class AuditStoreListByAuditCycle(APIView):
                                                                    request.GET.get('lastAuditId'),
                                                                    request.GET.get('status'),
                                                                    request.GET.get('userId'),
+                                                                   request.GET.get('city'),
                                                                    request.GET.get('start_date'),
                                                                    request.GET.get('end_date'),
                                                                    request.GET.get('is_load_more'),
                                                                    request.GET.get('last_total_count'))
+        return Response(audit_stores)
+
+class AuditStoreCityListByAuditCycle(APIView):
+    permission_classes = [AllowAny]
+    # required_groups = {
+    #     'GET': [GROUP_NAME_MANAGER],
+    # }
+
+    def get(self, request, audit_cycle_id, format=None):
+        user_id = request.user.id
+        audit_stores = audit_store_service.find_audit_store_city_by_audit_cycle_id(audit_cycle_id,user_id)
         return Response(audit_stores)
 
 class AuditListByAuditCycleAuditStore(APIView):

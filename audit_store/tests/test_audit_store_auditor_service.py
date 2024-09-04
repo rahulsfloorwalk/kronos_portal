@@ -46,6 +46,7 @@ class AuditStoreAuditorServiceTestCase(TestCase):
             audit__audit_cycle=self.audit_cycle,
             report_summary="Summary LoremLorem Lorem Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum nec justo id sollicitudin. Quisque et lectus velit consectetur adipiscing elit. Vivamus condimentum nec justo id sollicitudin. Quisque et lectus velit",
             report_summary_original='Foobar',
+            nps_section=5,
         )
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
         report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar foobar foobar foobar foobarfoobar foobar foobar foobar foobarfoobar foobar foobar foobar foobarfoobar foobar foobar foobar foobarfoobar foobar foo")
@@ -104,7 +105,8 @@ class AuditStoreAuditorServiceTestCase(TestCase):
             status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
             audit__audit_cycle=self.audit_cycle,
-            report_summary="Short summary"
+            report_summary="Short summary",
+            nps_section=5
         )
 
         with self.assertRaisesRegex(AppLogicError, "Report summary should be at least 150 characters"):
@@ -116,7 +118,9 @@ class AuditStoreAuditorServiceTestCase(TestCase):
             status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
             audit__audit_cycle=self.audit_cycle,
-            report_summary="Summary " + "Lorem ipsum " * 20  # Make it 150+ characters
+            report_summary="Summary " + "Lorem ipsum " * 20 , # Make it 150+ characters
+            nps_section=5
+
         )
 
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)

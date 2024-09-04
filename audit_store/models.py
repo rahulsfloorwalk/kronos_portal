@@ -145,6 +145,30 @@ class AuditStore(Model):
         (FAULTY_REPORT, "Faulty Report"),
     )
 
+    TEN = 10
+    NINE = 9
+    EIGHT = 8
+    SEVEN = 7
+    SIX = 6
+    FIVE = 5
+    FOUR = 4
+    THREE = 3
+    TWO = 2
+    ONE = 1
+
+    NPS_RATING = (
+        (TEN, 10),
+        (NINE, 9),
+        (EIGHT, 8),
+        (SEVEN, 7),
+        (SIX, 6),
+        (FIVE, 5),
+        (FOUR, 4),
+        (THREE, 3),
+        (TWO, 2),
+        (ONE, 1),
+    )
+
     id = AutoField(db_column='id', primary_key=True)
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     audit_date = DateField(db_column='audit_date')
@@ -167,6 +191,8 @@ class AuditStore(Model):
 
     moderator_status = CharField(db_column='moderator_status', max_length=100, choices=MODERATOR_STATUS, blank=True)
     moderator_comment = CharField(db_column='moderator_comment', max_length=3000, blank=True)
+
+    nps_section = PositiveSmallIntegerField(db_column='nps_section',choices=NPS_RATING, blank=True, null=True)
 
     report_summary = CharField(db_column='report_summary', max_length=16384, blank=True)
     report_summary_original = CharField(db_column='report_summary_original', max_length=16384, blank=True)
@@ -420,6 +446,10 @@ class AuditStore(Model):
 
     def set_report_summary(self, report_summary):
         self.report_summary = report_summary
+        self.save()
+
+    def set_nps_section(self, nps_section):
+        self.nps_section = nps_section
         self.save()
 
     def copy_report_summary(self):

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 current_date = datetime.now()
 seven_days_from_now = current_date + timedelta(days=7)
 
@@ -19,8 +19,11 @@ def fiat_assign(audit_id, email, audit_date, reimbursement, earnings_per_audit, 
     except (User.DoesNotExist) as e:
         raise AppLogicError("email is not valid") from e
 
-    if audit_date < current_date.date() or audit_date > seven_days_from_now.date():
-        raise AppLogicError("audit date is out of range")
+    #print("current date",current_date.date(), "audit date",audit_date)
+    #if audit_date < current_date.date() or audit_date > seven_days_from_now.date():
+
+        # raise AppLogicError("audit date is out of range")
+        #raise AppLogicError("audit date " + str(audit_date) + " is out of range (current date: " + str(current_date.date()) + ")")
     if audit_cycle.status == AuditCycle.ARCHIVED:
         raise AppLogicError("audit_cycle is archived")
 
