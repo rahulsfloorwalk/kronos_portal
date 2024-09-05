@@ -3,6 +3,7 @@ import json
 import logging
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
+from datetime import datetime, date
 
 from django.utils import timezone
 from django.conf import settings
@@ -87,7 +88,8 @@ def get_difference_between_date(date_val):
 
 
 def calculate_age(birthdate):
-    today = datetime.date.today()
+    # today = datetime.date.today()
+    today = date.today()
     try:
         birthday = birthdate.replace(year = today.year)
     except ValueError:
