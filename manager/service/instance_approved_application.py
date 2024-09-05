@@ -30,7 +30,7 @@ def approved(application_id):
         # auditor_avg_rating=profile_info_service.get_avg_auditor_rating_by_user(audit_application.profileinfo.user)
         if distance is not None and certification_score is not None and auditor_audit_count is not None:
         # if distance is not None and certification_score is not None :
-            if int(distance)<=10 and profile_percentage>=80 and certification_score>=80 and auditor_audit_count>=5:
+            if int(distance)<=10 and profile_percentage>=80 and certification_score>=80 and auditor_audit_count>=2:
             # if int(distance)<=10 and profile_percentage>=90 and certification_score>=80 :
                 if audit_application.status == AuditApplication.APPLIED and audit_application.audit.valid_report_count() < audit_application.audit.count:
                     audit_count = 1
@@ -39,8 +39,8 @@ def approved(application_id):
                     application = application_service.approve(audit_application.id, audit_application.audit_date, audit_application.audit.reimbursement, audit_application.audit.earnings_per_audit, audit_count, audit_application.profileinfo.user, auto_approve,instant_approve)
                     application.is_instant_approve=True
                     application.save()
-                    manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_INSTANT_APPROVED).order_by('-id')[0].id
-                    mail_notify.send_notification_mail(manager_notif_id, "")
+                    # manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_INSTANT_APPROVED).order_by('-id')[0].id
+                    # mail_notify.send_notification_mail(manager_notif_id, "")
                     return True
         else:
             return False

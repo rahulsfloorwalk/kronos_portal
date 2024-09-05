@@ -508,11 +508,11 @@ class AuditApplication(Model):
                             valid_factors_count += 1
 
             if factor['type'] == 'func':
-                if factor['key'] == 'auditor_age':
+                if factor['key'] == 'auditor_age_range':
                     if profile_info.date_of_birth:
                         age = calculate_age(profile_info.date_of_birth)
                         start_age, end_age = factor['value'].split('-')
-                        if int(start_age) <= age >= int(end_age):
+                        if int(start_age) <= age <= int(end_age):
                             valid_factors_count += 1
 
                 if factor['key'] == 'auditor_rating':
