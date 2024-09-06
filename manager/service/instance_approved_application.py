@@ -16,10 +16,13 @@ from notify import verbs
 
 @atomic
 def approved(application_id):
+    today = today_ist()
+    tomorrow = today + timedelta(days=1)
     audit_application = AuditApplication.objects.select_related('audit', 'audit__audit_cycle', 'profileinfo').get(
         id=application_id,
         audit__hidden = False,
-        audit_date__exact=today_ist() + timedelta(days=1),
+        # audit_date__exact=today_ist() + timedelta(days=1),
+        audit_date__in=[today, tomorrow],
         report_exists=False,
         audit__audit_cycle__status=AuditCycle.ACTIVE)
     if audit_application.audit.valid_report_count() < audit_application.audit.count:
@@ -61,13 +64,18 @@ def approved(application_id):
     
 def audit_cycle_audit_auto_approve_check_by_applictaion_id(application_id):
     try:
-        audit_application = AuditApplication.objects.select_related('audit', 'audit__audit_cycle', 'profileinfo').filter(
+        today = today_ist()
+        tomorrow = today + timedelta(days=1)
+        # audit_application = AuditApplication.objects.select_related('audit', 'audit__audit_cycle', 'profileinfo').filter(
+        audit_application = AuditApplication.objects.select_related('audit', 'audit__audit_cycle', 'profileinfo').get(
             id=application_id,
             audit__hidden=False,
-            audit_date__exact=today_ist() + timedelta(days=1),
+            # audit_date__exact=today_ist() + timedelta(days=1),
+            audit_date__in=[today, tomorrow],
             report_exists=False,
             audit__audit_cycle__status=AuditCycle.ACTIVE
-        ).first()    
+        )   
+        # ).first()
         if audit_application:
             return audit_application.audit.audit_cycle.audit_auto_approve
         else:

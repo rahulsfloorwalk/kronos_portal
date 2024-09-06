@@ -334,6 +334,9 @@ class AuditApplicationApplyView(APIView):
     }
     @atomic
     def post(self, request, audit_id, format=None):
+        current_date = datetime.now().date()
+        tomorrow_date = current_date + timedelta(days=1)
+
         request.data["audit_id"] = audit_id
         request.data["profileinfo_id"] = request.user.profileinfo.id
 
@@ -346,7 +349,8 @@ class AuditApplicationApplyView(APIView):
             application_apply_ds.validated_data["audit_date"]
         )
         audit_auto_approve = audit_cycle_audit_auto_approve_check_by_applictaion_id(application.id) 
-        if str(request.data['audit_date']) == str(tomorrow_date) and audit_auto_approve:
+        if str(request.data['audit_date']) in [str(current_date), str(tomorrow_date)] and audit_auto_approve:
+        # if str(request.data['audit_date']) == str(tomorrow_date) and audit_auto_approve:
             instance_approved_application.approved(application.id)
             audit_application = AuditApplication.objects.get(id=application.id)
             audit_application.report_exists = True
