@@ -15,7 +15,9 @@ from audit_store.models import AuditStore
 from . import audit_cycle_proof_tag
 from manager.models import ManagerProfileInfo
 from client.models import Client
+import logging
 
+logger = logging.getLogger(__name__)
 
 def save(audit):
     AuditCycle.save(audit)
@@ -163,6 +165,67 @@ def get_audit_cycle_dashboard(user):
         return response
     except ManagerProfileInfo.DoesNotExist:
         # Handle the case where ManagerProfileInfo doesn't exist for the user
+        return []
+
+def get_audit_cycle_dashboard_by_client_id(user, client_id=None, status=None):
+    try:
+        manager_profile_info = ManagerProfileInfo.objects.get(user=user)
+
+        audit_cycles_query = AuditCycle.objects.filter(
+            status__in=AuditCycle.MANAGER_DASHBOARD_STATUSES
+        ).order_by('end_date') \
+         .select_related('client') \
+         .prefetch_related(
+             'audits',
+             'audits__applications',
+             'audits__audit_stores',
+         )
+
+        if client_id:
+            audit_cycles_query = audit_cycles_query.filter(client=client_id)
+        if status and status != "undefined":
+            audit_cycles_query = audit_cycles_query.filter(status=status)
+
+        response = []
+        for audit_cycle in audit_cycles_query:
+            obj = {
+                'id': audit_cycle.id,
+                'name': audit_cycle.name,
+                'status': audit_cycle.status,
+                'client': audit_cycle.client.name,
+                'start_date': audit_cycle.start_date,
+                'end_date': audit_cycle.end_date,
+                'audit_count': audit_cycle.planned_audit,
+                'stats': get_audit_cycle_stats(audit_cycle),
+            }
+            response.append(obj)
+
+        return response
+
+    except ManagerProfileInfo.DoesNotExist:
+        return []
+
+
+def get_audit_cycle_dashboard_by_client_dropdown(user):
+    try:
+        manager_profile_info = ManagerProfileInfo.objects.get(user=user)
+        clients = get_clients_for_manager(manager_profile_info)
+
+        client_list = []
+        for client in clients:
+            audit_cycles_exist = AuditCycle.objects.filter(
+                status__in=AuditCycle.MANAGER_DASHBOARD_STATUSES,
+                client=client
+            ).exists()
+            if audit_cycles_exist:
+                client_data = {
+                    'id': client.id,
+                    'name': client.name
+                }
+                client_list.append(client_data)
+
+        return client_list
+    except ManagerProfileInfo.DoesNotExist:
         return []
 
 def get_clients_for_manager(manager_profile_info):

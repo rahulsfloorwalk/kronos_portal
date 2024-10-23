@@ -57,7 +57,8 @@ from django.db import IntegrityError
 from auditor.serializers import AuditProoftagSerializer
 from django.shortcuts import get_object_or_404
 from auditor.models import AuditApplication
-
+import logging
+_logger = logging.getLogger(__name__)
 
 # Get the current date
 current_date = datetime.now().date()
@@ -1041,5 +1042,6 @@ class AuditorSelfDeactivateView(APIView):
         'POST': [GROUP_NAME_AUDITOR]
     }
     def post(self, request, user_id):
-        user = auditor_service.deactivate_auditor(user_id)
+        user=request.user.id
+        user = auditor_service.deactivate_auditor(user)
         return Response(AuditorSerializer(user).data)
