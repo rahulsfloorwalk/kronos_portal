@@ -130,7 +130,8 @@ class __NpsSection extends Component {
 					<h3 className="page-header"><Tasks /> Overall Experience</h3>
 					{this.props.nps_section ? (
 						<div>
-							<label className="control-label">How would you rate your overall visit/call experience?</label>
+							{/* <label className="control-label">How would you rate your overall visit/call experience?</label> */}
+							<label className="control-label">How would you rate the brand you audited for its product/services ?</label>
 
 							<div className="row">
 								<div className="col-md-10">

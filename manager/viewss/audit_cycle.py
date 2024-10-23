@@ -16,6 +16,7 @@ from audit.models import AuditCycle
 from kronos.exceptions import AppLogicError
 from manager.models import ManagerProfileInfo
 from client.models import Client,ClientManager
+from rest_framework.permissions import AllowAny,IsAuthenticated
 
 class AuditCycleDeSerializer(ModelSerializer):
     class Meta:
@@ -270,6 +271,24 @@ class AuditCycleDashboard(APIView):
     }
     def get(self, request, format=None):
         return Response(audit_cycle_service.get_audit_cycle_dashboard(request.user))
+    
+class ClientAuditCycleClientDashboard(APIView):
+    permission_classes = [AllowAny]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, format=None):
+        status = request.query_params.get('status', None)
+        client_id = request.query_params.get('client_id', None)
+        return Response(audit_cycle_service.get_audit_cycle_dashboard_by_client_id(request.user,client_id,status))
+    
+class AuditCycleClientDropdownDashboard(APIView):
+    permission_classes = [AllowAny]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request , format=None):
+        return Response(audit_cycle_service.get_audit_cycle_dashboard_by_client_dropdown(request.user))
 
 class AuditCycleDashboardStatusViewByClient(APIView):
     permission_classes = [HasGroupPermission]

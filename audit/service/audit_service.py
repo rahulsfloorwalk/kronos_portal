@@ -14,6 +14,8 @@ from manager.service import geo
 from registration.service import auditor as auditor_service
 from auditor.models import AuditApplication
 from audit.service import audit_cycle as audit_cycle_service
+import logging
+_logger = logging.getLogger(__name__)
 
 def find_pincode_and_city_by_audit_cycle_id(audit_cycle_id):
     audit_list = Audit.objects.filter(audit_cycle_id=audit_cycle_id,hidden=False).prefetch_related('store')
@@ -181,6 +183,7 @@ def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
     available_audit_list = []
     nearDis=[]
     for i in available_audits:
+        lat2, lon2 = None, None
         if i.store.pincode:
             if geo.get_lat_lon_from_pincode(i.store.pincode,country_code):
                 lat2=geo.get_lat_lon_from_pincode(i.store.pincode,country_code).get('lat')
@@ -194,6 +197,9 @@ def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
             if city:
                 lat2 = city.lat
                 lon2 = city.lon
+
+        if lat2 is None or lon2 is None:
+            lat2, lon2 = city.lat, city.lon
         distance=geo.get_distance_from_lat1_lon1_and_lat2_lon2(lat1,lon1,lat2,lon2)
         nearDis.append({'distance':distance,'id':i.id})
     sorted_data = sorted(nearDis, key=lambda x: x["distance"])
@@ -300,6 +306,14 @@ def find_audits_for_auditor_limit(user_id,kms):
     else:
         kms = 50
 
+    city_id = auditor.profileinfo.city_id
+    kms = int(kms)
+    pincode = auditor.profileinfo.pincode
+    _logger.info("dateeeeeeeeeeeeeeeeeeeeeeeeeaucity_id %s", city_id) 
+    _logger.info("dateeeeeeeeeeeeeeeeeeeeeeeeeaudkms %s", kms) 
+    _logger.info("dateeeeeeeeeeeeeeeeeeeeeeeeeapincode %s", pincode) 
+    # return find_audits_around_pincode_and_city(city_id, kms,pincode)
+    
     return find_audits_around_pincode_and_city(auditor.profileinfo.city_id, int(kms),auditor.profileinfo.pincode)
     
 def find_audits_for_auditor(user_id, kms):

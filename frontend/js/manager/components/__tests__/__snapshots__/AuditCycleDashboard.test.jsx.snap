@@ -25,6 +25,71 @@ exports[`<AuditCycleDashboard/> is rendered correctly when the data is successfu
     }
   }
 >
+  <select
+    className=""
+    onChange={[Function]}
+    style={
+      Object {
+        "marginBottom": "1rem",
+        "marginLeft": "78%",
+        "marginRight": "1rem",
+        "padding": "0.5rem",
+        "width": "15rem",
+      }
+    }
+  >
+    <option
+      value=""
+    >
+      All Clients
+    </option>
+    <option
+      value={1}
+    >
+      Client 1
+    </option>
+    <option
+      value={2}
+    >
+      Client 2
+    </option>
+  </select>
+  <select
+    className=""
+    onChange={[Function]}
+    style={
+      Object {
+        "padding": "0.5rem",
+        "width": "15rem",
+      }
+    }
+  >
+    <option
+      value=""
+    >
+      All Status
+    </option>
+    <option
+      value="UPCOMING"
+    >
+      Upcoming
+    </option>
+    <option
+      value="ACTIVE"
+    >
+      Active
+    </option>
+    <option
+      value="REPORT"
+    >
+      Report
+    </option>
+    <option
+      value="CLEARING"
+    >
+      Clearing
+    </option>
+  </select>
   <table
     className="table table-hover table-striped table-bordered table-condensed"
   >
@@ -286,6 +351,83 @@ exports[`<AuditCycleDashboard/> is rendered correctly when the data is successfu
           <b>
             1
           </b>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <strong>
+            Total
+          </strong>
+        </td>
+        <td
+          className="text-right"
+        >
+          <strong>
+            32
+          </strong>
+        </td>
+        <td
+          className="text-right"
+        >
+          <strong>
+            0
+          </strong>
+        </td>
+        <td
+          className="text-right"
+        >
+          <strong>
+            1
+          </strong>
+        </td>
+        <td
+          className="text-right"
+        >
+          <strong>
+            0
+          </strong>
+        </td>
+        <td
+          className="text-right"
+        >
+          <strong>
+            0
+          </strong>
+        </td>
+        <td
+          className="text-right"
+        >
+          <strong>
+            0
+          </strong>
+        </td>
+        <td
+          className="text-right"
+        >
+          <strong>
+            0
+          </strong>
+        </td>
+        <td
+          className="text-right"
+        >
+          <strong>
+            0
+          </strong>
+        </td>
+        <td
+          className="text-right"
+        >
+          <strong>
+            1
+          </strong>
+        </td>
+        <td
+          className="text-right"
+        >
+          <strong>
+            1
+          </strong>
         </td>
       </tr>
     </tbody>

@@ -755,6 +755,7 @@ class NotificationSerializer(ModelSerializer):
 class PaymentSerializer(ModelSerializer):
     payment_due_date = SerializerMethodField()
     reimbursement = SerializerMethodField()
+    amount = SerializerMethodField()
 
     # def get_payment_due_date(self, payment_obj):
         # return find_payment_due_date(payment_obj.audit_store.audit_date)
@@ -768,9 +769,27 @@ class PaymentSerializer(ModelSerializer):
                     return find_payment_due_date(audit_date)
         return None
 
-    def get_reimbursement(self,payment_obj):
+    # def get_reimbursement(self,payment_obj):
+    #     if isinstance(payment_obj, Payment):
+    #         return payment_obj.audit_store.reimbursement if payment_obj.audit_store else None
+    #     return None
+    
+    def get_reimbursement(self, payment_obj):
         if isinstance(payment_obj, Payment):
-            return payment_obj.audit_store.reimbursement if payment_obj.audit_store else None
+            if payment_obj.audit_store:
+                reimbursement = payment_obj.audit_store.reimbursement
+                if not reimbursement and payment_obj.audit_store.audit:
+                    reimbursement = payment_obj.audit_store.audit.reimbursement
+                return reimbursement
+        return None
+    
+    def get_amount(self, payment_obj):
+        if isinstance(payment_obj, Payment):
+            if payment_obj.audit_store:
+                earnings_per_audit = payment_obj.audit_store.earnings_per_audit
+                if not earnings_per_audit and payment_obj.audit_store.audit:
+                    earnings_per_audit = payment_obj.audit_store.audit.earnings_per_audit
+                return earnings_per_audit
         return None
     # def get_reimbursement(self,payment_obj):
     #     return payment_obj.audit_store.reimbursement
@@ -780,7 +799,7 @@ class PaymentSerializer(ModelSerializer):
         fields = (
             'id',
             'comment',
-            'amount',
+            # 'amount',
             'status',
             'user_id',
             'audit_store_id',
@@ -788,7 +807,9 @@ class PaymentSerializer(ModelSerializer):
             'paid_on',
             'get_audit_details',
             'payment_due_date',
-            'reimbursement'
+            'reimbursement',
+            'amount'
+            # 'earnings_per_audit'
         )
         read_only_fields = fields
 

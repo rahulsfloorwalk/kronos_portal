@@ -30,10 +30,10 @@ def approved(application_id):
         profile_percentage = audit_application.profile_match_percentage()
         certification_score = audit_application.certification_score()
         auditor_audit_count = audit_application.auditor_audit_count()
-        # auditor_avg_rating=profile_info_service.get_avg_auditor_rating_by_user(audit_application.profileinfo.user)
-        if distance is not None and certification_score is not None and auditor_audit_count is not None:
+        auditor_avg_rating=profile_info_service.get_avg_auditor_rating_by_user(audit_application.profileinfo.user)
+        if distance is not None and certification_score is not None and auditor_audit_count is not None and auditor_avg_rating >=3:
         # if distance is not None and certification_score is not None :
-            if int(distance)<=10 and profile_percentage>=80 and certification_score>=80 and auditor_audit_count>=2:
+            if int(distance)<=15 and profile_percentage>=75 and certification_score>=80 and auditor_audit_count>=5:
             # if int(distance)<=10 and profile_percentage>=90 and certification_score>=80 :
                 if audit_application.status == AuditApplication.APPLIED and audit_application.audit.valid_report_count() < audit_application.audit.count:
                     audit_count = 1
