@@ -42,7 +42,10 @@ def get_scores_graph_for_store_by_questionnaire_type(store_id, client_id, questi
         for mark in marks:
             score = mark.get('score', {}).get('marks', 0)
             total += score if score is not None else 0
-            max_marks += mark.get('max_marks', 0)
+            if not mark.get('not_applicable', True):  # Assuming 'not_applicable' key is part of the mark data
+                max_marks += mark.get('max_marks', 0)
+            # max_marks += mark.get('max_marks', 0)
+            
         audit_cycles_list.append(audit_cycle.name)
         scores_list.append(total)
         max_scores_list.append(max_marks)
@@ -112,6 +115,13 @@ def get_question_wise_marks_for_audit_cycle(audit_cycle_id, store_id):
         question_object['sequence'] = question.sequence
         question_object['max_marks'] = question.max_marks
         question_object['score'] = get_average_score_for_question_in_audit_cycle(question, store_id)
+
+        answer = question.answers.first()
+        if answer:
+            question_object['not_applicable'] = answer.not_applicable
+        else:
+            question_object['not_applicable'] = None
+
         response_data.append(question_object)
     return response_data
 
