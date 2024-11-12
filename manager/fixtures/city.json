@@ -57253,5 +57253,16 @@
         "lon": 80.6356,
         "country": "LK"
       }
-    }
+    },
+    {
+      "model":"manager.city",
+      "pk":5236,
+      "fields":{
+         "name":"Dwarka",
+         "state":"IN-GJ",
+         "lat":"22.23944",
+         "lon":"68.96778",
+         "country":"IN"
+      }
+   }
  ]
