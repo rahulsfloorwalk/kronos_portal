@@ -40,6 +40,13 @@ class MPLogInAPI(APIView):
         return JsonResponse(response, status=status)
 
 
+class WebLogInAPI(APIView):
+    permission_classes=[AllowAny]
+    @atomic
+    def post(self,request):
+        response , status = market_place_service_api.web_login_api(request)
+        return JsonResponse(response, status=status)
+
 class MPVerfifyEmailByOtp(APIView):
     permission_classes=[AllowAny]
     @atomic
