@@ -231,7 +231,8 @@ def web_login_api(request):
             }
             status = 200
         except Exception as e:
-            response = {'detail': f'Error during login: {str(e)}'}
+            # response = {'detail': f'Error during login: {str(e)}'}
+            response = {'detail': 'Error during login: ' + str(e)}
             status = 500
     else:
         response = {'detail': 'Invalid username or password'}
