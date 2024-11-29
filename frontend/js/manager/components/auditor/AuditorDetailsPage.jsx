@@ -95,7 +95,7 @@ export default class AuditorDetailsPage extends React.Component {
 		}
 
 		let verifyButton;
-		if( ! this.state.auditor.verification.is_verified){
+		if( this.state.auditor.verification && ! this.state.auditor.verification.is_verified){
 			verifyButton = (<button onClick={() => verifyAuditor(this.props.params.auditorId).then((auditor)=>{
 				this.setState({auditor});
 				Alert.success("AUDITOR VERIFIED");

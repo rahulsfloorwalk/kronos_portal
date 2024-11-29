@@ -7,7 +7,7 @@ from django.core.validators import validate_email
 from registration.service import client_mobile_number_service
 import hashlib
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout ,authenticate
 from os import urandom
 from guardian.shortcuts import assign_perm
 import datetime
@@ -206,6 +206,38 @@ def log_in_market_place(request):
     else:
         response = {'detail': 'Username or Password incorrect'}
         status = 400
+    return response, status
+
+@atomic
+def web_login_api(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+
+    user = authenticate(username=username, password=password)
+    if user:
+        try:
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            token, created = Token.objects.get_or_create(user=user)
+            # client_dashboard_data = market_place_api.get_client_dashboard_data(user)
+            client = Client.objects.get(email=user.email)
+            response = {
+                'detail': 'Login successful',
+                'token': token.key,
+                'username': user.username,
+                'user_id' : user.id,
+                'client_id' : client.id,
+                'client_name' : client.name,
+                # 'client_dashboard_data': client_dashboard_data,
+            }
+            status = 200
+        except Exception as e:
+            # response = {'detail': f'Error during login: {str(e)}'}
+            response = {'detail': 'Error during login: ' + str(e)}
+            status = 500
+    else:
+        response = {'detail': 'Invalid username or password'}
+        status = 400
+
     return response, status
 
 def verify_by_otp_and_login(request):

@@ -344,7 +344,7 @@ def get_client_wise_profitability_report(client, year, last_client_id):
     if last_client_id !="":
         client_list = client_list.filter(id__gt = last_client_id)
 
-    client_list = client_list[:50]
+    # client_list = client_list[:50]
     response = []
     month_list = ["01","02","03","04","05","06","07","08","09","10","11","12"]
     audit_cycles = AuditCycle.objects.filter(client__in = client_list, start_date__year = year).order_by('end_date')

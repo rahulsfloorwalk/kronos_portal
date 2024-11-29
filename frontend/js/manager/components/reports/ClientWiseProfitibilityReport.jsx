@@ -27,11 +27,14 @@ export default class ClientWiseProfitibilityReport extends Component{
 	reload_data = (year, client) => {
 		let last_client_id = "";
 		this.setLoading(true);
-		getClientProfitabilityReports(year, client, last_client_id).then((reports)=> this.setState({
-			reports: reports.client_list,
-			total_client_count: reports.total_client_count,
-			loading: false,
-		}));
+		getClientProfitabilityReports(year, client, last_client_id).then((reports)=>{
+			let newreport = reports.client_list.filter(client=>client.month_list.some(month=>month.profit!==0));
+			this.setState({
+			// reports: reports.client_list,
+				reports: newreport,
+				total_client_count: reports.total_client_count,
+				loading: false,
+			});});
 	};
 
 	setLoading = (loading) => {
@@ -54,38 +57,38 @@ export default class ClientWiseProfitibilityReport extends Component{
 		this.reload_data(this.state.year, e.target.value);
 	};
 
-	loadMoreReports = () => {
-		this.setState({
-			loadMoreLoader: true
-		});
-		let lastClientId= this.state.reports[this.state.reports.length-1].client.id;
-		let year = this.state.year;
-		let client = this.state.client;
-		getClientProfitabilityReports(year, client, lastClientId).then((reports)=> {
-			let newReports = this.state.reports;
-			for(let client_report of reports.client_list){
-				newReports.push(client_report);
-			}
-			this.setState({
-				reports: newReports,
-				loadMoreLoader: false
-			});
-		});
-	};
+	// loadMoreReports = () => {
+	// 	this.setState({
+	// 		loadMoreLoader: true
+	// 	});
+	// 	let lastClientId= this.state.reports[this.state.reports.length-1].client.id;
+	// 	let year = this.state.year;
+	// 	let client = this.state.client;
+	// 	getClientProfitabilityReports(year, client, lastClientId).then((reports)=> {
+	// 		let newReports = this.state.reports;
+	// 		for(let client_report of reports.client_list){
+	// 			newReports.push(client_report);
+	// 		}
+	// 		this.setState({
+	// 			reports: newReports,
+	// 			loadMoreLoader: false
+	// 		});
+	// 	});
+	// };
 
 	render(){
-		let loadMoreButton;
-		let loadMoreLoading;
-		if(this.state.loadMoreLoader){
-			loadMoreLoading = (<Loading/>);
-		}
-		if(this.state.reports){
-			if(this.state.reports.length !== this.state.total_client_count){
-				loadMoreButton = (<button className="btn btn-default" onClick={this.loadMoreReports}>
-					Load More
-				</button>);
-			}
-		}
+		// let loadMoreButton;
+		// let loadMoreLoading;
+		// if(this.state.loadMoreLoader){
+		// 	loadMoreLoading = (<Loading/>);
+		// }
+		// if(this.state.reports){
+		// 	if(this.state.reports.length !== this.state.total_client_count){
+		// 		loadMoreButton = (<button className="btn btn-default" onClick={this.loadMoreReports}>
+		// 			Load More
+		// 		</button>);
+		// 	}
+		// }
 
 		if(this.state.loading){
 			return <Loading/>;
@@ -169,7 +172,11 @@ export default class ClientWiseProfitibilityReport extends Component{
 							</tr>
 						</thead>
 						<tbody>
-							{report_blocks}
+							{/* {report_blocks} */}
+							{this.state.reports.length === 0 ?
+								<tr>
+									<td colSpan="15" className="text-center no-data-row">No Data Found</td>
+								</tr>: report_blocks}
 							<tr>
 								<td className="text-center" colSpan="2"><b>Total</b></td>
 								{total_list}
@@ -178,10 +185,10 @@ export default class ClientWiseProfitibilityReport extends Component{
 						</tbody>
 					</table>
 				</div>
-				<div className="text-center">
+				{/* <div className="text-center">
 					{loadMoreLoading}
 					{ this.state.loadMoreLoader ? null : loadMoreButton }
-				</div>
+				</div> */}
 			</div>
 		);
 	}

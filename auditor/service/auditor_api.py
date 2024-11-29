@@ -388,10 +388,10 @@ def sign_up_auditor_app(request):
     if to_check_email:
         to_check_email = to_check_email.strip().lower()
     
-    if not len(request.data.get("phone")) == 10:
-        response = {'detail': 'Phone number should be 10 digit'}
-        status = 400
-        return response, status
+    # if not len(request.data.get("phone")) == 10:
+    #     response = {'detail': 'Phone number should be 10 digit'}
+    #     status = 400
+    #     return response, status
 
     if request.GET.get("referred_by"):
         if not AdditionalInfo.objects.filter(referral_code=request.data.get("referred_by").lower()).exists():
@@ -399,10 +399,10 @@ def sign_up_auditor_app(request):
             status = 400
             return response, status
 
-    if not profile_info_service.mobile_number_pattern.match(request.data.get("phone")):
-        response = {'detail': 'invalid phone number'}
-        status = 400
-        return response, status
+    # if not profile_info_service.mobile_number_pattern.match(request.data.get("phone")):
+    #     response = {'detail': 'invalid phone number'}
+    #     status = 400
+    #     return response, status
 
     if mobile_number_service.mobile_number_exists(request.data.get("phone")):
         response = {'detail': 'a user with this phone number already exists'}
