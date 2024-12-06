@@ -39,6 +39,8 @@ from audit.models import AuditCycleProofTagList
 from audit_store.models import AuditStore
 from answer.models import ReportSection
 from attachment.models import Attachment
+from payment.service.payment_beneficiary import create_beneficiary_id_for_user
+
 
 
 UserModel = get_user_model()
@@ -436,6 +438,8 @@ def sign_up_auditor_app(request):
         additional_info = AdditionalInfo(user_id=user.id)
         additional_info.referred_by = request.GET.get("referred_by")
         additional_info.save()
+
+        create_beneficiary_id_for_user(user)
 
         prefs = Preferences(user_id=user.id)
         prefs.agreement_accepted = True

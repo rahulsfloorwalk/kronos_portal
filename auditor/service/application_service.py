@@ -64,14 +64,17 @@ def apply(audit_id, user_id, audit_date):
         if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.ARCHIVED) and application.status == AuditApplication.NOT_APPLIED or application.status == AuditApplication.WITHDRAWN or application.status is None:
             application.status = AuditApplication.APPLIED
             application.audit_date = audit_date
-            report_exists = previous_report_exists(profile_info, audit, audit_date)
-            if report_exists:
-                # application.report_exists = True
+            # report_exists = previous_report_exists(profile_info, audit, audit_date)
+            audit_stores, profile_info_store = previous_report_exists(profile_info, audit, audit_date)
+            if profile_info_store: 
+                application.report_exists = True
                 application.report_exists_data = {
-                    'audit_cycle_id': report_exists.audit.audit_cycle.id,
-                    'audit_cycle_name': report_exists.audit.audit_cycle.name,
-                    'audit_date': report_exists.audit_date.strftime('%Y-%m-%d'),
+                    'audit_cycle_id': profile_info_store.audit.audit_cycle.id,
+                    'audit_cycle_name': profile_info_store.audit.audit_cycle.name,
+                    'audit_date': profile_info_store.audit_date.strftime('%Y-%m-%d'),
                 }
+            elif audit_stores: 
+                application.report_exists = True
             else:
                 application.report_exists = False
             application.apply_count+=1
@@ -290,7 +293,17 @@ def get_application_stats(audit_cycle_id):
 
 def previous_report_exists(profile_info, audit, audit_date):
     start_date = audit_date - timedelta(days = 180)
-    return profile_info.user.auditstore_set.filter(audit__store=audit.store, audit_date__range=[start_date, audit_date], status = AuditStore.ACCEPTED).only('audit__audit_cycle', 'audit_date').last()
+    # return profile_info.user.auditstore_set.filter(audit__store=audit.store, audit_date__range=[start_date, audit_date], status = AuditStore.ACCEPTED).only('audit__audit_cycle', 'audit_date').last()
+
+    auditor = profile_info.user
+    audit_stores = AuditStore.objects.filter( user=auditor, audit__store=audit.store, audit_date__range=[start_date, audit_date], status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED] ).only('audit__audit_cycle', 'audit_date').last()
+    profile_info_store = profile_info.user.auditstore_set.filter( audit__store=audit.store, audit_date__range=[start_date, audit_date], status=AuditStore.ACCEPTED ).only('audit__audit_cycle', 'audit_date').last()
+
+    if profile_info_store:
+        return audit_stores, profile_info_store
+    else:
+        return audit_stores, None                                                                                                                      
+
 
 
 def change_application_status_to_withdrawn(audit_store_id):

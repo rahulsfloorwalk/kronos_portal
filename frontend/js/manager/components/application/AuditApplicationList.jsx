@@ -123,6 +123,7 @@ export class AuditApplicationRow extends Component{
 				<td>{report.audit__audit_cycle__name}</td>
 				<td>{report.audit_date}</td>
 				<td><AuditStoreRating rating={Math.round(report.qa_rating)}/></td>
+				<td><Link to={`/audit_store/${report.id}/report`} ><button className="btn btn-primary"> View Report </button></Link></td>
 			</tr>);
 		}
 		return(
@@ -169,6 +170,7 @@ export class AuditApplicationRow extends Component{
 													<th>Audit Cycle</th>
 													<th>Audit Date</th>
 													<th>Rating</th>
+													<th>Action</th>
 												</tr>
 											</thead>
 											<tbody>

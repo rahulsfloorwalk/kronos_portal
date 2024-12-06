@@ -703,7 +703,17 @@ class SummaryAuditCycle(APIView):
     def get(self, request, audit_cycle_id, format=None):
         twitter_feeds = twitter_client.get_feeds_for_report_summary_client_and_handle(request.user.clientuser.client_id, audit_cycle_id)
         return Response(SentimentDataSerializer(twitter_feeds, many=True).data)
-    
+
+class GetNPSScore(APIView):
+    # permission_classes = [HasGroupPermission]
+    permission_classes = [AllowAny]
+    # required_groups = {
+    #     'GET': [GROUP_NAME_CLIENT],
+    # }    
+    def get(self, request, audit_cycle_id, format=None):
+        client_id = request.user.clientuser.client_id
+        nps_score_data = twitter_client.get_over_all_nps_score(client_id, audit_cycle_id)
+        return Response(nps_score_data)
 class SentimentDataView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

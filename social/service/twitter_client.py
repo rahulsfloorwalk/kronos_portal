@@ -100,6 +100,11 @@ def get_report_summary_handle_by_client_and_id(client_id, audit_cycle_id):
     except TwitterHandle.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def get_all_audit_store_for_nps_score_by_audit_cycle_id(client_id, audit_cycle_id):
+    try:
+        return AuditStore.objects.filter( audit__audit_cycle__client=client_id, audit__audit_cycle__id=audit_cycle_id, nps_section__isnull=False, status__in=['COMPLETED', 'ACCEPTED'])
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
    
 def get_feeds_for_report_summary_client_and_handle(client_id, audit_cycle_id):
     report_handle = get_report_summary_handle_by_client_and_id(client_id, audit_cycle_id)
@@ -118,6 +123,46 @@ def get_feeds_for_report_summary_client_and_handle(client_id, audit_cycle_id):
     #                 audit_store_instance.save()    
 
     return report_handle
+   
+def get_over_all_nps_score(client_id, audit_cycle_id):
+    audit_stores = get_all_audit_store_for_nps_score_by_audit_cycle_id(client_id, audit_cycle_id)
+
+    total_nps_score_sum = 0
+    total_replies = 0
+    total_audit_store = 0
+    detractors_count = 0  # NPS scores 0-3
+    passives_count = 0    # NPS scores 4-6
+    promoters_count = 0   # NPS scores 7-10
+
+    for audit_store in audit_stores:
+        total_audit_store += 1
+        nps_score = audit_store.nps_section or 0
+
+        if audit_store.status in ['COMPLETED', 'ACCEPTED'] and nps_score > 0:
+            total_nps_score_sum += nps_score
+            total_replies += 1
+            if 1 <= nps_score <= 3:
+                detractors_count += 1
+            elif 4 <= nps_score <= 6:
+                passives_count += 1
+            elif 7 <= nps_score <= 10:
+                promoters_count += 1
+    if total_replies > 0:
+        average_nps_percentage = round((total_nps_score_sum / total_replies) * 10)
+    else:
+        average_nps_percentage = None
+
+    if average_nps_percentage is not None:
+        average_nps_percentage = min(average_nps_percentage, 100)
+
+    return {
+        "average_nps_percentage": average_nps_percentage,
+        "total_replies": total_replies,
+        "total_audit_store": total_audit_store,
+        "detractors_count": detractors_count,
+        "passives_count": passives_count,
+        "promoters_count": promoters_count,
+    }
 
 
 def get_feeds_for_client_and_handle(client_id, twitter_handle_id):
