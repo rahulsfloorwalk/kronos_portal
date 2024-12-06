@@ -95,6 +95,7 @@ urlpatterns = ([
     url(r'twitter/handles', views.TwitterHandlesView.as_view(), name='twitter_handles_view'),
     url(r'report_summary/handles', views.ReportSummaryHandlesView.as_view(), name='report_summary_handles_view'),
     url(r'summary/audit_report/(?P<audit_cycle_id>[0-9]+)$', views.SummaryAuditCycle.as_view(), name="summary_audit_by_cycle"),
+    url(r'over_all_nps_score/audit_cycle/(?P<audit_cycle_id>[0-9]+)$', views.GetNPSScore.as_view(), name="get_overview_api"),
     url(r'sentiment_data/(?P<audit_store_id>[0-9]+)',views.SentimentDataView.as_view(),name='sentiment_data_view'),
 
     url(r'update_sentiment_data$', views.SentimentData.as_view(), name="update_sentiment_data"),

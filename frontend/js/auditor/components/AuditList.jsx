@@ -60,7 +60,8 @@ class AuditRow extends React.Component{
 				<Link to={cancelLink} className="btn btn-sm btn-default" title="Cancel Application"><Cross/> Cancel</Link>
 			</div>;
 			if(this.props.application.status === "APPLIED"){
-				auditDate = <p>You have <b className="text-info">applied</b> for an audit on <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. It is pending for approval.<br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT UNTIL YOUR APPLICATION IS APPROVED.</b></small></p>;
+				// auditDate = <p>You have <b className="text-info">applied</b> for an audit on <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. It is pending for approval.<br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT UNTIL YOUR APPLICATION IS APPROVED.</b></small></p>;
+				auditDate = <p>You have <b className="text-info">applied</b> for an audit on <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. You will be shared with details once it gets assigned.<br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT UNTIL IT GETS ASSIGNED.</b></small></p>;
 			}
 
 			if(this.props.application.status === "WAITLISTED"){
@@ -68,7 +69,8 @@ class AuditRow extends React.Component{
 			}
 
 			button = cancelButton;
-			textLabel = <div style={{paddingBottom:"0.5rem",paddingTop: "0.5rem"}}><ApplicationStatusLabel status={this.props.application.status}/></div> ;
+			// textLabel = <div style={{paddingBottom:"0.5rem",paddingTop: "0.5rem"}}><ApplicationStatusLabel status={this.props.application.status}/></div> ;
+			textLabel = <div style={{paddingBottom:"0.5rem",paddingTop: "0.5rem"}}><span style={{backgroundColor:"#337AB7",padding:"5px 10px",color:"white",borderRadius:"3px"}}>You have added in Queue</span></div> ;
 		}
 		else if( this.props.application.status === "APPROVED"){
 			redirectButton = <div style={{paddingTop: "0.5rem"}}><button type="button" className="btn btn-primary" onClick={this.FillReportClicked} >Fill Report</button></div>;

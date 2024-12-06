@@ -354,7 +354,7 @@ class AuditApplicationApplyView(APIView):
         # if str(request.data['audit_date']) == str(tomorrow_date) and audit_auto_approve:
             instance_approved_application.approved(application.id)
             audit_application = AuditApplication.objects.get(id=application.id)
-            audit_application.report_exists = True
+            # audit_application.report_exists = True
             audit_application.save()
         return Response(AuditApplicationSerializer(application).data)
 

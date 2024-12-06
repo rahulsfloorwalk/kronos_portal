@@ -11,6 +11,9 @@ from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from django.db.models import Sum, F, Q, Count
 from client.models import Client
+import logging
+
+_logger = logging.getLogger(__name__)
 
 def get_auditor_payment_report(month, year, payment_type, client):
     if client:
@@ -359,21 +362,44 @@ def get_client_wise_profitability_report(client, year, last_client_id):
             ops_profitability = 0
 
             filtered_audit_cycle = audit_cycles.filter(client = client.id, start_date__month = month)
-            for cycle in filtered_audit_cycle:
-                audit_count = audit_stores.filter(audit__audit_cycle = cycle.id, audit_date__month = month).count()
+            for cycle in filtered_audit_cycle:  
+                # audit_count = audit_stores.filter(audit__audit_cycle = cycle.id, audit_date__month = month).count()
+                audit_count = audit_stores.filter(audit__audit_cycle = cycle.id, audit__audit_cycle__start_date__month = month).count()
                 revenue += ((cycle.charge_per_audit * audit_count) + cycle.system_cost)
 
-            filtered_audit_store = audit_stores.filter(audit__audit_cycle__in = filtered_audit_cycle, audit_date__month = month)
+                # if cycle.id == 1886:
+                #     _logger.info("Cycle ID: %s", cycle.id)
+                #     _logger.info("Audit Count (in cycle): %s", audit_count)
+                #     _logger.info("Audit Count (in cycle): %s", cycle.charge_per_audit)
+                #     _logger.info("Revenue (in cycle): %s", revenue)
+
+            # filtered_audit_store = audit_stores.filter(audit__audit_cycle__in = filtered_audit_cycle, audit_date__month = month)
+            filtered_audit_store = audit_stores.filter(audit__audit_cycle__in = filtered_audit_cycle, audit__audit_cycle__start_date__month = month)
             for store in filtered_audit_store:
                 auditor_cost += store.earnings_per_audit if store.earnings_per_audit else 0
 
             ops_profitability = revenue - auditor_cost
             total_ops_profitability += ops_profitability
+
+            # if any(cycle.id == 1886 for cycle in filtered_audit_cycle):
+            #     _logger.info("Month: %s", month)
+            #     _logger.info("Total Revenue: %s", revenue)
+            #     _logger.info("Total Auditor Cost: %s", auditor_cost)
+            #     _logger.info("Ops Profitability: %s", ops_profitability)
             client_data.append({
                 "month": month,
                 "profit": ops_profitability
             })
-        if client_data:
+        # if client_data:
+        #     response.append({
+        #         "client": {
+        #             "id": client.id,
+        #             "name": client.name,
+        #         },
+        #         "month_list": client_data,
+        #         "total_profit": total_ops_profitability
+        #     })
+        if total_ops_profitability > 0:
             response.append({
                 "client": {
                     "id": client.id,
