@@ -162,3 +162,37 @@ def get_profile_percentage(user_id):
         profile_percentage += 0.00
 
     return math.floor(profile_percentage * 100)
+
+def get_profile_completion(user_id):
+    profile_percentage = 0
+
+    user = User.objects.get(pk = user_id)
+    profile_info = profile_info_service.find_profile_info_by_user_id(user_id)
+    if profile_info.is_complete():
+        profile_percentage += 0.25
+
+    bank_info = bank_info_service.find_bank_info_by_user_id(user_id)
+    if bank_info.is_complete():
+        profile_percentage += 0.35
+
+    addl_indo = additional_info_service.find_additional_info_by_user_id(user_id)
+    addl_percentage = addl_indo.completed_field_count() / addl_indo.field_count()
+    profile_percentage += addl_percentage * 0.10
+
+    attachments = auditor_attachment_service.find_id_proof_for_auditor(user_id)
+    if len(attachments) > 0:
+        profile_percentage += 0.30
+
+    fb = social_auditor.find_facebook_by_user(user_id)
+    if fb.is_verified:
+        profile_percentage += 0.00
+
+    auditor_name = profile_info.first_name + " " + profile_info.last_name
+    auditor_email = user.email
+    auditor_profile_completion = math.floor(profile_percentage * 100)
+
+    return {
+        "auditor_name": auditor_name,
+        "auditor_email": auditor_email,
+        "auditor_profile_completion": auditor_profile_completion
+    }

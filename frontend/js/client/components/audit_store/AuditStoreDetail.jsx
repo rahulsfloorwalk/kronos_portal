@@ -327,7 +327,8 @@ export default class AuditStoreDetail extends React.Component {
 						: ""
 					} */}
 				</h2>
-				{!printMode && this.state.auditStore.report_summary ?
+				{!printMode && this.state.auditStore.audit.audit_cycle.audit_report_summary ?
+				// {!printMode && this.state.auditStore.report_summary ?
 					<Link to={`/audit_store/${auditStoreId}/analysis/${summaryId}`} className="aiinsight_storedetail">
 						<img src={analysispic} alt="analysis_icon" style={{ width: "50px" }} title="View AI insights"/>
 					</Link>
@@ -354,7 +355,10 @@ export default class AuditStoreDetail extends React.Component {
 				}
 				<ActionReportBox actionPlan={this.state.actionPlan}/>
 				<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
-				<ReportSectionBox auditStore={this.state.auditStore}/>
+				{/* <ReportSectionBox auditStore={this.state.auditStore}/> */}
+				{this.state.auditStore.audit.audit_cycle.audit_report_summary ?
+					<ReportSectionBox auditStore={this.state.auditStore}/>
+					:null}
 				<SectionList auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode || this.state.report_display == "block"}/>
 				{ printMode ?
 					<AttachmentPrintRenderer auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections}/>

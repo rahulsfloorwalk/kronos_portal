@@ -175,9 +175,9 @@ with open("./datasets/japan_&_malaysia_pincode.json") as JP_MY_pincode_file:
     JP_MY_pincode_list = json.load(JP_MY_pincode_file)
     __logger.info("loaded %d pincodes", len(JP_MY_pincode_list))
 
-with open("./datasets/netherland_&_Czech_pincode.json") as NL_CZ_pincode_file:
-    NL_CZ_pincode_list = json.load(NL_CZ_pincode_file)
-    __logger.info("loaded %d pincodes", len(NL_CZ_pincode_list))
+with open("./datasets/netherland_&_Czech_&_saudi_arebia_&_oman_pincode.json") as NL_CZ_SA_OM_pincode_file:
+    NL_CZ_SA_OM_pincode_list = json.load(NL_CZ_SA_OM_pincode_file)
+    __logger.info("loaded %d pincodes", len(NL_CZ_SA_OM_pincode_list))
 
 with open("./datasets/spain_&_england_pincode.json") as ES_GB_pincode_file:
     ES_GB_pincode_list = json.load(ES_GB_pincode_file)
@@ -226,9 +226,9 @@ def get_lat_lon_from_pincode(pincode, country_code):
             return JP_MY_pincode_list[pincode]
         else:
             return None
-    elif country_code == 'NL' or country_code == 'CZ':
-        if pincode in NL_CZ_pincode_list:
-            return NL_CZ_pincode_list[pincode]
+    elif country_code == 'NL' or country_code == 'CZ' or country_code == 'SA' or country_code == 'OM':
+        if pincode in NL_CZ_SA_OM_pincode_list:
+            return NL_CZ_SA_OM_pincode_list[pincode]
         else:
             return None
     elif country_code == 'ES' or country_code == 'GB':

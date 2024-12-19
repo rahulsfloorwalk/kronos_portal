@@ -57254,7 +57254,7 @@
         "country": "LK"
       }
     },
-    {
+   {
       "model":"manager.city",
       "pk":5236,
       "fields":{
@@ -57263,6 +57263,1139 @@
          "lat":"22.23944",
          "lon":"68.96778",
          "country":"IN"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5237,
+      "fields": {
+         "name": "Riyadh",
+         "state": "SA-RR",
+         "lat": 24.7136,
+         "lon": 46.6753,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5238,
+      "fields": {
+         "name": "Hail",
+         "state": "SA-HR",
+         "lat": 27.5115,
+         "lon": 41.7227,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5239,
+      "fields": {
+         "name": "Buraydah (Qaseem)",
+         "state": "SA-QR",
+         "lat": 26.3547,
+         "lon": 43.9747,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5240,
+      "fields": {
+         "name": "Unaizah",
+         "state": "SA-QR",
+         "lat": 26.2097,
+         "lon": 43.9784,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5241,
+      "fields": {
+         "name": "Al Kharj",
+         "state": "SA-RR",
+         "lat": 24.1989,
+         "lon": 47.3077,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5242,
+      "fields": {
+         "name": "Al Majma'ah",
+         "state": "SA-RR",
+         "lat": 25.0377,
+         "lon": 46.5747,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5243,
+      "fields": {
+         "name": "Buraydah",
+         "state": "SA-QR",
+         "lat": 26.3547,
+         "lon": 43.9747,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5244,
+      "fields": {
+         "name": "Buraidah (Qassim)",
+         "state": "SA-QR",
+         "lat": 26.3547,
+         "lon": 43.9747,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5245,
+      "fields": {
+         "name": "Ar Rass (Qassim)",
+         "state": "SA-QR",
+         "lat": 25.7735,
+         "lon": 43.6606,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5246,
+      "fields": {
+         "name": "Kharj",
+         "state": "SA-RR",
+         "lat": 24.1989,
+         "lon": 47.3077,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5247,
+      "fields": {
+         "name": "Jeddah",
+         "state": "SA-MR",
+         "lat": 21.2854,
+         "lon": 39.2376,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5248,
+      "fields": {
+         "name": "Dammam",
+         "state": "SA-EP",
+         "lat": 26.4207,
+         "lon": 49.9777,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5249,
+      "fields": {
+         "name": "Al Hasa",
+         "state": "SA-EP",
+         "lat": 25.3962,
+         "lon": 49.5883,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5250,
+      "fields": {
+         "name": "Al Ahsa",
+         "state": "SA-EP",
+         "lat": 25.3962,
+         "lon": 49.5883,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5251,
+      "fields": {
+         "name": "Khobar",
+         "state": "SA-EP",
+         "lat": 26.2394,
+         "lon": 50.197,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5252,
+      "fields": {
+         "name": "Jubail",
+         "state": "SA-EP",
+         "lat": 27.0377,
+         "lon": 49.6927,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5253,
+      "fields": {
+         "name": "Buqayq",
+         "state": "SA-EP",
+         "lat": 25.3025,
+         "lon": 49.6906,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5254,
+      "fields": {
+         "name": "Eastern Region",
+         "state": "SA-EP",
+         "lat": 26.42,
+         "lon": 49.8,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5255,
+      "fields": {
+         "name": "Saihat",
+         "state": "SA-EP",
+         "lat": 26.4947,
+         "lon": 49.9333,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5256,
+      "fields": {
+         "name": "Ras Tannurah",
+         "state": "SA-EP",
+         "lat": 26.5491,
+         "lon": 49.7379,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5257,
+      "fields": {
+         "name": "Khamis Mushait",
+         "state": "SA-AR",
+         "lat": 18.3167,
+         "lon": 42.7333,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5258,
+      "fields": {
+         "name": "Mahail Asir",
+         "state": "SA-AR",
+         "lat": 19.5922,
+         "lon": 42.8556,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5259,
+      "fields": {
+         "name": "Besha",
+         "state": "SA-AR",
+         "lat": 19.7682,
+         "lon": 42.6865,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5260,
+      "fields": {
+         "name": "Abha",
+         "state": "SA-AR",
+         "lat": 18.2208,
+         "lon": 42.5053,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5261,
+      "fields": {
+         "name": "Jezans",
+         "state": "SA-JR",
+         "lat": 16.8791,
+         "lon": 42.5519,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5262,
+      "fields": {
+         "name": "Taif",
+         "state": "SA-MR",
+         "lat": 21.2854,
+         "lon": 40.4174,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5263,
+      "fields": {
+         "name": "Al Madinah",
+         "state": "SA-AM",
+         "lat": 24.4709,
+         "lon": 39.6117,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5264,
+      "fields": {
+         "name": "Yanbu",
+         "state": "SA-AM",
+         "lat": 24.084,
+         "lon": 38.07,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5265,
+      "fields": {
+         "name": "Tabuk",
+         "state": "SA-TR",
+         "lat": 28.3831,
+         "lon": 36.5663,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5266,
+      "fields": {
+         "name": "Makkah",
+         "state": "SA-MR",
+         "lat": 21.4225,
+         "lon": 39.8262,
+         "country": "SA"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5267,
+      "fields": {
+         "name": "Liwa",
+         "state": "OM-BS",
+         "lat": 23.1813,
+         "lon": 56.4239,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5268,
+      "fields": {
+         "name": "Sohar",
+         "state": "OM-BN",
+         "lat": 24.4416,
+         "lon": 56.6953,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5269,
+      "fields": {
+         "name": "Falaj Al Qabayil",
+         "state": "OM-BS",
+         "lat": 23.2685,
+         "lon": 56.4642,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5270,
+      "fields": {
+         "name": "Saham",
+         "state": "OM-BN",
+         "lat": 23.5411,
+         "lon": 56.9989,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5271,
+      "fields": {
+         "name": "Aqur",
+         "state": "OM-BN",
+         "lat": 24.4531,
+         "lon": 56.7042,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5272,
+      "fields": {
+         "name": "Barka",
+         "state": "OM-BS",
+         "lat": 23.7128,
+         "lon": 57.9641,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5273,
+      "fields": {
+         "name": "Tharmad",
+         "state": "OM-BS",
+         "lat": 23.37,
+         "lon": 57.4731,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5274,
+      "fields": {
+         "name": "Muladda",
+         "state": "OM-BS",
+         "lat": 23.42,
+         "lon": 57.5053,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5275,
+      "fields": {
+         "name": "Rustaq",
+         "state": "OM-BS",
+         "lat": 23.3985,
+         "lon": 57.4967,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5276,
+      "fields": {
+         "name": "Khadra",
+         "state": "OM-BN",
+         "lat": 23.5581,
+         "lon": 57.6531,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5277,
+      "fields": {
+         "name": "Suwaiq",
+         "state": "OM-BN",
+         "lat": 23.6343,
+         "lon": 57.5225,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5278,
+      "fields": {
+         "name": "Rumais",
+         "state": "OM-BN",
+         "lat": 23.6272,
+         "lon": 57.6667,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5279,
+      "fields": {
+         "name": "Nakhal",
+         "state": "OM-BS",
+         "lat": 23.2894,
+         "lon": 57.6573,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5280,
+      "fields": {
+         "name": "Musanna",
+         "state": "OM-BS",
+         "lat": 23.5089,
+         "lon": 57.5947,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5281,
+      "fields": {
+         "name": "Sawadi",
+         "state": "OM-BS",
+         "lat": 23.3621,
+         "lon": 57.3558,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5282,
+      "fields": {
+         "name": "Bidaya",
+         "state": "OM-AS",
+         "lat": 22.4914,
+         "lon": 59.4735,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5283,
+      "fields": {
+         "name": "Awabi",
+         "state": "OM-BS",
+         "lat": 23.3894,
+         "lon": 57.2772,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5284,
+      "fields": {
+         "name": "Buraimi",
+         "state": "OM-AB",
+         "lat": 24.0842,
+         "lon": 55.938,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5285,
+      "fields": {
+         "name": "Araqi",
+         "state": "OM-AD",
+         "lat": 23.3667,
+         "lon": 57.6903,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5286,
+      "fields": {
+         "name": "Ibri",
+         "state": "OM-AD",
+         "lat": 23.214,
+         "lon": 57.2411,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5287,
+      "fields": {
+         "name": "Hijayramat",
+         "state": "OM-AD",
+         "lat": 23.1972,
+         "lon": 57.5367,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5288,
+      "fields": {
+         "name": "Yibal",
+         "state": "OM-AD",
+         "lat": 23.101,
+         "lon": 57.2446,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5289,
+      "fields": {
+         "name": "Yanqul",
+         "state": "OM-AD",
+         "lat": 23.0339,
+         "lon": 57.5262,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5290,
+      "fields": {
+         "name": "Dhank",
+         "state": "OM-AD",
+         "lat": 23.2662,
+         "lon": 57.662,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5291,
+      "fields": {
+         "name": "Sunaina",
+         "state": "OM-AD",
+         "lat": 23.2687,
+         "lon": 57.5756,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5292,
+      "fields": {
+         "name": "Firq",
+         "state": "OM-AD",
+         "lat": 23.1669,
+         "lon": 57.5005,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5293,
+      "fields": {
+         "name": "Fanja",
+         "state": "OM-AD",
+         "lat": 23.1405,
+         "lon": 57.5301,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5294,
+      "fields": {
+         "name": "Samail",
+         "state": "OM-AD",
+         "lat": 23.2069,
+         "lon": 57.5028,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5295,
+      "fields": {
+         "name": "Luzugh",
+         "state": "OM-AD",
+         "lat": 23.087,
+         "lon": 57.6237,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5296,
+      "fields": {
+         "name": "Manah",
+         "state": "OM-AD",
+         "lat": 23.0211,
+         "lon": 57.6477,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5297,
+      "fields": {
+         "name": "Bahla",
+         "state": "OM-AD",
+         "lat": 22.9503,
+         "lon": 57.5665,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5298,
+      "fields": {
+         "name": "Nizwa",
+         "state": "OM-AD",
+         "lat": 22.9333,
+         "lon": 57.5322,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5299,
+      "fields": {
+         "name": "Izki",
+         "state": "OM-AD",
+         "lat": 22.9047,
+         "lon": 57.5511,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5300,
+      "fields": {
+         "name": "Bidbid",
+         "state": "OM-AD",
+         "lat": 22.9531,
+         "lon": 57.964,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5301,
+      "fields": {
+         "name": "Adam",
+         "state": "OM-AD",
+         "lat": 22.9271,
+         "lon": 57.5964,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5302,
+      "fields": {
+         "name": "Hamra",
+         "state": "OM-AD",
+         "lat": 22.9192,
+         "lon": 57.5097,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5303,
+      "fields": {
+         "name": "Bisiya",
+         "state": "OM-AD",
+         "lat": 22.9754,
+         "lon": 57.5616,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5304,
+      "fields": {
+         "name": "Salalah",
+         "state": "OM-DR",
+         "lat": 17.0115,
+         "lon": 54.0924,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5305,
+      "fields": {
+         "name": "Mirbat",
+         "state": "OM-DR",
+         "lat": 17.1421,
+         "lon": 54.0012,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5306,
+      "fields": {
+         "name": "Khasab",
+         "state": "OM-MM",
+         "lat": 26.2069,
+         "lon": 56.242,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5307,
+      "fields": {
+         "name": "Azaiba",
+         "state": "OM-MT",
+         "lat": 23.5991,
+         "lon": 58.3299,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5308,
+      "fields": {
+         "name": "Seeb",
+         "state": "OM-MT",
+         "lat": 23.5892,
+         "lon": 58.3492,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5309,
+      "fields": {
+         "name": "Boushe",
+         "state": "OM-MT",
+         "lat": 23.6,
+         "lon": 58.32,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5310,
+      "fields": {
+         "name": "Khoud",
+         "state": "OM-MT",
+         "lat": 23.5494,
+         "lon": 58.3756,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5311,
+      "fields": {
+         "name": "Mabela",
+         "state": "OM-MT",
+         "lat": 23.5569,
+         "lon": 58.3708,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5312,
+      "fields": {
+         "name": "Ghubra",
+         "state": "OM-MT",
+         "lat": 23.5572,
+         "lon": 58.376,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5313,
+      "fields": {
+         "name": "Hail",
+         "state": "OM-MT",
+         "lat": 23.6333,
+         "lon": 58.6,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5314,
+      "fields": {
+         "name": "Ghala",
+         "state": "OM-MT",
+         "lat": 23.5743,
+         "lon": 58.3235,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5315,
+      "fields": {
+         "name": "Mawaleh",
+         "state": "OM-MT",
+         "lat": 23.5683,
+         "lon": 58.3936,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5316,
+      "fields": {
+         "name": "Khuwair",
+         "state": "OM-MT",
+         "lat": 23.5905,
+         "lon": 58.3655,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5317,
+      "fields": {
+         "name": "Darsait",
+         "state": "OM-MT",
+         "lat": 23.6095,
+         "lon": 58.5905,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5318,
+      "fields": {
+         "name": "Hamriya",
+         "state": "OM-MT",
+         "lat": 23.5726,
+         "lon": 58.3125,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5319,
+      "fields": {
+         "name": "Amerat",
+         "state": "OM-MT",
+         "lat": 23.6015,
+         "lon": 58.4252,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5320,
+      "fields": {
+         "name": "Muttrah",
+         "state": "OM-MT",
+         "lat": 23.6194,
+         "lon": 58.6153,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5321,
+      "fields": {
+         "name": "Ruwi",
+         "state": "OM-MT",
+         "lat": 23.5905,
+         "lon": 58.5819,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5322,
+      "fields": {
+         "name": "Qurum",
+         "state": "OM-MT",
+         "lat": 23.5953,
+         "lon": 58.5775,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5323,
+      "fields": {
+         "name": "Wadi Kabir",
+         "state": "OM-MT",
+         "lat": 23.5847,
+         "lon": 58.6103,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5324,
+      "fields": {
+         "name": "Sinaw",
+         "state": "OM-AS",
+         "lat": 21.935,
+         "lon": 58.5217,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5325,
+      "fields": {
+         "name": "Ibra",
+         "state": "OM-AS",
+         "lat": 22.6666,
+         "lon": 58.5333,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5326,
+      "fields": {
+         "name": "Bidiya",
+         "state": "OM-AS",
+         "lat": 22.4914,
+         "lon": 59.4735,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5327,
+      "fields": {
+         "name": "Samad Alshan",
+         "state": "OM-AS",
+         "lat": 22.44,
+         "lon": 59.4,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5328,
+      "fields": {
+         "name": "Mintarib",
+         "state": "OM-AS",
+         "lat": 22.408,
+         "lon": 59.29,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5329,
+      "fields": {
+         "name": "Wadi Bani Khalid",
+         "state": "OM-AS",
+         "lat": 22.2766,
+         "lon": 59.5602,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5330,
+      "fields": {
+         "name": "Mudhaibi",
+         "state": "OM-AS",
+         "lat": 22.3321,
+         "lon": 59.4559,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5331,
+      "fields": {
+         "name": "Wadi Tayeen",
+         "state": "OM-AS",
+         "lat": 22.3446,
+         "lon": 59.489,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5332,
+      "fields": {
+         "name": "Sur",
+         "state": "OM-AS",
+         "lat": 22.5661,
+         "lon": 59.5278,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5333,
+      "fields": {
+         "name": "Jalan Bani Bu Hassan",
+         "state": "OM-AS",
+         "lat": 22.6197,
+         "lon": 58.6551,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5334,
+      "fields": {
+         "name": "Jalan Bani Bu Ali",
+         "state": "OM-AS",
+         "lat": 22.6611,
+         "lon": 58.6944,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5335,
+      "fields": {
+         "name": "Ashkarah",
+         "state": "OM-AS",
+         "lat": 22.7143,
+         "lon": 59.7319,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5336,
+      "fields": {
+         "name": "Kamil",
+         "state": "OM-AW",
+         "lat": 22.5704,
+         "lon": 56.4111,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5337,
+      "fields": {
+         "name": "Duqum",
+         "state": "OM-AW",
+         "lat": 19.3969,
+         "lon": 57.7519,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5338,
+      "fields": {
+         "name": "Mahoot",
+         "state": "OM-AW",
+         "lat": 19.5636,
+         "lon": 56.589,
+         "country": "OM"
+      }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5339,
+      "fields": {
+         "name": "Haima",
+         "state": "OM-AW",
+         "lat": 19.4408,
+         "lon": 56.558,
+         "country": "OM"
       }
    }
  ]

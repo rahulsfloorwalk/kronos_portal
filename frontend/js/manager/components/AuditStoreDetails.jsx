@@ -528,7 +528,11 @@ export class AuditStoreDetails extends React.Component{
 				</div>
 				{refresh_report_button}
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
-				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/>
+				{/* <ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/> */}
+				{this.props.auditStore.audit.audit_cycle.audit_report_summary ?
+					<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/>
+					: null
+				}
 				{this.props.children}
 
 				<div className="sidebar">
