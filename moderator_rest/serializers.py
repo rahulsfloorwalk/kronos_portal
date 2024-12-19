@@ -55,6 +55,7 @@ class AuditCycleSerializer(ModelSerializer):
             'description',
             'post_approval_description',
             'client',
+            'audit_report_summary',
         )
         read_only_fields = fields
 

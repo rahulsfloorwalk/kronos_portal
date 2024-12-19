@@ -563,6 +563,28 @@ states["PK-AK"] = "Azad Jammu and Kashmir"
 states["PK-GB"] = "Gilgit Baltistan"
 states["PK-IS"] = "Federal Capital (Islamabad)"
 
+# Saudi Arabia
+states["SA-AM"] = "Al Madinah Region"
+states["SA-EP"] = "Eastern Province"
+states["SA-AR"] = "Asir Region"
+states["SA-HR"] = "Hail Region"
+states["SA-JR"] = "Jizan Region"
+states["SA-MR"] = "Makkah Region"
+states["SA-QR"] = "Qassim Region"
+states["SA-RR"] = "Riyadh Region"
+states["SA-TR"] = "Tabuk Region"
+
+# Oman
+states["OM-BS"] = "Al Batinah South"
+states["OM-BN"] = "Al Batinah North"
+states["OM-AB"] = "Al Buraimi"
+states["OM-AD"] = "Ad Dhahirah"
+states["OM-AS"] = "Ash Sharqiyah"
+states["OM-AW"] = "Al Wusta"
+states["OM-DR"] = "Dhofar"
+states["OM-MM"] = "Musandam"
+states["OM-MT"] = "Muscat"
+
 
 def get_django_choices():
     choices = []

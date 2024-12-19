@@ -10,7 +10,7 @@ from notify.service.mail_withdraw_audit_report import send_audit_report_withdraw
 from notify.service.mail_concern_audit_report import send_audit_report_concern_email
 from auditor.service.application_service import change_application_status_to_withdrawn
 from client.service.client_manager import get_manager_email_list_by_audit_store_obj
-from audit.service.audit_cycle_proof_tag import get_status_of_audit_cycle_proof_tag_by_audit_cycle_id
+from audit.service.audit_cycle_proof_tag import get_status_of_audit_cycle_proof_tag_by_audit_cycle_id,get_status_of_audit_cycle_audit_report_summary_by_audit_cycle_id
 from attachment.service import set_attachment_by_proof_tag
 from audit_store.service_moderator import get_moderator_email_by_audit_store_obj
 from answer.service import report_section_auditor
@@ -79,19 +79,23 @@ def set_nps_section(audit_store_id, user_id, nps_section):
 def submit_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
     audit_cycle_proof_tag = get_status_of_audit_cycle_proof_tag_by_audit_cycle_id(audit_store.audit.audit_cycle.id)
+    audit_cycle_audit_report_summary = get_status_of_audit_cycle_audit_report_summary_by_audit_cycle_id(audit_store.audit.audit_cycle.id)
     user = auditor_service.find_auditor_by_id(user_id)
     if user != audit_store.user:
         raise AppLogicError("Report cannot be submitted by user")
-    if not audit_store.report_summary or not audit_store.report_summary.strip():
-        raise AppLogicError("Please fill report summary before submitting")
+
+    if audit_cycle_audit_report_summary:
+        if not audit_store.report_summary or not audit_store.report_summary.strip():
+            raise AppLogicError("Please fill in the report summary before submitting.")
     
     if not isinstance(audit_store.nps_section, int):
         raise AppLogicError("Please complete NPS Section before submitting")
     if audit_store.nps_section not in range(1, 11):
         raise AppLogicError("NPS Section rating should be between 1 and 10")
     
-    if len(audit_store.report_summary.strip()) < 150:
-        raise AppLogicError("Report summary should be at least 150 characters")
+    if audit_cycle_audit_report_summary:
+        if len(audit_store.report_summary.strip()) < 150:
+            raise AppLogicError("Report summary should be at least 150 characters")
     if not audit_store.is_submittable_for_auditor():
         raise AppLogicError("Please complete all answers and all section summaries before submitting")
     if not audit_store.check_auditor_comment_len():

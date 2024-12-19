@@ -809,6 +809,14 @@ class ProfilePercentageView(APIView):
     def get(self, request, format=None):
         return Response(auditor_dashboard_service.get_profile_percentage(request.user.id))
 
+class ProfileCompletioneView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+    }
+    def get(self, request, format=None):
+        return Response(auditor_dashboard_service.get_profile_completion(request.user.id))
+
 class ScoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

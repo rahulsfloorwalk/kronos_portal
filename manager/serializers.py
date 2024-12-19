@@ -97,6 +97,7 @@ class AuditCycleSerializer(ModelSerializer):
             'questionnaire_type',
             'audit_alignment_factors',
             'audit_auto_approve',
+            'audit_report_summary',
         )
         read_only_fields = fields
 

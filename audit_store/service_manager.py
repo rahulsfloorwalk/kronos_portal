@@ -133,21 +133,22 @@ def complete_report(audit_store_id, user_id):
     audit_ids = audit_cycle.audits.values_list('id', flat=True)
     audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
 
-    try:
-        sentiment_data = get_sentiment_data(audit_store.report_summary)
-        audit_store.main_keywords = sentiment_data['keywords']
-        audit_store.bullet_points = sentiment_data['key_sentences']
-        audit_store.sentiment_emotions = sentiment_data['emotions']
-        audit_store.sentiment_positive_words = sentiment_data['positive_words']
-        audit_store.sentiment_negative_words = sentiment_data['negative_words']
-        audit_store.sentiment_score = sentiment_data['sentiment_score']
-        audit_store.sentiment_text = sentiment_data['sentiment_result']
-        audit_store.save()
+    if audit_store.report_summary and audit_store.report_summary.strip():
+        try:
+            sentiment_data = get_sentiment_data(audit_store.report_summary)
+            audit_store.main_keywords = sentiment_data['keywords']
+            audit_store.bullet_points = sentiment_data['key_sentences']
+            audit_store.sentiment_emotions = sentiment_data['emotions']
+            audit_store.sentiment_positive_words = sentiment_data['positive_words']
+            audit_store.sentiment_negative_words = sentiment_data['negative_words']
+            audit_store.sentiment_score = sentiment_data['sentiment_score']
+            audit_store.sentiment_text = sentiment_data['sentiment_result']
+            audit_store.save()
 
-    except Exception as e:
-        print("Error in sentiment data: {}".format(e))
-        pass
-    
+        except Exception as e:
+            print("Error in sentiment data: {}".format(e))
+            pass
+        
     mp_order = MPOrder.objects.get(id=audit_cycle.order.id) if audit_cycle.order else None
     if mp_order is not None:
         # store_ids = [audit_store.id for audit_store in audit_stores]

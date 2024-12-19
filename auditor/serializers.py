@@ -391,7 +391,9 @@ class AuditCycleSerializer(ModelSerializer):
             'post_approval_description',
             'audit_alignment_factors',
             'client',
-            'support_page_link'
+            'support_page_link',
+            'audit_report_summary'
+
         )
         read_only_fields = fields
 
@@ -426,6 +428,15 @@ class AuditSerializer(ModelSerializer):
 
 class AppliedAuditSerializer(ModelSerializer):
     audit = AuditSerializer()
+    audit_store = serializers.SerializerMethodField()
+    def get_audit_store(self, obj):
+        audit_store = obj.audit.audit_stores.filter( user_id=obj.profileinfo.user.id).first()
+        if audit_store:
+            return {
+                "id": audit_store.id,
+                "status": audit_store.status
+            }
+        return None
     class Meta:
         model= AuditApplication
         fields=(
@@ -433,6 +444,8 @@ class AppliedAuditSerializer(ModelSerializer):
             'audit_date',
             'status',
             'get_brand_name',
+            'profileinfo',
+            'audit_store',
             'audit'
         )
         read_only_fields = fields

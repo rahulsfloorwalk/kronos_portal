@@ -148,6 +148,15 @@ def get_master_proof_tag_id_from_audit_cycle_proof_tag(proof_id):
 def get_status_of_audit_cycle_proof_tag_by_audit_cycle_id(audit_cycle_id):
     return AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, is_active=True).exists()
 
+def get_status_of_audit_cycle_audit_report_summary_by_audit_cycle_id(audit_cycle_id):
+    """
+    Retrieves the audit_report_summary for a specific AuditCycle.
+    :param audit_cycle_id: The ID of the AuditCycle.
+    :return: Boolean value of audit_report_summary if the AuditCycle exists and is active, otherwise None.
+    """
+    audit_cycle = AuditCycle.objects.filter(id=audit_cycle_id).values('audit_report_summary').first()
+    return audit_cycle['audit_report_summary'] if audit_cycle else None
+
 
 @atomic
 def copy_proof_tag_from_to_audit_cycle(from_audit_cycle, to_audit_cycle):

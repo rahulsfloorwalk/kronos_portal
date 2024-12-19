@@ -344,7 +344,10 @@ class AuditStoreDetails extends React.Component {
 				</div>
 				{buttonPanel}
 				<AttachmentUploadBox auditStoreId={this.props.params.auditStoreId} editable={this.isReportEditable()}/>
-				<ReportSummary audit_store_id={this.props.params.auditStoreId} report_summary={this.props.auditStore.report_summary} editable={this.isReportEditable()} showErrors={this.state.showErrors} />
+				{/* <ReportSummary audit_store_id={this.props.params.auditStoreId} report_summary={this.props.auditStore.report_summary} editable={this.isReportEditable()} showErrors={this.state.showErrors} /> */}
+				{this.props.auditStore.audit.audit_cycle.audit_report_summary ?
+					<ReportSummary audit_store_id={this.props.params.auditStoreId} report_summary={this.props.auditStore.report_summary} editable={this.isReportEditable()} showErrors={this.state.showErrors} />
+					: null}
 				<SectionList auditStoreId={this.props.params.auditStoreId} showErrors={this.state.showErrors} editable={this.isReportEditable()} auditStore={this.props.auditStore}/>
 				<NpsSection audit_store_id={this.props.params.auditStoreId} nps_section={this.props.auditStore.nps_section} editable={this.isReportEditable()} showErrors={this.state.showErrors} />
 				{buttonPanel}

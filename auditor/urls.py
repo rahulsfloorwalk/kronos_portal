@@ -17,6 +17,7 @@ urlpatterns = ([
     url(r'dashboard/score$', views.ScoreView.as_view(), name="auditor_score_view"),
 
     url(r'profile_completion_percentage$', views.ProfilePercentageView.as_view(), name="auditor_profile_percentage_view"),
+    url(r'profile_completion_with_user_detail$', views.ProfileCompletioneView.as_view(), name="auditor_profile_completion_view"),
     url(r'profile_info$', views.ProfileInfoView.as_view(), name="profile_info_view"),
     url(r'mobile_number$', views.MobileNumberView.as_view(), name="mobile_number_view"),
     url(r'whatsapp_number$', views.WhatsappNumberView.as_view(), name="whatsapp_number_view"),

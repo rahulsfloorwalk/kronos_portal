@@ -430,11 +430,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     auditStoreId="5"
     editable={false}
   />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
-  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -993,11 +988,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     }
     auditStoreId="5"
     editable={false}
-  />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
   />
   <AuditStoreSections
     auditStore={
@@ -1558,11 +1548,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     auditStoreId="5"
     editable={false}
   />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
-  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -2122,11 +2107,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     auditStoreId="5"
     editable={false}
   />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
-  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -2685,11 +2665,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     }
     auditStoreId="5"
     editable={false}
-  />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
   />
   <AuditStoreSections
     auditStore={
@@ -3258,11 +3233,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     auditStoreId="5"
     editable={false}
   />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
-  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -3829,11 +3799,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     auditStoreId="5"
     editable={false}
   />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
-  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -4393,11 +4358,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     auditStoreId="5"
     editable={false}
   />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
-  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -4949,11 +4909,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={false}
-  />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
   />
   <AuditStoreSections
     auditStore={
@@ -5507,11 +5462,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     auditStoreId="5"
     editable={false}
   />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
-  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -6064,11 +6014,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     auditStoreId="5"
     editable={false}
   />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
-  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -6620,11 +6565,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={false}
-  />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
   />
   <AuditStoreSections
     auditStore={
@@ -7234,11 +7174,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     auditStoreId="5"
     editable={true}
   />
-  <ReportSummary
-    auditStoreId={5}
-    editable={true}
-    reportSummary="Foobar"
-  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -7790,11 +7725,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={false}
-  />
-  <ReportSummary
-    auditStoreId={5}
-    editable={false}
-    reportSummary="Foobar"
   />
   <AuditStoreSections
     auditStore={

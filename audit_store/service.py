@@ -382,7 +382,7 @@ def find_by_id_for_auditor(audit_store_id, user_id):
         return AuditStore.objects.get(
             pk=audit_store_id,
             user_id=user_id,
-            status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
+            status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED,AuditStore.AUDITOR_WITHDRAWN, AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
             audit__audit_cycle__status__in=AuditCycle.AUDITOR_VISIBLE_STATUSES
         )
     except (AuditStore.DoesNotExist) as e:
