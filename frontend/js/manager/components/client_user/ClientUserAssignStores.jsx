@@ -66,17 +66,21 @@ class ClientUserAssignStores extends React.Component{
 			let val = parseInt($(this).attr("value"));
 			save_client_user_store_list.push(val);
 		});
-		if(save_client_user_store_list.length === 0){
-			this.setState({
-				errorMsg: "Please select at least one store"
-			});
-		}
-		else{
-			assignStoresForNonAdminUser(this.props.params.clientUserId, save_client_user_store_list).then(() => {
-				hashHistory.goBack();
-				Alert.success("STORES ASSIGNED");
-			});
-		}
+		// if(save_client_user_store_list.length === 0){
+		// 	this.setState({
+		// 		errorMsg: "Please select at least one store"
+		// 	});
+		// }
+		// else{
+		// 	assignStoresForNonAdminUser(this.props.params.clientUserId, save_client_user_store_list).then(() => {
+		// 		hashHistory.goBack();
+		// 		Alert.success("STORES ASSIGNED");
+		// 	});
+		// }
+		assignStoresForNonAdminUser(this.props.params.clientUserId, save_client_user_store_list).then(() => {
+			hashHistory.goBack();
+			Alert.success("STORES ASSIGNED");
+		});
 	};
 
 	render(){
