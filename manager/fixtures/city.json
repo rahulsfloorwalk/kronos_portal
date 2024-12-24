@@ -58397,5 +58397,16 @@
          "lon": 56.558,
          "country": "OM"
       }
+   },
+   {
+      "model": "manager.city",
+      "pk": 5339,
+      "fields": {
+         "name": "Muscat",
+         "state": "OM-MT",
+         "lat": 23.5905,
+         "lon": 58.5819,
+         "country": "OM"
+      }
    }
  ]

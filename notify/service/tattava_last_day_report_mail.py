@@ -37,14 +37,15 @@ def tattava_send_live_report_mail(report_list):
         **registration_context(),
     }
     to_email=[
-        'sumit.kumar@tattvaspa.org',
+        # 'sumit.kumar@tattvaspa.org',
+        'sumit.kumar@tattvaspa.com',
         'prem.choudhary@tattvaspa.com',
         'karan@tattvaspa.com',
         'vinay.singh@tattvaspa.org',
         'komal@tattvaspa.org',
-        'rashmi@tattvaspa.com',
+        # 'rashmi@tattvaspa.com',
         'praveen.limadiya@tattvaspa.com',
-        'naman@tattvaspa.org',
+        # 'naman@tattvaspa.org',
         'shipra@tattvaspa.com'
         ]
     # to_email=['arpan.patidar@floorwalk.in']
