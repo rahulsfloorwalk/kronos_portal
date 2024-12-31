@@ -551,6 +551,19 @@ class AuditStore(Model):
         self._change_status(AuditStore.COMPLETED, by)
         self.save_percentage()
 
+    @atomic
+    def qa_complete(self, *args, by):
+        if not self.is_completable():
+            raise AppLogicError("Report is not complete")
+
+        if not self.is_qa_rated():
+            raise AppLogicError("Report is not rated")
+
+        if not self.is_auditor_rated():
+            raise AppLogicError("Auditor is not rated")
+
+        self._change_status(AuditStore.COMPLETED, by)
+        self.save_percentage()
 
     @atomic
     def revert_complete(self, *args, by):

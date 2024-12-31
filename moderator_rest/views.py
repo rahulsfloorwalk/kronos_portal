@@ -20,7 +20,7 @@ import questionnaire.service.section as section_service
 import answer.service.report_section_moderator as report_section_moderator_service
 import answer.service.answer_moderator as answer_moderator_service
 from auditor.service import profile_info_service
-from audit_store.service_auditor import set_not_applicable_for_hide_questions
+from audit_store.service_auditor import set_not_applicable_for_hide_questions,complete_report
 from attachment.service import set_attachment_by_proof_tag
 
 from .serializers import AuditCycleSerializer, ClientSerializer
@@ -269,6 +269,10 @@ class AuditStoreIdQAOKView(APIView):
         set_attachment_by_proof_tag(audit_store_id)
         set_not_applicable_for_hide_questions(audit_store)
         audit_store.qa_ok(by=request.user)
+        audit_store_detail = AuditStoreSerializer(audit_store).data
+        client_id = audit_store.audit.audit_cycle.client.id
+        if client_id in [345, 346]:
+            audit_store = complete_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 

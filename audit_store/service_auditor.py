@@ -17,6 +17,7 @@ from answer.service import report_section_auditor
 from answer.service.answer_auditor import add_multiselect_answer_questions, remove_answer_revert_message_for_auditor
 from answer.models import Answer, ReportSection
 from questionnaire.models.question import Question
+from django.contrib.auth.models import User
 
 # def add_hide_section_in_report_section(audit_store_id):
 #     audit=AuditStore.objects.get(id=audit_store_id)
@@ -232,3 +233,56 @@ def set_not_applicable_for_hide_questions(audit_store: AuditStore):
 
 def find_completed_audit_store_count_by_user_id(user_id):
     return AuditStore.objects.filter(user = user_id, status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED]).count()
+
+def complete_report(audit_store_id, user_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    user = User.objects.get(id = user_id)
+    print(user,user_id)
+    # set_attachment_by_proof_tag(audit_store_id)
+    audit_store.qa_complete(by=user)
+
+    # audit_cycle_id = audit_store.audit.audit_cycle.id
+    # audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+
+    # audit_ids = audit_cycle.audits.values_list('id', flat=True)
+    # audit_stores = AuditStore.objects.filter(audit__id__in=audit_ids)
+
+    # if audit_store.report_summary and audit_store.report_summary.strip():
+    #     try:
+    #         sentiment_data = get_sentiment_data(audit_store.report_summary)
+    #         audit_store.main_keywords = sentiment_data['keywords']
+    #         audit_store.bullet_points = sentiment_data['key_sentences']
+    #         audit_store.sentiment_emotions = sentiment_data['emotions']
+    #         audit_store.sentiment_positive_words = sentiment_data['positive_words']
+    #         audit_store.sentiment_negative_words = sentiment_data['negative_words']
+    #         audit_store.sentiment_score = sentiment_data['sentiment_score']
+    #         audit_store.sentiment_text = sentiment_data['sentiment_result']
+    #         audit_store.save()
+
+    #     except Exception as e:
+    #         print("Error in sentiment data: {}".format(e))
+    #         pass
+        
+    # mp_order = MPOrder.objects.get(id=audit_cycle.order.id) if audit_cycle.order else None
+    # if mp_order is not None:
+    #     # store_ids = [audit_store.id for audit_store in audit_stores]
+    #     total_audit_count = audit_cycle.audit_count()
+    #     store_statuses = [audit_store.status for audit_store in audit_stores]
+
+    #     if store_statuses.count('COMPLETED') + store_statuses.count('ACCEPTED') == total_audit_count:
+    #         mp_order.status = 'COMPLETE'
+    #         mp_order.save()
+    #     else:
+    #         mp_order.status = 'ACTIVE'
+    #         mp_order.save()
+    #     report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
+    #     for report in report_obj:
+    #         report.save_percentage()
+    # else:
+    #     report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
+    #     for report in report_obj:
+    #         report.save_percentage()
+    report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
+    for report in report_obj:
+        report.save_percentage()
+    return audit_store
