@@ -26,6 +26,7 @@ from answer.models import ReportSection
 from attachment.models import Attachment
 from django.contrib.contenttypes.models import ContentType
 from auditor.service.profile_info_service import get_auditor_rating_by_user
+from manager.models import AuditProoftagNotAvailable
 
 _logger = logging.getLogger(__name__)
 
@@ -383,6 +384,16 @@ class AuditStore(Model):
         required_proof_tag_list = self.audit.audit_cycle.proof_tags_list.filter(section_proof_tag__is_required = True).values_list('section_proof_tag__audit_cycle_proof_tag__proof_tag', flat = True).distinct('proof_tag')
         proof_attached = self.attachments.filter(proof_tag__isnull = False, proof_tag__proof_tag__in = required_proof_tag_list, status = Attachment.ATTACHED).values_list('proof_tag__proof_tag', flat = True).distinct('proof_tag__proof_tag')
         return len(proof_attached) >= len(required_proof_tag_list)
+
+    def check_required_proof_attached_or_not_available(self):
+        required_proof_tag_list = self.audit.audit_cycle.proof_tags_list.filter(
+            section_proof_tag__is_required=True
+        ).values_list('section_proof_tag__audit_cycle_proof_tag__proof_tag', flat=True).distinct('proof_tag')
+
+        proof_attached = self.attachments.filter( proof_tag__isnull=False, proof_tag__proof_tag__in=required_proof_tag_list, status=Attachment.ATTACHED ).values_list('proof_tag__proof_tag', flat=True).distinct('proof_tag__proof_tag')
+        proof_in_audit_prooftag_not_available = AuditProoftagNotAvailable.objects.filter( proof_tag__in=required_proof_tag_list, audit_store_id=self.id ).values_list('proof_tag', flat=True).distinct()
+        total_proofs = set(proof_attached) | set(proof_in_audit_prooftag_not_available)
+        return len(total_proofs) >= len(required_proof_tag_list)
 
     def is_completable(self):
         sections = self.audit.audit_cycle.sections.all()

@@ -9,11 +9,21 @@ from answer.service import report_section_auditor as report_section_auditor_serv
 from answer.service import answer_auditor as answer_auditor_service
 import answer.service.report_section as report_section_service
 from . import service as attachment_service
+from manager.models import AuditProoftagNotAvailable
+
 
 
 def upload_for_audit_store_by_auditor(audit_store_id: int, user_id: int, file_name: str, file_size: str, mime_type: str):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
     return attachment_service.upload_for_audit_store(audit_store.id, file_name, file_size, mime_type)
+
+def upload_prooftag_not_available_for_audit_store_by_auditor(audit_store_id: int, user_id: int, proof_tag, description):
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
+    return attachment_service.upload_prooftag_not_available_for_object(audit_store.id, proof_tag, description,user_id)
+
+def upload_for_audit_store_by_auditor_with_proof_tag(audit_store_id: int, user_id: int, file_name: str, file_size: str, mime_type: str,proof_tag):
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
+    return attachment_service.upload_for_audit_store_with_proof_tag(audit_store.id, file_name, file_size, mime_type,proof_tag)
 
 
 def upload_for_report_section_by_auditor(audit_store_id: int, section_id: int, file_name: str, file_size: str, mime_type: str, user_id: int):
@@ -28,6 +38,12 @@ def upload_for_answer_by_auditor(audit_store_id: int, question_id: int, file_nam
 def find_by_audit_store_for_auditor(audit_store_id: int, user_id: int):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
     return attachment_service.find_by_audit_store(audit_store.id)
+
+def find_by_audit_store_for_auditor_prooftag_not_available(audit_store_id: int, user_id: int):
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
+    if audit_store is None:
+        return AuditProoftagNotAvailable.objects.none()
+    return attachment_service.find_prooftag_not_available_by_audit_store(audit_store.id)
 
 def find_attachment_by_audit_store_id(audit_store_id:int):
     audit_store = AuditStore.objects.get(id=audit_store_id)

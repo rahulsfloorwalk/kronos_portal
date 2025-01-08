@@ -58,9 +58,11 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_section$', views.ReportSectionListView.as_view(), name="report_section_list_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/acknowledge$', views.AuditStoreIdAcknowledgeView.as_view(), name="audit_store_id_acknowledge_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/submit$', views.AuditStoreIdSubmitView.as_view(), name="audit_store_id_submit_view"),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/submit_report$', views.AuditStoreIdSubmitReportView.as_view(), name="audit_store_id_submit_report_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/fail$', views.AuditStoreIdFailView.as_view(), name="audit_store_id_fail_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/withdraw$', views.AuditStoreIdWithdrawView.as_view(), name="audit_store_id_withdraw_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', views.AuditStoreAttachmentView.as_view(), name="audit_store_upload_view"),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment_with_prooftag$', views.AuditStoreAttachmentProofTagView.as_view(), name="audit_store_upload_view_with_proof_tag"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/guildline$', views.AuditGuidelineByAuditStore.as_view(), name='audit_guideline_by_audit_store'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment$', views.ReportSectionAttachmentView.as_view(), name="report_section_attachment_view"),
 
@@ -76,7 +78,8 @@ urlpatterns = ([
     url(r'attachment/(?P<audit_store_id>[0-9]+)/arrange_attachment$', views.AuditStoreIdArrangeAttachment.as_view(), name='arrange_attachment_by_proof_tags'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag$', views.AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),
 
-    url(r'proof_notavailable$', views.ProofTagNotAvailableView.as_view(), name='proof_tag_not_available_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/proof_not_available$', views.AuditStoreProofTagNotAvailableView.as_view(), name="audit_store_upload_proof_tag_not_available_view"),
+    url(r'proof_not_available/(?P<proof_not_available_id>[0-9]+)$', views.ProofTagNotAvailableView.as_view(), name="proof_tag_not_available_view"),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list$', views.AttachmentProofTagList.as_view(), name='attachment_proof_tag_list'),
     url(r'auditor_self/(?P<user_id>[0-9]+)/deactivate$', views.AuditorSelfDeactivateView.as_view(), name="auditor_self_id_deactivate_view"),
