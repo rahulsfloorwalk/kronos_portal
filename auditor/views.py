@@ -53,10 +53,14 @@ import registration.service.auditor as auditor_service
 from manager.viewss.auditor import AuditorSerializer
 from manager.models import ProofTag
 from django.db import IntegrityError
-# from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny
 from auditor.serializers import AuditProoftagSerializer
 from django.shortcuts import get_object_or_404
 from auditor.models import AuditApplication
+from audit.models.proof_tag import AuditCycleProofTagList
+from manager.models import AuditProoftagNotAvailable
+from attachment import service as attachment_service
+
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -477,6 +481,15 @@ class AuditStoreIdSubmitView(APIView):
         audit_store = audit_store_auditor_service.submit_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
+class AuditStoreIdSubmitReportView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR],
+    }
+    def post(self, request, audit_store_id):
+        audit_store = audit_store_auditor_service.submit_report_api(audit_store_id, request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
 
 class AuditStoreIdAcknowledgeView(APIView):
     permission_classes = [HasGroupPermission]
@@ -596,6 +609,44 @@ class AuditGuidelineByAuditStore(APIView):
     def get(self,request,audit_store_id,format=None):
         attachment = attachment_auditor_service.find_attachment_by_audit_store_id(audit_store_id)
         return Response(attachment)
+    
+def find_proof_tag_by_id(proof_tag_id):
+    """Retrieve the proof tag by its ID or return None if not found or ID is None."""
+    if proof_tag_id is None:
+        return None
+    try:
+        return AuditCycleProofTagList.objects.get(pk=proof_tag_id)
+    except AuditCycleProofTagList.DoesNotExist:
+        raise NotFound({"detail": "Proof tag with ID " + str(proof_tag_id) + " does not exist."})
+
+class AuditStoreAttachmentProofTagView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+
+    def get(self, request, audit_store_id, format=None):
+            attachments = attachment_auditor_service.find_by_audit_store_for_auditor(audit_store_id, request.user.id)
+            return Response(AttachmentSerializer(attachments, many=True).data)
+
+    def post(self, request, audit_store_id):
+        try:
+            proof_tag_id = request.data.get("proof_tag", None)
+            proof_tag = find_proof_tag_by_id(proof_tag_id)
+            post_data, attachment = attachment_auditor_service.upload_for_audit_store_by_auditor_with_proof_tag(
+                audit_store_id,
+                request.user.id,
+                request.data["file_name"],
+                request.data["file_size"],
+                request.data["file_type"],
+                proof_tag)
+            post_data["attachment"] = AttachmentSerializer(attachment).data
+            return Response(post_data)
+        except KeyError as e:
+            raise ValidationError({
+                'file_name': "file name is required"
+            })
 
 class AuditStoreAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
@@ -622,6 +673,61 @@ class AuditStoreAttachmentView(APIView):
             raise ValidationError({
                 'file_name': "file name is required"
             })
+        
+class AuditStoreProofTagNotAvailableView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+
+    def get(self, request, audit_store_id, format=None):
+            user_id = request.user.id
+            prooftag_not_available = attachment_auditor_service.find_by_audit_store_for_auditor_prooftag_not_available(audit_store_id, user_id)
+            return Response(AuditProoftagSerializer(prooftag_not_available, many=True).data)
+
+    def post(self, request, audit_store_id):
+        proof_tag = request.data.get('proof_tag_id')
+        description = request.data.get('description')
+        user_id = request.user.id
+        try:
+            prooftag_not_available = attachment_auditor_service.upload_prooftag_not_available_for_audit_store_by_auditor(
+                audit_store_id,
+                user_id,
+                proof_tag,
+                description)
+            return Response(AuditProoftagSerializer(prooftag_not_available).data)
+        except KeyError as e:
+            return Response( {"message": str(e)},status=400 )
+
+class ProofTagNotAvailableView(APIView):
+    # permission_classes = [AllowAny]
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR],
+        'DELETE': [GROUP_NAME_AUDITOR]
+    }
+    def post(self, request, proof_not_available_id):
+        description = request.data.get('description')
+        user_id = request.user.id
+        if not description:
+            return Response( {"message": "The description field (description) is required."}, status=400 )
+        try:
+            prooftag_not_available = attachment_service.find_prooftag_not_available_by_id(proof_not_available_id,user_id)
+            if not prooftag_not_available:
+                raise NotFound("The specified proof tag not available record does not exist.")
+            prooftag_not_available.description = description
+            prooftag_not_available.save()
+            return Response( AuditProoftagSerializer(prooftag_not_available).data, status=200 )
+        except Exception as e:
+            return Response( {"message": "An unexpected error occurred: " + str(e)}, status=500 )
+
+    def delete(self, request,proof_not_available_id):
+        user_id = request.user.id
+        prooftag_not_available = attachment_service.find_prooftag_not_available_by_id(proof_not_available_id,user_id)
+        prooftag_not_available.delete()
+        return Response({"message": "prooftag_not_available deleted successfully"}, status=200)
+
 
 class ReportSectionAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
@@ -898,39 +1004,6 @@ class AttachmentIdProofTagView(APIView):
         return Response(AttachmentSerializer(attachment).data)
     
     
-
-class ProofTagNotAvailableView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'POST': [GROUP_NAME_AUDITOR]
-    }
-    def post(self,request):
-        prooftag = request.data.get('proof_tag_id')
-        description = request.data.get('prooftagTextareaValue')
-        user_id = request.user.id
-        audit_store_id = request.data.get('audit_store_id') 
-
-        try:
-            prooftag = int(prooftag)
-        except (TypeError, ValueError):
-            return Response({'error': 'Invalid proof_tag_id'}, status=404)
-        
-        prooftag = audit_cycle_proof_tag.find_by_id(prooftag)
-        if prooftag is None:
-            return Response({'error': 'ProofTag does not exist'}, status=404)
-
-        data = {
-            'audit_cycle_prooftag_list': prooftag.id,
-            'prooftagTextareaValue': description,
-            'user': user_id,
-            'audit_store_id':audit_store_id
-        }
-        serializer = AuditProoftagSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Data saved successfully"}, status=200)
-        
-        return Response(status=400)
 
 class ProfileInfoPronounsView(APIView):
     permission_classes = [HasGroupPermission]

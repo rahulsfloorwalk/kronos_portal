@@ -40,6 +40,9 @@ from audit.service import audit_cycle as audit_cycle_service
 from manager.models import MPSolution,MPCategory
 from client.models import ClientRequirements
 from manager.service import client_requirement_attachment_service
+from manager.models import AuditProoftagNotAvailable
+from django.contrib.auth.models import User, Group
+from rest_framework.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -76,6 +79,33 @@ def upload_for_object(proof_type: str, mime_type: str, file_name: str, file_size
         file_size = file_size,
         file_slug = file_slug,
         content_object = content_object,
+    )
+
+def upload_prooftag_not_available_for_object(audit_store_id, proof_tag, description, user_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    prooftag = audit_cycle_proof_tag.find_by_id(proof_tag)
+    user = User.objects.get(id = user_id)
+
+    existing_record = AuditProoftagNotAvailable.objects.filter(proof_tag=prooftag.id,audit_store_id=audit_store.id,user=user).first()
+    if existing_record:
+        raise ValidationError("A record with the same audit store, proof tag, and user already exists.")
+    return AuditProoftagNotAvailable.objects.create(
+        proof_tag = prooftag.id,
+        description = description,
+        user = user,
+        audit_store_id = audit_store.id
+    )
+
+def upload_for_object_with_proof_tag(proof_type: str, mime_type: str, file_name: str, file_size: int, file_slug: str, content_object,proof_tag) -> Attachment:
+    return Attachment.objects.create(
+        status = Attachment.UPLOADING,
+        proof_type = proof_type,
+        mime_type = mime_type,
+        file_name = file_name,
+        file_size = file_size,
+        file_slug = file_slug,
+        content_object = content_object,
+        proof_tag = proof_tag,
     )
 
 def upload_for_object_order(
@@ -168,6 +198,16 @@ def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
     proof_type = get_proof_type(mime_type)
     post_data = get_signed_post(file_extension)
     attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], audit_store)
+    return (post_data, attachment)
+
+def upload_for_audit_store_with_proof_tag(audit_store_id, file_name, file_size, mime_type,proof_tag):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    check_file_size(file_size)
+    basename, file_extension = parse_file_name(file_name)
+    valid_file_type(mime_type, file_extension)
+    proof_type = get_proof_type(mime_type)
+    post_data = get_signed_post(file_extension)
+    attachment = upload_for_object_with_proof_tag(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], audit_store,proof_tag)
     return (post_data, attachment)
 
 def upload_for_solution(solution_id, file_name, file_size, mime_type):
@@ -316,6 +356,15 @@ def get_order_for_attachment(attachment_id : int) -> MPOrder:
 
 def find_by_audit_store(audit_store_id):
     return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED).order_by('id')
+
+def find_prooftag_not_available_by_audit_store(audit_store_id):
+    return AuditProoftagNotAvailable.objects.filter(audit_store_id=audit_store_id).order_by('id')
+
+def find_prooftag_not_available_by_id(proof_not_available_id,user_id):
+    try:
+        return AuditProoftagNotAvailable.objects.get(pk=proof_not_available_id,user=user_id)
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
 
 def find_by_solution(solution_id):  
     return Attachment.objects.filter(solutions__id=solution_id,status=Attachment.ATTACHED).order_by('id')

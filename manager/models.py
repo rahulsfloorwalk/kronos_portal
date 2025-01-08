@@ -77,8 +77,8 @@ class ProofTag(Model):
     
 class AuditProoftagNotAvailable(Model):
     id = AutoField(db_column='id', primary_key=True)
-    audit_cycle_prooftag_list = IntegerField(db_column='audit_cycle_prooftag_list', blank=True,null=True) #audit_auditcycleprooftaglist
-    prooftagTextareaValue = CharField(db_column='prooftagTextareaValue', max_length=5000, blank=True,null=True)
+    proof_tag = IntegerField(db_column='proof_tag_id', blank=True,null=True) #audit_auditcycleprooftaglist is proof_tag
+    description = CharField(db_column='description', max_length=5000, blank=True,null=True)
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
     audit_store_id = IntegerField(db_column='audit_store_id', blank=True,null=True)
 
