@@ -11,6 +11,7 @@ urlpatterns = ([
     url(r'state$', views.StateView.as_view(), name='state_view'),
     url(r'state/(?P<country>[\w\-]+)$', views.StateViewByCountry.as_view(), name='state_view_by_country'),
     url(r'city/(?P<state>[\w\-]+)$', views.CityView.as_view(), name='city_view'),
+    url(r'city_id/(?P<city_id>[0-9]+)$', views.CityGetByIdView.as_view(), name='city_get_by_id_view'),
     url(r'id_proof/attachment$', views.UserIdProofAttachmentView.as_view(), name="id_proof_upload_view"),
 
     url(r'dashboard/stats$', views.StatsView.as_view(), name="auditor_stats_view"),
@@ -37,6 +38,7 @@ urlpatterns = ([
     url(r'referral$', views.ReferralView.as_view(), name="referral_view"),
 
     url(r'audit$', views.AvailableAuditsView.as_view(), name="available_audits"),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/profile_match_percentage$', views.ProfileMatchPercentageView.as_view(), name="profile_match_percentage_view"),
     
     url(r'applied_audits$', views.AppliedAuditsView.as_view(), name="applied_audits"),
     

@@ -209,6 +209,20 @@ class AvailableAuditsView(APIView):
         available_audits = audit_service.find_audits_for_auditor_limit(request.user.id, kms)
         return Response(AuditSerializer(available_audits, many=True).data)
 
+class ProfileMatchPercentageView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        total_factors_count, valid_factors_count, match_percentage = audit_service.calculate_profile_match(request.user.id, audit_cycle_id)
+        response_data = {
+            "total_factors_count": total_factors_count,
+            "valid_factors_count": valid_factors_count,
+            "match_percentage": match_percentage,
+        }
+        return Response(response_data)
+
 class AppliedAuditsView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -395,6 +409,18 @@ class CityView(APIView):
             return Response(CitySerializer(cities, many=True).data)
         raise NotFound
 
+class CityGetByIdView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+    
+    def get(self, request, city_id, format=None):
+        try:
+            city = City.objects.get(id=city_id)
+        except City.DoesNotExist:
+            raise NotFound({"detail": "City not found."})
+        serializer = CitySerializer(city)
+        return Response(serializer.data)
+    
 class StateView(APIView):
     permission_classes = [HasGroupPermission]
     authentication_classes = [TokenAuthentication, SessionAuthentication]

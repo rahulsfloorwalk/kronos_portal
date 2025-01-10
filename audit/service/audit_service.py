@@ -14,6 +14,11 @@ from manager.service import geo
 from registration.service import auditor as auditor_service
 from auditor.models import AuditApplication
 from audit.service import audit_cycle as audit_cycle_service
+from datetime import datetime
+from auditor.models import ProfileInfo,AdditionalInfo
+from datetime import datetime
+from datetime import datetime, date
+
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -167,6 +172,8 @@ def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
             AuditCycle.ACTIVE
         ]
     )
+    active_audits = active_audits.exclude( audit_cycle__end_date__isnull=False, audit_cycle__end_date__lt=datetime.now() )
+
     # get the bounding box
     lon_max, lon_min, lat_max, lat_min = geo.bounding_box(lat1, lon1, kms)
 
@@ -244,6 +251,8 @@ def find_audits_around_city(city_id:int, kms:int=None):
         ]
     )
 
+    active_audits = active_audits.exclude( audit_cycle__end_date__isnull=False, audit_cycle__end_date__lt=datetime.now() )
+
     # get the bounding box
     lon_max, lon_min, lat_max, lat_min = geo.bounding_box(city.lat, city.lon, kms)
 
@@ -315,6 +324,107 @@ def find_audits_for_auditor_limit(user_id,kms):
     # return find_audits_around_pincode_and_city(city_id, kms,pincode)
     
     return find_audits_around_pincode_and_city(auditor.profileinfo.city_id, int(kms),auditor.profileinfo.pincode)
+    
+def calculate_profile_match(user_id, audit_cycle_id):
+    """
+    Calculate the profile match percentage for an auditor against an audit cycle.
+
+    :param user_id: ID of the user (auditor)
+    :param audit_cycle_id: ID of the audit cycle
+    :return: (total_factors_count, valid_factors_count, match_percentage)
+    """
+    def calculate_age(birthdate):
+        """Calculate age from the date of birth."""
+        today = date.today()
+        try:
+            birthday = birthdate.replace(year = today.year)
+        except ValueError:
+            birthday = birthdate.replace(year = today.year, month = birthdate.month + 1, day = 1)
+
+        if birthday > today:
+            return today.year - birthdate.year - 1
+        else:
+            return today.year - birthdate.year
+
+    # Fetch auditor and audit cycle
+    try:
+        auditor = auditor_service.find_auditor_by_id(user_id)
+        audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+    except (AuditCycle.DoesNotExist, auditor_service.AuditorNotFoundError):
+        return 0, 0, 0
+
+    factors = audit_cycle.audit_alignment_factors
+    if not factors:
+        return 0, 0, 100  # No factors to validate, assume 100% match
+
+    try:
+        profile_info = ProfileInfo.objects.get(user=auditor)
+        additional_info = AdditionalInfo.objects.get(user=auditor)
+        validator_objects = [additional_info, profile_info]
+    except (AdditionalInfo.DoesNotExist, ProfileInfo.DoesNotExist):
+        return 0, 0, 0  # Missing user details, cannot calculate match
+    valid_factors_count = 0
+    total_factors_count = 0
+    blank_values = ['', None, [],'date_availability']
+    null_blank_factor_keys = ['auditor_rating']
+
+    for factor in factors:
+        if factor['value'] in blank_values or factor['key'] in blank_values:
+            continue
+
+        total_factors_count += 1
+
+        if factor['type'] == 'str':
+            user_value = None
+            for obj in validator_objects:
+                if getattr(obj, factor['key'], '') not in blank_values:
+                    user_value = getattr(obj, factor['key'])
+                    if user_value:
+                        break
+            if not user_value and factor['key'] not in null_blank_factor_keys:
+                continue
+
+            alignment_factor_value = factor['value'] if type(factor['value']) in [list, set] else [factor['value']]
+
+            if type(user_value) in [list, set]:
+                user_value = [str(x) for x in user_value]
+                if any(item in user_value for item in alignment_factor_value):
+                    valid_factors_count += 1
+            else:
+                if str(user_value) in alignment_factor_value:
+                    valid_factors_count += 1
+                elif factor['key'] in null_blank_factor_keys:
+                    if user_value in alignment_factor_value:
+                        valid_factors_count += 1
+
+        if factor['type'] == 'func':
+            # if factor['key'] == 'auditor_age_range' and profile_info.date_of_birth:
+            if factor['key'].strip() == 'auditor_age_range':
+                if profile_info.date_of_birth:
+                    age = calculate_age(profile_info.date_of_birth)
+                    start_age, end_age = factor['value'].split('-')
+                    if int(start_age) <= age <= int(end_age):
+                        valid_factors_count += 1
+
+            if factor['key'] == 'auditor_rating':
+                from auditor.service.profile_info_service import get_avg_auditor_rating_by_user
+                if get_avg_auditor_rating_by_user(profile_info.user) in factor['value']:
+                    valid_factors_count += 1
+
+            if factor['key'] == 'report_rating':
+                if profile_info.average_rating():
+                        if str(round(profile_info.average_rating())) in factor['value']:
+                            valid_factors_count += 1
+
+            # if factor['key'] == 'date_availability':
+            #     date_range = split_date_range_from_string(factor['value'])
+            #     if date_range[0] <= getattr(auditor, 'audit_date', None) <= date_range[1]:
+            #         valid_factors_count += 1
+
+    # Calculate match percentage
+    match_percentage = round((valid_factors_count / total_factors_count) * 100) if total_factors_count else 0
+
+    return total_factors_count, valid_factors_count, match_percentage
     
 def find_audits_for_auditor(user_id, kms):
     auditor = auditor_service.find_auditor_by_id(user_id)
