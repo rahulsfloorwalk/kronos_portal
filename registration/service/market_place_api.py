@@ -219,14 +219,27 @@ def web_login_api(request):
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             token, created = Token.objects.get_or_create(user=user)
             # client_dashboard_data = market_place_api.get_client_dashboard_data(user)
-            client = Client.objects.get(email=user.email)
+            try:
+                client = Client.objects.get(email=user.email)
+                client_id = client.id
+                client_name = client.name
+            except Client.DoesNotExist:
+                try:
+                    client_user = ClientUser.objects.get(user=user)
+                    client_id = client_user.client.id
+                    client_name = client_user.client.name
+                except ClientUser.DoesNotExist:
+                    return {
+                        'detail': 'Invalid credentials: No associated client or client user found.'
+                    }, 400
+                
             response = {
                 'detail': 'Login successful',
                 'token': token.key,
                 'username': user.username,
                 'user_id' : user.id,
-                'client_id' : client.id,
-                'client_name' : client.name,
+                'client_id' : client_id,
+                'client_name' : client_name,
                 # 'client_dashboard_data': client_dashboard_data,
             }
             status = 200
