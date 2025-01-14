@@ -34,6 +34,7 @@ def setup_periodic_tasks(sender, **kwargs):
     from notify.service.auto_super_auditor_assign import auto_approve_for_super_auditor
     
     from notify.service.tattava_last_day_report_mail import auto_tattava_mail_for_last_day_completed_report
+    from notify.service.tattava_last_day_report_mail import auto_tattava_mail_for_last_day_completed_report_for_specific_localition
     # from notify.service.tattava_target_date_reminder import auto_tattava_report_action_target_date_to_admin
     
     # set up schedules for audit reminders
@@ -63,7 +64,8 @@ def setup_periodic_tasks(sender, **kwargs):
     # sender.add_periodic_task(queue_at_9, auto_tattava_report_action_target_date_to_admin.s())
     
     # last day complete report send tattava user's
-    sender.add_periodic_task(queue_at_9, auto_tattava_mail_for_last_day_completed_report.s())
+    # sender.add_periodic_task(queue_at_9, auto_tattava_mail_for_last_day_completed_report.s())
+    sender.add_periodic_task(queue_at_9, auto_tattava_mail_for_last_day_completed_report_for_specific_localition.s())
     
     
     # schedules for find repeated image attachment
