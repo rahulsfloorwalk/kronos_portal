@@ -668,6 +668,9 @@ class AuditStoreAttachmentProofTagView(APIView):
                 request.data["file_type"],
                 proof_tag)
             post_data["attachment"] = AttachmentSerializer(attachment).data
+            prooftag_not_available =  AuditProoftagNotAvailable.objects.filter(proof_tag=proof_tag_id,user=request.user.id,audit_store_id=audit_store_id)
+            if prooftag_not_available.exists():
+                prooftag_not_available.delete()
             return Response(post_data)
         except KeyError as e:
             raise ValidationError({
