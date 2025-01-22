@@ -390,22 +390,18 @@ class AuditStore(Model):
             section_proof_tag__is_required=True
         ).values_list('section_proof_tag__audit_cycle_proof_tag__proof_tag', flat=True).distinct('proof_tag')
 
-        proof_attached = self.attachments.filter( proof_tag__isnull=False, proof_tag__proof_tag__in=required_proof_tag_list, status=Attachment.ATTACHED ).values_list('proof_tag__proof_tag', flat=True).distinct('proof_tag__proof_tag')
-        proof_in_audit_prooftag_not_available = AuditProoftagNotAvailable.objects.filter( proof_tag__in=required_proof_tag_list, audit_store_id=self.id ).values_list('proof_tag', flat=True).distinct()
-        total_proofs = set(proof_attached) | set(proof_in_audit_prooftag_not_available)
-        return len(total_proofs) >= len(required_proof_tag_list)
-    
-    # def check_required_proof_attached_or_not_available(self):
-    #     required_proof_tag_list = self.audit.audit_cycle.proof_tags_list.filter(
-    #         section_proof_tag__is_required=True
-    #     ).values_list('section_proof_tag__audit_cycle_proof_tag__proof_tag', flat=True).distinct('proof_tag')
+        required_proof_tag_list_by_audit_cycle_prooftag_list = self.audit.audit_cycle.proof_tags_list.filter(
+            section_proof_tag__is_required=True
+        ).values('section_proof_tag__audit_cycle_proof_tag').distinct('proof_tag')
 
-    #     proof_attached = list(self.attachments.filter( proof_tag__isnull=False, proof_tag__proof_tag__in=required_proof_tag_list, status=Attachment.ATTACHED ).values_list('proof_tag__proof_tag', flat=True).distinct('proof_tag__proof_tag'))
-    #     proof_in_audit_prooftag_not_available = list(AuditProoftagNotAvailable.objects.filter( proof_tag__in=required_proof_tag_list, audit_store_id=self.id ).values_list('proof_tag', flat=True).distinct())
-    #     # total_proofs = set(proof_attached) | set(proof_in_audit_prooftag_not_available)
+        proof_attached = self.attachments.filter(proof_tag__isnull = False, proof_tag__proof_tag__in = required_proof_tag_list, status = Attachment.ATTACHED).values_list('proof_tag', flat = True).distinct('proof_tag__proof_tag')
+        proof_in_audit_prooftag_not_available = AuditProoftagNotAvailable.objects.filter( proof_tag__in=required_proof_tag_list_by_audit_cycle_prooftag_list, audit_store_id=self.id ).values_list('proof_tag', flat=True).distinct('proof_tag')
 
-    #     total_proofs = set(proof_attached + proof_in_audit_prooftag_not_available)
-    #     return (total_proofs) >= len(required_proof_tag_list)
+        total_proof_attached = proof_attached.count()
+        total_proof_in_audit_prooftag_not_available = proof_in_audit_prooftag_not_available.count()
+        total_proofs = total_proof_attached + total_proof_in_audit_prooftag_not_available
+
+        return total_proofs >=len(required_proof_tag_list)
 
     def is_completable(self):
         sections = self.audit.audit_cycle.sections.all()
