@@ -8,7 +8,7 @@ from django.db.transaction import atomic
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from ..validators import numericValidator, minLengthValidator, maxLengthValidator
-from ..models import AuditorRating, ProfileInfo, MobileNumberHistoryLog, WhatsappNumberHistoryLog
+from ..models import AuditorRating, ProfileInfo,AdditionalInfo, MobileNumberHistoryLog, WhatsappNumberHistoryLog
 from registration.models import GROUP_NAME_AUDITOR
 
 mobile_number_regex = "^[6-9]\d{9}$"
@@ -17,6 +17,20 @@ mobile_number_pattern = re.compile(mobile_number_regex)
 def find_profile_info_by_user_id(user_id):
     try:
         return ProfileInfo.objects.get(user_id=user_id)
+    except ProfileInfo.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+def find_profile_info_and_additional_info_by_user_id(user_id):
+    try:
+        profile_info = (
+            ProfileInfo.objects.select_related('user', 'city')
+            .get(user_id=user_id)
+        )
+        additional_info = AdditionalInfo.objects.filter(user_id=user_id).first()
+        return {
+            "profile_info": profile_info,
+            "is_tour_complete": additional_info.is_tour_complete if additional_info else False
+        }
     except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
 

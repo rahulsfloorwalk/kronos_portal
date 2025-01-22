@@ -78,7 +78,10 @@ def get_auditor_dashboard_data(user_id):
 
 
 def get_auditor_dashboard_data_for_app(user_id):
-    profile_info = profile_info_service.find_profile_info_by_user_id(user_id)
+    # profile_info = profile_info_service.find_profile_info_by_user_id(user_id)
+    data = profile_info_service.find_profile_info_and_additional_info_by_user_id(user_id)
+    profile_info = data["profile_info"]
+    is_tour_complete = data["is_tour_complete"]
 
     if profile_info is not None and profile_info.first_name.strip():
         auditor_stats = stats.getAuditorStats(user_id)
@@ -90,11 +93,17 @@ def get_auditor_dashboard_data_for_app(user_id):
                 'city': profile_info.city.name if profile_info.city else "",
                 'email': profile_info.user.email
             },
-            'auditor_stats': auditor_stats
+            'auditor_stats': auditor_stats,
+            'is_tour_complete': is_tour_complete,
         }
         return result
     else:
-        return {"result": "Please fill personal information"}, 200
+        # return {"result": "Please fill personal information"}, 200
+        result = {
+            'auditor_stats': auditor_stats,
+            'is_tour_complete': is_tour_complete,
+        }
+        return result
    
    
 def get_report_completion_percentage(audit_store_id):
@@ -546,7 +555,8 @@ def verify_by_otp_and_login(request):
                 # create_client_manager_and_trainer(user)
                 token, created = Token.objects.get_or_create(user=user_)
                 # result = market_place_api.get_client_dashboard_data(user_.id)
-                response = {'detail': 'OTP Verified !! Login Successfully', 'token': token.key}
+                result = auditor_api.get_auditor_dashboard_data_for_app(user_.id)
+                response = {'detail': 'OTP Verified !! Login Successfully', 'token': token.key,'auditor_dashboard_data': result}
                 status = 200
             
             else:
@@ -809,7 +819,8 @@ def verify_otp_for_forgot_password(request):
                 otp_verification.is_verified = True
                 otp_verification.save()
                 token, created = Token.objects.get_or_create(user=user_)
-                response = {'detail': 'OTP Verified !! Please Change Password', 'token': token.key,'user':user_.id}
+                result = auditor_api.get_auditor_dashboard_data_for_app(user_.id)
+                response = {'detail': 'OTP Verified !! Please Change Password', 'token': token.key,'user':user_.id,'auditor_dashboard_data': result}
                 status = 200
             
             else:
