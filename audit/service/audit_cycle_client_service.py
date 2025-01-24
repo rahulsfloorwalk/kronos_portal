@@ -147,6 +147,103 @@ def find_all_for_dashboard_clientuser(user_id):
 
     return map(map_audit_cycle_values, rows)
 
+def find_all_for_nps_clientuser(user_id):
+    user = find_clientuser_by_user_id(user_id)
+    client_user = user.clientuser
+    """
+        Normal client user can't access dashboard and report browser that's why need to
+        remove visible_to(user) function
+    """
+    """
+    rows = AuditStore.objects \
+        .presentable() \
+        .visible_to(user) \
+        .filter(
+            audit__audit_cycle__client__id=user.clientuser.client_id,
+            # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES
+        ) \
+        .distinct('audit__audit_cycle_id') \
+        .order_by('-audit__audit_cycle_id') \
+        .values(
+            'audit__audit_cycle__id',
+            'audit__audit_cycle__name',
+            'audit__audit_cycle__status',
+            'audit__audit_cycle__start_date',
+            'audit__audit_cycle__end_date',
+            'audit__audit_cycle__questionnaire_type__id',
+            'audit__audit_cycle__questionnaire_type__name',
+            'audit__audit_cycle__questionnaire_type__is_default',
+        )
+    """
+    if client_user.is_client_admin():
+        rows = AuditStore.objects \
+            .presentable() \
+            .filter(
+                audit__audit_cycle__client__id=user.clientuser.client_id,
+                # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES
+            ) \
+            .distinct('audit__audit_cycle_id') \
+            .order_by('-audit__audit_cycle_id') \
+            .values(
+                'audit__audit_cycle__id',
+                'audit__audit_cycle__name',
+                'audit__audit_cycle__status',
+                'audit__audit_cycle__start_date',
+                'audit__audit_cycle__end_date',
+                'audit__audit_cycle__questionnaire_type__id',
+                'audit__audit_cycle__questionnaire_type__name',
+                'audit__audit_cycle__questionnaire_type__is_default',
+            )
+    else:
+        non_client_admin_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_client_admin_store_list = non_client_admin_store.get_store_list()
+        rows = AuditStore.objects \
+            .presentable() \
+            .filter(
+                audit__audit_cycle__client__id=user.clientuser.client_id,
+                audit__store__id__in=non_client_admin_store_list
+            ) \
+            .distinct('audit__audit_cycle_id') \
+            .order_by('-audit__audit_cycle_id') \
+            .values(
+                'audit__audit_cycle__id',
+                'audit__audit_cycle__name',
+                'audit__audit_cycle__status',
+                'audit__audit_cycle__start_date',
+                'audit__audit_cycle__end_date',
+                'audit__audit_cycle__questionnaire_type__id',
+                'audit__audit_cycle__questionnaire_type__name',
+                'audit__audit_cycle__questionnaire_type__is_default',
+            )
+    audit_cycles_with_null_nps_section = AuditStore.objects \
+        .filter(nps_section__isnull=True) \
+        .values('audit__audit_cycle__id') \
+        .distinct('audit__audit_cycle__id')
+    
+    invalid_audit_cycle_ids = [
+        audit_cycle['audit__audit_cycle__id']
+        for audit_cycle in audit_cycles_with_null_nps_section
+    ]
+
+    # Filter out rows containing those AuditCycle IDs
+    rows = [row for row in rows if row['audit__audit_cycle__id'] not in invalid_audit_cycle_ids]
+
+    def map_audit_cycle_values(values):
+        return {
+            "id": values["audit__audit_cycle__id"],
+            "name": values["audit__audit_cycle__name"],
+            "status": values["audit__audit_cycle__status"],
+            "start_date": values["audit__audit_cycle__start_date"],
+            "end_date": values["audit__audit_cycle__end_date"],
+            "questionnaire_type": {
+                "id": values["audit__audit_cycle__questionnaire_type__id"],
+                "name": values["audit__audit_cycle__questionnaire_type__name"],
+                "is_default": values["audit__audit_cycle__questionnaire_type__is_default"],
+            },
+        }
+
+    return map(map_audit_cycle_values, rows)
+
 def get_audit_cycle_year_list(user_id):
     user = find_clientuser_by_user_id(user_id)
     client_user = user.clientuser

@@ -77,6 +77,7 @@ urlpatterns = ([
     
     url(r'audit_cycle$', views.AuditCycleView.as_view(), name='audit_cycle_view'),
     url(r'audit_cycle_for_dashboard$', views.AuditCycleForDashboardView.as_view(), name='audit_cycle_dashboard_view'),
+    url(r'audit_cycle_for_nps$', views.AuditCycleForNPSView.as_view(), name='audit_cycle_nps_view'),
     url(r'audit_cycle/(?P<audit_type>[A-Z_]+)$', views.AuditCycleByTypeView.as_view(), name='audit_cycle_by_type_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/report_attribute$', views.ReportAttributeByAuditCycleView.as_view(), name='report_attributes_by_audit_cycle_view'),
     url(r'audit_cycle/aggregation$', views.AuditCycleAggregate.as_view(), name='audit_cycle_aggregation'),

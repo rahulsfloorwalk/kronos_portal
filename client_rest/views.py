@@ -396,6 +396,15 @@ class AuditCycleForDashboardView(APIView):
         audit_cycles = audit_cycle_client_service.find_all_for_dashboard_clientuser(request.user.id)
         return Response(audit_cycles)
 
+class AuditCycleForNPSView(APIView):
+    permission_classes = [AllowAny]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        audit_cycles = audit_cycle_client_service.find_all_for_nps_clientuser(request.user.id)
+        return Response(audit_cycles)
+
 class ReportAttributeByAuditCycleView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

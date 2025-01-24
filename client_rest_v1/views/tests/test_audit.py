@@ -9,6 +9,7 @@ from faker import Faker
 
 from .utils import ClientAPITestCase
 from audit.models import AuditCycle, Audit
+from client.models import Client
 
 fake = Faker()
 
@@ -64,7 +65,7 @@ class AuditViewTestCase(ClientAPITestCase):
 
 
     def test_post_updates_existing_audit(self):
-        client = self.client_obj
+        client = mommy.make(Client, id=345) 
         store = mommy.make(Store, client=client)
         audit = mommy.make(Audit, count = 10, audit_date = "2018-09-01", earnings_per_audit = 200, reimbursement = 300, store = store, audit_cycle = self.audit_cycle)
 

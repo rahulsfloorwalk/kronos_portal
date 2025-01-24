@@ -424,11 +424,13 @@ def sign_up_auditor_app(request):
         user = User.objects.get(email__iexact=to_check_email)
         group_name = user.groups.get()
         if group_name.name != "Auditor":
-            response = {'details': 'User is Already Registered as a {}!! Please use Alternate Email'.format(group_name.name)}
-            status = 200
+            response = {'detail': 'User is Already Registered as a {}!! Please use Alternate Email'.format(group_name.name)}
+            status = 400
+            return response, status
         else:
-            response = {'details': 'User is Already Registered !! Please Login'}
-            status = 200
+            response = {'detail': 'User is Already Registered !! Please Login'}
+            status = 400
+            return response, status
         profile_info = ProfileInfo.objects.get(user=user)
     except User.DoesNotExist:
         user = User()

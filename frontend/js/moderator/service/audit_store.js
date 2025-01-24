@@ -37,6 +37,10 @@ export function findById(auditStoreId){
 	return $.get(url.api_base_path + `moderator/audit_store/${auditStoreId}`);
 }
 
+export function findStoreByClientId(clientId){
+	return $.get(url.api_base_path + `moderator/client/${clientId}/store`);
+}
+
 export function submit(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/submit`);
 }
@@ -91,6 +95,20 @@ export function setAuditModeratorComment(audit_store_id, moderator_comment){
 		contentType:"application/json"
 	});
 }
+
+export function setStoreStatus(store,audit_store_id,audit_cycle){
+	return $.ajax({
+		url: url.api_base_path + "moderator/audit",
+		method: "POST",
+		data: JSON.stringify({
+			store,
+			audit_store_id,
+			audit_cycle
+		}),
+		contentType: "application/json"
+	});
+}
+
 export function saveCheckList(audit_store_id, check_points){
 	return $.ajax({
 		url: url.api_base_path+ `moderator/audit_store/${audit_store_id}/check_points`,

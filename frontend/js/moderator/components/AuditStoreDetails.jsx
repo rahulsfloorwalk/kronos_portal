@@ -378,7 +378,8 @@ export default class AuditStoreDetails extends React.Component {
 											<tr>
 												<td className="text-right">Store:</td>
 												<td>
-													<b>{this.state.auditStore.audit.store.name}</b><br />
+													{/* <b>{this.state.auditStore.audit.store.name}</b><br /> */}
+													<b>{this.state.auditStore.audit.store.name}</b> {(this.state.auditStore.audit.audit_cycle.client.id === 345 || this.state.auditStore.audit.audit_cycle.client.id===346 )  && <Link to={`${this.props.location.pathname}/store_change`}><b>(change store)</b></Link>}<br />
 													<small>{this.state.auditStore.audit.store.address}</small>
 												</td>
 											</tr>
