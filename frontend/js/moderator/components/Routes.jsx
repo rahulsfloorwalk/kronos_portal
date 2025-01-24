@@ -11,6 +11,7 @@ import AuditStoreQARatingForm from "./AuditStoreQARatingForm.jsx";
 import AuditStoreAuditorRating from "./AuditStoreAuditorRatingForm.jsx";
 import AuditStoreEarningsPerAuditForm from "./AuditStoreEarningsPerAuditForm.jsx";
 import AuditStoreReimbursementForm from "./AuditStoreReimbursementForm.jsx";
+import AuditStoreChange from "./AuditStoreChange.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -26,6 +27,7 @@ const Routes = () => (
 				<Route path="rate" component={AuditStoreQARatingForm}/>
 				<Route path="earnings_per_audit" component={AuditStoreEarningsPerAuditForm}/>
 				<Route path="reimbursement" component={AuditStoreReimbursementForm}/>
+				<Route path="store_change" component={AuditStoreChange}/>
 				<Route path="auditor_rate" component={AuditStoreAuditorRating}/>
 			</Route>
 		</Route>

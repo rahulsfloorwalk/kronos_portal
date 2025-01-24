@@ -29,6 +29,8 @@ from .serializers import AttachmentSerializer
 from .serializers import SectionSerializer
 from .serializers import ReportSectionSerializer
 from .serializers import AnswerSerializer
+from .serializers import StoreSerializer,AuditSerializer
+from rest_framework.permissions import AllowAny
 # from .serializers import AuditCycleProoftagListSerializer
 
 
@@ -72,6 +74,27 @@ class AuditStoreCompletedView(APIView):
                                                           request.data['filterStatus'], request.data.get('client_id'))
         return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
 
+class StoreViewByClientView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+    def get(self, request, client_id, format=None):
+        stores = audit_store_service.find_stores_by_client(client_id)
+        return Response(StoreSerializer(stores, many=True).data)
+
+class AuditIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+    def post(self, request):
+        audit_store_id = request.data.get('audit_store_id')
+        audit = audit_store_service.create_audit_by_store(request.data)
+        audit_store = AuditStore.objects.get(id=audit_store_id)
+        audit_store.audit=audit
+        audit_store.save()
+        return Response(AuditSerializer(audit).data,status=200)
 
 class AuditStorePendingView(APIView):
     permission_classes = [HasGroupPermission]

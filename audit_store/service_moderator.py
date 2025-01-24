@@ -11,6 +11,8 @@ from audit_store.models import AuditStore
 import audit.service.audit_cycle as audit_cycle_service
 from audit_store import service as audit_store_service
 from attachment.service import set_attachment_by_audit_store, set_attachment_by_proof_tag
+from audit.models import Audit
+from client.models import Store
 
 
 def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id):
@@ -117,6 +119,42 @@ def find_by_audit_cycle_for_moderator(audit_cycle_id, user_id):
     return get_objects_for_user(user, 'moderator_manage', klass=query_set)
 
 
+def find_stores_by_client(client_id):
+    return Store.objects.filter(client_id=client_id).order_by('city__name').select_related('client','city')
+
+def find_audit_by_id(audit_id):
+    try:
+        return Audit.objects.get(pk=audit_id)
+    except Audit.DoesNotExist as e:
+        raise ObjectNotFound from e
+    
+def create_audit_by_store(data):
+    audit_cycle_id = data.get('audit_cycle')
+    store_id = data.get('store')
+    if not store_id:
+        raise AppLogicError("Please Choose at any One Store")
+    if not audit_cycle_id:
+        raise AppLogicError("Audit cycle is required.")
+
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    store_exists = Store.objects.filter(client=audit_cycle.client.id, id=store_id).exists()
+    if not store_exists:
+        raise AppLogicError("The specified store does not exist for this client.")
+    store_exists = Store.objects.filter(client = audit_cycle.client.id).exists()
+    if not store_exists:
+        raise AppLogicError("Stores are not found in This Client")
+    
+    audit_data = {
+        'count': data.get('count', 1),
+        'earnings_per_audit': data.get('earnings_per_audit', audit_cycle.earnings_per_audit),
+        'reimbursement': data.get('reimbursement', audit_cycle.reimbursement),
+        'store_id': store_id,
+        'audit_cycle': audit_cycle,
+        'post_approval_description': data.get('post_approval_description', '')
+    }
+    audit = Audit.objects.create(**audit_data)
+    return audit
+    
 def find_by_id_for_moderator(audit_store_id, user_id):
     try:
         user = find_moderator_by_user_id(user_id)

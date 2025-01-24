@@ -430,7 +430,7 @@ class AppliedAuditSerializer(ModelSerializer):
     audit = AuditSerializer()
     audit_store = serializers.SerializerMethodField()
     def get_audit_store(self, obj):
-        audit_store = obj.audit.audit_stores.filter( user_id=obj.profileinfo.user.id).first()
+        audit_store = obj.audit.audit_stores.filter( user_id=obj.profileinfo.user.id).order_by('-id').first()
         if audit_store:
             return {
                 "id": audit_store.id,

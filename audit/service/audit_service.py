@@ -291,7 +291,8 @@ def find_applied_audits_by_auditor_id(user_id,is_load_more, last_total_count):
     applied_audits = AuditApplication.objects.filter(
         profileinfo_id=auditor.profileinfo.id,
         status__in=(AuditApplication.APPLIED,AuditApplication.REJECTED,AuditApplication.WAITLISTED,AuditApplication.WITHDRAWN, AuditApplication.WAITLISTED,AuditApplication.APPROVED),
-        audit__audit_cycle__status=AuditCycle.ACTIVE)
+        audit__audit_cycle__status=AuditCycle.ACTIVE).exclude(
+        audit__audit_stores__status__in=["FAILED", "SUBMITTED", "PM_REVIEW", "COMPLETED", "ACCEPTED", "REJECTED"] )
     total_count = applied_audits.count()
     if is_load_more:
         start = int(last_total_count)
