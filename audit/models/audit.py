@@ -29,7 +29,7 @@ class Audit(Model):
         if not self.id:
             self.created_at = timezone.now()
         self.modified_at = timezone.now()
-        self.clean() 
+        # self.clean() 
         # Check for existing audits with the same store and audit_cycle before creating
         existing_audit = Audit.objects.filter(store=self.store, audit_cycle=self.audit_cycle).first()
         
@@ -38,23 +38,23 @@ class Audit(Model):
             if self.store.client.id in [345, 346]:
                 # Create a new audit with a new ID and allow duplicate combination
                 return super(Audit, self).save(*args, **kwargs)
-            else:
-                # If client_id is not 345 or 346, prevent duplicate and raise validation error
-                raise ValidationError("An audit already exists for this store and audit cycle.")
+            # else:
+            #     # If client_id is not 345 or 346, prevent duplicate and raise validation error
+            #     raise ValidationError("An audit already exists for this store and audit cycle.")
         
         # No existing audit, proceed to create a new one
         return super(Audit, self).save(*args, **kwargs)
     
 
-    def clean(self):
-        """Custom validation to skip unique_together check for client_id 345 or 346."""
-        client_id = self.store.client.id if self.store else None
+    # def clean(self):
+    #     """Custom validation to skip unique_together check for client_id 345 or 346."""
+    #     client_id = self.store.client.id if self.store else None
 
         # If client_id is not 345 or 346, enforce the unique_together constraint
-        if client_id not in [345, 346]:
-            # Check if an audit with the same store and audit_cycle already exists
-            if Audit.objects.filter(store=self.store, audit_cycle=self.audit_cycle).exists():
-                raise ValidationError("An audit already exists for this store and audit cycle.")
+        # if client_id not in [345, 346]:
+        #     # Check if an audit with the same store and audit_cycle already exists
+        #     if Audit.objects.filter(store=self.store, audit_cycle=self.audit_cycle).exists():
+        #         raise ValidationError("An audit already exists for this store and audit cycle.")
 
     def application_count(self):
         # check if prefetched cache exists,

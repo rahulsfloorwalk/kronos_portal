@@ -1,6 +1,10 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 
+export function findProofNotAvailable(auditStoreId){
+	return $.get(url.api_base_path + `manager/audit_store/${auditStoreId}/proof_not_available`);
+}
+
 export function failReport(audit_store_id, message) {
 	return $.ajax({
 		url: url.api_base_path + `manager/audit_store/${audit_store_id}/fail`,

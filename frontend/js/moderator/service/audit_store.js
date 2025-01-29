@@ -37,6 +37,10 @@ export function findById(auditStoreId){
 	return $.get(url.api_base_path + `moderator/audit_store/${auditStoreId}`);
 }
 
+export function findProofNotAvailable(auditStoreId){
+	return $.get(url.api_base_path + `moderator/audit_store/${auditStoreId}/proof_not_available`);
+}
+
 export function findStoreByClientId(clientId){
 	return $.get(url.api_base_path + `moderator/client/${clientId}/store`);
 }

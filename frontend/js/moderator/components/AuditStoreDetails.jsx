@@ -9,7 +9,7 @@ import "react-datetime/css/react-datetime.css";
 import moment from "moment";
 import { momentDateFormat } from "../../../config.js";
 
-import { findById, qaOk, fail, unsubmit, submit, setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment } from "../service/audit_store.js";
+import { findById, qaOk, fail, unsubmit, submit, setAuditDate,findProofNotAvailable, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment } from "../service/audit_store.js";
 
 import { Calendar, File, Envelope } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -25,6 +25,7 @@ import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 import ReportSummary from "./ReportSummary.jsx";
 import { fetchproofTags } from "../service/proof_tag.js";
 import { FetchGuidlineByAuditStoreModerator } from "../service/audit_store.js";
+import ProofNotAvailable from "./ProofNotAvailable.jsx";
 
 export default class AuditStoreDetails extends React.Component {
 	static propTypes = {
@@ -50,6 +51,7 @@ export default class AuditStoreDetails extends React.Component {
 			errMsg: "",
 			proof_tags: [],
 			guideline: "",
+			proof_not_available: [],
 		};
 	}
 	setAuditStore = (auditStore) => {
@@ -60,6 +62,7 @@ export default class AuditStoreDetails extends React.Component {
 	componentDidMount() {
 		findById(this.props.params.auditStoreId).then(this.setAuditStore);
 		FetchGuidlineByAuditStoreModerator(this.props.params.auditStoreId).then((guideline) => this.setState({ guideline: guideline }));
+		findProofNotAvailable(this.props.params.auditStoreId).then(result=> this.setState({proof_not_available:result}));
 	}
 	componentWillReceiveProps(nextProps) {
 		findById(nextProps.params.auditStoreId).then(this.setAuditStore);
@@ -581,6 +584,7 @@ export default class AuditStoreDetails extends React.Component {
 				{refresh_report_button}
 
 				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable} />
+				{this.state.proof_not_available.length>0 && <ProofNotAvailable proof_not_available={this.state.proof_not_available}/>}
 				{/* <ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} /> */}
 				{this.state.auditStore.audit.audit_cycle.audit_report_summary ?
 					<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} />
