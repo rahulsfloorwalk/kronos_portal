@@ -271,6 +271,7 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
                 'percentage': total_pct,
                 'color': get_color_code_by_percentage(total_pct),
             },
+            
         })
 
     audit_stores.sort(key=lambda a_s: (a_s['city_name'], a_s['store_id'], a_s['audit_date']))
