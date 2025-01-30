@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
+import Alert from "react-s-alert";
 
 import moment from "moment";
 import { momentDateFormat }  from "../../../../config.js";
 
-import { findPaymentsByUserId } from "../../service/payment.js";
+import { findPaymentsByUserId,failpay } from "../../service/payment.js";
 
 import Loading from "../../../components/Loading.jsx";
 import PaymentStatusLabel from "../../../components/PaymentStatusLabel.jsx";
@@ -15,6 +16,7 @@ export default class AuditorPayment extends Component{
 		params: PropTypes.shape({
 			auditorId: PropTypes.string.isRequired,
 		}),
+		onChange: PropTypes.func,
 	};
 
 	constructor(props){
@@ -22,8 +24,25 @@ export default class AuditorPayment extends Component{
 		this.state = {
 			loading: true,
 			payments: [],
+			payButtonMessage: "",
 		};
 	}
+
+	failpayButtonClicked = (paymentId) => {
+		failpay(paymentId).then((payment) => {
+			Alert.success("PAYMENT MARKED AS PAID AGAIN");
+			this.setState({
+				payButtonMessage: "Marked as paid again",
+			});
+			this.props.onChange && this.props.onChange(payment);
+		}, (err) => {
+			let errInfo = err.responseJSON && err.responseJSON.non_field_errors || {};
+			this.setState({
+				payButtonMessage: errInfo[0],
+			});
+			Alert.error(errInfo[0]);
+		});
+	};
 
 	setLoading = (loading) => {
 		this.setState( prevState => {
@@ -59,6 +78,7 @@ export default class AuditorPayment extends Component{
 				<td><PaymentStatusLabel status={p.status}/></td>
 				<td>{p.paid_on ? moment(p.paid_on).format(momentDateFormat) : ""}</td>
 				<td>{p.comment}</td>
+				<td>{p.status === "PAID" && ( <button onClick={() => this.failpayButtonClicked(p.id)} type="button" className="btn btn-default" > Fail & Pay </button> )}</td>
 				<td><Link to={`/audit_store/${p.audit_store_id}/report`} className="btn btn-default">View Report</Link></td>
 			</tr>);
 		});
@@ -76,6 +96,7 @@ export default class AuditorPayment extends Component{
 							<th>Status</th>
 							<th>Paid On</th>
 							<th>Comment</th>
+							<th>Action</th>
 							<th>Report</th>
 						</tr>
 						{paymentRows}

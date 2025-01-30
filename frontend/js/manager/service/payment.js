@@ -22,6 +22,10 @@ export function payAllPendingPaymentsForAuditCycle(audit_cycle_id, filters){
 	return $.post( url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/payment/pending/pay`, filters);
 }
 
+export function failpay(paymentId){
+	return $.post( url.api_base_path + `manager/payment/${paymentId}/payment_fail_and_pay`);
+}
+
 export function pay(paymentId){
 	return $.post( url.api_base_path + `manager/payment/${paymentId}/pay`);
 }

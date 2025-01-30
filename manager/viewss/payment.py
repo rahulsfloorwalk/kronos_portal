@@ -9,6 +9,7 @@ from registration.mixins import HasGroupPermission
 
 from payment.service import payment_manager as payment_service
 from payment.models import Payment
+from rest_framework.permissions import AllowAny
 
 from manager.serializers import UserSerializer
 
@@ -119,5 +120,15 @@ class PaymentIdFailView(APIView):
 
     def post(self, request, payment_id):
         payment = payment_service.fail(payment_id, request.user)
+        payments = payment_service.find_by_audit_store(payment.audit_store)
+        return Response(PaymentUserSerializer(payments, many=True).data)
+
+class FailPayPaymentIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, payment_id):
+        payment = payment_service.fail_and_pay(payment_id, request.user)
         payments = payment_service.find_by_audit_store(payment.audit_store)
         return Response(PaymentUserSerializer(payments, many=True).data)

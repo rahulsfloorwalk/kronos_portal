@@ -26,7 +26,7 @@ afterAll(() => {
 });
 
 const mockFetchGuidlineByAuditStoreModerator = jest.fn(() => Promise.resolve({ guideline: {} }));
-const mockFindProofNotAvailable = jest.fn(() => Promise.resolve([])); 
+const mockFindProofNotAvailable = jest.fn(() => Promise.resolve([]));
 
 describe("<AuditStoreDetails/>", () => {
 	const sampleParams = {
@@ -130,7 +130,7 @@ describe("<AuditStoreDetails/>", () => {
 	test.each(statuses)("is rendered correctly wwhere AuditStore status is %s", (s, done) => {
 		findById.mockResolvedValue(Object.assign({}, sampleAuditStore, { status: s }));
 		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
-		findProofNotAvailable.mockResolvedValue([]); 
+		findProofNotAvailable.mockResolvedValue([]);
 		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
 		setTimeout(() => {
 			r.update();
