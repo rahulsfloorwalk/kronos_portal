@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 import renderer from "react-test-renderer";
 
 import AuditStoreDetails from "../../../moderator/components/AuditStoreDetails";
-import { FetchGuidlineByAuditStoreModerator,findById, qaOk } from "../../../moderator/service/audit_store";
+import { FetchGuidlineByAuditStoreModerator,findById,findProofNotAvailable , qaOk } from "../../../moderator/service/audit_store";
 
 jest.mock("../../../moderator/service/audit_store");
 
@@ -26,6 +26,7 @@ afterAll(() => {
 });
 
 const mockFetchGuidlineByAuditStoreModerator = jest.fn(() => Promise.resolve({ guideline: {} }));
+const mockFindProofNotAvailable = jest.fn(() => Promise.resolve([]));
 
 describe("<AuditStoreDetails/>", () => {
 	const sampleParams = {
@@ -73,6 +74,7 @@ describe("<AuditStoreDetails/>", () => {
 	it("is rendered correctly when the AuditStore is loading", () => {
 		findById.mockReturnValue(new Promise(() => {}));
 		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
+		findProofNotAvailable.mockImplementation(mockFindProofNotAvailable);
 		const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
@@ -92,6 +94,7 @@ describe("<AuditStoreDetails/>", () => {
 		sampleAuditStore.qa_rating = 1;
 		findById.mockResolvedValue(sampleAuditStore);
 		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
+		findProofNotAvailable.mockResolvedValue([]);
 		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
 		setTimeout(() => {
 			r.update();
@@ -104,6 +107,7 @@ describe("<AuditStoreDetails/>", () => {
 	test.each(ratings)("is rendered correctly for QA rating: %s", (rt, done) => {
 		findById.mockResolvedValue(Object.assign({}, sampleAuditStore, { qa_rating: rt }));
 		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
+		findProofNotAvailable.mockResolvedValue([]);
 		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
 		setTimeout(() => {
 			r.update();
@@ -126,6 +130,7 @@ describe("<AuditStoreDetails/>", () => {
 	test.each(statuses)("is rendered correctly wwhere AuditStore status is %s", (s, done) => {
 		findById.mockResolvedValue(Object.assign({}, sampleAuditStore, { status: s }));
 		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
+		findProofNotAvailable.mockResolvedValue([]);
 		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
 		setTimeout(() => {
 			r.update();
@@ -139,6 +144,7 @@ describe("<AuditStoreDetails/>", () => {
 		sampleAuditStore.qa_rating = 2;
 		findById.mockResolvedValue(sampleAuditStore);
 		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
+		findProofNotAvailable.mockResolvedValue([]);
 		qaOk.mockResolvedValue(Object.assign({}, sampleAuditStore, {
 			status: "PM_REVIEW",
 		}));

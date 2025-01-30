@@ -140,6 +140,36 @@ def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_act
     except Payment.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def fail_pay_add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_actor) -> (int, int):
+    try:
+        audit_store = audit_store_service.find_by_id(audit_store_id)
+        payment = Payment()
+        payment.audit_store = audit_store
+        payment.user = audit_store.user
+        payment.amount = payment_amount
+        payment.comment = get_payment_comment_for_pending_status(audit_store)
+        payment.save()
+        notify.send(
+            user_actor,
+            recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+            verb=verbs.AUDIT_STORE_PENDING,
+            action_object=payment.audit_store,
+            target=payment.audit_store.audit
+        )
+        manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
+        notify.send(
+            user_actor,
+            recipient=payment.user,
+            verb=verbs.AUDIT_STORE_PENDING,
+            action_object=payment.audit_store,
+            target=payment.audit_store.audit
+        )
+        auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
+        return manager_notif_id, auditor_notif_id,payment
+
+    except Payment.DoesNotExist as e:
+        raise ObjectNotFound from e
+
 def clear_payment_for_audit_store(audit_store_id):
     payment = Payment.objects.get(audit_store_id=audit_store_id)
     payment.status = Payment.PAID
@@ -212,6 +242,63 @@ def fail(payment_id, user_actor):
     mail_notify.send_notification_mail(auditor_notif_id, "")
     mail_notify.send_notification_mail(notif_id1, "")
     mail_notify.send_notification_mail(notif_id2, "")
+    return payment
+
+def fail_and_pay(payment_id, user_actor):
+    try:
+        with atomic():
+            try:
+                payment = Payment.objects.get(pk=payment_id)
+            except Payment.DoesNotExist as e:
+                raise ObjectNotFound("Payment not found") from e
+                    
+            if payment.status == Payment.PAID:
+                payment.status = Payment.FAILED
+                payment.save()
+                _auditor_notif_id = Notification.objects.filter(verb=verbs.PAYMENT_FAILED).order_by('-id')[0].id
+                # Add an additional pending payment
+                notif_id1, notif_id2,payment = fail_pay_add_payment_on_audit_store_accepted(payment.audit_store.id, payment.amount, user_actor)
+            else:
+                raise AppLogicError("Cannot fail the payment")
+            
+            if is_payment_payable(payment):
+                if payment.status == Payment.PENDING:
+                    payment.status = Payment.PAID
+                    payment.paid_on = timezone.now()
+                    payment.comment = get_payment_comment_for_paid_status(payment.audit_store)
+                    payment.save()
+                    notify.send(
+                        user_actor,
+                        recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                        verb=verbs.AUDIT_STORE_PAID,
+                        action_object=payment.audit_store,
+                        target=payment.audit_store
+                    )
+                    manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PAID).order_by('-id')[0].id
+                    notify.send(
+                        user_actor,
+                        recipient=payment.user,
+                        verb=verbs.AUDIT_STORE_PAID,
+                        action_object=payment.audit_store,
+                        target=payment.audit_store
+                    )
+                    auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PAID).order_by('-id')[0].id
+                else:
+                    raise AppLogicError("payment cannot be paid now")
+            else:
+                raise AppLogicError("Bank Details Incomplete")
+    except Payment.DoesNotExist as e:
+        raise ObjectNotFound from e
+    if notif_id1:
+        mail_notify.send_notification_mail(notif_id1, "")
+    if notif_id2:
+        mail_notify.send_notification_mail(notif_id2, "")
+    if manager_notif_id:
+        mail_notify.send_notification_mail(manager_notif_id, "")
+    if manager_notif_id:
+        mail_notify.send_notification_mail(_auditor_notif_id, "")
+    if manager_notif_id:
+        mail_notify.send_notification_mail(auditor_notif_id, "")
     return payment
 
 

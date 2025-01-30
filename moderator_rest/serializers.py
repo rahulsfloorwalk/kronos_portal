@@ -16,6 +16,7 @@ from audit_store.models import AuditStore
 from questionnaire.models import Section, Question
 from answer.models import ReportSection, Answer
 from attachment.models import Attachment
+from manager.models import AuditProoftagNotAvailable
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -159,6 +160,30 @@ class AuditSerializerWithoutApplications(ModelSerializer):
             'post_approval_description',
         )
         read_only_fields = fields
+
+# class AuditProoftagSerializer(serializers.ModelSerializer):
+#     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), default=serializers.CurrentUserDefault())
+#     class Meta:
+#         model = AuditProoftagNotAvailable
+#         fields = '__all__'
+
+class AuditProoftagSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        default=serializers.CurrentUserDefault()
+    )
+    proof_tag_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AuditProoftagNotAvailable
+        fields = '__all__'
+        extra_fields = ['proof_tag_name']
+
+    def get_proof_tag_name(self, obj):
+        proof_tag = AuditCycleProofTagList.objects.filter(
+            id=obj.proof_tag
+        ).select_related('proof_tag').first()
+        return proof_tag.proof_tag.name if proof_tag and proof_tag.proof_tag else None
 
 
 class AuditStoreSerializer(ModelSerializer):

@@ -16,13 +16,14 @@ from audit_store import service_manager
 from ..service import moderator as moderator_service
 from auditor.service import profile_info_service
 from rest_framework.permissions import AllowAny,IsAuthenticated
+from attachment import service_auditor
 
 
 from attachment.service import set_attachment_by_proof_tag
 
 from client_report.service import xlsx_report as xlsx_report_service
 
-from ..serializers import AuditStoreFollowUpSerializer, AuditStoreSerializer, AuditStoreSerializerWithoutAudit, AuditStoreSerializerWithUser
+from ..serializers import AuditStoreFollowUpSerializer, AuditStoreSerializer, AuditStoreSerializerWithoutAudit, AuditStoreSerializerWithUser,AuditProoftagSerializer
 
 class AuditStoreByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -373,6 +374,30 @@ class AuditStoreIdSubmitView(APIView):
         audit_store = service_manager.submit_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
+
+class AuditStoreProofTagNotAvailableView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+        # 'POST': [GROUP_NAME_MANAGER]
+    }
+    def get(self, request, audit_store_id, format=None):
+            prooftag_not_available = service_auditor.find_by_audit_store_for_auditor_prooftag_not_available_for_moderator(audit_store_id)
+            return Response(AuditProoftagSerializer(prooftag_not_available, many=True).data)
+
+    # def post(self, request, audit_store_id):
+    #     proof_tag = request.data.get('proof_tag_id')
+    #     description = request.data.get('description')
+    #     user_id = request.user.id
+    #     try:
+    #         prooftag_not_available = service_auditor.upload_prooftag_not_available_for_audit_store_by_auditor_moderator(
+    #             audit_store_id,
+    #             user_id,
+    #             proof_tag,
+    #             description)
+    #         return Response(AuditProoftagSerializer(prooftag_not_available).data)
+    #     except KeyError as e:
+    #         return Response( {"message": str(e)},status=400 )
 
 class AuditStoreIdArrangeAttachment(APIView):
     permission_classes = [HasGroupPermission]

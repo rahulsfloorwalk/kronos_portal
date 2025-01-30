@@ -147,9 +147,11 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/accept', audit_store_views.AuditStoreIdAcceptView.as_view(), name='audit_store_id_accept_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/reject', audit_store_views.AuditStoreIdRejectView.as_view(), name='audit_store_id_reject_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/arrange_attachment$', audit_store_views.AuditStoreIdArrangeAttachment.as_view(), name='audit_store_id_arrange_attachment'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/proof_not_available$', audit_store_views.AuditStoreProofTagNotAvailableView.as_view(), name="audit_store_upload_proof_tag_not_available_view"),
 
     url(r'payment/(?P<payment_id>[0-9]+)/pay$', payment_views.PaymentIdPayView.as_view(), name='payment_id_pay_view'),
     url(r'payment/(?P<payment_id>[0-9]+)/fail', payment_views.PaymentIdFailView.as_view(), name='payment_id_fail_view'),
+    url(r'payment/(?P<payment_id>[0-9]+)/payment_fail_and_pay', payment_views.FailPayPaymentIdView.as_view(), name='payment_id_fail_and_pay_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', answer_views.AnswerByAuditStore.as_view(), name='answers_by_audit_store'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/mark$', answer_views.MarkByQuestionAndStore.as_view(), name='mark_by_question_and_store'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/answer_text$', answer_views.AnswerByQuestionAndStore.as_view(), name='answer_by_question_and_store'),

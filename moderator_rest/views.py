@@ -23,7 +23,7 @@ from auditor.service import profile_info_service
 from audit_store.service_auditor import set_not_applicable_for_hide_questions,complete_report
 from attachment.service import set_attachment_by_proof_tag
 
-from .serializers import AuditCycleSerializer, ClientSerializer
+from .serializers import AuditCycleSerializer, ClientSerializer,AuditProoftagSerializer
 from .serializers import AuditStoreSerializer, AuditStoreSerializerForList
 from .serializers import AttachmentSerializer
 from .serializers import SectionSerializer
@@ -31,6 +31,7 @@ from .serializers import ReportSectionSerializer
 from .serializers import AnswerSerializer
 from .serializers import StoreSerializer,AuditSerializer
 from rest_framework.permissions import AllowAny
+from attachment import service_auditor
 # from .serializers import AuditCycleProoftagListSerializer
 
 
@@ -297,6 +298,31 @@ class AuditStoreIdQAOKView(APIView):
         if client_id in [345, 346]:
             audit_store = complete_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
+    
+class AuditStoreProofTagNotAvailableView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MODERATOR],
+        # 'POST': [GROUP_NAME_MODERATOR]
+    }
+
+    def get(self, request, audit_store_id, format=None):
+            prooftag_not_available = service_auditor.find_by_audit_store_for_auditor_prooftag_not_available_for_moderator(audit_store_id)
+            return Response(AuditProoftagSerializer(prooftag_not_available, many=True).data)
+
+    # def post(self, request, audit_store_id):
+    #     proof_tag = request.data.get('proof_tag_id')
+    #     description = request.data.get('description')
+    #     user_id = request.user.id
+    #     try:
+    #         prooftag_not_available = service_auditor.upload_prooftag_not_available_for_audit_store_by_auditor_moderator(
+    #             audit_store_id,
+    #             user_id,
+    #             proof_tag,
+    #             description)
+    #         return Response(AuditProoftagSerializer(prooftag_not_available).data)
+    #     except KeyError as e:
+    #         return Response( {"message": str(e)},status=400 )
 
 
 class AuditStoreIdArrangeAttachment(APIView):

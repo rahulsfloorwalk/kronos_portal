@@ -9,7 +9,7 @@ from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditVi
 from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorCommentView, AuditStoreIdCheckPoints
 from .views import AttachmentProofTagList, AttachmentIdProofTagView,AuditGuidelinesByAuditStore
 from .views import AttachmentIdRotateView,StoreViewByClientView,AuditIdView
-from .views import AuditStoreIdArrangeAttachment
+from .views import AuditStoreIdArrangeAttachment,AuditStoreProofTagNotAvailableView
 from .views import ClientView
 from .views import ConfigView
 from .views import AuditorRatingView
@@ -64,6 +64,7 @@ urlpatterns = ([
     url(r'audit_store/completed$', AuditStoreCompletedView.as_view(), name='audit_store_completed_view'),
     url(r'client/(?P<client_id>[0-9]+)/store$', StoreViewByClientView.as_view(), name='audit_store_id_view'),
     url(r'audit$', AuditIdView.as_view(), name='audit_id_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/proof_not_available$', AuditStoreProofTagNotAvailableView.as_view(), name="audit_store_upload_proof_tag_not_available_view"),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store$', AuditStoreByAuditCycle.as_view(), name='audit_store_by_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)$', AuditCycleIdView.as_view(), name='audit_cycle_id_view'),

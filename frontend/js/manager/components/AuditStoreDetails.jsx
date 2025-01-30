@@ -27,7 +27,7 @@ import { fetchAuditStore,
 	pmRevertAuditStore,
 	revertAuditStore
 } from "../actions/audit_store.js";
-import { setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment, unSubmitAuditStore } from "../service/audit_store.js";
+import { setAuditDate, setAuditModeratorStatus,findProofNotAvailable, setAuditModeratorComment, saveCheckList, arrangeAttachment, unSubmitAuditStore } from "../service/audit_store.js";
 
 import { Calendar, Retweet, King, File, Download } from "../../components/Icons.jsx";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
@@ -43,6 +43,7 @@ import AttachmentDisplayBox from "./AttachmentDisplayBox.jsx";
 import ReportSummary from "./ReportSummary.jsx";
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 import AuditStoreReportAttributesTable from "./audit_store/AuditStoreReportAttributesTable.jsx";
+import ProofNotAvailable from "./ProofNotAvailable.jsx";
 
 export class AuditStoreDetails extends React.Component{
 	static propTypes = {
@@ -63,12 +64,16 @@ export class AuditStoreDetails extends React.Component{
 			auditDateLoading: false,
 			display:"none",
 			reason: "",
-			errMsg: ""
+			errMsg: "",
+			proof_not_available: [],
 		};
 	}
 
 	componentDidMount(){
 		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
+		findProofNotAvailable(this.props.params.auditStoreId).then(result=>{
+			this.setState({proof_not_available:result});
+		});
 	}
 
 	showModal = () => {
@@ -528,6 +533,7 @@ export class AuditStoreDetails extends React.Component{
 				</div>
 				{refresh_report_button}
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
+				{this.state.proof_not_available.length>0 && <ProofNotAvailable proof_not_available={this.state.proof_not_available}/>}
 				{/* <ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/> */}
 				{this.props.auditStore.audit.audit_cycle.audit_report_summary ?
 					<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/>

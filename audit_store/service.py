@@ -17,6 +17,8 @@ import client.service.client_user as client_user_service
 from manager.service import manager as manager_service
 from audit.service import report_attribute_service
 from registration.models import GROUP_NAME_AUDITOR
+from django.contrib.contenttypes.models import ContentType
+from guardian.models import UserObjectPermission
 
 
 def find_by_id(audit_store_id):
@@ -211,6 +213,14 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
             .distinct('id')
         total_audit_count = audit_list_obj.count()
     elif status != "":
+        # if status == 'not_assigned':
+        #     status = 'SUBMITTED'
+        #     qa_not_assign_audit_store_ids = list(qa_not_assign(audit_cycle_id,status))
+        #     audit_list_obj = Audit.objects.filter( audit_cycle__id=audit_cycle_id, audit_stores__id__in=qa_not_assign_audit_store_ids, audit_stores__status=status ).order_by('id', 'store__city__name', 'store__name') \
+        #     .select_related('store__name', 'store__address', 'store__city__name') \
+        #     .values('id', 'store__name', 'store__address', 'store__city__name', 'count') \
+        #     .distinct('id')
+        # else:
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, audit_stores__status=status).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
             .values('id', 'store__name', 'store__address', 'store__city__name','count') \
@@ -306,6 +316,31 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
             audit_store_list_obj_slice = audit_store_list[0:20]
     return {'audit_store_list': audit_store_list_obj_slice, 'total_audit_count': total_audit_count}
 
+def qa_not_assign(audit_cycle_id,status):
+    audit_list_obj = Audit.objects.filter( audit_cycle__id=audit_cycle_id,  audit_stores__status=status ).order_by('id', 'store__city__name', 'store__name') \
+     .select_related('store__name', 'store__address', 'store__city__name') \
+     .values('id', 'store__name', 'store__address', 'store__city__name', 'count') \
+     .distinct('id')
+    
+    audit_ids_from_list = [audit['id'] for audit in audit_list_obj]
+    audit_store_obj = AuditStore.objects.filter(status=status, audit__id__in=audit_ids_from_list)
+    
+    content_type = ContentType.objects.get_for_model(AuditStore)
+    
+    audit_store_ids = audit_store_obj.values_list('id', flat=True)
+    audit_store_ids_as_str = [str(id) for id in audit_store_ids]
+
+    audit_store_ids_with_moderator_manage = UserObjectPermission.objects.filter(
+        content_type=content_type,
+        permission__codename="moderator_manage",
+        object_pk__in=audit_store_ids_as_str
+    ).values_list("object_pk", flat=True)
+
+    excluded_audit_store_ids = set(audit_store_ids_with_moderator_manage)
+    audit_store_obj = audit_store_obj.exclude(id__in=excluded_audit_store_ids)
+
+    return audit_store_obj.values_list('id', flat=True)
+
 def find_audit_store_city_by_audit_cycle_id(audit_cycle_id, user_id):
 
     audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id).order_by('id', 'store__city__name', 'store__name') \
@@ -382,6 +417,16 @@ def find_by_id_for_auditor(audit_store_id, user_id):
         return AuditStore.objects.get(
             pk=audit_store_id,
             user_id=user_id,
+            status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED,AuditStore.AUDITOR_WITHDRAWN, AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
+            audit__audit_cycle__status__in=AuditCycle.AUDITOR_VISIBLE_STATUSES
+        )
+    except (AuditStore.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
+def find_by_id_for_auditor_for_moderator(audit_store_id):
+    try:
+        return AuditStore.objects.get(
+            pk=audit_store_id,
             status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED,AuditStore.AUDITOR_WITHDRAWN, AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
             audit__audit_cycle__status__in=AuditCycle.AUDITOR_VISIBLE_STATUSES
         )
