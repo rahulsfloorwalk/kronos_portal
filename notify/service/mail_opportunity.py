@@ -127,6 +127,7 @@ def schedule_opportunity_emails_for_audit_cycle_with_filters(audit_cycle_id: int
         }
         opp.progress_count = 0
         opp.save()
+        _logger.info("opportunity email data saved...................................111111111111130.")
         send_opportunity_emails_for_record.delay(opp.id)
 
 @shared_task(ignore_result=True)
@@ -137,14 +138,60 @@ def send_opportunity_emails_for_record(opportunity_email_record_id):
         _logger.warn("OpportunityEmailRecord(%s): NOT FOUND", opportunity_email_record_id)
         return
 
-    async_results = ResultSet([])
-    for user_id in opp.record_data['user_list']:
-        if settings.EMAIL_SWITCH['OPPORTUNITY_EMAIL']:
-            async_results.add(opportunity_email_task.delay(opp.id, opp.audit_cycle_id, user_id))
-        else:
-            _logger.info("opportunity email disabled. skipping opportunity email for audit_cycle(%s) and user(%s)", opp.audit_cycle_id, user_id)
+    # async_results = ResultSet([])
+    # for user_id in opp.record_data['user_list']:
+    #     if settings.EMAIL_SWITCH['OPPORTUNITY_EMAIL']:
+    #         async_results.add(opportunity_email_task.delay(opp.id, opp.audit_cycle_id, user_id))
+    #     else:
+    #         _logger.info("opportunity email disabled. skipping opportunity email for audit_cycle(%s) and user(%s)", opp.audit_cycle_id, user_id)
 
+    # _logger.info("scheduled %s emails for audit cycle: %s", len(async_results), opp.audit_cycle_id)
+
+    users = opp.record_data['user_list']
+    MAX_EMAIL_SENT_COUNT = int(settings.EMAIL_SWITCH['MAX_EMAIL_SENT_COUNT'])
+    async_results = ResultSet([])
+
+    successful_count = 0
+    failed_count = 0
+    successful_user_ids = []
+    failed_user_ids = []
+
+    for i in range(0, len(users), MAX_EMAIL_SENT_COUNT):
+        chunk = users[i:i + MAX_EMAIL_SENT_COUNT]
+        for user_id in chunk:
+            if settings.EMAIL_SWITCH['OPPORTUNITY_EMAIL']:
+                    task_result = opportunity_email_task.delay(opp.id, opp.audit_cycle_id, user_id)
+                    async_results.add(task_result)        
+            else:
+                _logger.info("opportunity email disabled. skipping opportunity email for audit_cycle(%s) and user(%s)", opp.audit_cycle_id, user_id)
     _logger.info("scheduled %s emails for audit cycle: %s", len(async_results), opp.audit_cycle_id)
+
+    for task in async_results:
+        try:
+            task_result, user_id = task.get(timeout=30)
+            if task_result:
+                successful_count += 1
+                successful_user_ids.append(user_id)
+            else: 
+                failed_count += 1
+                failed_user_ids.append(user_id)
+        except Exception as e:
+            _logger.warn("Failed to send email for OpportunityEmailRecord(%s). Error: %s", opportunity_email_record_id, str(e))
+            failed_count += 1
+            failed_user_ids.append(user_id)
+
+    # After processing all tasks, update the counts and lists in the database
+    if successful_count > 0 or failed_count > 0:
+        opp.email_status = {
+            "successful_count": successful_count,
+            "failed_count": failed_count,
+            "successful_user_ids": successful_user_ids,
+            "failed_user_ids": failed_user_ids
+        }
+        opp.progress_count = successful_count  # Update the progress count with successful emails only
+        opp.save()
+    _logger.info("Updated progress count to %d, successful count to %d, failed count to %d for OpportunityEmailRecord(%s).", 
+                opp.progress_count, successful_count, failed_count, opportunity_email_record_id)
 
 
 @shared_task()
@@ -183,10 +230,14 @@ def opportunity_email_task(opp_id, audit_cycle_id, user_id):
     html_message = get_template("notify/opportunity_email.html").render(params)
     txt_message = get_template("notify/opportunity_email.txt").render(params)
 
+    _logger.info("opportunity email sataus checked...................................2222222222222222190.", user_id)
+
     send_email(params['to_email'], subject, html_message, txt_message)
 
+    _logger.info("opportunity email sataus checked...................................333333333333333195.", user_id)
+
     # increment the progress counter in the DB
-    OpportunityEmailRecord.objects.filter(pk=opp_id).update(progress_count=F('progress_count') + 1)
+    # OpportunityEmailRecord.objects.filter(pk=opp_id).update(progress_count=F('progress_count') + 1)
     return True
 
 
