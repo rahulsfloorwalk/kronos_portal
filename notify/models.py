@@ -15,6 +15,8 @@ class OpportunityEmailRecord(Model):
     progress_count = PositiveIntegerField(db_column='progress_count', blank=False, default=0)
     record_data = JSONField(db_column='record_data', default=dict, blank=False)
 
+    email_status = JSONField(db_column='email_status', default=dict, blank=True,null=True)
+
     created_at = DateTimeField(db_column="created_at")
     modified_at = DateTimeField(db_column="modified_at")
 
@@ -25,8 +27,14 @@ class OpportunityEmailRecord(Model):
         self.modified_at = timezone.now()
         return super(OpportunityEmailRecord, self).save(*args, **kwargs)
 
+    # def __str__(self):
+    #     return "OpportunityEmailRecord({}): audit_cycle: {}, city: {}, progress: {}/{}".format(self.id, self.audit_cycle, self.city, self.progress_count, self.total_count)
+    
     def __str__(self):
-        return "OpportunityEmailRecord({}): audit_cycle: {}, city: {}, progress: {}/{}".format(self.id, self.audit_cycle, self.city, self.progress_count, self.total_count)
+        return "OpportunityEmailRecord({}): audit_cycle: {}, city: {}, progress: {}/{}, successful: {}/{}, failed: {}/{}".format(
+            self.id, self.audit_cycle, self.city, self.progress_count, self.total_count, 
+            self.email_status.get('successful_count', 0), self.total_count, 
+            self.email_status.get('failed_count', 0), self.total_count)
 
     class Meta:
         ordering = ['-created_at']
