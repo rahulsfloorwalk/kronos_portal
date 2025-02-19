@@ -222,6 +222,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			return false;
 		}
 		let filters = this.getFilterData();
+		this.setState({loading:true});
 		saveOpportunityEmailRecord(this.props.params.auditCycleId, filters).done(() => {
 			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/opportunity_notification`);
 			Alert.success("NOTIFICATION SCHEDULED");
@@ -229,6 +230,8 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			this.setState({
 				errors: err.responseJSON || {},
 			});
+		}).always(() => {
+			this.setState({ loading: false });
 		});
 	};
 
@@ -497,7 +500,8 @@ export default class OpportunityEmailRecordForm extends React.Component {
 						}
 					</div>
 					{!this.state.loading && this.state.filter_count != "" ? <p><b>{this.state.filter_count} auditor{this.state.filter_count > 1 ? "s" : null} found for this filter</b></p> : null}
-					{!this.state.loading && this.state.filter_count > 0 ? <SaveButton text="Send Notification" /> : null}
+					{/* {!this.state.loading && this.state.filter_count > 0 ? <SaveButton text="Send Notification" /> : null} */}
+					{this.state.loading?<button type="button" className="btn btn-primary">Loading</button> : this.state.filter_count > 0 ? <SaveButton text="Send Notification" /> : null}
 				</form>
 			</Modal>
 		);

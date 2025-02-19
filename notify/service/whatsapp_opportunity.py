@@ -83,6 +83,7 @@ def schedule_opportunity_whatsapp_for_audit_cycle_with_filters(audit_cycle_id: i
         raise AppLogicError("audit cycle must be in UPCOMING or ACTIVE status to send opportunity email")
     MAX_WHATSAPP_SENT_COUNT = int(settings.MAX_WHATSAPP_SENT_COUNT)
     CHANNEL = 'whatsapp'
+    opp_ids = [] 
     if filters.get('city')=='11132323':
         city_list=audit_service.find_audit_city_by_audit_cycle_id(audit_cycle_id)
         if city_list==[]:
@@ -103,7 +104,8 @@ def schedule_opportunity_whatsapp_for_audit_cycle_with_filters(audit_cycle_id: i
             }
             opp.progress_count = 0
             opp.save()
-            send_opportunity_whatsapp_message_for_record.delay(opp.id)
+            # send_opportunity_whatsapp_message_for_record.delay(opp.id)
+            opp_ids.append(opp.id)
        
     else:
         city = City.objects.get(pk=filters.get('city'))
@@ -123,7 +125,27 @@ def schedule_opportunity_whatsapp_for_audit_cycle_with_filters(audit_cycle_id: i
         }
         opp.progress_count = 0
         opp.save()
-        send_opportunity_whatsapp_message_for_record.delay(opp.id)
+        # send_opportunity_whatsapp_message_for_record.delay(opp.id)
+        opp_ids.append(opp.id)
+    batch_size = 10
+    # Use apply_async to send emails for users in each OpportunityWhatsappRecord
+    if opp_ids:
+        for opp_id in opp_ids:
+            try:
+                opp = OpportunityWhatsappRecord.objects.get(pk=opp_id)
+                user_list = opp.record_data['user_list']
+                async_results = ResultSet([])
+                for i in range(0, len(user_list), batch_size):
+                    batch = user_list[i:i + batch_size]
+                    for user_id in batch:
+                        if settings.EMAIL_SWITCH['OPPORTUNITY_EMAIL']:
+                            async_results.add(opportunity_whatsapp_task.apply_async((opp.id, audit_cycle_id, user_id)))
+                            # async_results.add(opportunity_email_task.delay(opp.id, opp.audit_cycle_id, user_id))
+                        else:
+                            _logger.info("opportunity email disabled. skipping opportunity email for audit_cycle(%s) and user(%s)", opp.audit_cycle_id, user_id)
+            except opportunity_whatsapp_task.DoesNotExist:
+                _logger.warn("OpportunityEmailRecord(%s): NOT FOUND", opp_id)
+    return "Scheduled emails for audit cycle: {}".format(audit_cycle_id)
         
 @shared_task(ignore_result=True)
 def send_opportunity_whatsapp_message_for_record(opportunity_record_id):

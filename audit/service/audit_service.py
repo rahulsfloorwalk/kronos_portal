@@ -319,9 +319,9 @@ def find_audits_for_auditor_limit(user_id,kms):
     city_id = auditor.profileinfo.city_id
     kms = int(kms)
     pincode = auditor.profileinfo.pincode
-    _logger.info("city_id %s", city_id) 
-    _logger.info("kms %s", kms) 
-    _logger.info("pincode %s", pincode) 
+    # _logger.info("city_id %s", city_id) 
+    # _logger.info("kms %s", kms) 
+    # _logger.info("pincode %s", pincode) 
     # return find_audits_around_pincode_and_city(city_id, kms,pincode)
     
     return find_audits_around_pincode_and_city(auditor.profileinfo.city_id, int(kms),auditor.profileinfo.pincode)

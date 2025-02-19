@@ -58,7 +58,7 @@ def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, fi
             query_set = query_set.filter(audit__audit_cycle__client = client_id)
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
         count = data.count()
-    return data[0:50], count
+    return data[0:200], count
 
 
 def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id):
@@ -105,7 +105,7 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
         count = data.count()
 
-    return data[0:50], count
+    return data[0:200], count
 
 
 def find_by_audit_cycle_for_moderator(audit_cycle_id, user_id):

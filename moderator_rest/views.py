@@ -295,7 +295,7 @@ class AuditStoreIdQAOKView(APIView):
         audit_store.qa_ok(by=request.user)
         audit_store_detail = AuditStoreSerializer(audit_store).data
         client_id = audit_store.audit.audit_cycle.client.id
-        if client_id in [345, 346]:
+        if client_id in [344, 345, 346]:
             audit_store = complete_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
     

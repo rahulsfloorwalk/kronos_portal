@@ -18,7 +18,7 @@ _logger = logging.getLogger(__name__)
 #     return audit_stores
 
 def get_handles_for_reportsummary_by_client(client_id):
-    audit_cycles = AuditStore.objects.filter( audit__audit_cycle__client=client_id, report_summary__isnull=False, report_summary__gt='',status__in=['COMPLETED', 'ACCEPTED'] ).values( 'audit__audit_cycle__id', 'audit__audit_cycle__name' ).distinct()
+    audit_cycles = AuditStore.objects.filter( audit__audit_cycle__client=client_id, report_summary__isnull=False, report_summary__gt='',status__in=['COMPLETED', 'ACCEPTED'] ).values( 'audit__audit_cycle__id', 'audit__audit_cycle__name' ).distinct().order_by('-audit__audit_cycle__id')
     # audit_cycles = AuditStore.objects.filter( audit__audit_cycle__client=client_id, report_summary__isnull=False, report_summary__gt='').values( 'audit__audit_cycle__id', 'audit__audit_cycle__name' ).distinct()
     formatted_audit_cycles = [
         {
@@ -124,6 +124,28 @@ def get_feeds_for_report_summary_client_and_handle(client_id, audit_cycle_id):
 
     return report_handle
    
+def get_over_all_summary(client_id, audit_cycle_id):
+    report_handle = get_report_summary_handle_by_client_and_id(client_id, audit_cycle_id)
+    total_positive = 0
+    total_negative = 0
+    total_neutral = 0
+    for feed in report_handle:
+        sentiment_text = (feed.sentiment_text or "").lower()  # Direct attribute access
+        if sentiment_text == "positive":
+            total_positive += 1
+        elif sentiment_text == "negative":
+            total_negative += 1
+        elif sentiment_text == "neutral":
+            total_neutral += 1  
+
+    total_count = total_positive + total_negative + total_neutral
+    return{
+        "promoters_count": total_positive,
+        "detractors_count": total_negative,
+        "passives_count": total_neutral,
+        "total_replies": total_count
+    }
+
 def get_over_all_nps_score(client_id, audit_cycle_id):
     audit_stores = get_all_audit_store_for_nps_score_by_audit_cycle_id(client_id, audit_cycle_id)
 
