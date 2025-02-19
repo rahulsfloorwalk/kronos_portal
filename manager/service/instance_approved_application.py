@@ -76,6 +76,11 @@ def audit_cycle_audit_auto_approve_check_by_applictaion_id(application_id):
             audit__audit_cycle__status=AuditCycle.ACTIVE
         )   
         # ).first()
+        audit_start_date = audit_application.audit.audit_cycle.start_date        
+        # If the audit started within the last 10 days and auto_approve is True, return False to prevent approval
+        if audit_start_date <= today - timedelta(days=10) and audit_application.audit.audit_cycle.audit_auto_approve == True:
+            return False
+        
         if audit_application:
             return audit_application.audit.audit_cycle.audit_auto_approve
         else:

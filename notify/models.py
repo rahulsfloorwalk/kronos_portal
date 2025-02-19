@@ -27,14 +27,8 @@ class OpportunityEmailRecord(Model):
         self.modified_at = timezone.now()
         return super(OpportunityEmailRecord, self).save(*args, **kwargs)
 
-    # def __str__(self):
-    #     return "OpportunityEmailRecord({}): audit_cycle: {}, city: {}, progress: {}/{}".format(self.id, self.audit_cycle, self.city, self.progress_count, self.total_count)
-    
     def __str__(self):
-        return "OpportunityEmailRecord({}): audit_cycle: {}, city: {}, progress: {}/{}, successful: {}/{}, failed: {}/{}".format(
-            self.id, self.audit_cycle, self.city, self.progress_count, self.total_count, 
-            self.email_status.get('successful_count', 0), self.total_count, 
-            self.email_status.get('failed_count', 0), self.total_count)
+        return "OpportunityEmailRecord({}): audit_cycle: {}, city: {}, progress: {}/{}".format(self.id, self.audit_cycle, self.city, self.progress_count, self.total_count)
 
     class Meta:
         ordering = ['-created_at']

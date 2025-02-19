@@ -352,12 +352,20 @@ def find_audit_applications_for_auto_approve():
             range = audit.count - audit.valid_report_count()
             audit_application_filtered = audit_application.filter(audit=audit.id)
 
+            is_recent_audit = audit.audit_cycle.start_date >= today_ist() - timedelta(days=10)
             for application in audit_application_filtered:
                 # rating=profile_info_service.get_avg_auditor_rating_by_user(application.profileinfo.user)
                 distance=application.distance()
                 total_factors_count, valid_factors_count, match_percent = application.validate_alignment_factors()
                 # required minimum 3 alignment factors in audit cycle
                 if distance is not None:
+                    is_new_auditor = not AuditApplication.objects.filter(
+                        profileinfo=application.profileinfo, 
+                        status__in=[AuditApplication.APPROVED, AuditApplication.REJECTED, AuditApplication.WITHDRAWN]  
+                    ).exists()
+                    if is_recent_audit and not is_new_auditor:
+                        # If audit is recent, only new auditors are allowed
+                        continue
                     if (match_percent <= 100 and match_percent >= 85) and int(distance)<=10 :
                         if application.audit_date == today_ist()+timedelta(days=1):
                             application_id_list.append(application.id)

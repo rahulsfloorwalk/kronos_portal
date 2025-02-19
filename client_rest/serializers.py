@@ -154,7 +154,8 @@ class AuditStoreSerializer(ModelSerializer):
             # 'percentage',
             'audit_store_percentage',
             'sentiment_score',
-            'sentiment_text'
+            'sentiment_text',
+            'nps_section'
         )
         read_only_fields = fields
 
