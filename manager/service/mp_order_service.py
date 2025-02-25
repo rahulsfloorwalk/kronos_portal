@@ -167,12 +167,19 @@ def alignment_factor(order_id:int, factors:dict) -> MPOrder:
     
 
 def update_order(data,order):
-    sum=0
-    if data.get('store'):
-        for i in data.get('store'):
-            sum+=i['count']
-        if sum!=data.get('no_of_response'):
-            raise AppLogicError("No of Response and All Store Count is not Equal")
+    # sum=0
+    # if data.get('store'):
+    #     for i in data.get('store'):
+    #         sum+=i['count']
+    #     if sum!=data.get('no_of_response'):
+    #         raise AppLogicError("No of Response and All Store Count is not Equal")
+    if data.get('state_city_map'):
+        if isinstance(data['state_city_map'], str):
+            raise AppLogicError("Invalid state_city_map format. Must be a list of integers, not a string.")
+        if not isinstance(data['state_city_map'], list) or not all(isinstance(i, int) for i in data['state_city_map']):
+            raise AppLogicError("Invalid state_city_map format. Must be a list of integers.")
+        # if len(data['state_city_map']) != data.get('no_of_response'):
+        #     raise AppLogicError("No of Response and state_city_map Count must be equal.")
     if data.get('user'):
         user_id = int(data.get('user'))
         user = User.objects.get(id=user_id)
@@ -201,11 +208,13 @@ def update_order(data,order):
         order.describe=data.get('describe')
     if data.get('status'):
         order.status=data.get('status')
-    store=[]
-    if data.get('store'):
-        for i in data['store']:
-            store.append(i)
-        order.store=store
+    # store=[]
+    # if data.get('store'):
+    #     for i in data['store']:
+    #         store.append(i)
+    #     order.store=store
+    if data.get('state_city_map'):
+        order.state_city_map = data['state_city_map'] 
     order.save()
     if data.get('alignment_factors'):
         order = alignment_factor(order.id,data.get('alignment_factors'))

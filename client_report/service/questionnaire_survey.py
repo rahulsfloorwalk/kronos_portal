@@ -25,7 +25,7 @@ def get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_i
             questionnaire_survey_list.append(row)
             for question in section.questions.filter(question_type__in=['MUTEX', 'MULTISELECT']).order_by('sequence'):
                 if question.section == section:
-                    if question.max_marks > 0:
+                    if question.max_marks >= 0:
                         answer_obj = find_answers_by_question_id(question.id)
                         if client_admin:
                             answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],

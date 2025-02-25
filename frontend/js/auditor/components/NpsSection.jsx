@@ -75,7 +75,7 @@ class __NpsSection extends Component {
 					<h3 className="page-header"><Tasks />Overall Experience</h3> {" "}
 					<form onSubmit={this.onSubmit}>
 						<div className="form-group">
-							<label className="control-label">How would you rate your overall experience?</label>
+							<label className="control-label">How likely are you to rate the brand you audited for its products/services?</label>
 							<div className="row">
 								<div className="col-md-10">
 									<div className="star-rating star-rating-lg">

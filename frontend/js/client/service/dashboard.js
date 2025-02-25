@@ -1,6 +1,17 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 
+export function gettoken(user_id){
+	return $.ajax({
+		url: url.api_base_path + "client/get_token",
+		method: "POST",
+		data: JSON.stringify({
+			user_id
+		}),
+		contentType: "application/json"
+	});
+}
+
 export function fetchLatestAuditCycleMatrix(){
 	return $.get( url.api_base_path + "client/audit_cycle/aggregation");
 }

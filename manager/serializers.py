@@ -6,7 +6,7 @@ from agency.models import AgencyUser, Agency
 from audit.models import Audit, AuditCycle, AuditCycleProofTagList
 from audit_store.models import AuditStore, ReportFollowUpLog
 from auditor.models import ProfileInfo, AuditApplication
-from client.models import Client, Store,ClientForEcomm
+from client.models import Client, Store,ClientForEcomm,StateCityMapping
 from payment.models import Payment
 from registration.models import MobileNumber
 from .models import City, ProofTag,MPCategory,MPTax,MPSolution
@@ -15,6 +15,8 @@ from attachment.models import Attachment
 from manager.models import ManagerProfileInfo
 from rest_framework import serializers
 from manager.models import AuditProoftagNotAvailable
+from manager.models import City
+import json
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -72,6 +74,14 @@ class CitySerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class MappingCitySerializer(ModelSerializer):
+    class Meta:
+        model = City
+        fields = (
+            'id',
+            'name',
+        )
+        read_only_fields = fields
 
 class AuditCycleSerializer(ModelSerializer):
     client = ClientSerializer()
@@ -125,7 +135,36 @@ class StoreSerializer(ModelSerializer):
             'city',
         )
         read_only_fields = fields
+    
+class StateCityMappingSerializer(serializers.ModelSerializer):
+    # client = serializers.StringRelatedField()  # Shows client name
+    # mp_order = serializers.StringRelatedField()  # Shows order number
+    cities_data = serializers.SerializerMethodField()
 
+    class Meta:
+        model = StateCityMapping
+        fields = ['id', 'client', 'mp_order', 'cities', 'cities_data']   
+
+    def get_cities_data(self, obj):
+        try:
+            city_ids = json.loads(obj.cities) if isinstance(obj.cities, str) else obj.cities
+            city_objects = City.objects.filter(id__in=city_ids)
+            state_map = {}
+            for city in city_objects:
+                state = city.state
+                if state not in state_map:
+                    state_details = CitySerializer(city).data
+                    state_map[state] = {
+                        "state": state_details["state"],
+                        "state_name": state_details["state_name"],
+                        "city_data": []
+                    }
+                city_data = MappingCitySerializer(city).data
+                state_map[state]["city_data"].append(city_data)
+            return list(state_map.values())
+        except Exception as e:
+            print("Error in get_cities_data:", e)
+            return []
 
 class StoreSerializerWithoutClientUserAndClient(ModelSerializer):
     city = CitySerializer()

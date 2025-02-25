@@ -25,6 +25,8 @@ from django.db import IntegrityError
 from auditor.service import profile_info_service,market_place_api
 from django.template.loader import get_template
 from registration.context import registration_context
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
 _logger = logging.getLogger(__name__)
 
@@ -252,6 +254,25 @@ def web_login_api(request):
         status = 400
 
     return response, status
+
+def get_token_api(request):
+    user_id = request.data.get("user_id")
+    if not user_id:
+        return JsonResponse({'detail': 'User ID is required.'}, status=400)
+    user = get_object_or_404(User, id=user_id)
+    try:
+        client = Client.objects.get(email=user.email)
+        token, created = Token.objects.get_or_create(user=user_id)
+        response = {
+            'token': token.key,
+            'username': user.username,
+            'user_id': user.id,
+            'client_id': client.id,
+            'client_name': client.name,
+        }
+        return JsonResponse(response, status=200)
+    except Client.DoesNotExist:
+        return JsonResponse({'detail': 'Invalid credentials: No associated client found.'}, status=400)
 
 def verify_by_otp_and_login(request):
     user=request.data.get('user')

@@ -368,7 +368,7 @@ class MpPaymentCompleteView(APIView):
         if proof_tag_list:
             section_proof_tag.save_section_proof_tag(add_section.id,audit_cycle_response.id,proof_tag_list)
 
-        add_store_response = add_store_to_audit(audit_cycle_response,order,solution_details)
+        # add_store_response = add_store_to_audit(audit_cycle_response,order,solution_details)  (its comment for new market place becouse its not add audit on store--->24-02-2025)
         # success_payment_email_for_company = payment_service.success_payment_email_for_company(order.id)
         # active_cycle_email_for_client = payment_service.active_cycle_email_for_client(order.id)
         
@@ -847,7 +847,7 @@ class MPOrderSerializer(ModelSerializer):
     class Meta:
         model=MPOrder
         # exclude = ('attachments',) 
-        fields=('id','solution','category','category_name','user','price','no_of_response','describe','status','alignment_factors','store','attachments_data','created_at','modified_at','country_code')
+        fields=('id','solution','category','category_name','user','price','no_of_response','describe','status','alignment_factors','store','state_city_map','attachments_data','created_at','modified_at','country_code')
     def get_attachments_data(self, obj):
         attachments = obj.attachments.all()
         attachments_data = []
