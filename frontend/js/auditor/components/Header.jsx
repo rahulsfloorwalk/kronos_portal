@@ -32,7 +32,7 @@ class Header extends React.Component {
 				const secretKey = "e9w9r3q1w7d4f7t1g6c0s7v6c1x7z3b8m1y9e6a4q7e5t0r6n0l1p3u8a4z0h4!@#";
 				const ciphertext = CryptoJS.AES.encrypt(Token, secretKey).toString();
 				const encodedCiphertext = encodeURIComponent(ciphertext);
-				window.open(`https://auditor.floorwalk.in/auditor/audit?token=${encodedCiphertext}`,"_blank");
+				window.open(`https://auditor.floorwalk.in/auditor/audit?token=${encodedCiphertext}&tour=${true}`,"_blank");
 			}, (err) => {
 				this.setState({
 					errMsg: err.responseJSON.non_field_errors[0],
