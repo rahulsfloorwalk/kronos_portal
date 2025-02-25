@@ -47,6 +47,15 @@ class WebLogInAPI(APIView):
         response , status = market_place_service_api.web_login_api(request)
         return JsonResponse(response, status=status)
 
+class ClientUserTokenView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'POST':[GROUP_NAME_CLIENT]
+    }
+    def post(self,request):
+        response  = market_place_service_api.get_token_api(request)
+        return response
+
 class MPVerfifyEmailByOtp(APIView):
     permission_classes=[AllowAny]
     @atomic

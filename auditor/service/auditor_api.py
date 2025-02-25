@@ -40,7 +40,8 @@ from audit_store.models import AuditStore
 from answer.models import ReportSection
 from attachment.models import Attachment
 from payment.service.payment_beneficiary import create_beneficiary_id_for_user
-
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
 
 UserModel = get_user_model()
@@ -780,6 +781,24 @@ def log_in_app(request):
         status = 400
     return response, status
 
+def get_token_api(request):
+    user_id = request.data.get("user_id")
+    if not user_id:
+        return JsonResponse({'detail': 'User ID is required.'}, status=400)
+    user = get_object_or_404(User, id=user_id)
+    try:
+        profile_info = ProfileInfo.objects.get(user=user)
+        token, created = Token.objects.get_or_create(user=user)
+        response = {
+            'token': token.key,
+            'username': user.username,
+            'user_id': user.id,
+            'profile_info_id': profile_info.id,
+            'profile_info_name': profile_info.first_name,
+        }
+        return JsonResponse(response, status=200)
+    except ProfileInfo.DoesNotExist:
+        return JsonResponse({'detail': 'Invalid credentials: No associated auditor found.'}, status=400)
 
 
 

@@ -10,11 +10,15 @@ from registration.mixins import HasGroupPermission
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from client.service.store_import_xlsx import find_sample_xlsx_for_store_insert, import_store_by_xlsx_sheet
 from client.service import store as store_service
-from client.models import Store,Client
+from client.models import Store,Client,StateCityMapping
 from rest_framework.permissions import IsAuthenticated,AllowAny
-from manager.serializers import StoreSerializer, StoreImportDeSerializer
+from manager.serializers import StoreSerializer, StoreImportDeSerializer,StateCityMappingSerializer
 from django.contrib.auth.models import User
 from manager.viewss.mp_order import CustomPagination
+from django.shortcuts import get_object_or_404
+import json
+from rest_framework import serializers
+
 class MPStoreDeSerializer(ModelSerializer):
     class Meta:
         model = Store
@@ -87,6 +91,54 @@ class StoreDeSerializer(ModelSerializer):
         store.phone = self.validated_data.get('phone', store.phone)
         return store
 
+# class StateCityMappingDeSerializer(ModelSerializer):
+#     class Meta:
+#         model = StateCityMapping
+#         fields = ['id', 'cities', 'client', 'mp_order']
+#         read_only_fields = ('id',)
+#         validators=[]
+#     def deserialize(self):
+#         if 'id' in self.context and self.context.get('id') is not None:
+#             state_city_mapping = StateCityMapping.objects.get(id=self.context.get('id'))
+#         else:
+#             state_city_mapping = StateCityMapping()
+#         if isinstance(cities, str):
+#             try:
+#                 cities = json.loads(cities)
+#                 print("citiesaaa",cities)
+#             except json.JSONDecodeError:
+#                 raise serializers.ValidationError("Invalid format for cities")
+
+#         state_city_mapping.cities = self.validated_data.get('cities', state_city_mapping.cities)
+#         state_city_mapping.client = self.validated_data.get('client', state_city_mapping.client)
+#         state_city_mapping.mp_order = self.validated_data.get('mp_order_id', state_city_mapping.mp_order)
+#         return state_city_mapping
+    
+
+class StateCityMappingDeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StateCityMapping
+        fields = ['id', 'cities', 'client', 'mp_order']
+        read_only_fields = ('id',)
+    def validate_cities(self, value):
+        """ Convert string-based list to actual list before saving """
+        if isinstance(value, str):  
+            try:
+                value = json.loads(value)
+            except json.JSONDecodeError:
+                raise serializers.ValidationError("Invalid format: cities must be a list.")
+        if not isinstance(value, list):
+            raise serializers.ValidationError("Cities must be a list of integers.")
+        return value
+    def create(self, validated_data):
+        validated_data["cities"] = self.validate_cities(validated_data.get("cities", []))
+        return super().create(validated_data)
+    def update(self, instance, validated_data):
+        instance.cities = self.validate_cities(validated_data.get("cities", instance.cities))
+        instance.client = validated_data.get("client", instance.client)
+        instance.mp_order = validated_data.get("mp_order", instance.mp_order)
+        instance.save()
+        return instance
 
 class StoreViewByClient(APIView):
     permission_classes = [HasGroupPermission]
@@ -189,6 +241,43 @@ class StoreAddClientView(APIView):
         serializer = StoreSerializer(saved_store)
         return Response(serializer.data)
 
+class StateCityMappingView(APIView):
+    permission_classes = [AllowAny]
+    # required_groups = {
+    #     'POST': [GROUP_NAME_CLIENT],
+    #     'GET': [GROUP_NAME_CLIENT]
+    # }
+    def post(self, request):
+        mapping_ds = StateCityMappingDeSerializer(data=request.data)
+        mapping_ds.is_valid(raise_exception=True)
+        saved_mapping = mapping_ds.save()
+        serializer = StateCityMappingSerializer(saved_mapping)
+        return Response(serializer.data)
+
+class EditStateCityMappingView(APIView):
+    permission_classes = [AllowAny]
+    # required_groups = {
+    #     'POST': [GROUP_NAME_CLIENT],
+    #     'GET': [GROUP_NAME_CLIENT]
+    # }
+    def get(self, request, state_city_mapping_id):
+        mapping = get_object_or_404(StateCityMapping, id=state_city_mapping_id)
+        serializer = StateCityMappingSerializer(mapping)
+        return Response(serializer.data)
+
+    def post(self, request, state_city_mapping_id):
+        mapping = get_object_or_404(StateCityMapping, id=state_city_mapping_id)
+        serializer = StateCityMappingDeSerializer(mapping, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+    def delete(self, request, state_city_mapping_id):
+        mapping = get_object_or_404(StateCityMapping, id=state_city_mapping_id)
+        mapping.delete()
+        return Response({"message": "Deleted Successfully"}, status=200)
+    
 class StoreIdClientIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

@@ -30,6 +30,14 @@ class AppVerfifyEmailByOtp(APIView):
         response , status = auditor_service_api.verify_by_otp_and_login(request)
         return JsonResponse(response,status=status)   
 
+class AuditorTokenView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'POST':[GROUP_NAME_AUDITOR]
+    }
+    def post(self,request):
+        response  = auditor_service_api.get_token_api(request)
+        return response
 
 class LoginAPI(APIView):
     permission_classes = [AllowAny]

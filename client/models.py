@@ -512,6 +512,7 @@ class MPOrder(Model):
     payment_status = CharField(db_column='payment_status', max_length=20, choices=PAYMENT_STATUS_CHOICES, blank=True, null=True)
     alignment_factors = JSONField(db_column='alignment_factors', default=list, blank=True,null=True)
     store = JSONField(db_column='stores', default=list, blank=True,null=True)
+    state_city_map = JSONField(db_column='state_city_map',default=list, blank=True,null=True)
     attachments = GenericRelation('attachment.Attachment', related_query_name='orders')
     razorpay_payment_id = CharField(max_length=100, blank=True, null=True)
     razorpay_signature = CharField(max_length=100, blank=True, null=True)
@@ -545,3 +546,13 @@ class Transaction(Model):
     
     def __str__(self):
         return 'Transaction({}): orderID{}'.format(self.id,self.order) 
+    
+class StateCityMapping(Model):
+    id = AutoField(primary_key=True)
+    cities = JSONField(default=list, blank=True)
+    mp_order = ForeignKey(MPOrder, on_delete=CASCADE,db_column='mp_order_id',)
+    client = ForeignKey(Client, on_delete=PROTECT, null=True, blank=True, related_name="state_mappings")
+    mp_order = ForeignKey('client.MPOrder', db_column='order_id', on_delete=PROTECT, null=True, blank=True)
+  
+    def __str__(self):
+        return "Client: " + self.client.name + " - Order ID: " + self.mp_order.id

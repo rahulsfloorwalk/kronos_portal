@@ -167,7 +167,7 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
 
     sections = Section.objects.filter(audit_cycle=audit_cycle).order_by('sequence')
-    section_id_list = (s.id for s in sections if s.max_marks() > 0)
+    section_id_list = (s.id for s in sections if s.max_marks() >= 0)
 
     # prefetch questions once and then later again with audit_stores so that query count does not blow up
     sections = sections.filter(id__in = section_id_list).prefetch_related('questions')

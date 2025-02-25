@@ -91,6 +91,7 @@ urlpatterns = ([
     url(r'app/signup_api_app$', views_api.AppSignUpAPI.as_view(), name="app_signup_api_app"),
     url(r'app/verify_email_by_otp$', views_api.AppVerfifyEmailByOtp.as_view(), name="mp_verify_email_by_otp"),
     url(r'app/login_api$', views_api.LoginAPI.as_view(), name="login_api"),
+    url(r'get_token$', views_api.AuditorTokenView.as_view(), name='auditor_token_view'),
     url(r'app/logout_api$', views_api.LogoutAPI.as_view(), name="logout_api"),
 
     url(r'app/change_password_api$', views_api.ChangePasswordAPI.as_view(), name="change_password_api"),   
