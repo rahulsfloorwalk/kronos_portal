@@ -59,12 +59,28 @@ export class Dashboard extends React.Component{
 				{ this.props.selectedQuestionnaireType && this.props.selectedAuditCycle ? <div>
 					<AuditCycleTimeSeries questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
 					<hr/>
-					<AuditCycleImprovableQuestions questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
-					<hr/>
-					<AuditCycleStorePerformance questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
-					<hr/>
-					<DashboardCityPerformanceChart questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
-					<hr/>
+					{/* <AuditCycleImprovableQuestions questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
+					<hr/> */}
+					{this.props.selectedQuestionnaireType.client_id !== 346 &&
+						<div>
+							<AuditCycleImprovableQuestions questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
+							<hr/>
+						</div>
+					}
+					{this.props.selectedQuestionnaireType.client_id !== 346 &&
+					<div>
+						<AuditCycleStorePerformance questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
+						<hr/>
+					</div>}
+					{/* <AuditCycleStorePerformance questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
+					<hr/> */}
+					{/* <DashboardCityPerformanceChart questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
+					<hr/> */}
+					{(this.props.selectedQuestionnaireType.client_id !== 346 && this.props.selectedQuestionnaireType.client_id !== 344) &&
+					<div>
+						<DashboardCityPerformanceChart questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
+						<hr/>
+					</div>}
 				</div>
 					: null }
 				{ this.props.selectedQuestionnaireType && this.props.selectedAuditCycle && Object.keys(this.props.user).length !== 0 && this.props.user.client.id == 152 ? <div>

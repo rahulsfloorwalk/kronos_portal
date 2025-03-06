@@ -56,6 +56,15 @@ class ClientUserTokenView(APIView):
         response  = market_place_service_api.get_token_api(request)
         return response
 
+class CheckEmailView(APIView):
+    permission_classes=[AllowAny]
+    # required_groups={
+    #     'POST':[GROUP_NAME_CLIENT]
+    # }
+    def post(self,request):
+        response  = market_place_service_api.check_email(request)
+        return response
+
 class MPVerfifyEmailByOtp(APIView):
     permission_classes=[AllowAny]
     @atomic

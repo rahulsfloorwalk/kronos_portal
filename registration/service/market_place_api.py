@@ -262,17 +262,39 @@ def get_token_api(request):
     user = get_object_or_404(User, id=user_id)
     try:
         client = Client.objects.get(email=user.email)
-        token, created = Token.objects.get_or_create(user=user_id)
-        response = {
-            'token': token.key,
-            'username': user.username,
-            'user_id': user.id,
-            'client_id': client.id,
-            'client_name': client.name,
-        }
-        return JsonResponse(response, status=200)
     except Client.DoesNotExist:
-        return JsonResponse({'detail': 'Invalid credentials: No associated client found.'}, status=400)
+        try:
+            client_user = ClientUser.objects.get(user=user)
+            client = client_user.client
+        except ClientUser.DoesNotExist:
+            return JsonResponse({'detail': 'Invalid credentials: No associated client found.'}, status=400)
+    token, created = Token.objects.get_or_create(user=user)
+    response = {
+        'token': token.key,
+        'username': user.username,
+        'user_id': user.id,
+        'client_id': client.id,
+        'client_name': client.name,
+    }
+    return JsonResponse(response, status=200)
+
+def check_email(request):
+    email = request.data.get("email")
+
+    if not email:
+        return JsonResponse({'detail': 'Email is required.'}, status=400)
+
+    email_exists = (
+        Client.objects.filter(email=email).exists() or
+        ClientUser.objects.filter(user__email=email).exists()
+    )
+    if not email_exists and email.endswith("gmail.com"):
+        return JsonResponse(
+            {'detail': 'Email does not exist. Please use your company domain email.'},
+            status=400
+        )
+    return JsonResponse({'email': email}, status=200)
+
 
 def verify_by_otp_and_login(request):
     user=request.data.get('user')
