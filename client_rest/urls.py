@@ -110,6 +110,7 @@ urlpatterns = ([
     url(r'market_place/login_api$', viewss_api.MPLogInAPI.as_view(), name="mp_login_api"),
     url(r'web_login_api$', viewss_api.WebLogInAPI.as_view(), name="web_login_api"),
     url(r'get_token$', viewss_api.ClientUserTokenView.as_view(), name='client_user_token_view'),
+    url(r'check_email$', viewss_api.CheckEmailView.as_view(), name='check_email_view'),
     url(r'market_place/change_password_api$', viewss_api.MPChangePasswordAPI.as_view(), name="mp_teset_password_api"),
     
     url(r'market_place/forgot_password_api$', viewss_api.MPForgotPasswordAPI.as_view(), name="mp_forgot_password_api"),

@@ -242,11 +242,11 @@ class StoreAddClientView(APIView):
         return Response(serializer.data)
 
 class StateCityMappingView(APIView):
-    permission_classes = [AllowAny]
-    # required_groups = {
-    #     'POST': [GROUP_NAME_CLIENT],
-    #     'GET': [GROUP_NAME_CLIENT]
-    # }
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT]
+    }
     def post(self, request):
         mapping_ds = StateCityMappingDeSerializer(data=request.data)
         mapping_ds.is_valid(raise_exception=True)
@@ -255,11 +255,11 @@ class StateCityMappingView(APIView):
         return Response(serializer.data)
 
 class EditStateCityMappingView(APIView):
-    permission_classes = [AllowAny]
-    # required_groups = {
-    #     'POST': [GROUP_NAME_CLIENT],
-    #     'GET': [GROUP_NAME_CLIENT]
-    # }
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT]
+    }
     def get(self, request, state_city_mapping_id):
         mapping = get_object_or_404(StateCityMapping, id=state_city_mapping_id)
         serializer = StateCityMappingSerializer(mapping)
@@ -268,10 +268,10 @@ class EditStateCityMappingView(APIView):
     def post(self, request, state_city_mapping_id):
         mapping = get_object_or_404(StateCityMapping, id=state_city_mapping_id)
         serializer = StateCityMappingDeSerializer(mapping, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+        serializer.is_valid(raise_exception=True)
+        updated_mapping = serializer.save()
+        response_serializer = StateCityMappingSerializer(updated_mapping)
+        return Response(response_serializer.data)
 
     def delete(self, request, state_city_mapping_id):
         mapping = get_object_or_404(StateCityMapping, id=state_city_mapping_id)
