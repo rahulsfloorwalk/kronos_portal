@@ -409,19 +409,41 @@ def rename(attachment_id, new_name):
     return attachment
 
 
+# def save_attachment_proof_tag(attachment_id, proof_tag_id):
+#     attachment = find_by_id(attachment_id)
+#     if proof_tag_id == "":
+#         attachment.proof_tag = None
+#     else:
+#         proof_tag_obj = audit_cycle_proof_tag.find_by_id(proof_tag_id)
+#         attachment.proof_tag = proof_tag_obj
+#         attachment_file_name = attachment.file_name
+#         if "." in attachment_file_name:
+#             extension = attachment_file_name.split(".")[-1]
+#             attachment.file_name = proof_tag_obj.proof_tag.name + "." + extension
+#         else:
+#             attachment.file_name = proof_tag_obj.proof_tag.name
+#     attachment.save()
+#     return attachment
+
 def save_attachment_proof_tag(attachment_id, proof_tag_id):
     attachment = find_by_id(attachment_id)
+
     if proof_tag_id == "":
         attachment.proof_tag = None
     else:
         proof_tag_obj = audit_cycle_proof_tag.find_by_id(proof_tag_id)
         attachment.proof_tag = proof_tag_obj
+
         attachment_file_name = attachment.file_name
-        if "." in attachment_file_name:
-            extension = attachment_file_name.split(".")[-1]
-            attachment.file_name = proof_tag_obj.proof_tag.name + "." + extension
-        else:
-            attachment.file_name = proof_tag_obj.proof_tag.name
+        extension = attachment_file_name.split(".")[-1] if "." in attachment_file_name else None
+
+        new_file_name = proof_tag_obj.proof_tag.name
+        if extension:
+            new_file_name += "." + extension
+
+        if attachment.file_name != new_file_name:
+            attachment.file_name = new_file_name
+
     attachment.save()
     return attachment
 
