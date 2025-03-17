@@ -207,25 +207,33 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
             .distinct('id')
         total_audit_count = audit_list_obj.count()
     elif status != "" and city:
-        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, audit_stores__status=status, store__city__name=city).order_by('id', 'store__city__name', 'store__name') \
+        if status == 'QA_Not_Assign':
+            status = 'SUBMITTED'
+            qa_not_assign_audit_store_ids = list(qa_not_assign(audit_cycle_id,status))
+            audit_list_obj = Audit.objects.filter( audit_cycle__id=audit_cycle_id, audit_stores__id__in=qa_not_assign_audit_store_ids, audit_stores__status=status ).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count') \
+            .values('id', 'store__name', 'store__address', 'store__city__name', 'count') \
             .distinct('id')
-        total_audit_count = audit_list_obj.count()
+        else:
+            audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, audit_stores__status=status, store__city__name=city).order_by('id', 'store__city__name', 'store__name') \
+                .select_related('store__name', 'store__address', 'store__city__name') \
+                .values('id', 'store__name', 'store__address', 'store__city__name','count') \
+                .distinct('id')
+            total_audit_count = audit_list_obj.count()
     elif status != "":
-        # if status == 'not_assigned':
-        #     status = 'SUBMITTED'
-        #     qa_not_assign_audit_store_ids = list(qa_not_assign(audit_cycle_id,status))
-        #     audit_list_obj = Audit.objects.filter( audit_cycle__id=audit_cycle_id, audit_stores__id__in=qa_not_assign_audit_store_ids, audit_stores__status=status ).order_by('id', 'store__city__name', 'store__name') \
-        #     .select_related('store__name', 'store__address', 'store__city__name') \
-        #     .values('id', 'store__name', 'store__address', 'store__city__name', 'count') \
-        #     .distinct('id')
-        # else:
-        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, audit_stores__status=status).order_by('id', 'store__city__name', 'store__name') \
+        if status == 'QA_Not_Assign':
+            status = 'SUBMITTED'
+            qa_not_assign_audit_store_ids = list(qa_not_assign(audit_cycle_id,status))
+            audit_list_obj = Audit.objects.filter( audit_cycle__id=audit_cycle_id, audit_stores__id__in=qa_not_assign_audit_store_ids, audit_stores__status=status ).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count') \
+            .values('id', 'store__name', 'store__address', 'store__city__name', 'count') \
             .distinct('id')
-        total_audit_count = audit_list_obj.count()
+        else:
+            audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, audit_stores__status=status).order_by('id', 'store__city__name', 'store__name') \
+                .select_related('store__name', 'store__address', 'store__city__name') \
+                .values('id', 'store__name', 'store__address', 'store__city__name','count') \
+                .distinct('id')
+            total_audit_count = audit_list_obj.count()
     elif city != "" and city != None:
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, store__city__name=city).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \

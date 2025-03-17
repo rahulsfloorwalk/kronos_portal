@@ -216,6 +216,8 @@ def web_login_api(request):
     password = request.data.get("password")
 
     user = authenticate(username=username, password=password)
+    if not user.is_active:
+        return {'detail': 'User account is inactive or deleted.'}, 400
     if user:
         try:
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
@@ -260,6 +262,8 @@ def get_token_api(request):
     if not user_id:
         return JsonResponse({'detail': 'User ID is required.'}, status=400)
     user = get_object_or_404(User, id=user_id)
+    if not user.is_active:
+        return {'detail': 'User account is inactive or deleted.'}, 400
     try:
         client = Client.objects.get(email=user.email)
     except Client.DoesNotExist:

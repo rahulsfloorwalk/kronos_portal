@@ -171,6 +171,8 @@ export function getAuditStoreStatus(value){
 		return "Auditor Withdrawn";
 	case "SUBMITTED":
 		return "QA Review";
+	case "QA_Not_Assign":
+		return "QA Not Assign";
 	case "PM_REVIEW":
 		return "PM Review";
 	case "COMPLETED":
