@@ -190,9 +190,11 @@ def get_profile_completion(user_id):
     auditor_name = profile_info.first_name + " " + profile_info.last_name
     auditor_email = user.email
     auditor_profile_completion = math.floor(profile_percentage * 100)
+    auditor_certification_score = profile_info.certification_score
 
     return {
         "auditor_name": auditor_name,
         "auditor_email": auditor_email,
-        "auditor_profile_completion": auditor_profile_completion
+        "auditor_profile_completion": auditor_profile_completion,
+        "auditor_certification_score": auditor_certification_score,
     }

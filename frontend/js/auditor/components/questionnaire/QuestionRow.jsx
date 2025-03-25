@@ -13,7 +13,7 @@ import { affectInputEventToComponent } from "../../../react_utils.js";
 
 // import { ClientID } from "../../../constants.js";
 
-import { submitAnswer } from "../../actions/answer.js";
+import { postNotAvailable,submitAnswer } from "../../actions/answer.js";
 
 import AnswerComment from "./AnswerComment.jsx";
 
@@ -38,6 +38,7 @@ class QuestionRow extends React.Component {
 			answer_text: "",
 			touched: false,
 			focused: false,
+			isNotAvailable: false,
 		};
 
 	}
@@ -101,6 +102,19 @@ class QuestionRow extends React.Component {
 			status: e.target.checked
 		};
 		this.props.dispatch(submitAnswer(payload)).then(() => this.setState({ saving: false }));
+	};
+
+	handleNotAvailableChange = (e) => {
+		const isChecked = e.target.checked;
+		this.setState({ isNotAvailable: isChecked });
+
+		postNotAvailable(this.props.auditStoreId, this.props.q.id,  e.target.checked)
+			.then((data) => {
+				if (data.non_field_errors) {
+					Alert.error("Something Went wrong");
+				}
+				Alert.success("Data saved successfully");
+			});
 	};
 
 	render() {
@@ -233,8 +247,24 @@ class QuestionRow extends React.Component {
 						<div className="col-xs-10 col-md-5">
 							<b><MarkdownViewer markdown={this.props.q.question_txt || ""} />{savingMessage}</b>
 						</div>
-						<div className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6">
+						{/* <div className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6">
 							{answerElement}
+						</div> */}
+						<div className="col-xs-offset-1 col-xs-10 col-md-offset-0 col-sm-10 col-md-5">
+							{this.state.isNotAvailable ? (
+								<span>Not Applicable</span>
+							) : (
+								answerElement
+							)}
+						</div>
+						<div className="col-xs-offset-1 col-xs-1 col-md-offset-0 col-sm-1 col-md-">
+							<input
+								type="checkbox"
+								name="not_available"
+								checked={this.state.isNotAvailable}
+								onChange={this.handleNotAvailableChange}
+								style={{ verticalAlign: "bottom", width: "20px", height: "20px" }}
+							/>
 						</div>
 						{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.state.revert_message ? <div className="col-xs-12 col-xs-offset-1 col-md-12 col-md-offset-1" style={{ marginTop: "9px" }}>
 							<p className="text-danger"><b>Revert message: </b>{this.state.revert_message}</p>

@@ -60,6 +60,7 @@ from auditor.models import AuditApplication
 from audit.models.proof_tag import AuditCycleProofTagList
 from manager.models import AuditProoftagNotAvailable
 from attachment import service as attachment_service
+import answer.service.answer_moderator as answer_moderator_service
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -784,6 +785,21 @@ class ReportSectionAttachmentView(APIView):
             raise ValidationError({
                 'file_name': "file name is required"
             })
+
+class AnswerNotApplicableView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR],
+    }
+    class Deserializer(Serializer):
+        not_applicable = BooleanField()
+
+    def post(self, request, audit_store_id, question_id):   
+        ds = self.Deserializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        not_applicable = ds.validated_data.get('not_applicable')
+        answer = answer_moderator_service.set_not_applicable_for_auditor(audit_store_id, question_id, not_applicable, request.user.id)
+        return Response(AnswerSerializer(answer).data)
 
 class UserIdProofAttachmentView(APIView):
     permission_classes = [HasGroupPermission]

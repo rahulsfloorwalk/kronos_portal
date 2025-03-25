@@ -97,11 +97,17 @@ def upload_prooftag_not_available_for_object(audit_store_id, proof_tag, descript
     )
 
 def upload_for_object_with_proof_tag(proof_type: str, mime_type: str, file_name: str, file_size: int, file_slug: str, content_object,proof_tag) -> Attachment:
+    proof_tag_name = proof_tag.proof_tag.name if proof_tag and proof_tag.proof_tag else None
+    extension = file_name.split(".")[-1] if "." in file_name else None
+    new_file_name = proof_tag_name if proof_tag_name else file_name
+    
+    if extension:
+        new_file_name += "." + extension
     return Attachment.objects.create(
         status = Attachment.UPLOADING,
         proof_type = proof_type,
         mime_type = mime_type,
-        file_name = file_name,
+        file_name = new_file_name,
         file_size = file_size,
         file_slug = file_slug,
         content_object = content_object,

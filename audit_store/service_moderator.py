@@ -4,7 +4,7 @@ from audit.service.audit_cycle_proof_tag import get_audit_cycle_proof_tag_for_at
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
-from registration.service.moderator import find_moderator_by_user_id
+from registration.service.moderator import find_moderator_by_user_id,find_auditor_by_user_id
 
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
@@ -175,6 +175,31 @@ def find_by_id_for_moderator(audit_store_id, user_id):
             return audit_store
         else:
             raise ObjectNotFound
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+    
+def find_by_id_for_auditor(audit_store_id, user_id):
+    try:
+        user = find_auditor_by_user_id(user_id)
+        audit_store = AuditStore.objects.get(
+            pk=audit_store_id,
+            status__in=[
+                AuditStore.ASSIGNED,
+                AuditStore.ACKNOWLEDGED,
+                AuditStore.SUBMITTED,
+                AuditStore.PM_REVIEW,
+                AuditStore.FAILED,
+                AuditStore.COMPLETED,
+                AuditStore.ACCEPTED,
+                AuditStore.REJECTED,
+            ]
+        )
+        if audit_store:
+            return audit_store
+        # if user.has_perm('moderator_manage', audit_store):
+        #     return audit_store
+        # else:
+        #     raise ObjectNotFound
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
