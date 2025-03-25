@@ -9,6 +9,11 @@ from audit_store.service_client import find_today_client_review_status_reports, 
 from audit.service.audit_cycle_client_service import find_all_client_with_active_report_and_clearing_audit_cycle_status
 from client.service.client_service import find_client_by_id
 from client.service.client_user import find_client_admin_users_by_client_id
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils.timezone import now, timedelta
+from audit.models import AuditCycle
+from questionnaire.models import Question
 _logger = logging.getLogger(__name__)
 
 # from notify.service import mail_notify_client
@@ -58,3 +63,61 @@ def send_live_report_mail(client_id, report_list):
     html_message = get_template("notify/client_notify_report_email.html").render(params)
     txt_message = get_template("notify/client_notify_report_email.txt").render(params)
     send_email(to_email, subject, html_message, txt_message)
+
+
+
+# def trigger_mark_loss_email_if_consistent():
+#     # Get the start of the current week (Monday)
+#     start_of_week = now().date() - timedelta(days=now().weekday())
+
+#     audit_cycles = AuditCycle.objects.filter(
+#         status="clearing",
+#         modified_at__date__gte=start_of_week,
+#         mark_loss_email_sent=False
+#     ).order_by('-end_date')
+
+#     for audit_cycle in audit_cycles:
+#         store = audit_cycle.audits.first().store
+
+#         recent_audit_cycles = AuditCycle.objects.filter(
+#             audits__store=store
+#         ).order_by('-end_date')[:3]
+
+#         if len(recent_audit_cycles) < 3:
+#             continue 
+
+#         question_sets = [
+#             set(Question.objects.filter(section__audit_cycle=a_cycle)
+#                 .values_list('id', flat=True))
+#             for a_cycle in recent_audit_cycles
+#         ]
+
+#         common_questions = set.intersection(*question_sets)
+#         loss_questions = []
+
+#         for question_id in common_questions:
+#             scores = []
+#             max_marks = None
+
+#             for a_cycle in recent_audit_cycles:
+#                 question_data = get_question_wise_marks_for_audit_cycle(a_cycle.id, store.id)
+#                 for q_data in question_data:
+#                     if q_data["question_id"] == question_id:
+#                         scores.append(q_data["score"]["marks"])
+#                         max_marks = q_data["max_marks"]
+
+#             if all(score is not None and score < max_marks for score in scores):
+#                 loss_questions.append({
+#                     "question_id": question_id,
+#                     "question_txt": Question.objects.get(id=question_id).question_txt,
+#                     "max_marks": max_marks,
+#                     "obtained_marks": scores
+#                 })
+
+#         if loss_questions:
+#             subject = "{} reports are live today".format(str(len(report_list)))
+#             params['subject_text'] = subject
+#             params['report_list'] = report_list
+#             html_message = get_template("notify/client_notify_report_email.html").render(params)
+#             txt_message = get_template("notify/client_notify_report_email.txt").render(params)
+#             send_email(to_email, subject, html_message, txt_message)

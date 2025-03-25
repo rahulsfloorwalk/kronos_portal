@@ -189,7 +189,9 @@ class __Section extends React.Component{
 									<div className="row">
 										<div className="col-xs-1 text-right">#</div>
 										<div className="col-xs-10 col-md-5">Question</div>
-										<div className="col-xs-12 col-md-6 hidden-xs hidden-sm">Answer</div>
+										{/* <div className="col-xs-12 col-md-6 hidden-xs hidden-sm">Answer</div> */}
+										<div className="col-xs-11 col-md-5 hidden-xs hidden-sm">Answer</div>
+										<div className="col-xs-1 col-md-1 hidden-xs hidden-sm">N/A</div>
 									</div>
 								</th>
 							</tr>

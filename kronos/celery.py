@@ -44,6 +44,8 @@ def setup_periodic_tasks(sender, **kwargs):
     # sender.add_periodic_task(queue_at, send_post_audit_reminders.s()) --comment-- stopped to send post audit email
     # setup schedules for sending completed reports to client
     sender.add_periodic_task(queue_at, send_mail_to_client.s())
+
+    # sender.add_periodic_task(queue_at, send_mail_to_client_if_mark_loss_consistent.s())
     # setup schedules for sending reporting stats
     sender.add_periodic_task(queue_at, reporting_stats_send_mail.s())
     sender.add_periodic_task(queue_at, fail_withdraw_audit_stores.s())

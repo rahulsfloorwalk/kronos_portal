@@ -609,6 +609,7 @@ class AnswerSerializer(serializers.ModelSerializer):
             'answer_comment',
             'get_answer_text_list',
             'max_marks',
+            'not_applicable',
             'question_data',
             # 'section_completion_status'
         )

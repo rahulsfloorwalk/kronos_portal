@@ -77,3 +77,13 @@ export function submitAnswerComment(audit_store_id, question_id, answer_comment)
 	};
 }
 
+export function postNotAvailable(audit_store_id,q_id,payload){
+	return $.ajax({
+		url: url.api_base_path + `auditor/audit_store/${audit_store_id}/question/${q_id}/not_applicable`,
+		method: "POST",
+		data: JSON.stringify({
+			not_applicable: payload
+		}),
+		contentType: "application/json"
+	});
+}
