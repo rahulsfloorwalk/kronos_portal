@@ -65,6 +65,10 @@ def find_by_audit_store_for_clientuser(audit_store_id, user):
     audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
     return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
 
+def get_sections_by_audit_cycle(audit_cycle_id, user):
+    audit_cycle = audit_store_client_service.find_audit_cycle_by_id_for_clientuser(audit_cycle_id, user)
+    return  Section.objects.filter(audit_cycle_id=audit_cycle.id).only("id", "name").values("id", "name")
+
 def find_by_audit_store_for_moderator(audit_store_id, user_id):
     from audit_store.service_moderator import find_by_id_for_moderator
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)

@@ -190,6 +190,19 @@ class AuditStoreReportActionView(APIView):
         return Response(ReportActionPlanSerializer(audit_report_action).data)
 
 
+class SectionByAuditCycle(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_cycle_id):
+        sections = section_service.get_sections_by_audit_cycle(request.user.clientuser, audit_cycle_id)
+        formatted_sections = [
+            {"id": section["id"], "name": section["name"]}
+            for section in sections
+        ]
+        return Response(formatted_sections)
+
 class ActionReportsView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
