@@ -58408,5 +58408,16 @@
          "lon": 58.5819,
          "country": "OM"
       }
+   },
+   {
+      "model":"manager.city",
+      "pk":5340,
+      "fields":{
+         "name":"Neemrana",
+         "state":"IN-RJ",
+         "lat":"27.9607971",
+         "lon":"76.4026992",
+         "country":"IN"
+      }
    }
  ]

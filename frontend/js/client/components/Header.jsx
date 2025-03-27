@@ -76,10 +76,11 @@ export default class Header extends React.Component {
 		let clientName = this.state.clientUser ? this.state.clientUser.client.name : "FloorWalk";
 		return (
 			<>
+				{!(this.state.clientUser.client.id ==344 ||  this.state.clientUser.client.id==345 || this.state.clientUser.client.id==346) &&
 				<div className="link-container">
 					<p className="new" level={5}>Would you like to switch to our new view</p>
 					<button className="new-btn" onClick={this.handelredirect}>Click here</button>
-				</div>
+				</div>}
 				<div className="container-fluid">
 					<div className="text-center">
 						<Link to="/">
