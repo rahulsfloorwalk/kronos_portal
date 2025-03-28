@@ -75,21 +75,6 @@ def find_by_id_for_clientuser(audit_store_id, user):
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
     
-def find_audit_cycle_by_id_for_clientuser(audit_cycle_id, user):
-    """
-        Normal client user can't access dashboard and report browser that's why need to
-        remove visible_to(user) function
-    """
-    try:
-        """
-        return AuditCycle.objects.presentable().visible_to(user).get(
-            audit__audit_cycle__client_id=user.clientuser.client.id,
-            id=audit_cycle_id,
-        )
-        """
-        return AuditCycle.objects.presentable().get( audit__audit_cycle__client_id=user.clientuser.client.id, id=audit_cycle_id, status__in=['COMPLETED', 'ACCEPTED']).values( 'audit__audit_cycle__id', 'audit__audit_cycle__name' )
-    except AuditCycle.DoesNotExist as e:
-        raise ObjectNotFound from e
 
 
 def find_presentable_for_client(client_id):

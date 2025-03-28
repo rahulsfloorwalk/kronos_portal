@@ -12,8 +12,11 @@ from audit_store import service_agency as audit_store_agency_service
 from answer.models import ReportSection
 
 from questionnaire.service import question as question_service
+from answer.models import Answer
 
 from questionnaire.service import section_proof_tag as proof_tag_service
+from django.contrib.auth.models import User
+from questionnaire.models import Question
 
 import logging
 __logger = logging.getLogger(__name__)
@@ -61,13 +64,40 @@ def find_by_audit_store_for_agency(audit_store_id, user_id):
     return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
 
 
-def find_by_audit_store_for_clientuser(audit_store_id, user):
-    audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
-    return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
-
 def get_sections_by_audit_cycle(audit_cycle_id, user):
-    audit_cycle = audit_store_client_service.find_audit_cycle_by_id_for_clientuser(audit_cycle_id, user)
-    return  Section.objects.filter(audit_cycle_id=audit_cycle.id).only("id", "name").values("id", "name")
+    try:
+        user = User.objects.get(id=user)
+        audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+    except (User.DoesNotExist, AuditCycle.DoesNotExist):
+        return []
+    return Section.objects.filter(audit_cycle_id=audit_cycle.id).only("id", "name").values("id", "name")
+
+def get_questions_by_section(section_id, user):   
+    try:
+        user = User.objects.get(id=user)
+        section = Section.objects.get(id=section_id)
+    except (User.DoesNotExist, Section.DoesNotExist):
+        return []
+    return  Question.objects.filter(section=section).values("id", "question_txt")
+
+def get_question_by_id(question_ids, user, store_ids=None): 
+    try:
+        user = User.objects.get(id=user)
+    except User.DoesNotExist:
+        raise ValueError("Unauthorized user")  
+    
+    questions = Question.objects.filter(id__in=question_ids)
+    if not questions.exists():
+        return []
+    
+    answers = Answer.objects.filter(question__in=questions)
+    if store_ids:
+        answers = answers.filter(audit_store__audit__store__id__in=store_ids)
+    return answers
+
+# def get_sections_by_audit_cycle(audit_cycle_id, user):
+#     audit_cycle = audit_store_client_service.find_audit_cycle_by_id_for_clientuser(audit_cycle_id, user)
+#     return  Section.objects.filter(audit_cycle_id=audit_cycle.id).only("id", "name").values("id", "name")
 
 def find_by_audit_store_for_moderator(audit_store_id, user_id):
     from audit_store.service_moderator import find_by_id_for_moderator
