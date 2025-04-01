@@ -160,6 +160,15 @@ class AuditStoreSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class AuditStoreKeywordAnalysisSerializer(serializers.Serializer):
+    audit_cycles = serializers.ListField(
+        child=serializers.DictField(child=serializers.CharField()), required=False
+    )
+    audit_stores = serializers.ListField(
+        child=serializers.DictField(child=serializers.IntegerField()), required=False
+    )
+    positive_keywords = serializers.DictField(child=serializers.IntegerField(), required=False)
+    negative_keywords = serializers.DictField(child=serializers.IntegerField(), required=False)
 
 class ReportActionPlanSerializer(ModelSerializer):
     class Meta:
@@ -222,6 +231,7 @@ class AnswerSerializer(ModelSerializer):
 
 class QuestionsAnswerSerializer(ModelSerializer):
     question_txt = serializers.CharField(source='question.question_txt', read_only=True)
+    max_marks = serializers.IntegerField(source='question.max_marks', read_only=True)
     store_details = serializers.SerializerMethodField()
     class Meta:
         model = Answer
@@ -229,6 +239,7 @@ class QuestionsAnswerSerializer(ModelSerializer):
             'id',
             'question',
             'question_txt',
+            'max_marks',
             'audit_store',
             'answer_text',
             'answer_comment',

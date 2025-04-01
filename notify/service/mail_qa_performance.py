@@ -19,6 +19,16 @@ from kronos.celery import app
 
 _logger = logging.getLogger(__name__)
 
+BLOCKED_EMAILS = {
+    "example1@gmail.com",
+    "example2@gmail.com",
+    "testuser@domain.com",
+}
+
+def is_email_blocked(email):
+    """Check if the email is in the blocked list."""
+    return email in BLOCKED_EMAILS
+
 @app.task(ignore_result=True)
 def qa_performance_report():
     today = timezone.now()
@@ -119,11 +129,19 @@ SUBJECT_PREFIX = "[FloorWalk]"
 def send_email(to_email, subject, html_message, txt_message):
     "prepends a [FloorWalk] to the subject and sends an email containing both the HTML and plain text versions to to_email"
 
-    cc_emails = ('sourabh@floorwalk.in', 'tiyasha.roy@floorwalk.in', 'renuka.phatak@floorwalk.in',)
+    if isinstance(to_email, str):
+        to_email = [to_email]
+
+    filtered_emails = [email for email in to_email if not is_email_blocked(email)]
+
+    if not filtered_emails:
+        return False
+
+    cc_emails = ('sourabh@floorwalk.in')
     subject = "{} {}".format(SUBJECT_PREFIX, subject)
-    msg = EmailMultiAlternatives(subject, txt_message, to=to_email, cc=cc_emails)
+    msg = EmailMultiAlternatives(subject, txt_message, to=filtered_emails, cc=cc_emails)
     msg.attach_alternative(html_message, "text/html")
     msg.send()
 
-    return email_log_service.log_email(to_email, subject, html_message, txt_message)
+    return email_log_service.log_email(filtered_emails, subject, html_message, txt_message)
 

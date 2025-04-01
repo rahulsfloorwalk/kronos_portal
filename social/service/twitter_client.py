@@ -169,8 +169,14 @@ def get_over_all_nps_score(client_id, audit_cycle_id):
                 passives_count += 1
             elif 7 <= nps_score <= 10:
                 promoters_count += 1
+    # if total_replies > 0:
+    #     average_nps_percentage = round((total_nps_score_sum / total_replies) * 10)
+    # else:
+    #     average_nps_percentage = None
+
     if total_replies > 0:
         average_nps_percentage = round((total_nps_score_sum / total_replies) * 10)
+        average_nps_percentage = min(average_nps_percentage, 100)
     else:
         average_nps_percentage = None
 

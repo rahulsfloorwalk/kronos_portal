@@ -46,7 +46,7 @@ from client_report.service import audit_cycle
 from client_report.service import store_marking as store_marking_service
 
 from social.service import twitter_client
-from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer,QuestionsAnswerSerializer, AnswerSerializer, CitySerializer, SentimentDataSerializer
+from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer,QuestionsAnswerSerializer, AnswerSerializer, CitySerializer, SentimentDataSerializer,AuditStoreKeywordAnalysisSerializer
 from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
 from .serializers import ReportAttributeSerializer
@@ -144,6 +144,15 @@ class MarkingByStore(APIView):
         data = store_marking_service.get_scores_for_store_by_questionnaire_type(store_id, request.user.clientuser.client.id, questionnaire_type_id)
         return Response(data)
 
+class KeyWordAnalysisByStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, questionnaire_type_id, store_id, format=None):
+        audit_stores = store_marking_service.get_keyword_analysis_for_store_by_questionnaire_type(store_id, request.user.clientuser.client.id, questionnaire_type_id)
+        return Response(audit_stores)
+
 class MarkingGraphByStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -204,8 +213,10 @@ class SectionByAuditCycle(APIView):
         return Response(formatted_sections)
 
 class QuestionsBySection(APIView):
-    permission_classes = [AllowAny]
-
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT]
+    }
     def get(self, request, section_id):
         questions = section_service.get_questions_by_section(section_id, request.user.id)
         formatted_questions = [{"id": question["id"], "name": question["question_txt"]} for question in questions]
