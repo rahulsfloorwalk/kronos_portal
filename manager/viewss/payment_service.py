@@ -21,7 +21,7 @@ def success_payment_email_for_company(order_id):
     mp_order = MPOrder.objects.get(id=order_id)
     transaction = find_transaction_by_order_id(mp_order.id)
 
-    account_email = ['pooja.satfale@floorwalk.in','sourabh@floorwalk.in','tiyasha.roy@floorwalk.in','rahul.solanki@floorwalk.in']
+    account_email = ['pooja.satfale@floorwalk.in','sourabh@floorwalk.in','rahul.solanki@floorwalk.in']
     # account_email = ['rahul.solanki@floorwalk.in']
     send_payment_success_email.delay(account_email, order_id,transaction.id)
     return mp_order 
@@ -54,7 +54,7 @@ def send_payment_success_email(email_address,order_id,transaction_id):
 def failed_payment_email_for_company(order_id):
     mp_order = MPOrder.objects.get(id=order_id)
 
-    account_email = ['pooja.satfale@floorwalk.in','sourabh@floorwalk.in','tiyasha.roy@floorwalk.in','rahul.solanki@floorwalk.in']
+    account_email = ['pooja.satfale@floorwalk.in','sourabh@floorwalk.in','rahul.solanki@floorwalk.in']
     send_failed_payment_success_email.delay(account_email, order_id)
     return mp_order 
 

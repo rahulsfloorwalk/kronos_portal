@@ -46,7 +46,7 @@ from client_report.service import audit_cycle
 from client_report.service import store_marking as store_marking_service
 
 from social.service import twitter_client
-from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, CitySerializer, SentimentDataSerializer
+from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer,QuestionsAnswerSerializer, AnswerSerializer, CitySerializer, SentimentDataSerializer,AuditStoreKeywordAnalysisSerializer
 from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
 from .serializers import ReportAttributeSerializer
@@ -144,6 +144,15 @@ class MarkingByStore(APIView):
         data = store_marking_service.get_scores_for_store_by_questionnaire_type(store_id, request.user.clientuser.client.id, questionnaire_type_id)
         return Response(data)
 
+class KeyWordAnalysisByStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, questionnaire_type_id, store_id, format=None):
+        audit_stores = store_marking_service.get_keyword_analysis_for_store_by_questionnaire_type(store_id, request.user.clientuser.client.id, questionnaire_type_id)
+        return Response(audit_stores)
+
 class MarkingGraphByStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -196,13 +205,53 @@ class SectionByAuditCycle(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id):
-        sections = section_service.get_sections_by_audit_cycle(request.user.clientuser, audit_cycle_id)
+        sections = section_service.get_sections_by_audit_cycle( audit_cycle_id,request.user.id)
         formatted_sections = [
             {"id": section["id"], "name": section["name"]}
             for section in sections
         ]
         return Response(formatted_sections)
 
+class QuestionsBySection(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT]
+    }
+    def get(self, request, section_id):
+        questions = section_service.get_questions_by_section(section_id, request.user.id)
+        formatted_questions = [{"id": question["id"], "name": question["question_txt"]} for question in questions]
+        
+        return Response(formatted_questions) 
+
+class QuestionById(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT]
+    }
+
+    def post(self, request):
+        question_ids = request.data.get("question_ids", "[]")
+        store_ids = request.data.get("store_ids", "[]")
+
+        try:
+            if isinstance(question_ids, str):
+                question_ids = json.loads(question_ids)
+            question_ids = list(map(int, question_ids))
+        except (json.JSONDecodeError, ValueError, TypeError):
+            return Response({"error": "Invalid question_ids format"}, status=400)
+
+        try:
+            if isinstance(store_ids, str):
+                store_ids = json.loads(store_ids)
+            store_ids = list(map(int, store_ids)) if store_ids else None
+        except (json.JSONDecodeError, ValueError, TypeError):
+            return Response({"error": "Invalid store_ids format"}, status=400)
+
+        answers = section_service.get_question_by_id(question_ids, request.user.id, store_ids)
+        return Response(QuestionsAnswerSerializer(answers, many=True).data)
+
+
+    
 class ActionReportsView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

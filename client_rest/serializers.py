@@ -11,6 +11,7 @@ from answer.models import Answer, ReportSection
 from attachment.models import Attachment
 from social.models import TwitterFeed, TwitterHandle
 from questionnaire.models import QuestionnaireType
+from rest_framework import serializers
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -159,6 +160,15 @@ class AuditStoreSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class AuditStoreKeywordAnalysisSerializer(serializers.Serializer):
+    audit_cycles = serializers.ListField(
+        child=serializers.DictField(child=serializers.CharField()), required=False
+    )
+    audit_stores = serializers.ListField(
+        child=serializers.DictField(child=serializers.IntegerField()), required=False
+    )
+    positive_keywords = serializers.DictField(child=serializers.IntegerField(), required=False)
+    negative_keywords = serializers.DictField(child=serializers.IntegerField(), required=False)
 
 class ReportActionPlanSerializer(ModelSerializer):
     class Meta:
@@ -219,6 +229,34 @@ class AnswerSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class QuestionsAnswerSerializer(ModelSerializer):
+    question_txt = serializers.CharField(source='question.question_txt', read_only=True)
+    max_marks = serializers.IntegerField(source='question.max_marks', read_only=True)
+    store_details = serializers.SerializerMethodField()
+    class Meta:
+        model = Answer
+        fields = (
+            'id',
+            'question',
+            'question_txt',
+            'max_marks',
+            'audit_store',
+            'answer_text',
+            'answer_comment',
+            'marks_obtained',
+            'not_applicable',
+            "store_details" 
+        )
+        read_only_fields = fields
+    def get_store_details(self, obj):
+        if obj.audit_store and obj.audit_store.audit:
+            store = obj.audit_store.audit.store
+            return {
+                "store_id": store.id,
+                "store_name": store.name,
+                "store_address": store.address,
+            }
+        return None
 class ReportSectionSerializer(ModelSerializer):
     class Meta:
         model = ReportSection

@@ -40,6 +40,7 @@ urlpatterns = ([
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/time_series_xlsx$', views.AuditCycleTimeSeriesReportXlsx.as_view(), name='audit_cycle_time_series_xlsx'),
     url(r'report/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/store/(?P<store_id>[0-9]+)/marking_graph', views.MarkingGraphByStore.as_view(), name='marking_graph_by_store'),
     url(r'report/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/store/(?P<store_id>[0-9]+)/marking', views.MarkingByStore.as_view(), name='marking_by_store'),
+    url(r'report/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/store/(?P<store_id>[0-9]+)/keyword_analysis$', views.KeyWordAnalysisByStore.as_view(), name='keyword_analysis_by_store'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_cycle_filtered_xlsx_report$', views.AuditCycleFilteredXlsxReport.as_view(), name='audit_cycle_filtered_xlsx_report'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/report_browser_filtered_xlsx_report$', views.ReportBrowserFilteredXlsxReport.as_view(), name='report_browser_filtered_xlsx_report'),
     url(r'audit_cycle_year_list$',views.AuditCycleYearList.as_view(), name='audit_cycle_year_list'),
@@ -57,6 +58,8 @@ urlpatterns = ([
     url(r'audit_store/upcoming$', views.AuditStoreUpcoming.as_view(), name='audit_store_upcoming'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)$', views.AuditStoreIdView.as_view(), name='audit_store_id_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/section$', views.SectionByAuditCycle.as_view(), name='section_by_audit_cycle'),
+    url(r'section/(?P<section_id>[0-9]+)/quetions$', views.QuestionsBySection.as_view(), name='questions_by_section'),
+    url(r'quetions$', views.QuestionById.as_view(), name='questions_by_id'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_action$', views.AuditStoreReportActionView.as_view(), name='audit_store_report_action_view'),
 

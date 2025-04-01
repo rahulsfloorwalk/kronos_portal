@@ -4,6 +4,7 @@ from audit.models import AuditCycle
 from questionnaire.models import Question
 from answer.models import Answer
 from kronos.utils import get_color_code
+from collections import defaultdict
 
 
 def get_scores_graph_for_store_by_questionnaire_type(store_id, client_id, questionnaire_type_id):
@@ -95,6 +96,46 @@ def get_scores_for_store_by_questionnaire_type(store_id, client_id, questionnair
     response_data['scores'] = transpose_data(master_questions, raw_data)
     response_data['audit_cycle'] = audit_cycle_master
     return response_data
+
+
+
+def get_keyword_analysis_for_store_by_questionnaire_type(store_id, client_id, questionnaire_type_id):
+    cycles = AuditCycle.objects.filter(client_id=client_id, questionnaire_type_id=questionnaire_type_id) \
+        .order_by('end_date').values('id', 'name')
+
+    cycle_map = {c["id"]: c["name"] for c in cycles}
+
+    audit_stores = AuditStore.objects.filter(
+        audit__audit_cycle_id__in=cycle_map.keys(),
+        status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+        audit__store_id=store_id
+    ).values('id', 'audit__audit_cycle_id', 'sentiment_positive_words', 'sentiment_negative_words')
+
+    result, total_pos, total_neg = [], defaultdict(int), defaultdict(int)
+    for store in audit_stores:
+        pos, neg = store["sentiment_positive_words"] or {}, store["sentiment_negative_words"] or {}
+        if not pos and not neg:
+            continue
+        for k, v in pos.items(): total_pos[k] += v
+        for k, v in neg.items(): total_neg[k] += v
+
+        result.append({
+            "audit_cycle_id": store["audit__audit_cycle_id"],
+            "audit_cycle_name": cycle_map[store["audit__audit_cycle_id"]],
+            "audit_store_id": store["id"],
+            "positive_keywords": pos,
+            "negative_keywords": neg,
+        })
+
+    total_keywords = sum(total_pos.values()) + sum(total_neg.values())
+    if total_keywords:
+        result.append({
+            "total_positive_keywords": dict(total_pos),
+            "total_negative_keywords": dict(total_neg),
+            "positive_keywords_percentage": {k: round((v / total_keywords) * 100, 1) for k, v in total_pos.items()},
+            "negative_keywords_percentage": {k: round((v / total_keywords) * 100, 1) for k, v in total_neg.items()}
+        })
+    return result
 
 def get_question_wise_marks_for_audit_cycle(audit_cycle_id, store_id):
     questions = Question.objects.filter(section__audit_cycle__id=audit_cycle_id) \

@@ -22,7 +22,9 @@ def find_client_user_email_by_audit_store_id(audit_store_id):
     client_users= NonClientAdminUserStore.objects.filter(stores__store_list__contains=audit_store.audit.store_id)
     result=[]
     for i in client_users:
-        result.append({'email':i.client_user.user.email})
+        user = i.client_user.user
+        if user.is_active:
+            result.append({'email':i.client_user.user.email})
     return result
 
 def find_client_by_id(client_id):
