@@ -153,6 +153,16 @@ class KeyWordAnalysisByStore(APIView):
         audit_stores = store_marking_service.get_keyword_analysis_for_store_by_questionnaire_type(store_id, request.user.clientuser.client.id, questionnaire_type_id)
         return Response(audit_stores)
 
+class StoreListByQuestionnaireType(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, questionnaire_type_id):
+        cleint_id = request.user.clientuser.client.id
+        types = store_marking_service.find_store_list_by_questionnaire_types(cleint_id, questionnaire_type_id)
+        return Response(types)
+
 class MarkingGraphByStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -785,11 +795,11 @@ class GetAllSummaryAuditCycle(APIView):
         return Response(all_summary)
 
 class GetNPSScore(APIView):
-    # permission_classes = [HasGroupPermission]
-    permission_classes = [AllowAny]
-    # required_groups = {
-    #     'GET': [GROUP_NAME_CLIENT],
-    # }    
+    permission_classes = [HasGroupPermission]
+    # permission_classes = [AllowAny]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }    
     def get(self, request, audit_cycle_id, format=None):
         client_id = request.user.clientuser.client_id
         nps_score_data = twitter_client.get_over_all_nps_score(client_id, audit_cycle_id)

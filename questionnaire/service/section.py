@@ -64,6 +64,10 @@ def find_by_audit_store_for_agency(audit_store_id, user_id):
     return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
 
 
+def find_by_audit_store_for_clientuser(audit_store_id, user):
+    audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
+    return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
+
 def get_sections_by_audit_cycle(audit_cycle_id, user):
     try:
         user = User.objects.get(id=user)

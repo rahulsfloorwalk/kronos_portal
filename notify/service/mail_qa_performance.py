@@ -20,9 +20,59 @@ from kronos.celery import app
 _logger = logging.getLogger(__name__)
 
 BLOCKED_EMAILS = {
-    "example1@gmail.com",
-    "example2@gmail.com",
-    "testuser@domain.com",
+    "vodafone-ownstore-newsimonboarding@gmail.com",
+    "vodafone-ownstore-migrationoutbound@gmail.com",
+    "vodafone-dealer@gmail.com",
+    "vodafone-estore-newsimonboarding@gmail.com",
+    "vodafone-estore-datavalidation@gmail.com",
+    "vodafone-callcenter@gmail.com",
+    "vodafone-competitioncallcenter@gmail.com",
+    "vodafone-whatsapp@gmail.com",
+    "vodafone-competitionwhatsapp@gmail.com",
+    "vodafone-facebook@gmail.com",
+    "vodafone-competitionfacebook@gmail.com",
+    "vodafone-instagram@gmail.com",
+    "vodafone-competitioninstagram@gmail.com",
+    "vodafone-x@gmail.com",
+    "vodafone-competition-x@gmail.com",
+    "vodafone-competitionmobileapp@gmail.com",
+    "vodafone-digitaltelesales@gmail.com",
+    "vodafone-competitorsstores@gmail.com",
+    "qavodafone-ownstore-newsimonboarding@gmail.com",
+    "qavodafone-ownstore-migrationoutbound@gmail.com",
+    "qavodafone-dealer@gmail.com",
+    "qavodafone-estore-newsimonboarding@gmail.com",
+    "qavodafone-estore-datavalidation@gmail.com",
+    "qavodafone-callcenter@gmail.com",
+    "qavodafone-competitioncallcenter@gmail.com",
+    "qavodafone-whatsapp@gmail.com",
+    "qavodafone-competitionwhatsapp@gmail.com",
+    "qavodafone-facebook@gmail.com",
+    "qavodafone-competitionfacebook@gmail.com",
+    "qavodafone-instagram@gmail.com",
+    "qavodafone-competitioninstagram@gmail.com",
+    "qavodafone-x@gmail.com",
+    "qavodafone-competition-x@gmail.com",
+    "qavodafone-competitionmobileapp@gmail.com",
+    "qavodafone-digitaltelesales@gmail.com",
+    "qavodafone-competitorsstores@gmail.com",
+    "friendi-retailaudit@gmial.com",
+    "friendi-simwithcopyofid@gmial.com",
+    "friendi-multiplesim1id@gmial.com",
+    "qafriendi-retailaudit@gmial.com",
+    "qafriendi-simwithcopyofid@gmial.com",
+    "qafriendi-multiplesim1id@gmial.com",
+    "virgin-multiplesimsameid@gmial.com",
+    "virgin-competitionmultiplesim@gmial.com",
+    "virgin-simwithoutid@gmial.com",
+    "virgin-competitionsimwithoutid@gmial.com",
+    "qavirgin-multiplesimsameid@gmial.com",
+    "qavirgin-competitionmultiplesim@gmial.com",
+    "qavirgin-simwithoutid@gmial.com",
+    "qavirgin-competitionsimwithoutid@gmial.com",
+    "neerjavaidya@floorwalk.in",
+    "qasuhail@simpa-mr.com",
+    "demo.qa@floorwalk.in",
 }
 
 def is_email_blocked(email):
@@ -137,7 +187,7 @@ def send_email(to_email, subject, html_message, txt_message):
     if not filtered_emails:
         return False
 
-    cc_emails = ('sourabh@floorwalk.in')
+    cc_emails = ('sourabh@floorwalk.in',)
     subject = "{} {}".format(SUBJECT_PREFIX, subject)
     msg = EmailMultiAlternatives(subject, txt_message, to=filtered_emails, cc=cc_emails)
     msg.attach_alternative(html_message, "text/html")

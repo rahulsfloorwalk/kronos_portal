@@ -247,13 +247,13 @@ def concern_report(audit_store_id, user_id, message):
     # Send Mail to manager or "shubham.mohod@floorwalk.in"
     if settings.EMAIL_SWITCH['AUDIT_REPORT_CONCERN_BY_AUDITOR_EMAIL']:
         email_list = get_manager_email_list_by_audit_store_obj(audit_store)
-        moderator_email = get_moderator_email_by_audit_store_obj(audit_store)
-        if moderator_email:
-            email_list.append(moderator_email)
+        # moderator_email = get_moderator_email_by_audit_store_obj(audit_store)
+        # if moderator_email:
+        #     email_list.append(moderator_email)
         if email_list:
             emails = email_list
         else:
-            emails = ["arpan.patidar@floorwalk.in"]
+            emails = ["rahul.solanki@floorwalk.in"]
         for email in emails:
             send_audit_report_concern_email.delay(email, audit_store_id, user_id, message)
     # End of Send Mail to manager or "arpan.patidar@floorwalk.in"

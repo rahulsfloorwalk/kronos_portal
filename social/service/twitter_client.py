@@ -175,13 +175,14 @@ def get_over_all_nps_score(client_id, audit_cycle_id):
     #     average_nps_percentage = None
 
     if total_replies > 0:
-        average_nps_percentage = round((total_nps_score_sum / total_replies) * 10)
-        average_nps_percentage = min(average_nps_percentage, 100)
+        # average_nps_percentage = round((total_nps_score_sum / total_replies) * 10)
+        average_nps_percentage = round((total_nps_score_sum / total_replies))
+        average_nps_percentage = min(average_nps_percentage, 10)
     else:
         average_nps_percentage = None
 
     if average_nps_percentage is not None:
-        average_nps_percentage = min(average_nps_percentage, 100)
+        average_nps_percentage = min(average_nps_percentage, 10)
 
     return {
         "average_nps_percentage": average_nps_percentage,
