@@ -27,7 +27,7 @@ def setup_periodic_tasks(sender, **kwargs):
     from notify.service.waitlist_audit_application import waitlist_audit_application
     from notify.service.hide_audit_store_section import hide_audit_store_section
     # from notify.service.mail_full_time_opportunity import send_full_time_opportunity_emails
-    from notify.service.mail_qa_performance import qa_performance_report
+    # from notify.service.mail_qa_performance import qa_performance_report #(moderator pending email)
     # from notify.service.add_payout_beneficiary import add_beneficiary
     from notify.service.auto_audit_alignment import auto_approve_audit_application
     
