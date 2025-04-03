@@ -58419,5 +58419,16 @@
          "lon":"76.4026992",
          "country":"IN"
       }
+   },
+   {
+      "model":"manager.city",
+      "pk":5341,
+      "fields":{
+         "name":"Katra",
+         "state":"IN-JK",
+         "lat":"32.726602",
+         "lon":"74.857026",
+         "country":"IN"
+      }
    }
  ]
