@@ -94,7 +94,10 @@ def get_question_by_id(question_ids, user, store_ids=None):
     if not questions.exists():
         return []
     
-    answers = Answer.objects.filter(question__in=questions)
+    answers = Answer.objects.filter(
+        question__in=questions,
+        audit_store__status__in=['ACCEPTED', 'COMPLETED']
+    )
     if store_ids:
         answers = answers.filter(audit_store__audit__store__id__in=store_ids)
     return answers

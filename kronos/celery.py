@@ -56,7 +56,7 @@ def setup_periodic_tasks(sender, **kwargs):
     # This cron will send mail next day of audit date at 9 am
     sender.add_periodic_task(queue_at_9, send_on_audit_reminders.s())
     sender.add_periodic_task(queue_at_9, reject_audit_application.s())
-    sender.add_periodic_task(queue_at_9, qa_performance_report.s())
+    # sender.add_periodic_task(queue_at_9, qa_performance_report.s())
 
     #send super auditor assign
     queue_at_every_five_days = crontab(hour=0, minute=0, day_of_week='*/5')
