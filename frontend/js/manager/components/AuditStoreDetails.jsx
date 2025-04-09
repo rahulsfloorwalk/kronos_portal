@@ -44,6 +44,7 @@ import ReportSummary from "./ReportSummary.jsx";
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 import AuditStoreReportAttributesTable from "./audit_store/AuditStoreReportAttributesTable.jsx";
 import ProofNotAvailable from "./ProofNotAvailable.jsx";
+import { fetchConfig } from "../service/config.js";
 
 export class AuditStoreDetails extends React.Component{
 	static propTypes = {
@@ -66,6 +67,7 @@ export class AuditStoreDetails extends React.Component{
 			reason: "",
 			errMsg: "",
 			proof_not_available: [],
+			config: {},
 		};
 	}
 
@@ -73,6 +75,9 @@ export class AuditStoreDetails extends React.Component{
 		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
 		findProofNotAvailable(this.props.params.auditStoreId).then(result=>{
 			this.setState({proof_not_available:result});
+		});
+		fetchConfig().then((config) => {
+			this.setState({config: config});
 		});
 	}
 
@@ -211,6 +216,8 @@ export class AuditStoreDetails extends React.Component{
 	};
 
 	render(){
+		const allowedUserIds = [4152,14287,305659,11413];
+		const isForceSubmitEnabled = allowedUserIds.includes(this.state.config.USER_ID);
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
@@ -245,7 +252,7 @@ export class AuditStoreDetails extends React.Component{
 		let moreOptionsDropdown;
 		let completeButton, unSubmitButton, submitButton, uncompleteButton, acceptButton, rejectButton, qaOkButton, pmRevertButton;
 		if (this.props.auditStore.status === "ACKNOWLEDGED"){
-			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">
+			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary" disabled={!isForceSubmitEnabled}>
 				Force Submit
 			</button>);
 		}
