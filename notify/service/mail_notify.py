@@ -191,6 +191,7 @@ def notification_email_task(notif_id, message):
             params['account'] = notif.action_object.user.bankinfo.account_number
 
             # This assumes that there will be at least 1 payment.
+            # This assumes that there will be at least 1 payment.
 
         elif notif.verb == verbs.PAYMENT_FAILED:
             get_params_from_payment(notif.action_object, params)
