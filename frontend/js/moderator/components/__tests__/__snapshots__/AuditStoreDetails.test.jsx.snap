@@ -7,13 +7,18 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
   <h2
     className="page-header"
   >
-    <button
-      className="btn btn-default pull-right"
-      onClick={[Function]}
-      type="button"
+    <Link
+      onlyActiveOnIndex={false}
+      style={Object {}}
+      to="foo/bar/fail"
     >
-      Fail
-    </button>
+      <button
+        className="btn btn-default pull-right"
+        type="button"
+      >
+        Fail
+      </button>
+    </Link>
     <File />
      Audit Report - 
     5
@@ -390,6 +395,9 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -566,13 +574,18 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
   <h2
     className="page-header"
   >
-    <button
-      className="btn btn-default pull-right"
-      onClick={[Function]}
-      type="button"
+    <Link
+      onlyActiveOnIndex={false}
+      style={Object {}}
+      to="foo/bar/fail"
     >
-      Fail
-    </button>
+      <button
+        className="btn btn-default pull-right"
+        type="button"
+      >
+        Fail
+      </button>
+    </Link>
     <File />
      Audit Report - 
     5
@@ -949,6 +962,9 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -1125,13 +1141,18 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
   <h2
     className="page-header"
   >
-    <button
-      className="btn btn-default pull-right"
-      onClick={[Function]}
-      type="button"
+    <Link
+      onlyActiveOnIndex={false}
+      style={Object {}}
+      to="foo/bar/fail"
     >
-      Fail
-    </button>
+      <button
+        className="btn btn-default pull-right"
+        type="button"
+      >
+        Fail
+      </button>
+    </Link>
     <File />
      Audit Report - 
     5
@@ -1508,6 +1529,9 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -1684,13 +1708,18 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
   <h2
     className="page-header"
   >
-    <button
-      className="btn btn-default pull-right"
-      onClick={[Function]}
-      type="button"
+    <Link
+      onlyActiveOnIndex={false}
+      style={Object {}}
+      to="foo/bar/fail"
     >
-      Fail
-    </button>
+      <button
+        className="btn btn-default pull-right"
+        type="button"
+      >
+        Fail
+      </button>
+    </Link>
     <File />
      Audit Report - 
     5
@@ -2067,6 +2096,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -2243,13 +2275,18 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
   <h2
     className="page-header"
   >
-    <button
-      className="btn btn-default pull-right"
-      onClick={[Function]}
-      type="button"
+    <Link
+      onlyActiveOnIndex={false}
+      style={Object {}}
+      to="foo/bar/fail"
     >
-      Fail
-    </button>
+      <button
+        className="btn btn-default pull-right"
+        type="button"
+      >
+        Fail
+      </button>
+    </Link>
     <File />
      Audit Report - 
     5
@@ -2626,6 +2663,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -3193,6 +3233,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -3369,13 +3412,18 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
-    <button
-      className="btn btn-default pull-right"
-      onClick={[Function]}
-      type="button"
+    <Link
+      onlyActiveOnIndex={false}
+      style={Object {}}
+      to="foo/bar/fail"
     >
-      Fail
-    </button>
+      <button
+        className="btn btn-default pull-right"
+        type="button"
+      >
+        Fail
+      </button>
+    </Link>
     <File />
      Audit Report - 
     5
@@ -3759,6 +3807,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -3935,13 +3986,18 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
-    <button
-      className="btn btn-default pull-right"
-      onClick={[Function]}
-      type="button"
+    <Link
+      onlyActiveOnIndex={false}
+      style={Object {}}
+      to="foo/bar/fail"
     >
-      Fail
-    </button>
+      <button
+        className="btn btn-default pull-right"
+        type="button"
+      >
+        Fail
+      </button>
+    </Link>
     <File />
      Audit Report - 
     5
@@ -4318,6 +4374,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -4870,6 +4929,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -5422,6 +5484,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -5974,6 +6039,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -6526,6 +6594,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -6702,13 +6773,18 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
-    <button
-      className="btn btn-default pull-right"
-      onClick={[Function]}
-      type="button"
+    <Link
+      onlyActiveOnIndex={false}
+      style={Object {}}
+      to="foo/bar/fail"
     >
-      Fail
-    </button>
+      <button
+        className="btn btn-default pull-right"
+        type="button"
+      >
+        Fail
+      </button>
+    </Link>
     <File />
      Audit Report - 
     5
@@ -7134,6 +7210,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   >
     Refresh Report
   </button>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -7686,6 +7765,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <MandatoryProofBox
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {

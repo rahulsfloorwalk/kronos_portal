@@ -9,7 +9,7 @@ import "react-datetime/css/react-datetime.css";
 import moment from "moment";
 import { momentDateFormat } from "../../../config.js";
 
-import { findById, qaOk, fail, unsubmit, submit, setAuditDate,findProofNotAvailable, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment } from "../service/audit_store.js";
+import { findById, qaOk, fail, unsubmit, submit, setAuditDate, findProofNotAvailable, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment } from "../service/audit_store.js";
 
 import { Calendar, File, Envelope } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -26,6 +26,8 @@ import ReportSummary from "./ReportSummary.jsx";
 import { fetchproofTags } from "../service/proof_tag.js";
 import { FetchGuidlineByAuditStoreModerator } from "../service/audit_store.js";
 import ProofNotAvailable from "./ProofNotAvailable.jsx";
+import "../../../css/bs_overrides.scss";
+import MandatoryProofBox from "./MandatoryProofBox.jsx";
 
 export default class AuditStoreDetails extends React.Component {
 	static propTypes = {
@@ -61,8 +63,9 @@ export default class AuditStoreDetails extends React.Component {
 	};
 	componentDidMount() {
 		findById(this.props.params.auditStoreId).then(this.setAuditStore);
+		// findMandatoryProofTags(this.props.params.auditStoreId).then();
 		FetchGuidlineByAuditStoreModerator(this.props.params.auditStoreId).then((guideline) => this.setState({ guideline: guideline }));
-		findProofNotAvailable(this.props.params.auditStoreId).then(result=> this.setState({proof_not_available:result}));
+		findProofNotAvailable(this.props.params.auditStoreId).then(result => this.setState({ proof_not_available: result }));
 	}
 	componentWillReceiveProps(nextProps) {
 		findById(nextProps.params.auditStoreId).then(this.setAuditStore);
@@ -215,7 +218,8 @@ export default class AuditStoreDetails extends React.Component {
 			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">Force Submit</button>);
 		}
 		if (this.state.auditStore.status === "ASSIGNED" || this.state.auditStore.status === "ACKNOWLEDGED" || this.state.auditStore.status === "SUBMITTED") {
-			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-default pull-right">Fail</button>);
+			// failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-default pull-right">Fail</button>);
+			failButton = (<Link to={`${this.props.location.pathname}/fail`}><button type="button" className="btn btn-default pull-right">Fail</button></Link>);
 		}
 		if (this.state.auditStore.status === "SUBMITTED") {
 			if (this.state.auditStore.user.agencyuser) {
@@ -382,7 +386,7 @@ export default class AuditStoreDetails extends React.Component {
 												<td className="text-right">Store:</td>
 												<td>
 													{/* <b>{this.state.auditStore.audit.store.name}</b><br /> */}
-													<b>{this.state.auditStore.audit.store.name}</b> {(this.state.auditStore.audit.audit_cycle.client.id === 345 || this.state.auditStore.audit.audit_cycle.client.id===346 )  && <Link to={`${this.props.location.pathname}/store_change`}><b>(change store)</b></Link>}<br />
+													<b>{this.state.auditStore.audit.store.name}</b> {(this.state.auditStore.audit.audit_cycle.client.id === 345 || this.state.auditStore.audit.audit_cycle.client.id === 346) && <Link to={`${this.props.location.pathname}/store_change`}><b>(change store)</b></Link>}<br />
 													<small>{this.state.auditStore.audit.store.address}</small>
 												</td>
 											</tr>
@@ -410,7 +414,8 @@ export default class AuditStoreDetails extends React.Component {
 											<tr>
 												<td className="text-right">Auditor:</td>
 												<td>
-													<AuditorNameDisplay user={this.state.auditStore.user} />
+													{/* <AuditorNameDisplay user={this.state.auditStore.user} /> */}
+													<AuditorNameDisplay user={this.state.auditStore.user} id={this.state.auditStore.id} />
 													( <Envelope /> {auditorEmailLink})
 												</td>
 											</tr>
@@ -431,9 +436,27 @@ export default class AuditStoreDetails extends React.Component {
 												<th>{this.state.auditStore.report_revert_count}</th>
 											</tr>
 											<tr>
+												<td className="text-right">Overall Audit Score:</td>
+												<th>
+													{this.state.auditStore.audit_store_percentage === null ? <span>---</span> :
+														<div className="progress" style={{ width: "100px" }}>
+															<div className="progress-bar bg-primary" role="progressbar" style={{ width: `${this.state.auditStore.audit_store_percentage}%`, backgroundColor: this.state.auditStore.audit_store_percentage === 100 ? "#28a745" : " " }} aria-valuenow={this.state.auditStore.audit_store_percentage} aria-valuemin="0" aria-valuemax="100">
+																{this.state.auditStore.audit_store_percentage}%
+															</div>
+														</div>
+													}
+												</th>
+											</tr>
+											<tr>
 												<td className="text-right">QA Report Rating:</td>
 												<th>
 													<AuditStoreRating rating={this.state.auditStore.qa_rating} /> (<Link to={`${this.props.location.pathname}/rate`}>change</Link>)
+												</th>
+											</tr>
+											<tr>
+												<td className="text-right">QA Report Feedback:</td>
+												<th>
+													{this.state.auditStore.qa_rating_feedback && this.state.auditStore.qa_rating_feedback.length > 0 && this.state.auditStore.qa_rating_feedback.join(", ")}{" "}(<Link to={`${this.props.location.pathname}/rate`}>change</Link>)
 												</th>
 											</tr>
 											<tr>
@@ -572,23 +595,23 @@ export default class AuditStoreDetails extends React.Component {
 						</div>
 					}
 					<div className="col-md-12">
-						<td className="text-right"style={{ fontSize: "16px",paddingLeft: "10px" }}><b> Audit Notes :-</b></td>
-						{ ( this.state.auditStore.audit.post_approval_description ) ?
+						<td className="text-right" style={{ fontSize: "16px", paddingLeft: "10px" }}><b> Audit Notes :-</b></td>
+						{(this.state.auditStore.audit.post_approval_description) ?
 							<div className="panel-body" style={{ marginTop: "-20px" }}>
-								<MarkdownViewer markdown={this.state.auditStore.audit.post_approval_description || ""}/>
+								<MarkdownViewer markdown={this.state.auditStore.audit.post_approval_description || ""} />
 							</div>
-							: null }
+							: null}
 					</div>
 				</div>
 
 				{refresh_report_button}
-
+				<MandatoryProofBox auditStoreId={this.props.params.auditStoreId} />
 				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable} />
-				{this.state.proof_not_available.length>0 && <ProofNotAvailable proof_not_available={this.state.proof_not_available}/>}
+				{this.state.proof_not_available.length > 0 && <ProofNotAvailable proof_not_available={this.state.proof_not_available} />}
 				{/* <ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} /> */}
 				{this.state.auditStore.audit.audit_cycle.audit_report_summary ?
 					<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} />
-					:null}
+					: null}
 				<AuditStoreSections auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore} />
 				{this.props.children}
 

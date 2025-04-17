@@ -25,13 +25,14 @@ from attachment.service import set_attachment_by_proof_tag
 
 from .serializers import AuditCycleSerializer, ClientSerializer,AuditProoftagSerializer
 from .serializers import AuditStoreSerializer, AuditStoreSerializerForList
-from .serializers import AttachmentSerializer
+from .serializers import AttachmentSerializer, AttachmentMandatoryProoftagSerializer
 from .serializers import SectionSerializer
 from .serializers import ReportSectionSerializer
 from .serializers import AnswerSerializer
 from .serializers import StoreSerializer,AuditSerializer
 from rest_framework.permissions import AllowAny
 from attachment import service_auditor
+from answer.models import Answer, ReportSection
 # from .serializers import AuditCycleProoftagListSerializer
 
 
@@ -106,7 +107,8 @@ class AuditStorePendingView(APIView):
         audit_stores, count = audit_store_service\
             .find_qa_pending_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'],
                                                         request.data['filterStatus'], request.data.get('client_id'))
-        return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
+        # return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
+        return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True,context={"filter_status": request.data['filterStatus']}).data, "count": count})
 
 
 class AuditStoreIdView(APIView):
@@ -215,12 +217,15 @@ class AuditStoreIdQARatingView(APIView):
 
     class DeSerializer(Serializer):
         qa_rating = ChoiceField(AuditStore.QA_RATING)
+        qa_feedback_rating = ListField(required=False, allow_empty=True)
 
     def post(self, request, audit_store_id):
         ds = self.DeSerializer(data=request.data)
         audit_store = get_object_or_404(AuditStore.objects.for_moderator(request.user), pk=audit_store_id)
         ds.is_valid(raise_exception=True)
-        audit_store.rate(ds.validated_data['qa_rating'])
+        qa_rating = ds.validated_data['qa_rating']
+        qa_feedback_rating = ds.validated_data.get('qa_feedback_rating')
+        audit_store.rate(qa_rating, qa_feedback_rating)
         return Response(AuditStoreSerializer(audit_store).data)
 
 
@@ -292,6 +297,9 @@ class AuditStoreIdQAOKView(APIView):
         audit_store = get_object_or_404(AuditStore.objects.for_moderator(request.user), pk=audit_store_id)
         set_attachment_by_proof_tag(audit_store_id)
         set_not_applicable_for_hide_questions(audit_store)
+        report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
+        for report in report_obj:
+            report.save_percentage()
         audit_store.qa_ok(by=request.user)
         audit_store_detail = AuditStoreSerializer(audit_store).data
         client_id = audit_store.audit.audit_cycle.client.id
@@ -391,6 +399,16 @@ class ReportSectionAttachmentView(APIView):
                 'file_name': "file name is required"
             })
 
+class AuditStoreMandatoryProofTagView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MODERATOR],
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+    def get(self, request, audit_store_id, format=None):
+        attachments = attachment_service.find_by_audit_store_for_moderator_mandatory_proof(audit_store_id, request.user.id)
+        return Response(AttachmentMandatoryProoftagSerializer(attachments, many=True).data)
+
 class AttachmentIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -480,6 +498,8 @@ class AuditGuidelinesByAuditStore(APIView):
     }
     def get(self,request,audit_store_id,format=None):
         attachment = attachment_service.find_attachment_by_audit_store_id(audit_store_id)
+        if not attachment:
+            return Response({'detail': 'No guildlines found for this audit store.'}, status=400)
         return Response(attachment)
 
 

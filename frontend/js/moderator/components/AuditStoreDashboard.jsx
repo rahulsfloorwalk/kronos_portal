@@ -20,6 +20,7 @@ import { findActiveClients } from "../service/client.js";
 import { findPending, findCompleted } from "../service/audit_store.js";
 
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
+import "../../../css/bs_overrides.scss";
 
 class AuditStoreList2 extends Component{
 	static propTypes = {
@@ -41,10 +42,11 @@ class AuditStoreList2 extends Component{
 	render(){
 		let reps = [];
 		for(let as of this.props.auditStores){
-			reps.push( <tr key={as.id}>
+			reps.push( <tr key={as.id} style={(as.critical_report===true && as.critical_status===false) ? {backgroundColor:"#f2dede"}:{backgroundColor:""}}>
 				{/* <tr key={as.id} style={pointerStyle} onClick={() => hashHistory.push(`/audit_store/${as.id}/report`)}> */}
 				<td className="text-right">{as.id}</td>
-				<td>{as.audit.audit_cycle.client.name}</td>
+				{/* <td>{as.audit.audit_cycle.client.name}</td> */}
+				<td className="cycle-name-cell" title={as.audit.audit_cycle.name}>{as.audit.audit_cycle.name}</td>
 				<td>{as.audit.store.name}, {as.audit.store.city.name}</td>
 				<td><AuditorNameDisplay user={as.user}/></td>
 				<td className="text-right">{as.audit.earnings_per_audit}</td>
@@ -81,7 +83,8 @@ class AuditStoreList2 extends Component{
 					<thead>
 						<tr>
 							<th className="text-right">Report ID</th>
-							<th>Client</th>
+							{/* <th>Client</th> */}
+							<th>Cycle Name</th>
 							<th>Store</th>
 							<th>Auditor Name</th>
 							<th className="text-right">Fees</th>
@@ -303,6 +306,8 @@ export default class AuditStoreDashboard extends Component {
 					<option value="ASSIGNED">{getAuditStoreStatus("ASSIGNED")}</option>
 					<option value="ACKNOWLEDGED">{getAuditStoreStatus("ACKNOWLEDGED")}</option>
 					<option value="SUBMITTED">{getAuditStoreStatus("SUBMITTED")}</option>
+					<option value="CRITICAL_REPORT">{getAuditStoreStatus("CRITICAL_REPORT")}</option>
+					<option value="REVERTED_REPORT">{getAuditStoreStatus("REVERTED_REPORT")}</option>
 				</select>
 			);
 			clientFilter = (

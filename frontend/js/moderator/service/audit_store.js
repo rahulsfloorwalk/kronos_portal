@@ -37,6 +37,10 @@ export function findById(auditStoreId){
 	return $.get(url.api_base_path + `moderator/audit_store/${auditStoreId}`);
 }
 
+export function findMandatoryProofTags(auditStoreId){
+	return $.get(url.api_base_path + `moderator/audit_store/${auditStoreId}/mandatory_proof_tag`);
+}
+
 export function findProofNotAvailable(auditStoreId){
 	return $.get(url.api_base_path + `moderator/audit_store/${auditStoreId}/proof_not_available`);
 }
@@ -63,6 +67,16 @@ export function unsubmit(auditStoreId, reason, missing_proofs){
 
 export function fail(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/fail`);
+}
+export function failReport(auditStoreId, message){
+	return $.ajax({
+		url:url.api_base_path + `moderator/audit_store/${auditStoreId}/fail`,
+		method: "POST",
+		data: JSON.stringify({
+			message
+		}),
+		contentType: "application/json"
+	});
 }
 
 export function qaOk(auditStoreId){
@@ -145,12 +159,13 @@ export function setReimbursement(auditStoreId, reimbursement){
 	});
 }
 
-export function rate(auditStoreId, qa_rating){
+export function rate(auditStoreId, qa_rating, qa_feedback_rating){
 	return $.ajax({
 		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/qa_rating`,
 		method: "POST",
 		data: JSON.stringify({
-			qa_rating
+			qa_rating,
+			qa_feedback_rating
 		}),
 		contentType: "application/json"
 	});

@@ -118,14 +118,15 @@ describe("<AuditStoreQARatingForm/>", () => {
 	it("calls rate() with the correct rating and closes modal when save is clicked", (done) => {
 		findById.mockResolvedValue(sampleAuditStore);
 		rate.mockResolvedValue(sampleAuditStore);
-		const r = shallow(<AuditStoreQARatingForm params={sampleParams} router={mockRouter}/>);
-
+		const r = shallow(<AuditStoreQARatingForm params={sampleParams} router={mockRouter} />);
 		expect(findById).toHaveBeenCalledWith(sampleParams.auditStoreId);
-		r.find("button").at(2).simulate("click");
+
+		r.findWhere(n => n.type() === "button" && n.text() === "Good").simulate("click");
+		r.setState({ selectedFeedback: ["Provided clear & relevant proofs"] });
 		r.find("form").simulate("submit", formSubmitEvent);
 		expect(formSubmitEvent.preventDefault).toHaveBeenCalled();
-		expect(rate).lastCalledWith(sampleParams.auditStoreId, 2);
 		setTimeout(() => {
+			expect(rate).toHaveBeenCalledWith(sampleParams.auditStoreId, 2, ["Provided clear & relevant proofs"]);
 			expect(mockRouter.goBack).toHaveBeenCalled();
 			done();
 		});

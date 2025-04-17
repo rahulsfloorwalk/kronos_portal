@@ -13,7 +13,7 @@ from audit_store import service as audit_store_service
 from attachment.service import set_attachment_by_audit_store, set_attachment_by_proof_tag
 from audit.models import Audit
 from client.models import Store
-
+from datetime import date, timedelta
 
 def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id):
     # TODO: move this in to the AuditStoreQuerySet
@@ -65,7 +65,40 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
     # TODO: move this in to the AuditStoreQuerySet
     count = 0
     user = find_moderator_by_user_id(user_id)
-    if filterStatus != "" and lastAuditStoreDate != "":
+    today = date.today()
+    if filterStatus == "CRITICAL_REPORT":
+        four_days_ago = today - timedelta(days=4)
+        query_set = AuditStore.objects.filter(
+            audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
+            status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED),
+            audit_date__lte=four_days_ago
+        ).prefetch_related(
+            'audit', 'audit__audit_cycle', 'audit__audit_cycle__client',
+            'audit__store', 'audit__store__city'
+        ).order_by('audit_date')
+
+        if client_id:
+            query_set = query_set.filter(audit__audit_cycle__client=client_id)
+
+        data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+        count = data.count()
+
+    elif filterStatus == "REVERTED_REPORT":
+        query_set = AuditStore.objects.filter(
+            audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
+            status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED),
+            report_revert_count__gt=0
+        ).prefetch_related(
+            'audit', 'audit__audit_cycle', 'audit__audit_cycle__client',
+            'audit__store', 'audit__store__city'
+        ).order_by('audit_date')
+
+        if client_id:
+            query_set = query_set.filter(audit__audit_cycle__client=client_id)
+
+        data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+        count = data.count()
+    elif filterStatus != "" and lastAuditStoreDate != "":
         query_set = AuditStore.objects.filter(
             audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
             status=filterStatus, audit_date__gte=lastAuditStoreDate

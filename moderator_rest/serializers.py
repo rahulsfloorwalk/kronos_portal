@@ -17,6 +17,7 @@ from questionnaire.models import Section, Question
 from answer.models import ReportSection, Answer
 from attachment.models import Attachment
 from manager.models import AuditProoftagNotAvailable
+from datetime import date
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -85,6 +86,7 @@ class ProfileInfoSmallSerializer(ModelSerializer):
             'first_name',
             'last_name',
             'mobile_number',
+            'whatsapp_number',
             'city',
             'user_id',
             'auditor_rating',
@@ -206,6 +208,8 @@ class AuditStoreSerializer(ModelSerializer):
             'instant_assigned',
             'user',
             'qa_rating',
+            'qa_rating_feedback',
+            'audit_store_percentage',
             'earnings_per_audit',
             'report_summary',
             'reimbursement',
@@ -264,6 +268,20 @@ class AuditSerializer(ModelSerializer):
 class AuditStoreSerializerForList(ModelSerializer):
     audit = AuditSerializerWithoutApplications()
     user = UserSerializer()
+    critical_report = SerializerMethodField()
+    critical_status = SerializerMethodField()
+    
+    def get_critical_report(self, obj):
+        if obj.audit_date:
+            days_diff = (date.today() - obj.audit_date).days
+            return days_diff >= 4
+        return False
+    
+    def get_critical_status(self, obj):
+        filter_status = self.context.get("filter_status")
+        if filter_status == "CRITICAL_REPORT":
+            return self.get_critical_report(obj)
+        return False
     class Meta:
         model = AuditStore
         fields = (
@@ -276,7 +294,9 @@ class AuditStoreSerializerForList(ModelSerializer):
             'audit',
             'user',
             'earnings_per_audit',
-            'reimbursement'
+            'reimbursement',
+            'critical_report',
+            'critical_status'
         )
         read_only_fields = fields
 
@@ -433,6 +453,45 @@ class AttachmentSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class AttachmentMandatoryProoftagSerializer(ModelSerializer):
+    proof_tag_id = SerializerMethodField()
+    proof_tag_name = SerializerMethodField()
+    report_section_id = SerializerMethodField()
+    class Meta:
+        model = Attachment
+        fields = (
+            'id',
+            'file_slug',
+            'proof_type',
+            'mime_type',
+            'file_name',
+            'status',
+            'content_type',
+            'object_id',
+            'direct_url',
+            'extra',
+            'faulty_report_id',
+            'proof_tag',
+            'proof_tag_id',
+            'proof_tag_name',
+            'report_section_id',
+            'faulty_attachment_url',
+            'audio_transcript_data'
+        )
+        read_only_fields = fields
+    
+    def get_proof_tag_id(self, obj):
+        return obj.proof_tag.id if obj.proof_tag else None
+
+    def get_proof_tag_name(self, obj):
+        if obj.proof_tag:
+            return obj.proof_tag.proof_tag.name
+        return None
+
+    def get_report_section_id(self, obj):
+        if isinstance(obj.content_object, ReportSection):
+            return obj.content_object.id
+        return None
 
 class ProfileInfoSerializer(ModelSerializer):
     city = CitySerializer()

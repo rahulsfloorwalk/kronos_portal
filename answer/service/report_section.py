@@ -40,6 +40,24 @@ def find_by_audit_store_and_section(audit_store_id, section_id):
         report_section.save()
         return report_section
 
+def find_by_audit_cycle_sections_mandatory_proof(audit_store_id):
+    report_sections = []
+    try:
+        audit_store = audit_store_service.find_by_id(audit_store_id)
+        sections = section_service.find_by_audit_cycle_mandatory_proof(audit_store.audit.audit_cycle_id)
+    except Exception:
+        return []
+    for section in sections:
+        report_section = ReportSection.objects.filter(audit_store_id=audit_store.id,section_id=section.id).first()
+
+        if not report_section:
+            try:
+                report_section = ReportSection(audit_store=audit_store,section=section)
+                report_section.save()
+            except Exception:
+                continue
+        report_sections.append(report_section)
+    return report_sections
 
 def submit_auditor_comment(audit_store_id, section_id, user_id, auditor_comment):
     if len(auditor_comment) < ReportSection.MIN_AUDITOR_COMMENT_LEN:

@@ -107,6 +107,59 @@ exports[`<AuditStoreQARatingForm/> is rendered correctly when AuditStore is alre
               </div>
             </div>
           </div>
+          <div
+            className="form-group"
+          >
+            <label
+              className="control-label"
+            >
+              Select Feedback:
+            </label>
+            <div
+              className="checkbox"
+            >
+              <label>
+                <input
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                Better quality proofs expected
+              </label>
+            </div>
+            <div
+              className="checkbox"
+            >
+              <label>
+                <input
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                Avoid generic comments
+              </label>
+            </div>
+            <div
+              className="checkbox"
+            >
+              <label>
+                <input
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                Sufficient feedback expected on findings
+              </label>
+            </div>
+            <div
+              className="checkbox"
+            >
+              <label>
+                <input
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                Recommendations need more clarity
+              </label>
+            </div>
+          </div>
           <button
             className="btn btn-lg btn-primary"
           >

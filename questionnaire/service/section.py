@@ -40,6 +40,12 @@ def find_by_audit_cycle_and_id(audit_cycle_id, section_id):
     except Section.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def find_by_audit_cycle_mandatory_proof(audit_cycle_id):
+    try:
+        return Section.objects.filter(audit_cycle_id=audit_cycle_id)
+    except Exception as e:
+        raise Exception("Error retrieving Sections for audit_cycle_id {}: {}".format(audit_cycle_id, e))
+
 def find_section_by_id(section_id):
     try:
         return Section.objects.get(pk=section_id)

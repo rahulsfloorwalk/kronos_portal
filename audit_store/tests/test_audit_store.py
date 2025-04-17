@@ -292,18 +292,21 @@ class AuditStoreTestCase(TestCase):
     def test_rate_sets_rating_correctly(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
         rating = AuditStore.GOOD
-        audit_store.rate(rating)
+        feedback = ["QA feedback for GOOD rating"]
+        audit_store.rate(rating, feedback)
+
         self.assertEqual(audit_store.qa_rating, rating)
+        self.assertEqual(audit_store.qa_rating_feedback, feedback) 
 
     def test_rate_raises_when_report_is_not_submitted_or_qa_ok(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
         with self.assertRaises(AppLogicError, msg="Report cannot be rated now"):
-            audit_store.rate(AuditStore.BAD)
+            audit_store.rate(AuditStore.BAD,"Feedback for non-submitted report")
 
     def test_rate_raises_when_rating_is_invalid(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
         with self.assertRaises(AppLogicError, msg="Invalid Rating"):
-            audit_store.rate(5)
+            audit_store.rate(5, "Invalid test rating")
 
     def test_is_qa_rated_returns_false_when_qa_rating_is_none(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, qa_rating=None)

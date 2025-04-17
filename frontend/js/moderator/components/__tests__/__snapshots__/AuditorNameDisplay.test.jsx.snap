@@ -2,30 +2,54 @@
 
 exports[`<AuditorNameDisplay/> renders the agency name and phone correctly for modrator 1`] = `
 <div>
-  <b>
-    GAIKI
-  </b>
-   (
-  <a
-    href="tel:1234567898"
+  <div
+    style={
+      Object {
+        "alignItems": "center",
+        "display": "flex",
+        "gap": ".3rem",
+        "justifyContent": "flex-start",
+      }
+    }
   >
-    1234567898
-  </a>
-  )
+    <b>
+      GAIKI
+    </b>
+    | (
+    <a
+      href="tel: 1234567898"
+    >
+       
+      1234567898
+    </a>
+    ) |
+  </div>
 </div>
 `;
 
 exports[`<AuditorNameDisplay/> renders the auditor name and phone correctly for modrator 1`] = `
 <div>
-  <b>
-    Raghava Sowrya
-  </b>
-   (
-  <a
-    href="tel:8123450516"
+  <div
+    style={
+      Object {
+        "alignItems": "center",
+        "display": "flex",
+        "gap": ".3rem",
+        "justifyContent": "flex-start",
+      }
+    }
   >
-    8123450516
-  </a>
-  )
+    <b>
+      Raghava Sowrya
+    </b>
+    | (
+    <a
+      href="tel: 8123450516"
+    >
+       
+      8123450516
+    </a>
+    ) |
+  </div>
 </div>
 `;

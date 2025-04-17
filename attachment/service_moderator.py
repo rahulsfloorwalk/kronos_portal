@@ -19,6 +19,9 @@ def find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, us
     report_section = report_section_moderator_service.find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, user_id)
     return attachment_service.find_by_audit_store_and_section(audit_store_id, report_section.section_id)
 
+def find_by_audit_store_for_moderator_mandatory_proof(audit_store_id, user_id):
+    audit_store = audit_store_service.find_by_id_for_moderator(audit_store_id, user_id)
+    return attachment_service.find_by_audit_store_mandatory_proof(audit_store.id)
 
 def upload_for_audit_store_for_moderator(audit_store_id, user_id, file_name, file_size, mime_type):
     audit_store = audit_store_service.find_by_id_for_moderator(audit_store_id, user_id)
@@ -104,6 +107,12 @@ def rotate_image_attachment_by_id(attachment_id, user_id, angle):
     return attachment_service.rotate(attachment_id, angle)
 
 
-def find_attachment_by_audit_store_id(audit_store_id:int):
-    audit_store = AuditStore.objects.get(id=audit_store_id)
+# def find_attachment_by_audit_store_id(audit_store_id:int):
+#     audit_store = AuditStore.objects.get(id=audit_store_id)
+#     return attachment_service.find_by_audit_cycle_id(audit_store.audit.audit_cycle.id)
+
+def find_attachment_by_audit_store_id(audit_store_id: int):
+    audit_store = AuditStore.objects.filter(id=audit_store_id).first()
+    if audit_store is None:
+        return None
     return attachment_service.find_by_audit_cycle_id(audit_store.audit.audit_cycle.id)

@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, IntegerField, CharField
+from rest_framework.serializers import Serializer, IntegerField, CharField,ListField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -237,6 +237,23 @@ class AuditStoreIdEarningsPerAuditView(APIView):
         audit_store = service_manager.set_earnings_per_audit(audit_store_id, ds.validated_data['earnings_per_audit'], request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
+# class AuditStoreIdQARatingView(APIView):
+#     permission_classes = [HasGroupPermission]
+#     required_groups = {
+#         'POST': [GROUP_NAME_MANAGER],
+#     }
+
+#     class DeSerializer(Serializer):
+#         qa_rating = serializers.ChoiceField(AuditStore.QA_RATING)
+
+#     def post(self, request, audit_store_id):
+#         ds = self.DeSerializer(data=request.data)
+#         ds.is_valid(raise_exception=True)
+#         audit_store = get_object_or_404(AuditStore, pk=audit_store_id)
+#         audit_store.rate(ds.validated_data['qa_rating'])
+#         return Response(AuditStoreSerializer(audit_store).data)
+
+
 class AuditStoreIdQARatingView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -245,14 +262,17 @@ class AuditStoreIdQARatingView(APIView):
 
     class DeSerializer(Serializer):
         qa_rating = serializers.ChoiceField(AuditStore.QA_RATING)
+        qa_feedback_rating = ListField(required=False, allow_empty=True)
 
     def post(self, request, audit_store_id):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         audit_store = get_object_or_404(AuditStore, pk=audit_store_id)
-        audit_store.rate(ds.validated_data['qa_rating'])
+        # audit_store.rate(ds.validated_data['qa_rating'])
+        qa_rating = ds.validated_data['qa_rating']
+        qa_feedback_rating = ds.validated_data.get('qa_feedback_rating')
+        audit_store.rate(qa_rating, qa_feedback_rating)
         return Response(AuditStoreSerializer(audit_store).data)
-
 
 class AuditStoreAuditorRatingView(APIView):
     permission_classes = [HasGroupPermission]
