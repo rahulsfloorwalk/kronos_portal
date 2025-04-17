@@ -108,6 +108,9 @@ def submit_report(audit_store_id, user_id):
             raise AppLogicError("Please select a tag for all attachments. You can select a tag by clicking on the "
                                 "drop-down present below the attachment.")
     set_attachment_by_proof_tag(audit_store_id)
+    report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
+    for report in report_obj:
+        report.save_percentage()
     audit_store.submit_auditor(by=user)
     add_multiselect_answer_questions(audit_store_id, user_id)
     remove_answer_revert_message_for_auditor(audit_store_id, user_id)
@@ -147,6 +150,9 @@ def submit_report_api(audit_store_id, user_id):
             raise AppLogicError("Please select a tag for all attachments. You can select a tag by clicking on the "
                                 "drop-down present below the attachment.")
     set_attachment_by_proof_tag(audit_store_id)
+    report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
+    for report in report_obj:
+        report.save_percentage()
     audit_store.submit_auditor(by=user)
     add_multiselect_answer_questions(audit_store_id, user_id)
     remove_answer_revert_message_for_auditor(audit_store_id, user_id)

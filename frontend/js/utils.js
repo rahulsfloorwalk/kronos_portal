@@ -181,6 +181,10 @@ export function getAuditStoreStatus(value){
 		return "Accepted";
 	case "REJECTED":
 		return "Rejected";
+	case "CRITICAL_REPORT":
+		return "Critical Report";
+	case "REVERTED_REPORT":
+		return "Reverted Report";
 	case "":
 	case null:
 	case undefined:

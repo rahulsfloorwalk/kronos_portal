@@ -995,3 +995,12 @@ p.new{
 	  color: #007dc1 !important;
 	}
 }
+// ------------------------------
+.cycle-name-cell {
+	max-width: 150px;    
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline-block; 
+	vertical-align: middle;
+  }

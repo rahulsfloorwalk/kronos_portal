@@ -20,7 +20,7 @@ from answer.models import Answer
 from questionnaire.models import Question
 
 from audit_store.signals import audit_store_status_change
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField , ArrayField
 
 from answer.models import ReportSection
 from attachment.models import Attachment
@@ -175,6 +175,7 @@ class AuditStore(Model):
     audit_date = DateField(db_column='audit_date')
 
     qa_rating = IntegerField(db_column='qa_rating', choices=QA_RATING, null=True)
+    qa_rating_feedback = ArrayField(CharField(max_length=250), db_column='qa_rating_feedback', blank=True, null = True)
 
     audit = ForeignKey(Audit, db_column='audit_id', related_name='audit_stores', on_delete=PROTECT)
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
@@ -515,6 +516,7 @@ class AuditStore(Model):
             raise AppLogicError("Report cannot be submitted now")
         self.submit_at = timezone.now()
         self._change_status(AuditStore.SUBMITTED, by)
+        self.save_percentage()
 
     @atomic
     def submit_manager(self, *args, by):
@@ -547,6 +549,7 @@ class AuditStore(Model):
             raise AppLogicError("Report cannot be forwarded for PM Review now.")
 
         self._change_status(AuditStore.PM_REVIEW, by)
+        self.save_percentage()
 
     @atomic
     def pm_revert(self, *args, by):
@@ -624,7 +627,7 @@ class AuditStore(Model):
         self._change_status(AuditStore.FAILED, by, message)
 
     @atomic
-    def rate(self, rating):
+    def rate(self, rating, rating_feedback):
         if self.status not in (AuditStore.SUBMITTED, AuditStore.PM_REVIEW):
             raise AppLogicError("Report cannot be rated now")
 
@@ -632,6 +635,7 @@ class AuditStore(Model):
             raise AppLogicError("Invalid Rating")
 
         self.qa_rating = rating
+        self.qa_rating_feedback = rating_feedback
         self.save()
 
     def _change_status(self, new_status, user_actor, message="", proof_tags=[]):

@@ -101,24 +101,24 @@ def get_scores_for_store_by_questionnaire_type(store_id, client_id, questionnair
     return response_data
 
 
-class StoreSerializer(serializers.ModelSerializer):
+class AuditCycleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Store
+        model = AuditCycle
         fields = ['id', 'name']
 
-def find_store_list_by_questionnaire_types(client_id, questionnaire_type_id):
-    cycles = set(AuditCycle.objects.filter(
+def find_audit_cycle_list_by_questionnaire_types(client_id, questionnaire_type_id):
+    audit_cycles = AuditCycle.objects.filter(
         client_id=client_id, questionnaire_type_id=questionnaire_type_id
-    ).values_list('id', flat=True))
+    ).order_by('-id')
 
-    stores = set(Audit.objects.filter(
-        audit_cycle_id__in=cycles
-    ).values_list('store_id', flat=True))
+    # stores = set(Audit.objects.filter(
+    #     audit_cycle_id__in=cycles
+    # ).values_list('store_id', flat=True))
 
-    stores = Store.objects.filter(id__in=stores)
-    return StoreSerializer(stores, many=True).data
+    # stores = Store.objects.filter(id__in=stores)
+    return AuditCycleSerializer(audit_cycles, many=True).data
 
-def get_keyword_analysis_for_store_by_questionnaire_type(store_id, client_id, questionnaire_type_id):
+def get_keyword_analysis_for_store_by_questionnaire_type(audit_cycle_id, client_id, questionnaire_type_id):
     cycles = AuditCycle.objects.filter(client_id=client_id, questionnaire_type_id=questionnaire_type_id) \
         .order_by('end_date').values('id', 'name')
 
@@ -127,7 +127,7 @@ def get_keyword_analysis_for_store_by_questionnaire_type(store_id, client_id, qu
     audit_stores = AuditStore.objects.filter(
         audit__audit_cycle_id__in=cycle_map.keys(),
         status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-        audit__store_id=store_id
+        audit__audit_cycle_id=audit_cycle_id
     ).values('id', 'audit__audit_cycle_id', 'sentiment_positive_words', 'sentiment_negative_words')
 
     total_pos, total_neg = defaultdict(int), defaultdict(int)
