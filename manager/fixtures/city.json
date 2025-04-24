@@ -58430,5 +58430,368 @@
          "lon":"74.857026",
          "country":"IN"
       }
+   },
+   {
+      "model":"manager.city",
+      "pk":5342,
+      "fields":{
+         "name":"Hajipur",
+         "state":"IN-BR",
+         "lat": "25.6856895",
+		   "lon": "85.2045478",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5343,
+      "fields":{
+         "name":"Forbesganj",
+         "state":"IN-BR",
+         "lat": "26.3049106",
+		   "lon": "87.2632847",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5344,
+      "fields":{
+         "name":"Arrah",
+         "state":"IN-BR",
+         "lat": "25.5504393",
+		   "lon": "84.648242",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5345,
+      "fields":{
+         "name":"Motihari",
+         "state":"IN-BR",
+         "lat": "26.2388762",
+		   "lon": "84.5835795",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5346,
+      "fields":{
+         "name":"Bihar Sharif",
+         "state":"IN-BR",
+         "lat": "25.2027302",
+		   "lon": "85.5147281",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5347,
+      "fields":{
+         "name":"Raxaul",
+         "state":"IN-BR",
+         "lat": "26.9833256",
+		   "lon": "84.8523069",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5348,
+      "fields":{
+         "name":"Bettiah",
+         "state":"IN-BR",
+         "lat": "26.7965173",
+		   "lon": "84.5103522",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5349,
+      "fields":{
+         "name":"Bihta",
+         "state":"IN-BR",
+         "lat": "25.5447517",
+		   "lon": "84.8649529",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5350,
+      "fields":{
+         "name":"Bhabua",
+         "state":"IN-BR",
+         "lat": "25.0445177",
+		   "lon": "83.6108933",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5351,
+      "fields":{
+         "name":"Itanagar",
+         "state":"IN-AR",
+         "lat": "27.095171",
+		   "lon": "93.6208411",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5352,
+      "fields":{
+         "name":"Paonta Sahib",
+         "state":"IN-HP",
+         "lat": "30.4384439",
+		   "lon": "77.6211774",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5353,
+      "fields":{
+         "name":"Manali",
+         "state":"IN-HP",
+         "lat": "32.2403139",
+		   "lon": "77.180504",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5354,
+      "fields":{
+         "name":"Banikhet",
+         "state":"IN-HP",
+         "lat": "31.3588",
+		   "lon": "76.4995",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5355,
+      "fields":{
+         "name":"Pinjore",
+         "state":"IN-HR",
+         "lat": "30.7987",
+		   "lon": "76.9182",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5356,
+      "fields":{
+         "name":"Dabwali",
+         "state":"IN-HR",
+         "lat": "29.9657112",
+		   "lon": "74.702937",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5357,
+      "fields":{
+         "name":"Behror",
+         "state":"IN-RJ",
+         "lat": "26.3302",
+		   "lon": "79.3506",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5358,
+      "fields":{
+         "name":"Suratgarh",
+         "state":"IN-RJ",
+         "lat": "29.3308392",
+		   "lon": "73.9116803",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5359,
+      "fields":{
+         "name":"Chomu-Jaipur",
+         "state":"IN-RJ",
+         "lat": "27.1583763",
+		   "lon": "75.7249175",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5360,
+      "fields":{
+         "name":"Hanumangarh Junction",
+         "state":"IN-RJ",
+         "lat": "28.4738",
+		   "lon": "75.5476",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5361,
+      "fields":{
+         "name":"Sumerpur",
+         "state":"IN-RJ",
+         "lat": "25.1508294",
+		   "lon": "73.0793549",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5362,
+      "fields":{
+         "name":"Beawar",
+         "state":"IN-RJ",
+         "lat": "25.2163",
+		   "lon": "73.8923",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5363,
+      "fields":{
+         "name":"Kotputli",
+         "state":"IN-RJ",
+         "lat": "27.707172",
+		   "lon": "76.1996447",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5364,
+      "fields":{
+         "name":"Kuchaman City",
+         "state":"IN-RJ",
+         "lat": "27.1519",
+		   "lon": "74.8621",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5365,
+      "fields":{
+         "name":"Kharar",
+         "state":"IN-PB",
+         "lat": "30.7494402",
+		   "lon": "76.6539706",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5366,
+      "fields":{
+         "name":"Patran",
+         "state":"IN-PB",
+         "lat": "29.9554252",
+		   "lon": "76.0516968",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5367,
+      "fields":{
+         "name":"Balurghat",
+         "state":"IN-WB",
+         "lat": "25.2234352",
+		   "lon": "88.7780654",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5368,
+      "fields":{
+         "name":"Alipurduar",
+         "state":"IN-WB",
+         "lat": "26.4851573",
+		   "lon": "89.5246926",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5369,
+      "fields":{
+         "name":"Raiganj",
+         "state":"IN-WB",
+         "lat": "25.6222834",
+		   "lon": "88.1295402",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5370,
+      "fields":{
+         "name":"Berhampore",
+         "state":"IN-WB",
+         "lat": "24.1048367",
+		   "lon": "88.251042",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5371,
+      "fields":{
+         "name":"Baripada",
+         "state":"IN-OR",
+         "lat": "21.9269",
+		   "lon": "86.7429",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5372,
+      "fields":{
+         "name":"Kashipur",
+         "state":"IN-UK",
+         "lat": "29.2051992",
+		   "lon": "78.9698154",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5373,
+      "fields":{
+         "name":"Mussoorie",
+         "state":"IN-UK",
+         "lat": "30.460065",
+		   "lon": "78.0664394",
+         "country":"IN"
+      }
+   },
+   {
+      "model":"manager.city",
+      "pk":5374,
+      "fields":{
+         "name":"Akbarpur",
+         "state":"IN-UP",
+         "lat": "26.4139839",
+		   "lon": "82.5346802",
+         "country":"IN"
+      }
    }
  ]
