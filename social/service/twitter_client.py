@@ -152,37 +152,29 @@ def get_over_all_nps_score(client_id, audit_cycle_id):
     total_nps_score_sum = 0
     total_replies = 0
     total_audit_store = 0
-    detractors_count = 0  # NPS scores 0-3
-    passives_count = 0    # NPS scores 4-6
-    promoters_count = 0   # NPS scores 7-10
+    detractors_count = 0  # NPS scores 0-6
+    passives_count = 0    # NPS scores 7-8
+    promoters_count = 0   # NPS scores 9-10
 
     for audit_store in audit_stores:
         total_audit_store += 1
         nps_score = audit_store.nps_section or 0
 
         if audit_store.status in ['COMPLETED', 'ACCEPTED'] and nps_score > 0:
-            total_nps_score_sum += nps_score
             total_replies += 1
-            if 1 <= nps_score <= 3:
+            if 1 <= nps_score <= 6:
                 detractors_count += 1
-            elif 4 <= nps_score <= 6:
+            elif 7 <= nps_score <= 8:
                 passives_count += 1
-            elif 7 <= nps_score <= 10:
+            elif 9 <= nps_score <= 10:
                 promoters_count += 1
-    # if total_replies > 0:
-    #     average_nps_percentage = round((total_nps_score_sum / total_replies) * 10)
-    # else:
-    #     average_nps_percentage = None
 
-    if total_replies > 0:
-        # average_nps_percentage = round((total_nps_score_sum / total_replies) * 10)
-        average_nps_percentage = round((total_nps_score_sum / total_replies))
-        average_nps_percentage = min(average_nps_percentage, 10)
+    valid_replies = promoters_count + detractors_count
+
+    if valid_replies > 0:
+        average_nps_percentage = round((promoters_count - detractors_count) / valid_replies * 100)
     else:
         average_nps_percentage = None
-
-    if average_nps_percentage is not None:
-        average_nps_percentage = min(average_nps_percentage, 10)
 
     return {
         "average_nps_percentage": average_nps_percentage,
