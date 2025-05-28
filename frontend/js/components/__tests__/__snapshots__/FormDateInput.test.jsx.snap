@@ -6,6 +6,7 @@ exports[`<FormDateInput/> renders a date input with a label 1`] = `
 >
   <label>
     Date of Birth
+     
   </label>
   <div
     className="rdt"

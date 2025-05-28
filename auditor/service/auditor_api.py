@@ -439,6 +439,7 @@ def sign_up_auditor_app(request):
         user.phone = request.data.get("phone")
         user.username = str.lower(request.data.get("username"))
         user.set_password(request.data.get("password"))
+        user.is_active = True
         user.save()
         user.groups.add(Group.objects.get(name=GROUP_NAME_AUDITOR))
         user.save()

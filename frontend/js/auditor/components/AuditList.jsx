@@ -276,11 +276,35 @@ class AuditList extends Component{
 		let eligibilityStyle = {fontSize: "1.5rem"};
 		const support_button = this.props.auditCycle.support_page_link ? <a href={this.props.auditCycle.support_page_link} target="_blank" rel="noopener noreferrer" className="btn btn-primary"><span style={{animation: "blink 1s linear infinite",fontWeight:"bold"}}>Need support for {this.props.auditCycle.client.auditor_display_name}?</span></a> : null;
 
-		function formatDate(inputDate) {
-			const [year, month, day] = inputDate.split("-");
-			const result = day+"-"+month+"-"+year;
-			return result;
-		}
+		// function formatDate(inputDate) {
+		// 	const [year, month, day] = inputDate.split("-");
+		// 	const result = day+"-"+month+"-"+year;
+		// 	return result;
+		// }
+		// Get the first audit ID and its dates
+		const firstAuditId = Object.keys(audit_list)[0];
+		const firstAudit = audit_list[firstAuditId];
+		const current = new Date();
+		current.setDate(current.getDate() + 1); // Set to tomorrow
+		const auditStartDate = new Date(firstAudit.audit_cycle.start_date);
+		const auditEndDate = new Date(firstAudit.audit_cycle.end_date);
+
+		//----Normalizing dates to midnight----
+		current.setHours(0, 0, 0, 0);
+		auditStartDate.setHours(0, 0, 0, 0);
+		auditEndDate.setHours(0, 0, 0, 0);
+
+		//-----Use audit_cycle.start_date if it's in the future, otherwise use current date---------
+		const effectiveStartDate =
+		auditStartDate > current ? auditStartDate : current;
+
+		//-------Calculate 7 days from effectiveStartDate-------
+		const SevenDaysLaterDate = new Date(effectiveStartDate);
+		SevenDaysLaterDate.setDate(effectiveStartDate.getDate() + 6); // +6 for display 7day range including
+
+		//----End date is the earlier of SevenDaysLaterDate or audit_cycle.end_date----
+		const eDate =
+		SevenDaysLaterDate > auditEndDate ? auditEndDate : SevenDaysLaterDate;
 		return (
 			<div>
 				<div className="row pull-right">
@@ -326,6 +350,9 @@ class AuditList extends Component{
 									<span style={eligibilityStyle}>
 										{this.state.audit_alignment_factors
 											? this.state.audit_alignment_factors .split(/(\b\w+:)/g) .map((part, index) => {
+												if (part.includes("Date_availability")) {
+													return null; // Skip data availability
+												}
 												if (index % 2 === 1) {
 													if (! part.trim().startsWith("_") ) {
 														part = <span><br />{part.replace(/_/g, " ")}</span>;
@@ -335,15 +362,17 @@ class AuditList extends Component{
 												if(index % 2 === 0){
 													const dateAvailabilityMatch = part.match(/(\d{4}-\d{2}-\d{2}) - (\d{4}-\d{2}-\d{2})/);
 													if(dateAvailabilityMatch){
-														let date = dateAvailabilityMatch.input.split(",")[0];
-														let startDate = formatDate(date.split(" ")[1]);
-														let endDate = formatDate(date.split(" ")[3]);
-														part = " " + startDate + " - " + endDate;
+														// let date = dateAvailabilityMatch.input.split(",")[0];
+														// let startDate = formatDate(date.split(" ")[1]);
+														// let endDate = formatDate(date.split(" ")[3]);
+														// part = " " + startDate + " - " + endDate;
+														return null;
 													}
 												}
 												return part;
 											}) : "N/A"}
 									</span>
+									<span style={{...eligibilityStyle,display:"block"}}><b>Date Availability:</b> <b>{moment(effectiveStartDate).format(momentDateFormat)}</b> to{" "} <b>{moment(eDate).format(momentDateFormat)}</b></span>
 								</p>
 							</div>
 							<div className="col-sm-12">

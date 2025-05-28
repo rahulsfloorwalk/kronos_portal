@@ -18,6 +18,7 @@ from datetime import datetime
 from auditor.models import ProfileInfo,AdditionalInfo
 from datetime import datetime
 from datetime import datetime, date
+from django.utils.timezone import now
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -163,6 +164,7 @@ def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
     # else:
     #     lat1=city.lat
     #     lon1=city.lon
+    today = now().date()
     
     active_audits = Audit.objects.filter(
         count__gt = 0,
@@ -172,7 +174,7 @@ def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
             AuditCycle.ACTIVE
         ]
     )
-    active_audits = active_audits.exclude( audit_cycle__end_date__isnull=False, audit_cycle__end_date__lt=datetime.now() )
+    active_audits = active_audits.exclude( audit_cycle__end_date__isnull=False,audit_cycle__end_date__lte=today  )
 
     # get the bounding box
     lon_max, lon_min, lat_max, lat_min = geo.bounding_box(lat1, lon1, kms)
@@ -251,7 +253,8 @@ def find_audits_around_city(city_id:int, kms:int=None):
         ]
     )
 
-    active_audits = active_audits.exclude( audit_cycle__end_date__isnull=False, audit_cycle__end_date__lt=datetime.now() )
+    today = now().date()
+    active_audits = active_audits.exclude( audit_cycle__end_date__isnull=False,audit_cycle__end_date__lte=today  )
 
     # get the bounding box
     lon_max, lon_min, lat_max, lat_min = geo.bounding_box(city.lat, city.lon, kms)
