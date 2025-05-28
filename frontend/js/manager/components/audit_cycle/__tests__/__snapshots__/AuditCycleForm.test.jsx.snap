@@ -119,6 +119,7 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
               >
                 <label>
                   Start Date
+                   
                 </label>
                 <div
                   className="rdt"
@@ -527,12 +528,14 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
               >
                 <label>
                   End Date
+                   
                 </label>
                 <div
                   className="rdt"
                 >
                   <input
                     className="form-control"
+                    disabled={true}
                     onChange={[Function]}
                     onClick={[Function]}
                     onFocus={[Function]}
@@ -1296,6 +1299,7 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
               >
                 <label>
                   Start Date
+                   
                 </label>
                 <div
                   className="rdt"
@@ -1704,12 +1708,14 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
               >
                 <label>
                   End Date
+                   
                 </label>
                 <div
                   className="rdt"
                 >
                   <input
                     className="form-control"
+                    disabled={false}
                     onChange={[Function]}
                     onClick={[Function]}
                     onFocus={[Function]}
@@ -1792,176 +1798,152 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                         <tbody>
                           <tr>
                             <td
-                              className="rdtDay rdtOld"
+                              className="rdtDay rdtOld rdtDisabled"
                               data-value={26}
-                              onClick={[Function]}
                             >
                               26
                             </td>
                             <td
-                              className="rdtDay rdtOld"
+                              className="rdtDay rdtOld rdtDisabled"
                               data-value={27}
-                              onClick={[Function]}
                             >
                               27
                             </td>
                             <td
-                              className="rdtDay rdtOld"
+                              className="rdtDay rdtOld rdtDisabled"
                               data-value={28}
-                              onClick={[Function]}
                             >
                               28
                             </td>
                             <td
-                              className="rdtDay rdtOld"
+                              className="rdtDay rdtOld rdtDisabled"
                               data-value={29}
-                              onClick={[Function]}
                             >
                               29
                             </td>
                             <td
-                              className="rdtDay rdtOld"
+                              className="rdtDay rdtOld rdtDisabled"
                               data-value={30}
-                              onClick={[Function]}
                             >
                               30
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={1}
-                              onClick={[Function]}
                             >
                               1
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={2}
-                              onClick={[Function]}
                             >
                               2
                             </td>
                           </tr>
                           <tr>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={3}
-                              onClick={[Function]}
                             >
                               3
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={4}
-                              onClick={[Function]}
                             >
                               4
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={5}
-                              onClick={[Function]}
                             >
                               5
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={6}
-                              onClick={[Function]}
                             >
                               6
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={7}
-                              onClick={[Function]}
                             >
                               7
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={8}
-                              onClick={[Function]}
                             >
                               8
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={9}
-                              onClick={[Function]}
                             >
                               9
                             </td>
                           </tr>
                           <tr>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={10}
-                              onClick={[Function]}
                             >
                               10
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={11}
-                              onClick={[Function]}
                             >
                               11
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={12}
-                              onClick={[Function]}
                             >
                               12
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={13}
-                              onClick={[Function]}
                             >
                               13
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={14}
-                              onClick={[Function]}
                             >
                               14
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={15}
-                              onClick={[Function]}
                             >
                               15
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={16}
-                              onClick={[Function]}
                             >
                               16
                             </td>
                           </tr>
                           <tr>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={17}
-                              onClick={[Function]}
                             >
                               17
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={18}
-                              onClick={[Function]}
                             >
                               18
                             </td>
                             <td
-                              className="rdtDay"
+                              className="rdtDay rdtDisabled"
                               data-value={19}
-                              onClick={[Function]}
                             >
                               19
                             </td>

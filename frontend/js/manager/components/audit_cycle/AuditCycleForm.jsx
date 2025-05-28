@@ -17,6 +17,7 @@ import FormTextarea from "../../../components/FormTextarea.jsx";
 import SaveButton from "../../../components/SaveButton.jsx";
 import Modal from "../../../components/Modal.jsx";
 import MarkdownViewer from "../../../components/MarkdownViewer.jsx";
+import moment from "moment";
 
 const FieldErrors = PropTypes.arrayOf(PropTypes.string);
 
@@ -132,6 +133,12 @@ export class AuditCycleForm extends Component{
 		this.dateChanged("end_date",date);
 	};
 
+	isValidEndDate = (currentDate) => {
+		const { start_date } = this.state;
+		if (!start_date) return true;
+		return currentDate.isAfter(moment(start_date), "day"); // only allow dates after start_date
+	};
+
 	onSubmit = (e) => {
 		e.preventDefault();
 		var promise;
@@ -167,7 +174,7 @@ export class AuditCycleForm extends Component{
 							<FormDateInput label="Start Date" value={this.state.start_date} name="start_date" onChange={this.startDateChanged} errors={this.props.errors.start_date}/>
 						</div>
 						<div className="col-md-6">
-							<FormDateInput label="End Date" value={this.state.end_date} name="end_date" onChange={this.endDateChanged} errors={this.props.errors.end_date}/>
+							<FormDateInput label="End Date" value={this.state.end_date} name="end_date" onChange={this.endDateChanged} errors={this.props.errors.end_date}disabled={!this.state.start_date} isValidDate={this.isValidEndDate}/>
 						</div>
 					</div>
 					<div className="row">

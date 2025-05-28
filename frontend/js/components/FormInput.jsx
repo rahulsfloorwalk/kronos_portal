@@ -76,32 +76,67 @@ export default class FormInput extends React.Component{
 	}
 }
 
-export class FormDateInput extends React.Component{
+// export class FormDateInput extends React.Component{
+// 	static propTypes = {
+// 		label: PropTypes.string,
+// 		errors: PropTypes.array,
+// 		required_mark: PropTypes.bool,
+// 	};
+
+// 	render(){
+// 		return (
+// 			<FormGroup>
+// 				{this.props.required_mark ?
+// 					<label>
+// 						{this.props.label} <span className="text-danger">(✳)</span>
+// 					</label>
+// 					:
+// 					<label>{this.props.label}</label>
+// 				}
+// 				<Datetime
+// 					timeFormat={false}
+// 					dateFormat="YYYY-MM-DD"
+// 					closeOnSelect={true}
+// 					{...this.props}
+// 				/>
+// 				<FormErrorList errors={this.props.errors}/>
+// 			</FormGroup>
+// 		);
+// 	}
+// }
+
+export class FormDateInput extends React.Component {
 	static propTypes = {
 		label: PropTypes.string,
 		errors: PropTypes.array,
 		required_mark: PropTypes.bool,
+		disabled: PropTypes.bool,
 	};
 
-	render(){
+	handleFocus = (e) => {
+		if (this.props.disabled) {
+			e.target.blur(); // prevent calendar popup by blurring input immediately
+		}
+	};
+
+	render() {
+		const { label, required_mark, errors, disabled, ...rest } = this.props;
+
 		return (
 			<FormGroup>
-				{this.props.required_mark ?
-					<label>
-						{this.props.label} <span className="text-danger">(✳)</span>
-					</label>
-					:
-					<label>{this.props.label}</label>
-				}
+				<label>
+					{label} {required_mark && <span className="text-danger">(✳)</span>}
+				</label>
 				<Datetime
 					timeFormat={false}
 					dateFormat="YYYY-MM-DD"
 					closeOnSelect={true}
-					{...this.props}
+					inputProps={{ disabled }}
+					onFocus={this.handleFocus} // block calendar popup when disabled
+					{...rest}
 				/>
-				<FormErrorList errors={this.props.errors}/>
+				<FormErrorList errors={errors} />
 			</FormGroup>
 		);
 	}
 }
-

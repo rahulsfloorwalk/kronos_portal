@@ -119,6 +119,7 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
               >
                 <label>
                   Start Date
+                   
                 </label>
                 <div
                   className="rdt"
@@ -527,6 +528,7 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
               >
                 <label>
                   End Date
+                   
                 </label>
                 <div
                   className="rdt"
@@ -1340,6 +1342,7 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
               >
                 <label>
                   Start Date
+                   
                 </label>
                 <div
                   className="rdt"
@@ -1748,6 +1751,7 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
               >
                 <label>
                   End Date
+                   
                 </label>
                 <div
                   className="rdt"
