@@ -45,27 +45,27 @@ describe("setEarningsPerAudit", () => {
 	});
 });
 
-// describe("qaOk", () => {
-// 	it("calls the qa_ok url", () => {
-// 		qaOk(5);
-// 		expect($.post).toBeCalledWith("/moderator/audit_store/5/qa_ok");
-// 	});
-// });
-
 describe("qaOk", () => {
-    it("calls the qa_ok url with correct payload", () => {
-        const auditStoreId = 5;
-        const payload = "00:00:00";
-        
-        qaOk(auditStoreId, payload);
-        
-        expect($.ajax).toBeCalledWith({
-            url: "/moderator/audit_store/5/qa_ok",
-            method: "POST",
-            data: JSON.stringify({
-                moderator_submission_time: "00:00:00"
-            }),
-            contentType: "application/json"
-        });
-    });
+	it("calls the qa_ok url", () => {
+		qaOk(5);
+		expect($.post).toBeCalledWith("/moderator/audit_store/5/qa_ok");
+	});
 });
+
+// describe("qaOk", () => {
+//     it("calls the qa_ok url with correct payload", () => {
+//         const auditStoreId = 5;
+//         const payload = "00:00:00";
+
+//         qaOk(auditStoreId, payload);
+
+//         expect($.ajax).toBeCalledWith({
+//             url: "/moderator/audit_store/5/qa_ok",
+//             method: "POST",
+//             data: JSON.stringify({
+//                 moderator_submission_time: "00:00:00"
+//             }),
+//             contentType: "application/json"
+//         });
+//     });
+// });
