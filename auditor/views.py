@@ -61,6 +61,7 @@ from audit.models.proof_tag import AuditCycleProofTagList
 from manager.models import AuditProoftagNotAvailable
 from attachment import service as attachment_service
 import answer.service.answer_moderator as answer_moderator_service
+from rest_framework.serializers import Serializer, IntegerField, CharField
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -316,6 +317,44 @@ class AuditStoreIdNpsSectionView(APIView):
         audit_store = audit_store_auditor_service.set_nps_section(audit_store_id, request.user.id, nps_section)
         return Response(AuditStoreSerializer(audit_store).data)
 
+        
+# class ReportSubmissionTimeView(APIView):
+#     permission_classes = [HasGroupPermission]
+#     required_groups = {
+#         'POST': [GROUP_NAME_AUDITOR]
+#     }
+#     class ReportSubmissionTimeDeSerializer(Serializer):
+#         report_submission_time = CharField(allow_null=True, allow_blank=True )
+
+#     def post(self, request, audit_store_id):
+#         ds = self.ReportSubmissionTimeDeSerializer(data=request.data)
+#         ds.is_valid(raise_exception=True)
+#         report_submission_time = ds.validated_data['report_submission_time']
+#         audit_store = audit_store_auditor_service.set_report_submission_time(audit_store_id, request.user.id, report_submission_time)
+#         return Response(AuditStoreSerializer(audit_store).data)
+
+class ReportSubmissionTimeView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+    class ReportSubmissionTimeItemSerializer(Serializer):
+        audit_store_id = IntegerField()
+        report_submission_time = CharField(allow_null=True, allow_blank=True)
+
+    def post(self, request):
+        input_serializer = self.ReportSubmissionTimeItemSerializer(data=request.data, many=True)
+        input_serializer.is_valid(raise_exception=True)
+        updated_audit_stores = []
+        for item in input_serializer.validated_data:
+            audit_store = audit_store_auditor_service.set_report_submission_time(
+                item["audit_store_id"],
+                request.user.id,
+                item["report_submission_time"]
+            )
+            updated_audit_stores.append(audit_store)
+        output_serializer = AuditStoreSerializer(updated_audit_stores, many=True)
+        return Response(output_serializer.data, status=200)
 
 class AuditStoreView(APIView):
     permission_classes = [HasGroupPermission]
@@ -506,6 +545,9 @@ class AuditStoreIdSubmitView(APIView):
     }
     def post(self, request, audit_store_id):
         audit_store = audit_store_auditor_service.submit_report(audit_store_id, request.user.id)
+        if 'report_submission_time' in request.data:
+            audit_store.report_submission_time = request.data['report_submission_time']
+            audit_store.save()
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdSubmitReportView(APIView):
@@ -515,6 +557,9 @@ class AuditStoreIdSubmitReportView(APIView):
     }
     def post(self, request, audit_store_id):
         audit_store = audit_store_auditor_service.submit_report_api(audit_store_id, request.user.id)
+        if 'report_submission_time' in request.data:
+            audit_store.report_submission_time = request.data['report_submission_time']
+            audit_store.save()
         return Response(AuditStoreSerializer(audit_store).data)
 
 

@@ -214,6 +214,8 @@ class AuditStore(Model):
     sentiment_negative_words = JSONField(db_column="sentiment_negative_words", blank=True, null=True)
     sentiment_score = CharField(db_column="sentiment_score",max_length=50,blank=True, null=True)
     sentiment_text = CharField(db_column="sentiment_text",max_length=50,blank=True, null=True)
+    report_submission_time = CharField(db_column="report_submission_time",max_length=50,null=True, blank=True)
+    moderator_submission_time = CharField(db_column="moderator_submission_time",max_length=50,null=True, blank=True)
     objects = AuditStoreQuerySet.as_manager()
 
     class Meta:

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router";
+// import { Link } from "react-router";
 // import { hashHistory } from "react-router";
 
 import moment from "moment";
@@ -17,7 +17,7 @@ import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 
 import { findActiveClients } from "../service/client.js";
-import { findPending, findCompleted } from "../service/audit_store.js";
+import { findPending, findCompleted, navigateToReport } from "../service/audit_store.js";
 
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 import "../../../css/bs_overrides.scss";
@@ -38,15 +38,30 @@ class AuditStoreList2 extends Component{
 	// 	let url = `/static/moderator#/audit_store/${id}/report`;
 	// 	window.open(url);
 	// }
+	navigateToReportPage = (as) =>{
+		if(as.status==="SUBMITTED" && as.moderator_submission_time===null){
+			const payload = [{
+				audit_store_id : as.id,
+				moderator_submission_time : "00:00:00"
+			}];
+			let promise = navigateToReport(payload);
+			promise.then(()=>{
+				window.open(`/static/moderator#/audit_store/${as.id}/report`, "_blank");
+			});
+		}else{
+			window.open(`/static/moderator#/audit_store/${as.id}/report`, "_blank");
+		}
+	};
 
 	render(){
 		let reps = [];
 		for(let as of this.props.auditStores){
-			reps.push( <tr key={as.id} style={(as.critical_report===true && as.critical_status===false) ? {backgroundColor:"#f2dede"}:{backgroundColor:""}}>
+			reps.push( <tr key={as.id} style={(as.critical_report===true && as.critical_status===false && as.status==="SUBMITTED") ? {backgroundColor:"#f2dede"}:{backgroundColor:""}}>
 				{/* <tr key={as.id} style={pointerStyle} onClick={() => hashHistory.push(`/audit_store/${as.id}/report`)}> */}
 				<td className="text-right">{as.id}</td>
 				{/* <td>{as.audit.audit_cycle.client.name}</td> */}
-				<td className="cycle-name-cell" title={as.audit.audit_cycle.name}>{as.audit.audit_cycle.name}</td>
+				{/* <td className="cycle-name-cell" title={as.audit.audit_cycle.name}>{as.audit.audit_cycle.name}</td> */}
+				<td>{as.audit.audit_cycle.name}</td>
 				<td>{as.audit.store.name}, {as.audit.store.city.name}</td>
 				<td><AuditorNameDisplay user={as.user}/></td>
 				<td className="text-right">{as.audit.earnings_per_audit}</td>
@@ -65,8 +80,11 @@ class AuditStoreList2 extends Component{
 						</td>
 					</tr>
 				</td>
-				<td>
+				{/* <td>
 					<Link to={`/audit_store/${as.id}/report`} target="_blank" className="btn btn-default">View</Link>
+				</td> */}
+				<td>
+					<p className="btn btn-default" onClick={()=>this.navigateToReportPage(as)}>View</p>
 				</td>
 			</tr>);
 		}

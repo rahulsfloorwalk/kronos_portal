@@ -396,45 +396,45 @@ def find_by_audit_cycle_id(audit_cycle_id):
     if attachment is None:
         return None
     return attachment.generate_presigned_url()
-
+    
 def find_by_audit_store_and_section(audit_store_id, section_id):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
     return Attachment.objects.filter(report_sections__id=report_section.id, status=Attachment.ATTACHED).order_by('id')
 
-def find_by_audit_store_mandatory_proof(audit_store_id):
-    report_sections = report_section_service.find_by_audit_cycle_sections_mandatory_proof(audit_store_id)
-    attachments = []
-
-    for report_section in report_sections:
-        section_id = report_section.section.id
-        audit_cycle_id = report_section.audit_store.audit.audit_cycle_id
-
-        required_proof_tag_ids = SectionProofTag.objects.filter(
-            section_id=section_id,
-            is_required=True,
-            audit_cycle_proof_tag__audit_cycle_id=audit_cycle_id
-        ).values_list('audit_cycle_proof_tag', flat=True)
-
-        filtered_attachments = Attachment.objects.filter(
-            report_sections__id=report_section.id,
-            status=Attachment.ATTACHED,
-            proof_tag__isnull=False,
-            proof_tag_id__in=required_proof_tag_ids
-        ).order_by('id')
-
-        attachments += list(filtered_attachments)
-    return attachments
-
 # def find_by_audit_store_mandatory_proof(audit_store_id):
 #     report_sections = report_section_service.find_by_audit_cycle_sections_mandatory_proof(audit_store_id)
 #     attachments = []
+
 #     for report_section in report_sections:
-#         attachments += Attachment.objects.filter(
+#         section_id = report_section.section.id
+#         audit_cycle_id = report_section.audit_store.audit.audit_cycle_id
+
+#         required_proof_tag_ids = SectionProofTag.objects.filter(
+#             section_id=section_id,
+#             is_required=True,
+#             audit_cycle_proof_tag__audit_cycle_id=audit_cycle_id
+#         ).values_list('audit_cycle_proof_tag', flat=True)
+
+#         filtered_attachments = Attachment.objects.filter(
 #             report_sections__id=report_section.id,
 #             status=Attachment.ATTACHED,
-#             proof_tag__isnull=False
+#             proof_tag__isnull=False,
+#             proof_tag_id__in=required_proof_tag_ids
 #         ).order_by('id')
+
+#         attachments += list(filtered_attachments)
 #     return attachments
+
+def find_by_audit_store_mandatory_proof(audit_store_id):
+    report_sections = report_section_service.find_by_audit_cycle_sections_mandatory_proof(audit_store_id)
+    attachments = []
+    for report_section in report_sections:
+        attachments += Attachment.objects.filter(
+            report_sections__id=report_section.id,
+            status=Attachment.ATTACHED,
+            proof_tag__isnull=False
+        ).order_by('id')
+    return attachments
 
 def find_by_profile_info(profile_info_id):
     return Attachment.objects.filter(profile_infos__id=profile_info_id, status=Attachment.ATTACHED)
@@ -473,6 +473,28 @@ def rename(attachment_id, new_name):
 #     attachment.save()
 #     return attachment
 
+# def save_attachment_proof_tag(attachment_id, proof_tag_id):
+#     attachment = find_by_id(attachment_id)
+
+#     if proof_tag_id == "":
+#         attachment.proof_tag = None
+#     else:
+#         proof_tag_obj = audit_cycle_proof_tag.find_by_id(proof_tag_id)
+#         attachment.proof_tag = proof_tag_obj
+
+#         attachment_file_name = attachment.file_name
+#         extension = attachment_file_name.split(".")[-1] if "." in attachment_file_name else None
+
+#         new_file_name = proof_tag_obj.proof_tag.name
+#         if extension:
+#             new_file_name += "." + extension
+
+#         if attachment.file_name != new_file_name:
+#             attachment.file_name = new_file_name
+
+#     attachment.save()
+#     return attachment
+
 def save_attachment_proof_tag(attachment_id, proof_tag_id):
     attachment = find_by_id(attachment_id)
 
@@ -483,14 +505,12 @@ def save_attachment_proof_tag(attachment_id, proof_tag_id):
         attachment.proof_tag = proof_tag_obj
 
         attachment_file_name = attachment.file_name
-        extension = attachment_file_name.split(".")[-1] if "." in attachment_file_name else None
+        if "." in attachment_file_name:
+            extension = attachment_file_name.split(".")[-1]
+            attachment.file_name = proof_tag_obj.proof_tag.name + "." + extension
 
-        new_file_name = proof_tag_obj.proof_tag.name
-        if extension:
-            new_file_name += "." + extension
-
-        if attachment.file_name != new_file_name:
-            attachment.file_name = new_file_name
+        else:
+            attachment.file_name = proof_tag_obj.proof_tag.name
 
     attachment.save()
     return attachment

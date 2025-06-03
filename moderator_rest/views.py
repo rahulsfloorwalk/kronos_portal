@@ -295,6 +295,10 @@ class AuditStoreIdQAOKView(APIView):
     }
     def post(self, request, audit_store_id):
         audit_store = get_object_or_404(AuditStore.objects.for_moderator(request.user), pk=audit_store_id)
+        moderator_submission_time = request.data.get("moderator_submission_time")
+        if moderator_submission_time:
+            audit_store.moderator_submission_time = moderator_submission_time
+            audit_store.save(update_fields=["moderator_submission_time"])
         set_attachment_by_proof_tag(audit_store_id)
         set_not_applicable_for_hide_questions(audit_store)
         report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
@@ -502,6 +506,28 @@ class AuditGuidelinesByAuditStore(APIView):
             return Response({'detail': 'No guildlines found for this audit store.'}, status=400)
         return Response(attachment)
 
+class ReportSubmissionTimeView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR]
+    }
+    class ReportSubmissionTimeItemSerializer(Serializer):
+        audit_store_id = IntegerField()
+        moderator_submission_time = CharField(allow_null=True, allow_blank=True)
+
+    def post(self, request):
+        input_serializer = self.ReportSubmissionTimeItemSerializer(data=request.data, many=True)
+        input_serializer.is_valid(raise_exception=True)
+        updated_audit_stores = []
+        for item in input_serializer.validated_data:
+            audit_store = attachment_service.set_report_submission_time(
+                item["audit_store_id"],
+                request.user.id,
+                item["moderator_submission_time"]
+            )
+            updated_audit_stores.append(audit_store)
+        output_serializer = AuditStoreSerializer(updated_audit_stores, many=True)
+        return Response(output_serializer.data, status=200)
 
 class SectionView(APIView):
     permission_classes = [HasGroupPermission]

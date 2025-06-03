@@ -51,6 +51,7 @@ urlpatterns = ([
     url(r'audit/(?P<audit_id>[0-9]+)$', views.AuditView.as_view(), name="audit_view"),
     url(r'application$', views.AuditApplicationsView.as_view(), name="audit_applications_view"),
 
+    url(r'audit_store/report_submission_time$', views.ReportSubmissionTimeView.as_view(), name="audit_store_id_report_submission_time_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section$', views.SectionView.as_view(), name="section_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)$', views.AuditStoreView.as_view(), name="audit_store_view"),
     url(r'audit_store$', views.AuditStoresView.as_view(), name="audit_stores_view"),

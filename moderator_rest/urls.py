@@ -9,7 +9,7 @@ from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditVi
 from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorCommentView, AuditStoreIdCheckPoints
 from .views import AttachmentProofTagList, AttachmentIdProofTagView,AuditGuidelinesByAuditStore
 from .views import AttachmentIdRotateView,StoreViewByClientView,AuditIdView
-from .views import AuditStoreIdArrangeAttachment,AuditStoreProofTagNotAvailableView
+from .views import AuditStoreIdArrangeAttachment,AuditStoreProofTagNotAvailableView,ReportSubmissionTimeView
 from .views import ClientView
 from .views import ConfigView
 from .views import AuditorRatingView
@@ -45,6 +45,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/mandatory_proof_tag$', AuditStoreMandatoryProofTagView.as_view(), name='audit_store_mandatory_proof_tag_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/guildlines$', AuditGuidelinesByAuditStore.as_view(), name='audit_guidelines_by_audit_store'),
+    url(r'audit_store/report_submission_time$', ReportSubmissionTimeView.as_view(), name="audit_store_id_report_submission_time_view"),
 
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/audit_date$', AuditStoreIdAuditDateView.as_view(), name='audit_store_id_audit_date_view'),

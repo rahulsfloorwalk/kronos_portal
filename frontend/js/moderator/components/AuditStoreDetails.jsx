@@ -9,7 +9,7 @@ import "react-datetime/css/react-datetime.css";
 import moment from "moment";
 import { momentDateFormat } from "../../../config.js";
 
-import { findById, qaOk, fail, unsubmit, submit, setAuditDate, findProofNotAvailable, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment } from "../service/audit_store.js";
+import { findById, qaOk, fail, unsubmit, submit, setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment,findProofNotAvailable } from "../service/audit_store.js";
 
 import { Calendar, File, Envelope } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -54,7 +54,13 @@ export default class AuditStoreDetails extends React.Component {
 			proof_tags: [],
 			guideline: "",
 			proof_not_available: [],
+			reloadKey: 0,
+			sectionproof_change: false,
+			timerValue: 0,
+			isTimerRunning: false,
+			forwardLoading: false,
 		};
+		this.timerInterval = null;
 	}
 	setAuditStore = (auditStore) => {
 		this.setState({
@@ -63,18 +69,164 @@ export default class AuditStoreDetails extends React.Component {
 	};
 	componentDidMount() {
 		findById(this.props.params.auditStoreId).then(this.setAuditStore);
-		// findMandatoryProofTags(this.props.params.auditStoreId).then();
+		findProofNotAvailable(this.props.params.auditStoreId).then(result=>{
+			this.setState({proof_not_available:result});
+		});
 		FetchGuidlineByAuditStoreModerator(this.props.params.auditStoreId).then((guideline) => this.setState({ guideline: guideline }));
-		findProofNotAvailable(this.props.params.auditStoreId).then(result => this.setState({ proof_not_available: result }));
+		this.initializeTimer();  // Initialize timer
+		document.addEventListener("visibilitychange", this.handleVisibilityChange); // Add visibility change listener
+		window.addEventListener("storage", this.handleStorageChange);  // Add storage event listener for cross-tab sync
+	}
+	componentDidUpdate(prevProps, prevState) {
+		// Start/stop timer based on audit status and route
+		if (
+			this.state.auditStore &&
+			this.state.auditStore.status === "SUBMITTED" &&
+			this.props.location.pathname === `/audit_store/${this.props.params.auditStoreId}/report` &&
+			!document.hidden &&
+			!this.state.isTimerRunning
+		) {
+			this.startTimer();
+		} else if (
+			(this.state.auditStore &&
+			this.state.auditStore.status !== "SUBMITTED") ||
+			this.props.location.pathname !== `/audit_store/${this.props.params.auditStoreId}/report` ||
+			document.hidden
+		) {
+			this.stopTimer();
+		}
+		if (prevState.auditStore !== this.state.auditStore) {  // Re-initialize timer if auditStore changes
+			this.initializeTimer();
+		}
 	}
 	componentWillReceiveProps(nextProps) {
 		findById(nextProps.params.auditStoreId).then(this.setAuditStore);
 	}
+	componentWillUnmount() {
+		this.stopTimer();
+		document.removeEventListener("visibilitychange", this.handleVisibilityChange);
+		window.removeEventListener("storage", this.handleStorageChange);
+	}
+	parseTimeToSeconds = (timeString) => {
+		if (!timeString) return 0;
+		const [hours, minutes, seconds] = timeString.split(":").map(Number);
+		return hours * 3600 + minutes * 60 + seconds;
+	};
+
+	initializeTimer = () => {
+		const savedTime = localStorage.getItem(`timer_${this.props.params.auditStoreId}`);
+		let newTimerValue = 0;
+		if (savedTime) {
+			newTimerValue = parseInt(savedTime, 10);
+		} else if (
+			this.state.auditStore && this.state.auditStore.status === "SUBMITTED" &&
+			this.state.auditStore.moderator_submission_time
+		) {
+			newTimerValue = this.parseTimeToSeconds(this.state.auditStore.moderator_submission_time);
+			localStorage.setItem(`timer_${this.props.params.auditStoreId}`, newTimerValue);
+		}
+		this.setState({ timerValue: newTimerValue });
+	};
+
+	startTimer = () => {
+		if (!this.state.isTimerRunning) {
+			this.setState({ isTimerRunning: true });
+			this.timerInterval = setInterval(() => {
+				this.setState(
+					(prevState) => ({
+						timerValue: prevState.timerValue + 1,
+					}),
+					() => {
+						if (this.state.timerValue % 5 === 0) { // Save to localStorage every 5 seconds
+							localStorage.setItem(
+								`timer_${this.props.params.auditStoreId}`,
+								this.state.timerValue.toString()
+							);
+						}
+					}
+				);
+			}, 1000);
+		}
+	};
+
+	stopTimer = () => {
+		if (this.state.isTimerRunning) {
+			clearInterval(this.timerInterval);
+			this.timerInterval = null;
+			if (this.state.timerValue > 0) {
+				localStorage.setItem(
+					`timer_${this.props.params.auditStoreId}`,
+					this.state.timerValue.toString()
+				);
+			}
+			this.setState({ isTimerRunning: false });
+		}
+	};
+
+	handleVisibilityChange = () => {
+		if (
+			document.hidden ||
+			this.props.location.pathname !== `/audit_store/${this.props.params.auditStoreId}/report`
+		) {
+			this.stopTimer();
+		} else if (
+			this.state.auditStore && this.state.auditStore.status === "SUBMITTED" &&
+			!this.state.isTimerRunning
+		) {
+			this.startTimer();
+		}
+	};
+
+	handleStorageChange = (event) => {
+		if (event.key === `timer_${this.props.params.auditStoreId}`) {
+			const newValue = parseInt(event.newValue, 10);
+			if (!isNaN(newValue)) {
+				this.setState({ timerValue: newValue });
+			}
+		}
+	};
+
+	formatTime = (seconds) => {
+		const hrs = Math.floor(seconds / 3600);
+		const mins = Math.floor((seconds % 3600) / 60);
+		const secs = seconds % 60;
+		return `${hrs.toString().padStart(2, "0")}:${mins
+			.toString()
+			.padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+	};
+
+	formatTimewWithHourMinute = (timeString) => {
+		if (!timeString || timeString === "00:00:00") {
+			return "0 hours 0 minutes 0 seconds";
+		}
+		const [hours, minutes, seconds] = timeString.split(":").map(Number);
+		return `${hours} hour${hours !== 1 ? "s" : ""} ${minutes} minute${minutes !== 1 ? "s" : ""} ${seconds} second${seconds !== 1 ? "s" : ""}`;
+	};
+
+	handleMandatoryProofReload = () => {
+		// Increment reloadKey to force AuditStoreSections to remount
+		this.setState((prevState) => ({
+			reloadKey: prevState.reloadKey + 1,
+		}));
+	};
+
+	handleSectionProofChange = () => {
+		this.setState((prev)=>({
+			sectionproof_change : !prev.sectionproof_change
+		}));
+	};
+
 	qaOkButtonClicked = () => {
-		qaOk(this.props.params.auditStoreId).then(this.setAuditStore, (err) => {
+		const totalTime = localStorage.getItem(`timer_${this.props.params.auditStoreId}`);
+		let moderatorSubmissionTime;
+		if (totalTime) {
+			const seconds = parseInt(totalTime, 10);
+			moderatorSubmissionTime = this.formatTime(seconds);
+		}
+		qaOk(this.props.params.auditStoreId,moderatorSubmissionTime).then(this.setAuditStore, (err) => {
 			if (err.responseJSON && err.responseJSON.non_field_errors) {
 				this.setState({
-					errorMessage: err.responseJSON.non_field_errors[0]
+					errorMessage: err.responseJSON.non_field_errors[0],
 				});
 			}
 		});
@@ -219,7 +371,7 @@ export default class AuditStoreDetails extends React.Component {
 		}
 		if (this.state.auditStore.status === "ASSIGNED" || this.state.auditStore.status === "ACKNOWLEDGED" || this.state.auditStore.status === "SUBMITTED") {
 			// failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-default pull-right">Fail</button>);
-			failButton = (<Link to={`${this.props.location.pathname}/fail`}><button type="button" className="btn btn-default pull-right">Fail</button></Link>);
+			failButton = (<Link to={`${this.props.location.pathname}/fail`}><button type="button" className="btn btn-default pull-right" style={{backgroundColor:"#d9534f",color:"white"}}>Fail</button></Link>);
 		}
 		if (this.state.auditStore.status === "SUBMITTED") {
 			if (this.state.auditStore.user.agencyuser) {
@@ -254,6 +406,8 @@ export default class AuditStoreDetails extends React.Component {
 		let errorMessageElement = (<span>{this.state.errorMessage}</span>);
 		let editable = this.state.auditStore && this.state.auditStore.status === "SUBMITTED";
 
+		var storeElement = null;
+		var submitStore = null;
 		var selectElement = null;
 		var textareaElement = null;
 		var checkpointButton = null;
@@ -365,6 +519,9 @@ export default class AuditStoreDetails extends React.Component {
 				{checkpointButton}
 				<h2 className="page-header">
 					{failButton}
+					{this.state.isTimerRunning && ( <button type="button" className="btn btn-default pull-right" style={{marginRight:".5rem"}}>
+						{this.formatTime(this.state.timerValue)}
+					</button>)}
 					<File /> Audit Report - {this.state.auditStore.id}
 					{faultyReportMessage}
 				</h2>
@@ -436,7 +593,11 @@ export default class AuditStoreDetails extends React.Component {
 												<th>{this.state.auditStore.report_revert_count}</th>
 											</tr>
 											<tr>
-												<td className="text-right">Overall Audit Score:</td>
+												<td className="text-right">Report Submission Time:</td>
+												<th>{this.state.auditStore.report_submission_time ? this.formatTimewWithHourMinute(this.state.auditStore.report_submission_time) : "0 hours 0 minutes 0 seconds"}</th>
+											</tr>
+											<tr>
+												<td className="text-right">Report Completion %:</td>
 												<th>
 													{this.state.auditStore.audit_store_percentage === null ? <span>---</span> :
 														<div className="progress" style={{ width: "100px" }}>
@@ -456,7 +617,7 @@ export default class AuditStoreDetails extends React.Component {
 											<tr>
 												<td className="text-right">QA Report Feedback:</td>
 												<th>
-													{this.state.auditStore.qa_rating_feedback && this.state.auditStore.qa_rating_feedback.length > 0 && this.state.auditStore.qa_rating_feedback.join(", ")}{" "}(<Link to={`${this.props.location.pathname}/rate`}>change</Link>)
+													{this.state.auditStore.qa_rating_feedback && this.state.auditStore.qa_rating_feedback.length>0 &&  this.state.auditStore.qa_rating_feedback.join(", ")}(<Link to={`${this.props.location.pathname}/rate`}>change</Link>)
 												</th>
 											</tr>
 											<tr>
@@ -483,7 +644,14 @@ export default class AuditStoreDetails extends React.Component {
 										{textareaElement}
 									</div>
 								</div>
-
+								<div className="row" style={paddingStyle}>
+									<div className="col-md-8">
+										{storeElement}
+									</div>
+									<div className="col-md-4">
+										{submitStore}
+									</div>
+								</div>
 								<div className="panel panel-default">
 									<div className="panel-body">
 										<MarkdownViewer markdown={this.state.auditStore.audit.audit_cycle.post_approval_description || ""} />
@@ -605,14 +773,17 @@ export default class AuditStoreDetails extends React.Component {
 				</div>
 
 				{refresh_report_button}
-				<MandatoryProofBox auditStoreId={this.props.params.auditStoreId} />
+				<MandatoryProofBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable} onReload={this.handleMandatoryProofReload} sectionproof_change={this.state.sectionproof_change}/>
 				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable} />
 				{this.state.proof_not_available.length > 0 && <ProofNotAvailable proof_not_available={this.state.proof_not_available} />}
 				{/* <ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} /> */}
 				{this.state.auditStore.audit.audit_cycle.audit_report_summary ?
 					<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} />
 					: null}
-				<AuditStoreSections auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore} />
+				<AuditStoreSections
+					key={this.state.reloadKey} // to force remount when mandatoryproofbox changes
+					handleSectionProofChange={this.handleSectionProofChange}
+					auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore} />
 				{this.props.children}
 
 				{sidebarElement}

@@ -75,6 +75,17 @@ def set_nps_section(audit_store_id, user_id, nps_section):
     else:
         raise AppLogicError("Cannot set NPS Section of current audit store")
 
+@atomic
+def set_report_submission_time(audit_store_id, user_id, report_submission_time):
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
+    if audit_store.is_editable_by_auditor():
+        duration = report_submission_time
+        audit_store = AuditStore.objects.get(id=audit_store_id)
+        audit_store.report_submission_time = duration
+        audit_store.save()
+        return audit_store
+    else:
+        raise AppLogicError("Cannot set set report submission time of current audit store")
 
 @atomic
 def submit_report(audit_store_id, user_id):

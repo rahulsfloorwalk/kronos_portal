@@ -214,6 +214,13 @@ export class AuditStoreDetails extends React.Component{
 			location.reload();
 		});
 	};
+	formatTimewWithHourMinute = (timeString) => {
+		if (!timeString || timeString === "00:00:00") {
+			return "0 hours 0 minutes 0 seconds";
+		}
+		const [hours, minutes, seconds] = timeString.split(":").map(Number);
+		return `${hours} hour${hours !== 1 ? "s" : ""} ${minutes} minute${minutes !== 1 ? "s" : ""} ${seconds} second${seconds !== 1 ? "s" : ""}`;
+	};
 
 	render(){
 		const allowedUserIds = [4152,14287,305659,11413];
@@ -506,6 +513,14 @@ export class AuditStoreDetails extends React.Component{
 									<tr style={this.props.auditStore.report_revert_count>0 ? {color:"red"}: null}>
 										<td className="text-right">Report Revert Count:</td>
 										<th>{this.props.auditStore.report_revert_count}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Auditor Report Submit Time:</td>
+										<th>{ this.formatTimewWithHourMinute(this.props.auditStore.report_submission_time)}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Moderator Report Submit Time:</td>
+										<th>{ this.formatTimewWithHourMinute(this.props.auditStore.moderator_submission_time)}</th>
 									</tr>
 									<tr>
 										<td className="text-right">Report Rating:</td>

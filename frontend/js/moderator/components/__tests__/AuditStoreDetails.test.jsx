@@ -139,24 +139,39 @@ describe("<AuditStoreDetails/>", () => {
 		});
 	});
 
-	it("calls qaOk when QA OK button is clicked", (done) => {
-		sampleAuditStore.status = "SUBMITTED";
-		sampleAuditStore.qa_rating = 2;
-		findById.mockResolvedValue(sampleAuditStore);
-		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
-		findProofNotAvailable.mockResolvedValue([]);
-		qaOk.mockResolvedValue(Object.assign({}, sampleAuditStore, {
-			status: "PM_REVIEW",
-		}));
-		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
-		setTimeout(() => {
-			r.update();
-			const qaOkButton = r.find("div.panel-footer > button").at(1);
-			expect(qaOkButton.length).toEqual(1);
-			expect(qaOkButton.text()).toEqual("Forward to PM");
-			qaOkButton.simulate("click");
-			expect(qaOk).toBeCalledWith(sampleParams.auditStoreId);
-			done();
-		});
+	describe("AuditStoreDetails", () => {
+    it("calls qaOk with auditStoreId and moderatorSubmissionTime when QA OK button is clicked", (done) => {
+        // Mock sample data
+        sampleAuditStore.status = "SUBMITTED";
+        sampleAuditStore.qa_rating = 2;
+        findById.mockResolvedValue(sampleAuditStore);
+        FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
+        qaOk.mockResolvedValue(Object.assign({}, sampleAuditStore, {
+            status: "PM_REVIEW",
+        }));
+
+        // Mock localStorage.getItem
+        const mockTotalTime = "3600"; // Example: 3600 seconds (1 hour)
+        const mockModeratorSubmissionTime = "01:00:00"; // Expected formatted time
+        jest.spyOn(Storage.prototype, "getItem").mockReturnValue(mockTotalTime);
+
+        // Render component
+        const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation} />);
+
+        setTimeout(() => {
+            r.update();
+            const qaOkButton = r.find("div.panel-footer > button").at(1);
+            expect(qaOkButton.length).toEqual(1);
+            expect(qaOkButton.text()).toEqual("Forward to PM");
+            qaOkButton.simulate("click");
+
+            // Verify qaOk is called with auditStoreId and formatted time
+            expect(qaOk).toBeCalledWith(sampleParams.auditStoreId, mockModeratorSubmissionTime);
+
+            // Cleanup mocks
+            Storage.prototype.getItem.mockRestore();
+            done();
+        });
+    });
 	});
 });

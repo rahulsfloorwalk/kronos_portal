@@ -14,6 +14,12 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     >
       <button
         className="btn btn-default pull-right"
+        style={
+          Object {
+            "backgroundColor": "#d9534f",
+            "color": "white",
+          }
+        }
         type="button"
       >
         Fail
@@ -396,7 +402,46 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 0,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -476,6 +521,8 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -581,6 +628,12 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     >
       <button
         className="btn btn-default pull-right"
+        style={
+          Object {
+            "backgroundColor": "#d9534f",
+            "color": "white",
+          }
+        }
         type="button"
       >
         Fail
@@ -963,7 +1016,46 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -1043,6 +1135,8 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -1148,6 +1242,12 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     >
       <button
         className="btn btn-default pull-right"
+        style={
+          Object {
+            "backgroundColor": "#d9534f",
+            "color": "white",
+          }
+        }
         type="button"
       >
         Fail
@@ -1530,7 +1630,46 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 2,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -1610,6 +1749,8 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -1715,6 +1856,12 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     >
       <button
         className="btn btn-default pull-right"
+        style={
+          Object {
+            "backgroundColor": "#d9534f",
+            "color": "white",
+          }
+        }
         type="button"
       >
         Fail
@@ -2097,7 +2244,46 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -2177,6 +2363,8 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -2282,6 +2470,12 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     >
       <button
         className="btn btn-default pull-right"
+        style={
+          Object {
+            "backgroundColor": "#d9534f",
+            "color": "white",
+          }
+        }
         type="button"
       >
         Fail
@@ -2664,7 +2858,46 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": null,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -2744,6 +2977,8 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -3234,7 +3469,46 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "ACCEPTED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -3314,6 +3588,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -3419,6 +3695,12 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     >
       <button
         className="btn btn-default pull-right"
+        style={
+          Object {
+            "backgroundColor": "#d9534f",
+            "color": "white",
+          }
+        }
         type="button"
       >
         Fail
@@ -3808,7 +4090,46 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "ACKNOWLEDGED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -3888,6 +4209,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -3993,6 +4316,12 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     >
       <button
         className="btn btn-default pull-right"
+        style={
+          Object {
+            "backgroundColor": "#d9534f",
+            "color": "white",
+          }
+        }
         type="button"
       >
         Fail
@@ -4375,7 +4704,46 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -4455,6 +4823,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -4930,7 +5300,46 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "COMPLETED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -5010,6 +5419,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -5485,7 +5896,46 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "FAILED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -5565,6 +6015,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -6040,7 +6492,46 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "PM_REVIEW",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -6120,6 +6611,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -6595,7 +7088,46 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "REJECTED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -6675,6 +7207,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -6780,6 +7314,12 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     >
       <button
         className="btn btn-default pull-right"
+        style={
+          Object {
+            "backgroundColor": "#d9534f",
+            "color": "white",
+          }
+        }
         type="button"
       >
         Fail
@@ -7211,7 +7751,46 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     Refresh Report
   </button>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "SUBMITTED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={true}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -7291,6 +7870,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
@@ -7766,7 +8347,46 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     </div>
   </div>
   <MandatoryProofBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "WITHDRAWN",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
     auditStoreId="5"
+    editable={false}
+    onReload={[Function]}
+    sectionproof_change={false}
   />
   <AttachmentBox
     auditStore={
@@ -7846,6 +8466,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       }
     }
     auditStoreId={5}
+    handleSectionProofChange={[Function]}
+    key="0"
   />
   <div
     className="modal"
