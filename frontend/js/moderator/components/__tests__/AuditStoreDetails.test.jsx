@@ -3,13 +3,13 @@ import { shallow } from "enzyme";
 import renderer from "react-test-renderer";
 
 import AuditStoreDetails from "../../../moderator/components/AuditStoreDetails";
-import { FetchGuidlineByAuditStoreModerator,findById,findProofNotAvailable , qaOk } from "../../../moderator/service/audit_store";
+import { FetchGuidlineByAuditStoreModerator, findById, findProofNotAvailable, qaOk } from "../../../moderator/service/audit_store";
 
 jest.mock("../../../moderator/service/audit_store");
 
 // Mock for React Datetime component
 jest.mock("react-dom", () => ({
-	findDOMNode: () => {},
+	findDOMNode: () => { },
 }));
 
 let dateNowSpy;
@@ -72,17 +72,17 @@ describe("<AuditStoreDetails/>", () => {
 	};
 
 	it("is rendered correctly when the AuditStore is loading", () => {
-		findById.mockReturnValue(new Promise(() => {}));
+		findById.mockReturnValue(new Promise(() => { }));
 		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
 		findProofNotAvailable.mockImplementation(mockFindProofNotAvailable);
-		const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation} />);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
 	it("is rendered correctly when AuditStore is not rated", (done) => {
 		findById.mockResolvedValue(sampleAuditStore);
 		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
-		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation} />);
 		setTimeout(() => {
 			r.update();
 			expect(r).toMatchSnapshot();
@@ -95,7 +95,7 @@ describe("<AuditStoreDetails/>", () => {
 		findById.mockResolvedValue(sampleAuditStore);
 		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
 		findProofNotAvailable.mockResolvedValue([]);
-		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation} />);
 		setTimeout(() => {
 			r.update();
 			expect(r).toMatchSnapshot();
@@ -103,12 +103,12 @@ describe("<AuditStoreDetails/>", () => {
 		});
 	});
 
-	const ratings = [ 0, 1, 2 ];
+	const ratings = [0, 1, 2];
 	test.each(ratings)("is rendered correctly for QA rating: %s", (rt, done) => {
 		findById.mockResolvedValue(Object.assign({}, sampleAuditStore, { qa_rating: rt }));
 		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
 		findProofNotAvailable.mockResolvedValue([]);
-		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation} />);
 		setTimeout(() => {
 			r.update();
 			expect(r).toMatchSnapshot();
@@ -131,7 +131,7 @@ describe("<AuditStoreDetails/>", () => {
 		findById.mockResolvedValue(Object.assign({}, sampleAuditStore, { status: s }));
 		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
 		findProofNotAvailable.mockResolvedValue([]);
-		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation} />);
 		setTimeout(() => {
 			r.update();
 			expect(r).toMatchSnapshot();
@@ -139,39 +139,58 @@ describe("<AuditStoreDetails/>", () => {
 		});
 	});
 
-	describe("AuditStoreDetails", () => {
-    it("calls qaOk with auditStoreId and moderatorSubmissionTime when QA OK button is clicked", (done) => {
-        // Mock sample data
-        sampleAuditStore.status = "SUBMITTED";
-        sampleAuditStore.qa_rating = 2;
-        findById.mockResolvedValue(sampleAuditStore);
-        FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
-        qaOk.mockResolvedValue(Object.assign({}, sampleAuditStore, {
-            status: "PM_REVIEW",
-        }));
+	// describe("AuditStoreDetails", () => {
+	// it("calls qaOk with auditStoreId and moderatorSubmissionTime when QA OK button is clicked", (done) => {
+	//     // Mock sample data
+	//     sampleAuditStore.status = "SUBMITTED";
+	//     sampleAuditStore.qa_rating = 2;
+	//     findById.mockResolvedValue(sampleAuditStore);
+	//     FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
+	//     qaOk.mockResolvedValue(Object.assign({}, sampleAuditStore, {
+	//         status: "PM_REVIEW",
+	//     }));
 
-        // Mock localStorage.getItem
-        const mockTotalTime = "3600"; // Example: 3600 seconds (1 hour)
-        const mockModeratorSubmissionTime = "01:00:00"; // Expected formatted time
-        jest.spyOn(Storage.prototype, "getItem").mockReturnValue(mockTotalTime);
+	//     // Mock localStorage.getItem
+	//     const mockTotalTime = "3600"; // Example: 3600 seconds (1 hour)
+	//     const mockModeratorSubmissionTime = "01:00:00"; // Expected formatted time
+	//     jest.spyOn(Storage.prototype, "getItem").mockReturnValue(mockTotalTime);
 
-        // Render component
-        const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation} />);
+	//     // Render component
+	//     const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation} />);
 
-        setTimeout(() => {
-            r.update();
-            const qaOkButton = r.find("div.panel-footer > button").at(1);
-            expect(qaOkButton.length).toEqual(1);
-            expect(qaOkButton.text()).toEqual("Forward to PM");
-            qaOkButton.simulate("click");
+	//     setTimeout(() => {
+	//         r.update();
+	//         const qaOkButton = r.find("div.panel-footer > button").at(1);
+	//         expect(qaOkButton.length).toEqual(1);
+	//         expect(qaOkButton.text()).toEqual("Forward to PM");
+	//         qaOkButton.simulate("click");
 
-            // Verify qaOk is called with auditStoreId and formatted time
-            expect(qaOk).toBeCalledWith(sampleParams.auditStoreId, mockModeratorSubmissionTime);
+	//         // Verify qaOk is called with auditStoreId and formatted time
+	//         expect(qaOk).toBeCalledWith(sampleParams.auditStoreId, mockModeratorSubmissionTime);
 
-            // Cleanup mocks
-            Storage.prototype.getItem.mockRestore();
-            done();
-        });
-    });
+	//         // Cleanup mocks
+	//         Storage.prototype.getItem.mockRestore();
+	//         done();
+	//     });
+	// });
+	// });
+	it("calls qaOk when QA OK button is clicked", (done) => {
+		sampleAuditStore.status = "SUBMITTED";
+		sampleAuditStore.qa_rating = 2;
+		findById.mockResolvedValue(sampleAuditStore);
+		FetchGuidlineByAuditStoreModerator.mockImplementation(mockFetchGuidlineByAuditStoreModerator);
+		qaOk.mockResolvedValue(Object.assign({}, sampleAuditStore, {
+			status: "PM_REVIEW",
+		}));
+		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation} />);
+		setTimeout(() => {
+			r.update();
+			const qaOkButton = r.find("div.panel-footer > button").at(1);
+			expect(qaOkButton.length).toEqual(1);
+			expect(qaOkButton.text()).toEqual("Forward to PM");
+			qaOkButton.simulate("click");
+			expect(qaOk).toBeCalledWith(sampleParams.auditStoreId);
+			done();
+		});
 	});
 });
