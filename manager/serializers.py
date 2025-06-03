@@ -422,7 +422,9 @@ class AuditStoreSerializer(ModelSerializer):
             'find_faulty_report_count',
             'check_points',
             'audit_store_percentage',
-            'report_revert_count'
+            'report_revert_count',
+            'report_submission_time',
+            'moderator_submission_time'
         )
         read_only_fields = fields
 

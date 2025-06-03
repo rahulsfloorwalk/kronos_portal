@@ -48,26 +48,28 @@ export default class AuditorNameDisplay extends Component {
 		}
 		return (
 			<div>
-				<div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", gap: ".3rem" }}><b>{auditorName}</b>| ({auditorPhoneLink}) |
 
-					{(location.href == `http://localhost:8080/static/moderator#/audit_store/${this.props.id}/report` && this.props.user.profileinfo.whatsapp_number) ?
-						<div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", gap: ".3rem" }}>
-							(
-							<a
-								href={whatsappUrl}
-								target="_blank"
-								rel="noopener noreferrer"
-								style={{ textDecoration: "none", }}
-								title={`Message ${auditorName} on WhatsApp`}
-							>
-								<FaWhatsapp size={20} color="#25D366" />
-							</a> {" "} {auditorWhatsappLink} )
-						</div>
-						: null
+				{(location.href==`http://localhost:8080/static/moderator#/audit_store/${this.props.id}/report` && this.props.user.profileinfo.whatsapp_number) ?
+				<>
+					<div style={{display:"flex",justifyContent:"flex-start",alignItems:"center",gap:".3rem"}}><b>{auditorName}</b> | ({auditorPhoneLink}) |</div>
+					<div style={{display:"flex",justifyContent:"flex-start",alignItems:"center",gap:".3rem"}}>
+						(
+						<a
+							href={whatsappUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							style={{ textDecoration: "none", marginLeft: "5px", }}
+							title={`Message ${auditorName} on WhatsApp`}
+						>
+							<FaWhatsapp size={17} color="#25D366"/>
+						</a> :- {auditorWhatsappLink}) {" "}
+						|
+					</div>
+				</>
+					: <div style={{display:"flex",justifyContent:"flex-start",alignItems:"center",gap:".3rem"}}><b>{auditorName}</b>  ({auditorPhoneLink}) </div>
+				}
+			</div>
 
-					}
-				</div>
-			</div >
 		);
 	}
 }

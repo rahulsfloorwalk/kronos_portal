@@ -544,7 +544,8 @@ class AuditStoreSerializer(ModelSerializer):
             # 'manager_email_list',            
             'manager_info_list',
             'report_revert_count',
-            'completion_percentage'
+            'completion_percentage',
+            'report_submission_time',
         )
         read_only_fields = fields
 

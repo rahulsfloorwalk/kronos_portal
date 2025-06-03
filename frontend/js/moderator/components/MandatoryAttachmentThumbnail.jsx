@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { truncateStyle, pointerStyle } from "../../styles.js";
 import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";
-
+import { Cross } from "../../components/Icons.jsx";
 import loadingImageUrl from "../../../img/ripple.svg";
 import attachmentErrorImgUrl from "../../../img/error_100.png";
 import attachmentMicrophoneImgUrl from "../../../img/microphone_100.png";
@@ -19,6 +19,21 @@ export default class MandatoryAttachmentThumbnail extends Component {
 			file_name: PropTypes.string,
 			proof_tag: PropTypes.any,
 		}),
+		user: PropTypes.string,
+		selected: PropTypes.bool,
+		deletable: PropTypes.bool,
+
+		onSelect: PropTypes.func,
+		onDelete: PropTypes.func,
+
+		editable: PropTypes.bool,
+
+		faulty_report_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+		proof_tags: PropTypes.array,
+		onChange: PropTypes.func,
+		faulty_attachment_url: PropTypes.string,
+		section_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 	};
 
 	constructor(props) {
@@ -31,6 +46,19 @@ export default class MandatoryAttachmentThumbnail extends Component {
 			showModal: false,
 		};
 	}
+	showDeleteModal = (e) => {
+		e.stopPropagation();
+		this.setState({ display: "block" });
+	};
+
+	hideDeleteModal = () => {
+		this.setState({ display: "none" });
+	};
+	delete_hideModal = () => {
+		this.props.onDelete();
+		this.setState({ display: "none" });
+	};
+
 	showModal = () => {
 		this.setState({ showModal: true });
 	};
@@ -79,6 +107,10 @@ export default class MandatoryAttachmentThumbnail extends Component {
 	}
 	render() {
 		let a = this.props.attachment;
+		let proof_tag_select_box_style;
+		let selected = this.props.selected || false;
+		// let onSelect = this.props.onSelect || (() => { });
+		let selectable = !!this.props.onSelect;
 
 		let divStyle = Object.assign({}, pointerStyle, {
 			display: "inline-block",
@@ -112,6 +144,94 @@ export default class MandatoryAttachmentThumbnail extends Component {
 		if (this.state.hover) {
 			divStyle.border = "solid #337AB7 2px";
 		}
+
+		// ---------------------------------
+
+
+		/*var contentStyle = {
+		  "width": "20px",
+		  "height": "20px",
+		};*/
+
+		// var faulty_style = {
+		//   "fontSize": "14px",
+		//   "color": "red"
+		// };
+
+
+
+		const modalStyle = {
+			display: this.state.display,
+			overflow: "scroll"
+		};
+		const modalBackdropStyle = {
+			zIndex: "1060",
+			height: "100%"
+		};
+		const modalDialogStyle = {
+			zIndex: "1070",
+		};
+
+		if (selectable && (this.state.hover || selected)) {
+			divStyle.border = "solid #337AB7 2px";
+		}
+		if (selected) {
+			fileNameStyle.backgroundColor = "rgba(51,122,183,0.8)";
+			fileNameStyle.color = "White";
+			anchorStyle.color = "White";
+		}
+
+		let deleteButton;
+		let proof_tag_select_box;
+		let option_tag_list = [];
+		if (this.props.user == "auditor") {
+			for (let p of this.props.proof_tags) {
+				if (p.section_id === this.props.section_id) {
+					option_tag_list.push(<option key={p.id} value={p.id}>{p.proof_tag}</option>);
+				}
+			}
+		}
+		else {
+			for (let p of this.props.proof_tags) {
+				option_tag_list.push(<option key={p.id} value={p.id}>{p.proof_tag}</option>);
+			}
+		}
+
+		if (this.props.deletable && this.props.onDelete) {
+			deleteButton = (
+				<button className="btn btn-default btn-sm pull-right" onClick={this.showDeleteModal} title="Delete Attachment">
+					<Cross />
+				</button>
+			);
+			if (option_tag_list.length > 0) {
+				let proof_tag_select_box_value;
+				if (this.props.attachment.proof_tag) {
+					proof_tag_select_box_value = this.props.attachment.proof_tag;
+					proof_tag_select_box_style = {
+						fontSize: "12px",
+						width: "145px",
+						height: "30px",
+						backgroundColor: "#DFF0D8",
+					};
+				}
+				else {
+					proof_tag_select_box_value = "";
+					proof_tag_select_box_style = {
+						fontSize: "12px",
+						width: "145px",
+						height: "30px",
+						backgroundColor: "#F2DEDE",
+						border: "1px solid #ed0c0c",
+					};
+				}
+				proof_tag_select_box = (<select className="form-control form-control-sm" value={proof_tag_select_box_value} style={proof_tag_select_box_style} onChange={this.props.onChange}>
+					<option value="">Select Tag</option>
+					{option_tag_list}
+				</select>);
+			}
+		}
+
+		// ------------------------------------
 
 		let imageSrc;
 		switch (a.proof_type) {
@@ -157,7 +277,8 @@ export default class MandatoryAttachmentThumbnail extends Component {
 					onMouseEnter={this.onMouseEnter}
 					onMouseLeave={this.onMouseLeave}
 				>
-					<div style={fileNameStyle}>
+					{deleteButton}
+					<div style={fileNameStyle} onClick={(e) => e.stopPropagation()}>
 						<AttachmentProofIcon proofType={a.proof_type} />
 						&nbsp;
 						<a href={a.direct_url} style={anchorStyle}>
@@ -171,6 +292,27 @@ export default class MandatoryAttachmentThumbnail extends Component {
 						onLoad={this.onImageLoad}
 						onError={this.onImageError}
 					/>
+				</div>
+				<div style={{ marginLeft: "5px", marginBottom: "10px" }}>
+					{proof_tag_select_box}
+				</div>
+				<div className="modal" tabIndex="-1" style={modalStyle}>
+					<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideDeleteModal} />
+					<div className="modal-dialog" style={modalDialogStyle}>
+						<div className="modal-content">
+							<div className="modal-header">
+								<button type="button" className="close" onClick={this.hideDeleteModal}>&times;</button>
+								<h4 className="modal-title">Delete Attachment</h4>
+							</div>
+							<div className="modal-body">
+								Are you sure you want to delete <b>{this.props.attachment.file_name}</b> attachment ?
+							</div>
+							<div className="modal-footer">
+								<button type="button" className="btn btn-default" onClick={this.delete_hideModal}>Yes</button>
+								<button type="button" className="btn btn-default" onClick={this.hideDeleteModal}>No</button>
+							</div>
+						</div>
+					</div>
 				</div>
 				{this.state.showModal && (
 					<MandatoryAttachmentBiggerModal

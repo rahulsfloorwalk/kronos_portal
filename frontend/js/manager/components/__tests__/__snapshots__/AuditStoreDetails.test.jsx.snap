@@ -311,6 +311,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
               <td
                 className="text-right"
               >
+                Auditor Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Moderator Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Report Rating:
               </td>
               <th>
@@ -890,6 +910,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
               <td
                 className="text-right"
               >
+                Auditor Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Moderator Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Report Rating:
               </td>
               <th>
@@ -1403,6 +1443,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
                 Report Revert Count:
               </td>
               <th />
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Moderator Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
             </tr>
             <tr>
               <td
@@ -1982,6 +2042,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                 Report Revert Count:
               </td>
               <th />
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Moderator Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
             </tr>
             <tr>
               <td
@@ -2574,6 +2654,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
               <td
                 className="text-right"
               >
+                Auditor Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Moderator Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Report Rating:
               </td>
               <th>
@@ -3087,6 +3187,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
                 Report Revert Count:
               </td>
               <th />
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Moderator Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
             </tr>
             <tr>
               <td
@@ -3646,6 +3766,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
                 Report Revert Count:
               </td>
               <th />
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Moderator Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
             </tr>
             <tr>
               <td
@@ -4230,6 +4370,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
               <td
                 className="text-right"
               >
+                Auditor Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Moderator Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Report Rating:
               </td>
               <th>
@@ -4761,6 +4921,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
                 Report Revert Count:
               </td>
               <th />
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Moderator Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
             </tr>
             <tr>
               <td
@@ -5345,6 +5525,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
               <td
                 className="text-right"
               >
+                Auditor Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Moderator Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Report Rating:
               </td>
               <th>
@@ -5896,6 +6096,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
                 Report Revert Count:
               </td>
               <th />
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Moderator Report Submit Time:
+              </td>
+              <th>
+                0 hours 0 minutes 0 seconds
+              </th>
             </tr>
             <tr>
               <td

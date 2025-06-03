@@ -3,7 +3,7 @@ from django.db.transaction import atomic
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
-from questionnaire.models import Section
+from questionnaire.models import Section,SectionProofTag
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo
@@ -17,6 +17,7 @@ from answer.models import Answer
 from questionnaire.service import section_proof_tag as proof_tag_service
 from django.contrib.auth.models import User
 from questionnaire.models import Question
+from django.db.models import Prefetch
 
 import logging
 __logger = logging.getLogger(__name__)
@@ -42,7 +43,10 @@ def find_by_audit_cycle_and_id(audit_cycle_id, section_id):
 
 def find_by_audit_cycle_mandatory_proof(audit_cycle_id):
     try:
-        return Section.objects.filter(audit_cycle_id=audit_cycle_id)
+        # return Section.objects.filter(audit_cycle_id=audit_cycle_id,section_proof_tag__is_required=True)
+        return Section.objects.filter(audit_cycle_id=audit_cycle_id).prefetch_related(
+            Prefetch('section_proof_tag', queryset=SectionProofTag.objects.filter(is_required=True))
+        )
     except Exception as e:
         raise Exception("Error retrieving Sections for audit_cycle_id {}: {}".format(audit_cycle_id, e))
 

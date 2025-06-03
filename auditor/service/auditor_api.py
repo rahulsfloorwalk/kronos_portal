@@ -83,6 +83,7 @@ def get_auditor_dashboard_data_for_app(user_id):
     data = profile_info_service.find_profile_info_and_additional_info_by_user_id(user_id)
     profile_info = data["profile_info"]
     is_tour_complete = data["is_tour_complete"]
+    auditor_stats = {}
 
     if profile_info is not None and profile_info.first_name.strip():
         auditor_stats = stats.getAuditorStats(user_id)
@@ -743,6 +744,11 @@ def log_in_app(request):
     password = request.data.get("password")
     user = authenticate(username,password)
     if user:
+        if not user.is_active:
+            response = {'detail': 'User is Inactive. Please contact support.'}
+            status = 400
+            return response, status
+
         otp_verification_exists = OTPVerification.objects.filter(user_id=user.id,is_verified=True).exists()
         verification_exists = Verification.objects.filter(user_id=user.id,is_verified=True).exists()
         # if not user.otpverification.is_verified :

@@ -17,6 +17,12 @@ exports[`<QuestionRow/> renders the question row correctly when answer has 0 mar
         className="form-control"
         onBlur={[Function]}
         onChange={[Function]}
+        style={
+          Object {
+            "overflow": "hidden",
+            "resize": "none",
+          }
+        }
         value="We were 4; two adults and two kids."
       />
     </div>
@@ -85,6 +91,12 @@ exports[`<QuestionRow/> renders the question row correctly when answer has non 0
         className="form-control"
         onBlur={[Function]}
         onChange={[Function]}
+        style={
+          Object {
+            "overflow": "hidden",
+            "resize": "none",
+          }
+        }
         value="We were 4; two adults and two kids."
       />
     </div>

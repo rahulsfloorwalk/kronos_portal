@@ -15,14 +15,14 @@ exports[`<AuditorNameDisplay/> renders the agency name and phone correctly for m
     <b>
       GAIKI
     </b>
-    | (
+      (
     <a
       href="tel: 1234567898"
     >
        
       1234567898
     </a>
-    ) |
+    ) 
   </div>
 </div>
 `;
@@ -42,14 +42,14 @@ exports[`<AuditorNameDisplay/> renders the auditor name and phone correctly for 
     <b>
       Raghava Sowrya
     </b>
-    | (
+      (
     <a
       href="tel: 8123450516"
     >
        
       8123450516
     </a>
-    ) |
+    ) 
   </div>
 </div>
 `;

@@ -218,7 +218,9 @@ class AuditStoreSerializer(ModelSerializer):
             'find_faulty_report_count',
             'check_points',
             'report_revert_count',
-            'manager_info_list'
+            'manager_info_list',
+            'report_submission_time',
+            'moderator_submission_time'
         )
         read_only_fields = fields
 
@@ -296,7 +298,9 @@ class AuditStoreSerializerForList(ModelSerializer):
             'earnings_per_audit',
             'reimbursement',
             'critical_report',
-            'critical_status'
+            'critical_status',
+            'report_submission_time',
+            'moderator_submission_time',
         )
         read_only_fields = fields
 

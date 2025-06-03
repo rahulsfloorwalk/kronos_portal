@@ -9,6 +9,7 @@ from . import service as attachment_service
 import audit_store.service as audit_store_service_section
 from answer.service import report_section as report_section_service
 from audit_store.models import AuditStore
+from django.db.transaction import atomic
 
 def find_by_audit_store_for_moderator(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id_for_moderator(audit_store_id, user_id)
@@ -65,6 +66,18 @@ def complete_for_moderator(attachment_id, user_id):
         raise AppLogicError("cannot complete attachment now")
 
     return attachment_service.complete(attachment_id)
+
+@atomic
+def set_report_submission_time(audit_store_id, user_id, moderator_submission_time):
+    audit_store = audit_store_service.find_by_id_for_moderator(audit_store_id, user_id)
+    if audit_store.is_editable_by_moderator():
+        duration = moderator_submission_time
+        audit_store = AuditStore.objects.get(id=audit_store_id)
+        audit_store.moderator_submission_time = duration
+        audit_store.save()
+        return audit_store
+    else:
+        raise AppLogicError("Cannot set set report submission time of current audit store")
 
 def delete_for_moderator(attachment_id, user_id):
     audit_store = attachment_service.get_audit_store_for_attachment(attachment_id)

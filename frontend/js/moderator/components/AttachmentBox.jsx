@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 // import $ from "jquery";
 
 // import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment ,moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
-import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, rotateImageAngle } from "../service/attachment.js";
+import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, rotateImageAngle } from "../service/attachment.js";
 // import { fetchSections } from "../service/section.js";
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
@@ -25,7 +25,7 @@ export default class AttachmentBox extends React.Component {
 			status: PropTypes.string.isRequired,
 			audit: PropTypes.object
 		}),
-		editable:PropTypes.bool
+		editable: PropTypes.bool
 	};
 
 	state = {
@@ -35,7 +35,7 @@ export default class AttachmentBox extends React.Component {
 		selectedAttachment: undefined,
 		// sections:[],
 		// sectionId : "",
-		submitMessage : "",
+		submitMessage: "",
 		submitStatus: "",
 		showErrors: false,
 		disableRotateButton: false
@@ -52,10 +52,10 @@ export default class AttachmentBox extends React.Component {
 	componentDidMount() {
 		this.reloadState();
 		/*fetchSections(this.props.auditStoreId).then((sections) => {
-			this.setState({
-				sections
-			});
-		});*/
+				this.setState({
+					sections
+				});
+			});*/
 		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
 			this.setState({
 				proof_tags
@@ -70,7 +70,7 @@ export default class AttachmentBox extends React.Component {
 	};
 
 	deleteButtonClicked = () => {
-		if( this.state.selectedAttachment){
+		if (this.state.selectedAttachment) {
 			deleteAttachment(this.state.selectedAttachment.id).then(() => {
 				this.setState({
 					selectedAttachment: null,
@@ -80,30 +80,31 @@ export default class AttachmentBox extends React.Component {
 		}
 	};
 
-	attachmentRenamed = (file_name) => {
-		renameAttachment(this.state.selectedAttachment.id, file_name).done((a)=>{
+	saveAttachmentTag = (attachment_id, e) => {
+		saveAttachmentTag(attachment_id, e.target.value).then((a) => {
 			this.setState({
-				selectedAttachment: a
+				selectedAttachment: a,
 			});
-			for( let i in this.state.attachments){
-				if(this.state.attachments[i].id === a.id){
-					let arr = this.state.attachments;
+			for (let i in this.state.mandatory_proof_tags) {
+				if (this.state.mandatory_proof_tags[i].id === a.id) {
+					let arr = this.state.mandatory_proof_tags;
 					arr[i] = a;
 					this.setState({
-						attachments: arr
+						mandatory_proof_tags: arr,
 					});
+					this.reloadState();
 				}
 			}
 		});
 	};
 
 	saveAttachmentTag = (attachment_id, e) => {
-		saveAttachmentTag(attachment_id, e.target.value).then((a)=>{
+		saveAttachmentTag(attachment_id, e.target.value).then((a) => {
 			this.setState({
 				selectedAttachment: a
 			});
-			for( let i in this.state.attachments){
-				if(this.state.attachments[i].id === a.id){
+			for (let i in this.state.attachments) {
+				if (this.state.attachments[i].id === a.id) {
 					let arr = this.state.attachments;
 					arr[i] = a;
 					this.setState({
@@ -119,7 +120,7 @@ export default class AttachmentBox extends React.Component {
 	};
 
 	setProgressState = (tempId, progressState) => {
-		this.setState((prevState)=>{
+		this.setState((prevState) => {
 			return Object.assign({}, prevState, {
 				inProgress: Object.assign({}, prevState.inProgress, {
 					[tempId]: Object.assign({}, prevState.inProgress[tempId], progressState)
@@ -129,11 +130,11 @@ export default class AttachmentBox extends React.Component {
 	};
 
 	uploadFile = () => {
-		if( this.uploadInput.files.length > 10){
+		if (this.uploadInput.files.length > 10) {
 			alert("You can only upload 10 attachments at once");
 			return;
 		}
-		for( let toUploadFile of this.uploadInput.files){
+		for (let toUploadFile of this.uploadInput.files) {
 			let tempId = Math.random().toString(36).substring(7);
 			this.setProgressState(tempId, {
 				uploading: true,
@@ -141,38 +142,38 @@ export default class AttachmentBox extends React.Component {
 			});
 
 			let promise = uploadFileForAuditStore(this.props.auditStoreId, toUploadFile);
-			promise.progress((type, percent)=>{
-				switch(type){
+			promise.progress((type, percent) => {
+				switch (type) {
 				case "INIT":
 					this.setProgressState(tempId, {
-						uploadMessage :"initializing upload",
+						uploadMessage: "initializing upload",
 						active: false,
 					});
 					break;
 				case "STARTING_UPLOAD":
 					this.setProgressState(tempId, {
-						uploadMessage :"starting upload",
+						uploadMessage: "starting upload",
 						active: true,
 					});
 					break;
 				case "UPLOAD_PROGRESS":
 					this.setProgressState(tempId, {
-						uploadMessage :"",
+						uploadMessage: "",
 						progress: Math.floor(percent)
 					});
 					break;
 				}
 			});
-			promise.always(()=>{
+			promise.always(() => {
 				this.setProgressState(tempId, {
-					progress :"",
-					uploading:false,
+					progress: "",
+					uploading: false,
 					active: false
 				});
 			});
-			promise.then(()=>{
+			promise.then(() => {
 				this.setProgressState(tempId, {
-					uploadMessage :"upload successful",
+					uploadMessage: "upload successful",
 				});
 				this.reloadState();
 			}, (errorMessage) => {
@@ -186,37 +187,37 @@ export default class AttachmentBox extends React.Component {
 	};
 
 	/*getSectionId = (e) => {
-		this.setState({
-			sectionId : e.target.value
-		});
-	};
+		  this.setState({
+			  sectionId : e.target.value
+		  });
+	  };
 
-	moveAttachment = () => {
-		let attachmentlist = [];
-		$(".attachment_checkbox input:checked").each(function() {
-			let val = $(this).attr("value");
-			attachmentlist.push(val);
-		});
+	  moveAttachment = () => {
+		  let attachmentlist = [];
+		  $(".attachment_checkbox input:checked").each(function() {
+			  let val = $(this).attr("value");
+			  attachmentlist.push(val);
+		  });
 
-		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
-			window.location.reload();
-		},(err) => {
-			this.setState({
-				submitMessage : err.responseJSON.non_field_errors[0],
-				submitStatus: "danger",
-				showErrors: true,
-			});
-		});
-	};*/
+		  moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
+			  window.location.reload();
+		  },(err) => {
+			  this.setState({
+				  submitMessage : err.responseJSON.non_field_errors[0],
+				  submitStatus: "danger",
+				  showErrors: true,
+			  });
+		  });
+	  };*/
 
 	rotateImage = (angle) => {
-		this.setState({disableRotateButton: true});
-		rotateImageAngle(this.state.selectedAttachment.id, angle).then((a)=>{
+		this.setState({ disableRotateButton: true });
+		rotateImageAngle(this.state.selectedAttachment.id, angle).then((a) => {
 			this.setState({
 				selectedAttachment: a
 			});
-			for( let i in this.state.attachments){
-				if(this.state.attachments[i].id === a.id){
+			for (let i in this.state.attachments) {
+				if (this.state.attachments[i].id === a.id) {
 					let arr = this.state.attachments;
 					arr[i] = a;
 					this.setState({
@@ -224,7 +225,7 @@ export default class AttachmentBox extends React.Component {
 					});
 				}
 			}
-			this.setState({disableRotateButton: false});
+			this.setState({ disableRotateButton: false });
 		});
 	};
 
@@ -232,20 +233,20 @@ export default class AttachmentBox extends React.Component {
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
 		/*var contentStyle = {
-			"paddingTop": "2%"
-		};*/
+				"paddingTop": "2%"
+			};*/
 
-		if(! this.props.auditStore){
-			return <Loading/>;
+		if (!this.props.auditStore) {
+			return <Loading />;
 		}
 
 		var attachmentRows = [];
-		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} onDelete={this.deleteButtonClicked} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="moderator" editable={this.props.editable} deletable={this.props.editable} faulty_report_id={a.faulty_report_id} faulty_attachment_url={a.faulty_attachment_url} proof_tags={this.state.proof_tags} section_id={0} onChange={(e) => this.saveAttachmentTag(a.id, e)}/>);
+		for (let a of this.state.attachments) {
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} onDelete={this.deleteButtonClicked} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="moderator" editable={this.props.editable} deletable={this.props.editable} faulty_report_id={a.faulty_report_id} faulty_attachment_url={a.faulty_attachment_url} proof_tags={this.state.proof_tags} section_id={0} onChange={(e) => this.saveAttachmentTag(a.id, e)} />);
 		}
 
-		for(let id in this.state.inProgress){
-			if(this.state.inProgress[id].uploading || this.state.inProgress[id].error){
+		for (let id in this.state.inProgress) {
+			if (this.state.inProgress[id].uploading || this.state.inProgress[id].error) {
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
 				attachmentRows.push(<AttachmentInProgressThumbnail
 					key={id}
@@ -262,56 +263,56 @@ export default class AttachmentBox extends React.Component {
 			proof_tags={this.state.proof_tags}
 			onRename={this.attachmentRenamed}
 			onDelete={this.deleteButtonClicked}
-			onChange={(e)=>this.saveAttachmentTag(this.state.selectedAttachment.id, e)}
+			onChange={(e) => this.saveAttachmentTag(this.state.selectedAttachment.id, e)}
 			rotateImage={this.rotateImage}
 			section_id={0}
-			disableRotateButton={this.state.disableRotateButton}/>;
+			disableRotateButton={this.state.disableRotateButton} />;
 
 		let uploadButton;
-		if(this.props.auditStore.status === "SUBMITTED"){
+		if (this.props.auditStore.status === "SUBMITTED") {
 			attachmentRows.push(<div key="upload_input" className="hidden">
 				<input type="file" onChange={this.uploadFile} multiple
-					ref={(input)=>this.uploadInput = input}/>
+					ref={(input) => this.uploadInput = input} />
 			</div>);
-			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Plus/> Upload Attachment</button>);
+			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Plus /> Upload Attachment</button>);
 		}
 
-		const attachment_tags = this.state.attachments.map((value)=> value.proof_tag);
+		const attachment_tags = this.state.attachments.map((value) => value.proof_tag);
 
 		const proof_tag_list = [];
-		for(let tag of this.state.proof_tags){
+		for (let tag of this.state.proof_tags) {
 			const attach = attachment_tags.includes(tag.id);
 			proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={tag.is_required} />);
 		}
 
 		// var selectSection = null;
 
-		if( attachmentRows.length === 0){
-			return <Jumbotron heading="no attachments here" para="none uploaded"/>;
+		if (attachmentRows.length === 0) {
+			return <Jumbotron heading="no attachments here" para="none uploaded" />;
 		} else {
 			/*if(this.props.editable){
-				selectSection = (
-					<div className="col-md-4" style={contentStyle}>
-						<div className="col-md-8">
-							<select className="form-control" onChange={this.getSectionId}>
-								<option value="">Select Section</option>
-								{this.state.sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option> )}
-							</select>
-						</div>
-						<div className="col-md-2">
-							<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
-						</div>
-					</div>
-				);
-			}*/
+					  selectSection = (
+						  <div className="col-md-4" style={contentStyle}>
+							  <div className="col-md-8">
+								  <select className="form-control" onChange={this.getSectionId}>
+									  <option value="">Select Section</option>
+									  {this.state.sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option> )}
+								  </select>
+							  </div>
+							  <div className="col-md-2">
+								  <button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
+							  </div>
+						  </div>
+					  );
+				  }*/
 			return (
 				<div>
 					<div className="row page-header">
 						<div className="col-md-8">
-							<h3><Paperclip/> Attachments {uploadButton}</h3>
+							<h3><Paperclip /> Attachments {uploadButton}</h3>
 							<p>Proof list</p>
 							<AttachmentLegend />
-							<br/>
+							<br />
 							{proof_tag_list}
 							{submitMessageElement}
 						</div>
@@ -319,7 +320,7 @@ export default class AttachmentBox extends React.Component {
 					</div>
 
 					<div className="row">
-						<div className="col-md-4 attachment_checkbox" style={{maxHeight:"500px", overflowY: "auto"}}>
+						<div className="col-md-4 attachment_checkbox" style={{ maxHeight: "500px", overflowY: "auto" }}>
 							{attachmentRows}
 						</div>
 						<div className="col-md-8">
