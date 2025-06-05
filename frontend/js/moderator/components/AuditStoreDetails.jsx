@@ -9,7 +9,7 @@ import "react-datetime/css/react-datetime.css";
 import moment from "moment";
 import { momentDateFormat } from "../../../config.js";
 
-import { findById, qaOk, fail, unsubmit, submit, setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment,findProofNotAvailable } from "../service/audit_store.js";
+import { findById, qaOk, fail, unsubmit, submit, setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment, findProofNotAvailable } from "../service/audit_store.js";
 
 import { Calendar, File, Envelope } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -60,7 +60,9 @@ export default class AuditStoreDetails extends React.Component {
 			// isTimerRunning: false,
 			// forwardLoading: false,
 		};
-		// this.timerInterval = null;
+		this.timerValue = 0; // Store timer value in a class property
+		this.isTimerRunning = false; // Track timer state
+		this.timerInterval = null; // Store interval ID
 	}
 	setAuditStore = (auditStore) => {
 		this.setState({
@@ -68,132 +70,141 @@ export default class AuditStoreDetails extends React.Component {
 		});
 	};
 	componentDidMount() {
-		findById(this.props.params.auditStoreId).then(this.setAuditStore);
-		findProofNotAvailable(this.props.params.auditStoreId).then(result=>{
-			this.setState({proof_not_available:result});
+		findById(this.props.params.auditStoreId).then((auditStore) => {
+			this.setAuditStore(auditStore);
+			this.initializeTimer(); // Initialize timer after auditStore is set
+		});
+		findProofNotAvailable(this.props.params.auditStoreId).then(result => {
+			this.setState({ proof_not_available: result });
 		});
 		FetchGuidlineByAuditStoreModerator(this.props.params.auditStoreId).then((guideline) => this.setState({ guideline: guideline }));
-		// this.initializeTimer();  // Initialize timer
-		// document.addEventListener("visibilitychange", this.handleVisibilityChange); // Add visibility change listener
-		// window.addEventListener("storage", this.handleStorageChange);  // Add storage event listener for cross-tab sync
+		document.addEventListener("visibilitychange", this.handleVisibilityChange); // Add visibility change listener
+		window.addEventListener("storage", this.handleStorageChange);  // Add storage event listener for cross-tab sync
 	}
-	// componentDidUpdate(prevProps, prevState) {
-	// 	// Start/stop timer based on audit status and route
-	// 	if (
-	// 		this.state.auditStore &&
-	// 		this.state.auditStore.status === "SUBMITTED" &&
-	// 		this.props.location.pathname === `/audit_store/${this.props.params.auditStoreId}/report` &&
-	// 		!document.hidden &&
-	// 		!this.state.isTimerRunning
-	// 	) {
-	// 		this.startTimer();
-	// 	} else if (
-	// 		(this.state.auditStore &&
-	// 		this.state.auditStore.status !== "SUBMITTED") ||
-	// 		this.props.location.pathname !== `/audit_store/${this.props.params.auditStoreId}/report` ||
-	// 		document.hidden
-	// 	) {
-	// 		this.stopTimer();
-	// 	}
-	// 	if (prevState.auditStore !== this.state.auditStore) {  // Re-initialize timer if auditStore changes
-	// 		this.initializeTimer();
-	// 	}
-	// }
+	componentDidUpdate(prevProps, prevState) {
+		if (
+			this.state.auditStore &&
+			this.state.auditStore.status === "SUBMITTED" &&
+			this.props.location.pathname === `/audit_store/${this.props.params.auditStoreId}/report` &&
+			!document.hidden &&
+			!this.isTimerRunning
+		) {
+			this.startTimer();
+		} else if (
+			(this.state.auditStore && this.state.auditStore.status !== "SUBMITTED") ||
+			this.props.location.pathname !== `/audit_store/${this.props.params.auditStoreId}/report` ||
+			document.hidden
+		) {
+			this.stopTimer();
+		}
+		if (
+			prevState.auditStore !== this.state.auditStore &&
+			this.state.auditStore &&
+			this.state.auditStore.status === "SUBMITTED"
+		) {
+			this.initializeTimer();
+		}
+	}
 	componentWillReceiveProps(nextProps) {
 		findById(nextProps.params.auditStoreId).then(this.setAuditStore);
 	}
-	// componentWillUnmount() {
-	// 	this.stopTimer();
-	// 	document.removeEventListener("visibilitychange", this.handleVisibilityChange);
-	// 	window.removeEventListener("storage", this.handleStorageChange);
-	// }
-	// parseTimeToSeconds = (timeString) => {
-	// 	if (!timeString) return 0;
-	// 	const [hours, minutes, seconds] = timeString.split(":").map(Number);
-	// 	return hours * 3600 + minutes * 60 + seconds;
-	// };
 
-	// initializeTimer = () => {
-	// 	const savedTime = localStorage.getItem(`timer_${this.props.params.auditStoreId}`);
-	// 	let newTimerValue = 0;
-	// 	if (savedTime) {
-	// 		newTimerValue = parseInt(savedTime, 10);
-	// 	} else if (
-	// 		this.state.auditStore && this.state.auditStore.status === "SUBMITTED" &&
-	// 		this.state.auditStore.moderator_submission_time
-	// 	) {
-	// 		newTimerValue = this.parseTimeToSeconds(this.state.auditStore.moderator_submission_time);
-	// 		localStorage.setItem(`timer_${this.props.params.auditStoreId}`, newTimerValue);
-	// 	}
-	// 	this.setState({ timerValue: newTimerValue });
-	// };
+	componentWillUnmount() {
+		this.stopTimer();
+		document.removeEventListener("visibilitychange", this.handleVisibilityChange);
+		window.removeEventListener("storage", this.handleStorageChange);
+	}
 
-	// startTimer = () => {
-	// 	if (!this.state.isTimerRunning) {
-	// 		this.setState({ isTimerRunning: true });
-	// 		this.timerInterval = setInterval(() => {
-	// 			this.setState(
-	// 				(prevState) => ({
-	// 					timerValue: prevState.timerValue + 1,
-	// 				}),
-	// 				() => {
-	// 					if (this.state.timerValue % 5 === 0) { // Save to localStorage every 5 seconds
-	// 						localStorage.setItem(
-	// 							`timer_${this.props.params.auditStoreId}`,
-	// 							this.state.timerValue.toString()
-	// 						);
-	// 					}
-	// 				}
-	// 			);
-	// 		}, 1000);
-	// 	}
-	// };
+	parseTimeToSeconds = (timeString) => {
+		if (!timeString) return 0;
+		const [hours, minutes, seconds] = timeString.split(":").map(Number);
+		return hours * 3600 + minutes * 60 + seconds;
+	};
 
-	// stopTimer = () => {
-	// 	if (this.state.isTimerRunning) {
-	// 		clearInterval(this.timerInterval);
-	// 		this.timerInterval = null;
-	// 		if (this.state.timerValue > 0) {
-	// 			localStorage.setItem(
-	// 				`timer_${this.props.params.auditStoreId}`,
-	// 				this.state.timerValue.toString()
-	// 			);
-	// 		}
-	// 		this.setState({ isTimerRunning: false });
-	// 	}
-	// };
+	initializeTimer = () => {
+		const savedTime = localStorage.getItem(`timer_${this.props.params.auditStoreId}`);
+		this.timerValue = savedTime
+			? parseInt(savedTime, 10)
+			: this.state.auditStore && this.state.auditStore.status === "SUBMITTED" && this.state.auditStore.moderator_submission_time
+				? this.parseTimeToSeconds(this.state.auditStore.moderator_submission_time)
+				: 0;
+		if (this.state.auditStore && this.state.auditStore.status === "SUBMITTED") {
+			localStorage.setItem(`timer_${this.props.params.auditStoreId}`, this.timerValue);
+		}
+		this.updateTimerDisplay();
+		if (
+			this.state.auditStore &&
+			this.state.auditStore.status === "SUBMITTED" &&
+			this.props.location.pathname === `/audit_store/${this.props.params.auditStoreId}/report` &&
+			!document.hidden &&
+			!this.isTimerRunning
+		) {
+			this.startTimer();
+		}
+	};
 
-	// handleVisibilityChange = () => {
-	// 	if (
-	// 		document.hidden ||
-	// 		this.props.location.pathname !== `/audit_store/${this.props.params.auditStoreId}/report`
-	// 	) {
-	// 		this.stopTimer();
-	// 	} else if (
-	// 		this.state.auditStore && this.state.auditStore.status === "SUBMITTED" &&
-	// 		!this.state.isTimerRunning
-	// 	) {
-	// 		this.startTimer();
-	// 	}
-	// };
+	updateTimerDisplay = () => {
+		const timerElement = document.getElementById("timer-display");
+		if (timerElement) {
+			timerElement.textContent = this.formatTime(this.timerValue);
+		}
+	};
 
-	// handleStorageChange = (event) => {
-	// 	if (event.key === `timer_${this.props.params.auditStoreId}`) {
-	// 		const newValue = parseInt(event.newValue, 10);
-	// 		if (!isNaN(newValue)) {
-	// 			this.setState({ timerValue: newValue });
-	// 		}
-	// 	}
-	// };
+	startTimer = () => {
+		if (!this.isTimerRunning) {
+			this.isTimerRunning = true;
+			this.timerInterval = setInterval(() => {
+				this.timerValue += 1;
+				if (this.timerValue % 5 === 0) {
+					localStorage.setItem(`timer_${this.props.params.auditStoreId}`, this.timerValue.toString());
+				}
+				this.updateTimerDisplay();
+			}, 1000);
+		}
+	};
 
-	// formatTime = (seconds) => {
-	// 	const hrs = Math.floor(seconds / 3600);
-	// 	const mins = Math.floor((seconds % 3600) / 60);
-	// 	const secs = seconds % 60;
-	// 	return `${hrs.toString().padStart(2, "0")}:${mins
-	// 		.toString()
-	// 		.padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-	// };
+	stopTimer = () => {
+		if (this.isTimerRunning) {
+			clearInterval(this.timerInterval);
+			this.timerInterval = null;
+			if (this.timerValue > 0 && this.state.auditStore && this.state.auditStore.status === "SUBMITTED") {
+				localStorage.setItem(`timer_${this.props.params.auditStoreId}`, this.timerValue.toString());
+			}
+			this.isTimerRunning = false;
+			this.updateTimerDisplay();
+		}
+	};
+
+	handleVisibilityChange = () => {
+		if (
+			document.hidden ||
+			this.props.location.pathname !== `/audit_store/${this.props.params.auditStoreId}/report`
+		) {
+			this.stopTimer();
+		} else if (
+			this.state.auditStore && this.state.auditStore.status === "SUBMITTED" &&
+			!this.isTimerRunning
+		) {
+			this.startTimer();
+		}
+	};
+
+	handleStorageChange = (event) => {
+		if (event.key === `timer_${this.props.params.auditStoreId}`) {
+			const newValue = parseInt(event.newValue, 10);
+			if (!isNaN(newValue)) {
+				this.timerValue = newValue;
+				this.updateTimerDisplay();
+			}
+		}
+	};
+
+	formatTime = (seconds) => {
+		const hrs = Math.floor(seconds / 3600);
+		const mins = Math.floor((seconds % 3600) / 60);
+		const secs = seconds % 60;
+		return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+	};
 
 	formatTimewWithHourMinute = (timeString) => {
 		if (!timeString || timeString === "00:00:00") {
@@ -217,19 +228,24 @@ export default class AuditStoreDetails extends React.Component {
 	};
 
 	qaOkButtonClicked = () => {
-		// const totalTime = localStorage.getItem(`timer_${this.props.params.auditStoreId}`);
-		// let moderatorSubmissionTime;
-		// if (totalTime) {
-		// 	const seconds = parseInt(totalTime, 10);
-		// 	moderatorSubmissionTime = this.formatTime(seconds);
-		// }
-		qaOk(this.props.params.auditStoreId).then(this.setAuditStore, (err) => {
-			if (err.responseJSON && err.responseJSON.non_field_errors) {
-				this.setState({
-					errorMessage: err.responseJSON.non_field_errors[0],
-				});
-			}
-		});
+		const totalTime = localStorage.getItem(`timer_${this.props.params.auditStoreId}`);
+		let moderatorSubmissionTime;
+		if (totalTime) {
+			const seconds = parseInt(totalTime, 10);
+			moderatorSubmissionTime = this.formatTime(seconds);
+		}
+		qaOk(this.props.params.auditStoreId, moderatorSubmissionTime)
+			.then((auditStore) => {
+				localStorage.removeItem(`timer_${this.props.params.auditStoreId}`);
+				this.setAuditStore(auditStore);
+			})
+			.catch((err) => {
+				if (err.responseJSON && err.responseJSON.non_field_errors) {
+					this.setState({
+						errorMessage: err.responseJSON.non_field_errors[0],
+					});
+				}
+			});
 	};
 	failButtonClicked = () => {
 		fail(this.props.params.auditStoreId).then(this.setAuditStore);
@@ -519,9 +535,11 @@ export default class AuditStoreDetails extends React.Component {
 				{checkpointButton}
 				<h2 className="page-header">
 					{failButton}
-					{/* {this.state.isTimerRunning && ( <button type="button" className="btn btn-default pull-right" style={{marginRight:".5rem"}}>
-						{this.formatTime(this.state.timerValue)}
-					</button>)} */}
+					{this.isTimerRunning && (
+						<button type="button" className="btn btn-default pull-right" style={{ marginRight: ".5rem" }} id="timer-display">
+							{this.formatTime(this.timerValue)}
+						</button>
+					)}
 					<File /> Audit Report - {this.state.auditStore.id}
 					{faultyReportMessage}
 				</h2>

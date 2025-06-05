@@ -520,6 +520,7 @@ class SectionAttachmentBox extends React.Component {
 
 	attachmentDeleteClicked = (attachment) => {
 		deleteAttachment(attachment.id).then(() => {
+			this.props.handleSectionProofChange();
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
 	};

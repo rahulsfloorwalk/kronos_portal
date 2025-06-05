@@ -87,19 +87,28 @@ export function navigateToReport(payload){
 	});
 }
 
-export function qaOk(auditStoreId){
-	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/qa_ok`);
-}
-// export function qaOk(auditStoreId, payload){
-// 	return $.ajax({
-// 		url:url.api_base_path + `moderator/audit_store/${auditStoreId}/qa_ok`,
-// 		method: "POST",
-// 		data: JSON.stringify({
-// 			moderator_submission_time : payload
-// 		}),
-// 		contentType: "application/json"
-// 	});
+// export function qaOk(auditStoreId){
+// 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/qa_ok`);
 // }
+export function qaOk(auditStoreId, payload){
+	return $.ajax({
+		url:url.api_base_path + `moderator/audit_store/${auditStoreId}/qa_ok`,
+		method: "POST",
+		data: JSON.stringify({
+			moderator_submission_time : payload
+		}),
+		contentType: "application/json"
+	});
+}
+
+export function logoutTimer(payload){
+	return $.ajax({
+		url: url.api_base_path + "moderator/audit_store/report_submission_time",
+		method: "POST",
+		data: JSON.stringify(payload),
+		contentType: "application/json"
+	});
+}
 
 export function setAuditDate(auditStoreId, auditDate){
 	return $.ajax({
