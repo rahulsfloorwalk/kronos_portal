@@ -103,7 +103,8 @@ class AnswerComment extends Component {
 			let hasError = this.state.error ? "has-error" : "";
 			return (
 				<div className={`${hasSuccess} ${hasError}`}>
-					<textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" rows="1" style={this.props.optional_comment_required ? { border: "1px solid red" } : {}} />
+					{/* <textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" rows="1" style={this.props.optional_comment_required ? { border: "1px solid red" } : {}} /> */}
+					<textarea className="form-control" ref={this.answerCommentRef} value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" rows="1" style={{  resize: "none", overflow: "hidden", ...(this.props.optional_comment_required ? { border: "1px solid red" } : {}) }} />
 				</div>
 			);
 		} else {

@@ -58,23 +58,65 @@ export function acknowledgeAuditStore(auditStoreId){
 	};
 }
 
-export function submitAuditStore(auditStoreId){
-	return function(dispatch){
+// export function submitAuditStore(auditStoreId){
+// 	return function(dispatch){
+// 		dispatch({
+// 			type: types.AUDIT_STORE_ID_SUBMIT,
+// 			status: "request",
+// 			auditStoreId
+// 		});
+
+// 		return $.post( url.api_base_path + `auditor/audit_store/${auditStoreId}/submit`, function(auditStore){
+// 			dispatch({
+// 				type: types.AUDIT_STORE_ID_SUBMIT,
+// 				status: "success",
+// 				auditStore
+// 			});
+// 		});
+// 		//TODO: Handle error
+// 	};
+// }
+
+export function submitAuditStore(auditStoreId, reportSubmissionTime) {
+	return function (dispatch) {
 		dispatch({
 			type: types.AUDIT_STORE_ID_SUBMIT,
 			status: "request",
-			auditStoreId
+			auditStoreId,
 		});
 
-		return $.post( url.api_base_path + `auditor/audit_store/${auditStoreId}/submit`, function(auditStore){
-			dispatch({
-				type: types.AUDIT_STORE_ID_SUBMIT,
-				status: "success",
-				auditStore
+		return $.ajax({
+			url:  url.api_base_path + `auditor/audit_store/${auditStoreId}/submit`,
+			type: "POST",
+			data: JSON.stringify({ report_submission_time: reportSubmissionTime }),
+			contentType: "application/json",
+			dataType: "json",
+		})
+			.then((auditStore) => {
+				dispatch({
+					type: types.AUDIT_STORE_ID_SUBMIT,
+					status: "success",
+					auditStore,
+				});
+				return auditStore;
+			})
+			.fail((error) => {
+				dispatch({
+					type: types.AUDIT_STORE_ID_SUBMIT,
+					status: "error",
+					error,
+				});
+				throw error;
 			});
-		});
-		//TODO: Handle error
 	};
+}
+export function logoutTimer(payload){
+	return $.ajax({
+		url: url.api_base_path + "auditor/audit_store/report_submission_time",
+		method: "POST",
+		data: JSON.stringify(payload),
+		contentType: "application/json"
+	});
 }
 
 export function withdrawAuditStore(auditStoreId, message){

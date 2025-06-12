@@ -12,6 +12,8 @@ import GoogleTranslateWidget from "./GoogleTranslateWidget.jsx";
 import { gettoken } from "../service/dashboard.js";
 import CryptoJS from "crypto-js";
 import { fetchConfig } from "../service/config.js";
+import Alert from "react-s-alert";
+import { logoutTimer } from "../actions/audit_store.js";
 
 class Header extends React.Component {
 	constructor(props){
@@ -25,6 +27,27 @@ class Header extends React.Component {
 			this.setState({userId:config.USER_ID});
 		});
 	}
+	getTimerData = () => {
+		const timerData = [];
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+			if (key.startsWith("timer_")) {
+				const audit_store_id = key.split("_")[1];
+				const totalTime = localStorage.getItem(key);
+				if (totalTime) {
+					const seconds = parseInt(totalTime, 10);
+					const hrs = Math.floor(seconds / 3600);
+					const mins = Math.floor((seconds % 3600) / 60);
+					const secs = seconds % 60;
+					timerData.push({
+						audit_store_id,
+						report_submission_time: `${hrs}:${mins}:${secs}`,
+					});
+				}
+			}
+		}
+		return timerData;
+	};
 	handelredirect = () => {
 		if (this.state.userId) {
 			gettoken(this.state.userId).then((result) => {
@@ -39,6 +62,29 @@ class Header extends React.Component {
 				});
 			});
 		}
+	};
+	performLogout = () => {
+		const timerData = this.getTimerData();
+		const completeLogout = () => {
+			if (this._logoutForm) {
+				this._logoutForm.submit();
+			}
+			localStorage.clear();
+			// hashHistory.push("/login?logout=true");
+		};
+
+		if (!timerData || timerData.length === 0) {
+			completeLogout();
+			return;
+		}
+
+		logoutTimer(timerData)
+			.then(() => {
+				completeLogout();
+			})
+			.catch(() => {
+				Alert.error("Logout failed, Try again");
+			});
 	};
 
 	render() {
@@ -73,9 +119,14 @@ class Header extends React.Component {
 							{/* <NavLink to="/content_ninja"><Star /> Content Ninja</NavLink> */}
 						</ul>
 						<ul className="nav navbar-nav navbar-right">
-							<li>
+							{/* <li>
 								<a style={pointerStyle} onClick={() => this._logoutForm && this._logoutForm.submit()}>
 									<LogOut/> Logout
+								</a>
+							</li> */}
+							<li>
+								<a style={pointerStyle} onClick={this.performLogout}>
+									<LogOut /> Logout
 								</a>
 							</li>
 							<li style={{marginTop: "15px"}}>

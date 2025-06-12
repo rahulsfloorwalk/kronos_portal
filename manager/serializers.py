@@ -249,6 +249,7 @@ class AgencySmallSerializer(ModelSerializer):
 
 class AuditApplicationSerializer(ModelSerializer):
     profileinfo = ProfileInfoSmallSerializer()
+    audit_cycle_count_for_auditor = SerializerMethodField()
 
     class Meta:
         model = AuditApplication
@@ -267,9 +268,16 @@ class AuditApplicationSerializer(ModelSerializer):
             'comment',
             'profile_match_percentage',
             'auditor_audit_count',
-            'is_super_auditor'
+            'is_super_auditor',
+            'audit_cycle_count_for_auditor'
         )
         read_only_fields = fields
+    def get_audit_cycle_count_for_auditor(self, obj):
+        # Safely count how many times this auditor was used in the same audit_cycle
+        return AuditApplication.objects.filter(
+            profileinfo=obj.profileinfo,
+            audit__audit_cycle=obj.audit.audit_cycle
+        ).count()
 
 
 class AuditSerializer(ModelSerializer):
