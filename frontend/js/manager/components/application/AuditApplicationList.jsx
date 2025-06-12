@@ -136,6 +136,7 @@ export class AuditApplicationRow extends Component{
 				<td>{application.report_exists ?<ApplicationRepeat report_exists={application.report_exists} report_data={application.report_exists_data}/>: "----"}</td>
 				<td>{application.auditor_audit_count > 0 ? <button className="btn btn-sm btn-primary" onClick={this.showRecentAudits}>View {application.auditor_audit_count} reports</button> : 0}</td>
 				<td>{application.profileinfo.certification_score ? application.profileinfo.certification_score : "--" }</td>
+				<td>{application.audit_cycle_count_for_auditor ? application.audit_cycle_count_for_auditor : "--" }</td>
 				<td>
 					<tr >
 						{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
@@ -250,6 +251,7 @@ class AuditApplicationList extends Component{
 						<th style={{width: "5%"}}>Previous Report</th>
 						<th style={{width: "10%"}}>Total Auditor Audits</th>
 						<th style={{width: "5%"}}>Certification Score</th>
+						<th style={{width: "5%"}}>Auditor Reassign Count</th>
 						<th style={{width: "25%"}}>Status</th>
 						<th style={{width: "12%"}}>Comment</th>
 					</tr>
