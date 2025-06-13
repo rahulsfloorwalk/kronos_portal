@@ -210,6 +210,48 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
                 <td
                   className="text-right"
                 >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   QA Report Rating:
                 </td>
                 <th>
@@ -819,6 +861,48 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
                   Report Revert Count:
                 </td>
                 <th />
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
               </tr>
               <tr>
                 <td
@@ -1438,6 +1522,48 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
                 <td
                   className="text-right"
                 >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   QA Report Rating:
                 </td>
                 <th>
@@ -2047,6 +2173,48 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                   Report Revert Count:
                 </td>
                 <th />
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
               </tr>
               <tr>
                 <td
@@ -2666,6 +2834,48 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 <td
                   className="text-right"
                 >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   QA Report Rating:
                 </td>
                 <th>
@@ -3272,6 +3482,48 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Report Revert Count:
                 </td>
                 <th />
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
               </tr>
               <tr>
                 <td
@@ -3886,6 +4138,48 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Report Revert Count:
                 </td>
                 <th />
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
               </tr>
               <tr>
                 <td
@@ -4512,6 +4806,48 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   QA Report Rating:
                 </td>
                 <th>
@@ -5103,6 +5439,48 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Report Revert Count:
                 </td>
                 <th />
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
               </tr>
               <tr>
                 <td
@@ -5704,6 +6082,48 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   QA Report Rating:
                 </td>
                 <th>
@@ -6300,6 +6720,48 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   QA Report Rating:
                 </td>
                 <th>
@@ -6891,6 +7353,48 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Report Revert Count:
                 </td>
                 <th />
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
               </tr>
               <tr>
                 <td
@@ -7541,6 +8045,48 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   QA Report Rating:
                 </td>
                 <th>
@@ -8150,6 +8696,48 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Report Revert Count:
                 </td>
                 <th />
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Submission Time:
+                </td>
+                <th>
+                  0 hours 0 minutes 0 seconds
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Report Completion %:
+                </td>
+                <th>
+                  <div
+                    className="progress"
+                    style={
+                      Object {
+                        "width": "100px",
+                      }
+                    }
+                  >
+                    <div
+                      aria-valuemax="100"
+                      aria-valuemin="0"
+                      className="progress-bar bg-primary"
+                      role="progressbar"
+                      style={
+                        Object {
+                          "backgroundColor": " ",
+                          "width": "undefined%",
+                        }
+                      }
+                    >
+                      %
+                    </div>
+                  </div>
+                </th>
               </tr>
               <tr>
                 <td

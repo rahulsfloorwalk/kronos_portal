@@ -277,7 +277,7 @@ class AuditApplicationSerializer(ModelSerializer):
         return AuditApplication.objects.filter(
             profileinfo=obj.profileinfo,
             audit__audit_cycle=obj.audit.audit_cycle
-        ).count()
+        ).exclude(status__in=['WAITLISTED', 'NOT_APPLIED','REJECTED']).count()
 
 
 class AuditSerializer(ModelSerializer):
