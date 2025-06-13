@@ -328,30 +328,34 @@ def __get_mean_for_report_browser(sections, audit_stores):
         total_percentage = 0
         count = 0
 
-        for audit_store in audit_stores:
-            # run the find by section and audit_store in python because we have already prefetched report_sections for the audit_store
-            report_section = None
-            for rs in audit_store.report_sections.all():
-                if rs.section_id == section.id:
-                    report_section = rs
-            if report_section:
-                if not report_section.not_applicable:
-                    # total_percentage += report_section.marks_percentage()
-                    if report_section.report_section_percentage:
-                        total_percentage += report_section.report_section_percentage
-                        count += 1
-
-        if count > 0:
-            avg_percentage = int(total_percentage / count)
-        else:
+        section_max_marks = section.max_marks()
+        if section_max_marks == 0:
             avg_percentage = None
+        else:
+            for audit_store in audit_stores:
+                # run the find by section and audit_store in python because we have already prefetched report_sections for the audit_store
+                report_section = None
+                for rs in audit_store.report_sections.all():
+                    if rs.section_id == section.id:
+                        report_section = rs
+                if report_section:
+                    if not report_section.not_applicable:
+                        # total_percentage += report_section.marks_percentage()
+                        if report_section.report_section_percentage is not None :
+                            total_percentage += report_section.report_section_percentage
+                            count += 1
 
-        color = get_color_code_by_percentage(avg_percentage)
+            if count > 0:
+                avg_percentage = int(total_percentage / count)
+            else:
+                avg_percentage = None
 
-        mean.append({
-            'sequence': section.sequence,
-            'section': section.name,
-            'percentage': avg_percentage,
-            'color': color
-        })
+            color = get_color_code_by_percentage(avg_percentage)
+
+            mean.append({
+                'sequence': section.sequence,
+                'section': section.name,
+                'percentage': avg_percentage,
+                'color': color
+            })
     return mean

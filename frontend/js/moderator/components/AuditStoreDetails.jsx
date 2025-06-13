@@ -742,6 +742,22 @@ export default class AuditStoreDetails extends React.Component {
 												<th>{this.state.auditStore.report_revert_count}</th>
 											</tr>
 											<tr>
+												<td className="text-right">Report Submission Time:</td>
+												<th>{this.state.auditStore.report_submission_time ? this.formatTimewWithHourMinute(this.state.auditStore.report_submission_time) : "0 hours 0 minutes 0 seconds"}</th>
+											</tr>
+											<tr>
+												<td className="text-right">Report Completion %:</td>
+												<th>
+													{this.state.auditStore.audit_store_percentage === null ? <span>---</span> :
+														<div className="progress" style={{ width: "100px" }}>
+															<div className="progress-bar bg-primary" role="progressbar" style={{ width: `${this.state.auditStore.audit_store_percentage}%`, backgroundColor: this.state.auditStore.audit_store_percentage === 100 ? "#28a745" : " " }} aria-valuenow={this.state.auditStore.audit_store_percentage} aria-valuemin="0" aria-valuemax="100">
+																{this.state.auditStore.audit_store_percentage}%
+															</div>
+														</div>
+													}
+												</th>
+											</tr>
+											<tr>
 												<td className="text-right">QA Report Rating:</td>
 												<th>
 													<AuditStoreRating rating={this.state.auditStore.qa_rating} /> (<Link to={`${this.props.location.pathname}/rate`}>change</Link>)

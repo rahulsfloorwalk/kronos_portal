@@ -114,7 +114,7 @@ def get_average_for_report_sections(report_sections):
     total = 0
     for report_section in report_sections:
         if not report_section.not_applicable:
-            if report_section.report_section_percentage:
+            if report_section.report_section_percentage is not None:
                 counter += 1
                 # total += report_section.marks_percentage()
                 total += report_section.report_section_percentage
