@@ -33,6 +33,7 @@ from .serializers import StoreSerializer,AuditSerializer
 from rest_framework.permissions import AllowAny
 from attachment import service_auditor
 from answer.models import Answer, ReportSection
+from django.utils import timezone
 # from .serializers import AuditCycleProoftagListSerializer
 
 
@@ -295,6 +296,8 @@ class AuditStoreIdQAOKView(APIView):
     }
     def post(self, request, audit_store_id):
         audit_store = get_object_or_404(AuditStore.objects.for_moderator(request.user), pk=audit_store_id)
+        audit_store.moderator_submission_date = timezone.now()
+        audit_store.save(update_fields=["moderator_submission_date"])
         moderator_submission_time = request.data.get("moderator_submission_time")
         if moderator_submission_time:
             audit_store.moderator_submission_time = moderator_submission_time
@@ -491,7 +494,7 @@ class AttachmentIdProofTagView(APIView):
         'POST': [GROUP_NAME_MODERATOR]
     }
     def post(self, request, attachment_id):
-        attachment = attachment_service.save_attachment_proof_tag(attachment_id, request.data['proof_tag_id'])
+        attachment = attachment_service.save_attachment_proof_tag(attachment_id, request.data['proof_tag_id'], request.data['object_id'])
         return Response(AttachmentSerializer(attachment).data)
 
 

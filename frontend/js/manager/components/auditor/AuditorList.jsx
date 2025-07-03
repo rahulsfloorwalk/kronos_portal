@@ -1,23 +1,23 @@
 import React from "react";
 import moment from "moment";
 import * as ReactRedux from "react-redux";
-import {Link} from "react-router";
+// import { Link } from "react-router";
 
-import {affectInputEventToComponent} from "../../../react_utils.js";
-import {getGender, getIndustry, getCarCost, getIncomeText, getOccupation} from "../../../utils.js";
+import { affectInputEventToComponent } from "../../../react_utils.js";
+import { getGender, getIndustry, getCarCost, getIncomeText, getOccupation } from "../../../utils.js";
 
 import { CSSTransitionGroup } from "react-transition-group";
 
-import {setAuditorSearch} from "../../actions/auditor.js";
-import {searchAuditors} from "../../service/auditor.js";
+import { setAuditorSearch } from "../../actions/auditor.js";
+import { searchAuditors } from "../../service/auditor.js";
 import { fetchStates, fetchCities } from "../../service/location.js";
 
-import { pointerStyle }  from "../../../styles.js";
+import { pointerStyle } from "../../../styles.js";
 
-import {Search, Check, Cross, Pawn} from "../../../components/Icons.jsx";
+import { Search, Check, Cross, Pawn } from "../../../components/Icons.jsx";
 import AuditStoreRating from "../../../components/AuditStoreRating.jsx";
 import StarRating from "../../../components/StarRating.jsx";
-import {momentDateFormat} from "../../../../config.js";
+import { momentDateFormat } from "../../../../config.js";
 import Loading from "../../../components/Loading.jsx";
 import PropTypes from "prop-types";
 
@@ -45,13 +45,13 @@ export class AuditorRow extends React.Component {
 	};
 
 	render() {
-		var linkTo = `/auditor/${this.props.auditor.id}`;
+		// var linkTo = `/auditor/${this.props.auditor.id}`;
 		var prof = this.props.auditor.profileinfo || {};
 		prof.city = prof.city || {};
 
-		let activeIcon = this.props.auditor.is_active ? <Check/> : <Cross/>;
+		let activeIcon = this.props.auditor.is_active ? <Check /> : <Cross />;
 
-		var {occupation, industry, car_cost, income} = this.props.auditor.additionalinfo;
+		var { occupation, industry, car_cost, income } = this.props.auditor.additionalinfo;
 
 		let expandedBorder = {
 			borderLeft: "solid #337ab7 5px",
@@ -62,7 +62,7 @@ export class AuditorRow extends React.Component {
 		let trStyle = Object.assign({}, pointerStyle, {
 			backgroundColor
 		}, this.state.expanded ? expandedBorder : {},
-		this.state.expanded ? { fontSize : "100%", fontWeight: "bold", } : {},
+		this.state.expanded ? { fontSize: "100%", fontWeight: "bold", } : {},
 		);
 
 		return (
@@ -75,11 +75,20 @@ export class AuditorRow extends React.Component {
 					<td>{industry == null ? "N/A" : getIndustry(industry)}</td>
 					<td>{car_cost == null ? "N/A" : getCarCost(car_cost)}</td>
 					<td><center>{prof.average_rating !== null ?
-						<AuditStoreRating rating={Math.round(prof.average_rating)}/> : null}</center></td>
+						<AuditStoreRating rating={Math.round(prof.average_rating)} /> : null}</center></td>
 					<td>{moment(this.props.auditor.last_login).format(momentDateFormat)}</td>
 					<td>{activeIcon}</td>
 					<td>
-						<Link to={linkTo} className="btn btn-default pull-right">View</Link>
+						{/* <Link to={linkTo} className="btn btn-default pull-right">View</Link> */}
+						<a
+							href={`/static/manager/index.html#/auditor/${this.props.auditor.id}/details`}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="btn btn-default pull-right"
+							onClick={(e) => e.stopPropagation()}
+						>
+							View
+						</a>
 					</td>
 				</tr>
 				<CSSTransitionGroup
@@ -88,14 +97,14 @@ export class AuditorRow extends React.Component {
 					style={expandedBorder}
 					transitionEnterTimeout={300}
 					transitionLeaveTimeout={300}>
-					{ this.state.expanded ?
-						<td colSpan="10" style={{backgroundColor: "White"}}>
-							<div className="col-md-2"><b>Gender:</b><br/>{getGender(prof.gender)}</div>
-							<div className="col-md-2"><b>Mobile No.:</b><br/>{prof.mobile_number}</div>
-							<div className="col-md-2"><b>Rating:</b><br/><StarRating rating={prof.avg_auditor_rating}/></div>
-							<div className="col-md-2"><b>Pincode:</b><br/>{prof.pincode}</div>
-							<div className="col-md-2"><b>City:</b><br/>{prof.city.name}</div>
-							<div className="col-md-2"><b>State:</b><br/>{prof.city.state_name}</div>
+					{this.state.expanded ?
+						<td colSpan="10" style={{ backgroundColor: "White" }}>
+							<div className="col-md-2"><b>Gender:</b><br />{getGender(prof.gender)}</div>
+							<div className="col-md-2"><b>Mobile No.:</b><br />{prof.mobile_number}</div>
+							<div className="col-md-2"><b>Rating:</b><br /><StarRating rating={prof.avg_auditor_rating} /></div>
+							<div className="col-md-2"><b>Pincode:</b><br />{prof.pincode}</div>
+							<div className="col-md-2"><b>City:</b><br />{prof.city.name}</div>
+							<div className="col-md-2"><b>State:</b><br />{prof.city.state_name}</div>
 						</td>
 						: null
 					}
@@ -130,7 +139,7 @@ export class AuditorList extends React.Component {
 	};
 
 	setLoading = (loading) => {
-		this.setState(prevState => Object.assign({}, prevState, {loading}));
+		this.setState(prevState => Object.assign({}, prevState, { loading }));
 	};
 
 	searchAuditors = (search, state, city, gender, rating, occupation, income, industry, car_cost) => {
@@ -143,7 +152,7 @@ export class AuditorList extends React.Component {
 	};
 
 	componentDidMount() {
-		fetchStates().done((states)=>this.setState({states}));
+		fetchStates().done((states) => this.setState({ states }));
 		this.setState({
 			search: this.props.search
 		});
@@ -156,7 +165,7 @@ export class AuditorList extends React.Component {
 		e.preventDefault();
 		this.props.dispatch(setAuditorSearch(this.state.search));
 		this.searchAuditors(this.state.search, this.state.state, this.state.city,
-			this.state.gender,this.state.rating, this.state.occupation, this.state.income,
+			this.state.gender, this.state.rating, this.state.occupation, this.state.income,
 			this.state.industry, this.state.car_cost);
 	};
 
@@ -166,8 +175,8 @@ export class AuditorList extends React.Component {
 
 	myStateChanged = (e) => {
 		this.inputChanged(e);
-		if(e.target.value){
-			fetchCities(e.target.value).done((cities)=>this.setState({cities}));
+		if (e.target.value) {
+			fetchCities(e.target.value).done((cities) => this.setState({ cities }));
 		} else {
 			this.setState({
 				state: "",
@@ -182,16 +191,16 @@ export class AuditorList extends React.Component {
 		let stateOptions = [];
 		let cityOptions = [];
 
-		for( let s in this.state.states){
+		for (let s in this.state.states) {
 			stateOptions.push(<option key={s} value={s}>{this.state.states[s]}</option>);
 		}
 
-		for( let s of this.state.cities){
+		for (let s of this.state.cities) {
 			cityOptions.push(<option key={s.id} value={s.id}>{s.name}</option>);
 		}
 
 		for (let a of this.state.auditors) {
-			rows.push(<AuditorRow auditor={a} key={a.id}/>);
+			rows.push(<AuditorRow auditor={a} key={a.id} />);
 		}
 		if (rows.length > 0) {
 			table = (
@@ -224,18 +233,18 @@ export class AuditorList extends React.Component {
 			);
 		}
 		if (this.state.loading) {
-			table = <Loading/>;
+			table = <Loading />;
 		}
 
 		return (
 			<div>
 				<h2 className="page-header">
-					<Pawn/> Auditors
+					<Pawn /> Auditors
 				</h2>
 				<form className="form-group" onSubmit={this.onSubmit}>
 					<div className="row">
 						<div className="col-md-4 form-group">
-							<input className="form-control" placeholder="name, email, city, pincode or mobile number" name="search" value={this.state.search} onChange={this.inputChanged}/>
+							<input className="form-control" placeholder="name, email, city, pincode or mobile number" name="search" value={this.state.search} onChange={this.inputChanged} />
 						</div>
 						<div className="col-md-2 form-group">
 							<select name="state" className="form-control" value={this.state.state} onChange={this.myStateChanged}>
@@ -347,7 +356,7 @@ export class AuditorList extends React.Component {
 							</select>
 						</div>
 						<div className="col-md-12">
-							<button type="submit" className="btn btn-primary"><Search/> Search</button>
+							<button type="submit" className="btn btn-primary"><Search /> Search</button>
 						</div>
 					</div>
 				</form>

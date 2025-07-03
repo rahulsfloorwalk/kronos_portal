@@ -220,7 +220,8 @@ class AuditStoreSerializer(ModelSerializer):
             'report_revert_count',
             'manager_info_list',
             'report_submission_time',
-            'moderator_submission_time'
+            'moderator_submission_time',
+            'moderator_submission_date',
         )
         read_only_fields = fields
 

@@ -19,21 +19,22 @@ import { auditStorePropType } from "../prop_types";
 // import AttachmentLegend from "../../components/AttachmentLegend.jsx";
 import ProofTagLabel from "../../components/ProofTagLabel.jsx";
 import "../../../css/bs_overrides.scss";
+import Alert from "react-s-alert";
 
 // import { fetchSections } from "../actions/section.js";
 
 class AttachmentUploadBox extends React.Component {
 	static propTypes = {
 		dispatch: PropTypes.func.isRequired,
-		auditStoreId: PropTypes.oneOfType([ PropTypes.number, PropTypes.string, ]),
+		auditStoreId: PropTypes.oneOfType([PropTypes.number, PropTypes.string,]),
 		auditStore: auditStorePropType,
-		editable:PropTypes.bool,
+		editable: PropTypes.bool,
 		// sections:PropTypes.object
 	};
 
 	state = {
 		attachments: [],
-		uploadMessage : "",
+		uploadMessage: "",
 		selectedAttachment: undefined,
 		isOver: false,
 		proof_tags: [],
@@ -41,7 +42,7 @@ class AttachmentUploadBox extends React.Component {
 		progress: "",
 		uploading: false,
 		// sectionId:"",
-		submitMessage : "",
+		submitMessage: "",
 		submitStatus: "",
 		showErrors: false,
 		prooftagTextareaValue: "",
@@ -75,7 +76,7 @@ class AttachmentUploadBox extends React.Component {
 	};
 
 	setProgressState = (tempId, progressState) => {
-		this.setState((prevState)=>{
+		this.setState((prevState) => {
 			return Object.assign({}, prevState, {
 				inProgress: Object.assign({}, prevState.inProgress, {
 					[tempId]: Object.assign({}, prevState.inProgress[tempId], progressState)
@@ -85,52 +86,59 @@ class AttachmentUploadBox extends React.Component {
 	};
 
 	uploadFile = () => {
-		if( this.uploadInput.files.length > 10){
+		if (this.uploadInput.files.length > 10) {
 			alert("You can only upload 10 attachments at once");
 			return;
 		}
-		for( let toUploadFile of this.uploadInput.files){
+		for (let toUploadFile of this.uploadInput.files) {
 			let tempId = Math.random().toString(36).substring(7);
 			this.setProgressState(tempId, {
 				uploading: true,
 				file: toUploadFile
 			});
 			var promise = uploadFileForAuditStore(this.props.auditStoreId, toUploadFile);
-			promise.progress((type, percent)=>{
-				if(type === "INIT"){
+			promise.progress((type, percent) => {
+				if (type === "INIT") {
 					this.setProgressState(tempId, {
-						uploadMessage :"initializing upload",
+						uploadMessage: "initializing upload",
 						active: false,
 					});
 				}
-				if(type === "STARTING_UPLOAD"){
+				if (type === "STARTING_UPLOAD") {
 					this.setProgressState(tempId, {
-						uploadMessage :"starting upload",
+						uploadMessage: "starting upload",
 						active: true,
 					});
 				}
-				if(type === "UPLOAD_PROGRESS"){
+				if (type === "UPLOAD_PROGRESS") {
 					this.setProgressState(tempId, {
-						uploadMessage :"",
+						uploadMessage: "",
 						progress: Math.floor(percent)
 					});
 				}
 			});
-			promise.always(()=>{
+			promise.always(() => {
 				this.setProgressState(tempId, {
-					progress :"",
-					uploading:false,
+					progress: "",
+					uploading: false,
 					active: false
 				});
 			});
-			promise.then(()=>{
+			promise.then(() => {
 				this.setProgressState(tempId, {
-					uploadMessage :"upload successful",
+					uploadMessage: "upload successful",
 				});
 				this.reloadState();
 			}, (errorMessage) => {
+				const maxLength = 30;
+				const truncatedMessage =
+					errorMessage.length > maxLength
+						? errorMessage.slice(0, maxLength) + "..."
+						: errorMessage;
+				Alert.error(errorMessage);
 				this.setProgressState(tempId, {
-					uploadMessage: errorMessage,
+					// uploadMessage: errorMessage,
+					uploadMessage: truncatedMessage,
 					error: true,
 				});
 			});
@@ -162,53 +170,60 @@ class AttachmentUploadBox extends React.Component {
 
 	handleDrop = (e) => {
 		e.preventDefault();
-		if( e.dataTransfer.files.length > 10){
+		if (e.dataTransfer.files.length > 10) {
 			alert("You can only upload 10 attachments at once");
 			return;
 		}
-		for( let toUploadFile of e.dataTransfer.files){
+		for (let toUploadFile of e.dataTransfer.files) {
 			let tempId = Math.random().toString(36).substring(7);
 			this.setProgressState(tempId, {
 				uploading: true,
 				file: toUploadFile
 			});
 			var promise = uploadFileForAuditStore(this.props.auditStoreId, toUploadFile);
-			promise.progress((type, percent)=>{
-				if(type === "INIT"){
+			promise.progress((type, percent) => {
+				if (type === "INIT") {
 					this.setProgressState(tempId, {
-						uploadMessage :"initializing upload",
+						uploadMessage: "initializing upload",
 						active: false,
 					});
 				}
-				if(type === "STARTING_UPLOAD"){
+				if (type === "STARTING_UPLOAD") {
 					this.setProgressState(tempId, {
-						uploadMessage :"starting upload",
+						uploadMessage: "starting upload",
 						active: true,
 					});
 				}
-				if(type === "UPLOAD_PROGRESS"){
+				if (type === "UPLOAD_PROGRESS") {
 					this.setProgressState(tempId, {
-						uploadMessage :"",
+						uploadMessage: "",
 						progress: Math.floor(percent)
 					});
 				}
 			});
-			promise.always(()=>{
+			promise.always(() => {
 				this.setProgressState(tempId, {
-					progress :"",
-					uploading:false,
+					progress: "",
+					uploading: false,
 					active: false
 				});
 			});
-			promise.then(()=>{
+			promise.then(() => {
 				this.setProgressState(tempId, {
-					uploadMessage :"upload successful",
+					uploadMessage: "upload successful",
 					isOver: false,
 				});
 				this.reloadState();
 			}, (errorMessage) => {
+				const maxLength = 30;
+				const truncatedMessage =
+					errorMessage.length > maxLength
+						? errorMessage.slice(0, maxLength) + "..."
+						: errorMessage;
+				Alert.error(errorMessage);
 				this.setProgressState(tempId, {
-					uploadMessage: errorMessage,
+					// uploadMessage: errorMessage,
+					uploadMessage: truncatedMessage,
 					error: true,
 				});
 			});
@@ -229,35 +244,35 @@ class AttachmentUploadBox extends React.Component {
 		});
 	};
 
-    moveAttachment = () => {
-        let attachmentlist = [];
-        $(".attachment_checkbox input:checked").each(function() {
-            let val = $(this).attr("value");
-            attachmentlist.push(val);
-        });
+	moveAttachment = () => {
+		let attachmentlist = [];
+		$(".attachment_checkbox input:checked").each(function() {
+			let val = $(this).attr("value");
+			attachmentlist.push(val);
+		});
 
-        moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
-            this.reloadState();
-            this.props.dispatch(fetchSections(this.props.auditStoreId));
-            this.setState({
-                selectedAttachment: null,
-            });
-        },(err) => {
-            this.setState({
-                submitMessage : err.responseJSON.non_field_errors[0],
-                submitStatus: "danger",
-                showErrors: true,
-            });
-        });
-    };*/
+		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
+			this.reloadState();
+			this.props.dispatch(fetchSections(this.props.auditStoreId));
+			this.setState({
+				selectedAttachment: null,
+			});
+		},(err) => {
+			this.setState({
+				submitMessage : err.responseJSON.non_field_errors[0],
+				submitStatus: "danger",
+				showErrors: true,
+			});
+		});
+	};*/
 
 	saveAttachmentTag = (attachmentId, e) => {
-		saveAttachmentTag(attachmentId, e.target.value).then((a)=>{
+		saveAttachmentTag(attachmentId, e.target.value).then((a) => {
 			// this.setState({
 			// 	selectedAttachment: a
 			// });
-			for( let i in this.state.attachments){
-				if(this.state.attachments[i].id === a.id){
+			for (let i in this.state.attachments) {
+				if (this.state.attachments[i].id === a.id) {
 					let arr = this.state.attachments;
 					arr[i] = a;
 					this.setState({
@@ -290,10 +305,10 @@ class AttachmentUploadBox extends React.Component {
 
 	saveProoftagModalData = () => {
 		// console.log("Data when Prooftag Modal:", this.state);
-		if(this.state.prooftagTextareaValue && this.state.selectedProoftag){
+		if (this.state.prooftagTextareaValue && this.state.selectedProoftag) {
 			this.setState({
 				prooftagModalText: this.state.prooftagTextareaValue,
-				prooftagModalTagId : this.state.selectedProoftag,
+				prooftagModalTagId: this.state.selectedProoftag,
 			});
 			// saveNotAvailableTag(this.state.selectedProoftag,this.state.prooftagTextareaValue,this.props.auditStoreId)
 			// 	.then(response => {
@@ -302,8 +317,8 @@ class AttachmentUploadBox extends React.Component {
 			// 	.catch(error => {
 			// 		console.error("Error saving attachment tag:", error);
 			// 	});------->profftag not available
-		}else{
-			this.setState({prooftagModalTextError:"Fields can not be empty"});
+		} else {
+			this.setState({ prooftagModalTextError: "Fields can not be empty" });
 		}
 	};
 
@@ -339,7 +354,7 @@ class AttachmentUploadBox extends React.Component {
 								<textarea className="form-control" id="prooftagTextarea" rows="3" value={prooftagTextareaValue} onChange={this.handleTextareaChange}></textarea>
 							</div>
 							<div className="form-group">
-								<p style={{color:"red"}}>{this.state.prooftagModalTextError}</p>
+								<p style={{ color: "red" }}>{this.state.prooftagModalTextError}</p>
 							</div>
 						</div>
 						<div className="modal-footer">
@@ -355,8 +370,8 @@ class AttachmentUploadBox extends React.Component {
 	render() {
 		// const { proof_tags } = this.state;
 
-		if(! this.props.auditStore){
-			return <Loading/>;
+		if (!this.props.auditStore) {
+			return <Loading />;
 		}
 
 		// var contentStyle = {
@@ -367,22 +382,22 @@ class AttachmentUploadBox extends React.Component {
 
 		let uploadButton;
 		let deletable = false;
-		if(this.props.auditStore.status === "ACKNOWLEDGED"){
+		if (this.props.auditStore.status === "ACKNOWLEDGED") {
 			uploadButton = (
 				<span>
 					<input type="file" multiple
 						onChange={this.uploadFile}
 						disabled={this.state.uploading}
-						ref={(input)=>this.uploadInput = input}
-						className="hidden"/>
+						ref={(input) => this.uploadInput = input}
+						className="hidden" />
 					<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default">
-						<Paperclip/> Upload
+						<Paperclip /> Upload
 					</button>
 				</span>);
 			deletable = true;
 		}
 		let dragandDropBox;
-		if(this.props.auditStore.status === "ACKNOWLEDGED"){
+		if (this.props.auditStore.status === "ACKNOWLEDGED") {
 			dragandDropBox = (
 				<div
 					className={"drop-zone"}
@@ -396,7 +411,7 @@ class AttachmentUploadBox extends React.Component {
 						type="file"
 						name="myFile"
 						className="drop-zone_input"
-						style={{display:"none"}}
+						style={{ display: "none" }}
 						onChange={this.uploadFile}
 						multiple
 						ref={(input) => (this.inputElement = input)}
@@ -410,23 +425,23 @@ class AttachmentUploadBox extends React.Component {
 		// 		Open Prooftag Modal
 		// 	</button>;
 		// }-------------->prooftag not abvailable
-		const attachment_tags = this.state.attachments.map((value)=> value.proof_tag);
+		const attachment_tags = this.state.attachments.map((value) => value.proof_tag);
 
 		const proof_tag_list = [];
-		for(let tag of this.state.proof_tags){
+		for (let tag of this.state.proof_tags) {
 			const attach = attachment_tags.includes(tag.id);
 			proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={true} />);
 		}
 
 		var attachmentRows = [];
 
-		for(let a of this.state.attachments){
+		for (let a of this.state.attachments) {
 			attachmentRows.push(<AttachmentThumbnail
-				attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} onSelect={() => this.attachmentSelected(a)} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} key={a.id} user="" editable={this.props.editable} faulty_report_id="" proof_tags={this.state.proof_tags} section_id={0} onChange={(e) => this.saveAttachmentTag(a.id, e)}/>);
+				attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} onSelect={() => this.attachmentSelected(a)} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} key={a.id} user="" editable={this.props.editable} faulty_report_id="" proof_tags={this.state.proof_tags} section_id={0} onChange={(e) => this.saveAttachmentTag(a.id, e)} />);
 		}
 
-		for(let id in this.state.inProgress){
-			if(this.state.inProgress[id].uploading || this.state.inProgress[id].error){
+		for (let id in this.state.inProgress) {
+			if (this.state.inProgress[id].uploading || this.state.inProgress[id].error) {
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
 				attachmentRows.push(<AttachmentInProgressThumbnail
 					key={id}
@@ -443,10 +458,10 @@ class AttachmentUploadBox extends React.Component {
 			// onRename={this.attachmentRenamed}
 			onDelete={() => this.attachmentDeleteClicked(this.state.selectedAttachment)}
 			section_id={0}
-			onChange={(e) => this.saveAttachmentTag(this.state.selectedAttachment.id, e)}/>;
+			onChange={(e) => this.saveAttachmentTag(this.state.selectedAttachment.id, e)} />;
 
 		// var selectSection = null;
-		if( attachmentRows.length === 0){
+		if (attachmentRows.length === 0) {
 			attachmentRows.push(
 				<div key="empty" className="text-muted">
 					no attachments here
@@ -492,7 +507,7 @@ class AttachmentUploadBox extends React.Component {
 						{/* <p className="text-danger"><b>You can only add up to {this.props.auditStore.max_attachment_limit} attachments for this report.</b></p> */}
 						{/* <AttachmentLegend />
 						<br/> */}
-						<div style={{display: "flex", justifyContent: "flex-start", alignItems: "center", gap: "1rem",flexWrap: "wrap" }}>{proof_tag_list}</div>
+						<div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>{proof_tag_list}</div>
 
 						{submitMessageElement}
 					</div>
@@ -502,7 +517,7 @@ class AttachmentUploadBox extends React.Component {
 					{attachmentRows}
 				</div> */}
 				<div className="row">
-					<div className="col-md-12 attachment_checkbox" style={{maxHeight:"500px", overflowY: "auto"}}>
+					<div className="col-md-12 attachment_checkbox" style={{ maxHeight: "500px", overflowY: "auto" }}>
 						{attachmentRows}
 					</div>
 					<div className="col-md-12">
@@ -515,7 +530,7 @@ class AttachmentUploadBox extends React.Component {
 	}
 }
 
-var mapStoreToProps = function(store, ownProps){
+var mapStoreToProps = function (store, ownProps) {
 	return {
 		auditStore: store.auditStores[ownProps.auditStoreId],
 		// sections: store.sections

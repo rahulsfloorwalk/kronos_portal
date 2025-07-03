@@ -12,6 +12,12 @@ from audit_store.models import AuditStore
 from django.db.models import Sum, F, Q, Count
 from client.models import Client
 import logging
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from guardian.shortcuts import assign_perm
+from datetime import date
+
+User = get_user_model()
 
 _logger = logging.getLogger(__name__)
 
@@ -158,6 +164,216 @@ def get_profitability_report(month, year, client):
 
     return response
 
+def get_qa_wise_report_pannel(client=None, audit_cycle_id=None, day=None,month=None, year=None,qa=None):
+    if not year:
+        raise ValueError("The 'year' parameter is required.")
+    
+    try:
+        year = int(year)
+        month = int(month) if month else None
+        day = int(day) if day else None
+    except ValueError:
+        raise ValueError("Invalid 'year/month/day' — must be integers.")
+
+    client = int(client) if client else None
+    audit_cycle_id = int(audit_cycle_id) if audit_cycle_id else None
+    qa = int(qa) if qa else None
+
+    response = {
+        "audit_store_data": [],
+        "client_list": [],
+        "audit_cycle_list": []
+    }
+
+    VALID_STATUSES = [AuditStore.PM_REVIEW, AuditStore.COMPLETED, AuditStore.ACCEPTED]
+
+    store_filter = {
+        'status__in': VALID_STATUSES,
+        'audit_date__year': year,
+    }
+    if month:
+        store_filter['audit_date__month'] = month
+    if day:
+        store_filter['audit_date__day'] = day
+    audit_stores_qs = AuditStore.objects.filter(**store_filter)
+    valid_cycle_ids = audit_stores_qs.values_list('audit__audit_cycle_id', flat=True).distinct()
+
+    base_cycles = AuditCycle.objects.select_related('client').filter(
+        id__in=valid_cycle_ids
+    ).order_by("client__id", "id")
+
+    if not base_cycles.exists():
+        return response
+
+    client_set = set()
+    client_list = []
+    for cycle in base_cycles:
+        if cycle.client.id not in client_set:
+            client_set.add(cycle.client.id)
+            client_list.append({
+                "id": cycle.client.id,
+                "name": cycle.client.name
+            })
+    response["client_list"] = client_list
+
+    if not client:
+        client = base_cycles.first().client.id
+
+    selected_cycles = base_cycles.filter(client_id=client)
+    if not selected_cycles.exists():
+        return response
+
+    audit_cycle_list = [
+        {
+            "id": c.id,
+            "name": c.name,
+            "client_name": c.client.name,
+            "client_id": c.client.id
+        } for c in selected_cycles
+    ]
+    response["audit_cycle_list"] = audit_cycle_list
+
+    if not audit_cycle_id:
+        audit_cycle_id = selected_cycles.first().id
+    try:
+        selected_cycle = selected_cycles.get(id=audit_cycle_id)
+    except AuditCycle.DoesNotExist:
+        return response
+
+    # Final audit_store filter: only with required cycle and statuses
+    # final_store_filter = {
+    #     'audit__audit_cycle_id': selected_cycle.id,
+    #     'status__in': [AuditStore.COMPLETED, AuditStore.ACCEPTED],
+    # }
+    # if month:
+    #     final_store_filter['audit__audit_cycle__start_date__month'] = month
+    # if day:
+    #     final_store_filter['audit__audit_cycle__start_date__day'] = day
+
+
+    final_store_filter = {
+        'audit__audit_cycle_id': selected_cycle.id,
+        'status__in': [AuditStore.COMPLETED, AuditStore.ACCEPTED,AuditStore.PM_REVIEW],
+        'audit_date__year': year,
+    }
+    if month:
+        final_store_filter['audit_date__month'] = month
+    if day:
+        final_store_filter['audit_date__day'] = day
+
+    audit_stores = AuditStore.objects.filter(**final_store_filter)
+    content_type = ContentType.objects.get_for_model(AuditStore)
+    permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
+
+    if qa:
+        try:
+            mod_user = User.objects.get(id=qa, is_active=True)
+        except User.DoesNotExist:
+            raise Exception("Disabled or invalid QA cannot be assigned reports")
+
+        audit_store_ids = audit_stores.values_list("id", flat=True)
+        perm_store_ids = UserObjectPermission.objects.filter( content_type=content_type, permission=permission, user_id=qa, object_pk__in=map(str, audit_store_ids) ).values_list("object_pk", flat=True)
+
+        audit_stores = audit_stores.filter(id__in=list(map(int, perm_store_ids)))
+        for store in audit_stores:
+            if not UserObjectPermission.objects.filter(
+                user=mod_user,
+                content_type=content_type,
+                permission=permission,
+                object_pk=str(store.id)
+            ).exists():
+                assign_perm('moderator_manage', mod_user, store)
+
+    for store in audit_stores:
+        if qa:
+            user = User.objects.filter(id=qa).first()
+            qa_email = user.email if user else ""
+        else:
+            perm = UserObjectPermission.objects.filter( content_type=content_type, permission=permission, object_pk=str(store.id), user__is_active=True ).select_related('user').first()
+            qa_email = perm.user.email if perm and perm.user else ""
+
+        response["audit_store_data"].append({
+            "audit_cycle_id": selected_cycle.id,
+            "audit_cycle_name": selected_cycle.name,
+            "audit_cycle_status": selected_cycle.status,
+            "client_id": selected_cycle.client.id,
+            "client": selected_cycle.client.name,
+            "month": selected_cycle.start_date.month,
+            "year": selected_cycle.start_date.year,
+            "audit_store_id": store.id,
+            "audit_store_status": store.status,
+            "audit_date": store.audit_date,
+            "report_submission_time": store.report_submission_time,
+            "moderator_submission_time": store.moderator_submission_time,
+            "qa_rating": store.qa_rating,
+            "user_id": store.user_id,
+            "submit_at": store.submit_at,
+            "qa_email": qa_email,
+        })
+
+    return response
+
+
+def get_qa_wise_report_performance(raw_day, raw_month, raw_year, raw_qa):
+    day = int(raw_day) if raw_day and raw_day.strip() else None
+    month = int(raw_month) if raw_month and raw_month.strip() else None
+    year = int(raw_year) if raw_year and raw_year.strip() else None
+    qa = int(raw_qa) if raw_qa and raw_qa.strip() else None
+    if not year:
+        raise ValueError("Year is required")
+    response = {
+        "audit_store_data": []
+    }
+
+    day_list = [day] if day else list(range(1, 32))
+    month_list = [month] if month else list(range(1, 13))
+    audit_stores = AuditStore.objects.filter(status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW]).exclude(moderator_submission_date__isnull=True)
+
+    content_type = ContentType.objects.get_for_model(AuditStore)
+    permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
+
+    perms_all = UserObjectPermission.objects.filter(content_type=content_type, permission=permission, user__is_active=True)
+    perms = perms_all.filter(user_id=qa) if qa else perms_all
+    user_list = perms.order_by('user_id').distinct('user_id').values('user_id', 'user__email')
+
+    for m in month_list:
+        for d in day_list:
+            try:
+                filter_date = date(year, m, d)
+            except ValueError:
+                continue 
+
+            stores = audit_stores.filter(moderator_submission_date__date=filter_date)
+            if not stores.exists():
+                continue
+            # stores = audit_stores.filter(moderator_submission_date__year=year, moderator_submission_date__month=m, moderator_submission_date__day=d)
+            # if stores.exists():
+            store_ids = [str(s.id) for s in stores]
+            filtered_perms = perms.filter(object_pk__in=store_ids)
+            total_count = perms_all.filter(object_pk__in=store_ids).count()
+
+            for user in user_list:
+                audit_count = filtered_perms.filter(user_id=user['user_id']).count()
+
+                for store in stores:
+                    if filtered_perms.filter(user_id=user['user_id'], object_pk=str(store.id)).exists():
+                        response["audit_store_data"].append({
+                            "audit_store_id": store.id,
+                            "moderator_submission_date": store.moderator_submission_date,
+                            "audit_status": store.status,
+                            "report_submission_time": store.report_submission_time,
+                            "moderator_submission_time": store.moderator_submission_time,
+                            "qa_rating": store.qa_rating,
+                            "user_id": store.user_id,
+                            "qa_email": user['user__email'],
+                            "qa_id": user['user_id'],
+                            "year": year,
+                            "month": m,
+                            "day": d,
+                            "audit_count": audit_count
+                        })
+
+    return response
 
 def get_project_cost_report(month, year, client):
     if client:

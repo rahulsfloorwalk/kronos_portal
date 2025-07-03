@@ -569,8 +569,10 @@ exports[`<AuditorRow/> renders the list of auditors correctly 1`] = `
     <td>
       <a
         className="btn btn-default pull-right"
+        href="/static/manager/index.html#/auditor/7552/details"
         onClick={[Function]}
-        style={Object {}}
+        rel="noopener noreferrer"
+        target="_blank"
       >
         View
       </a>

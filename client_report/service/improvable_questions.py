@@ -14,21 +14,27 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_i
     improvable_questions_list = []
     audit_cycle_obj = AuditCycle.objects.get(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)
     questions_list = find_by_audit_cycle(audit_cycle_obj.id).prefetch_related('section')\
-        .values('id', 'max_marks', 'section__name', 'question_txt')
+        .values('id', 'max_marks', 'section__id', 'section__name', 'question_txt')
+
     client_admin = client_user.is_client_admin()
     if not client_admin:
         non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
     for question in questions_list:
+        section_id = question['section__id']
         if question['max_marks'] > 0:
             answer_obj = find_answers_by_question_id(question['id'])
             if client_admin:
                 answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                               not_applicable=False)
+                                               not_applicable=False,
+                                               audit_store__report_sections__section_id=section_id,
+                                               audit_store__report_sections__not_applicable=False)
             else:
                 answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
                                                audit_store__audit__store__id__in=non_admin_user_store_list,
-                                               not_applicable=False)
+                                               not_applicable=False,
+                                               audit_store__report_sections__section_id=section_id,
+                                               audit_store__report_sections__not_applicable=False)
             if answer_obj.count() > 0:
                 total_question_marks = question['max_marks'] * answer_obj.count()
                 obtained_marks = (answer_obj.aggregate(sum_marks=Sum('marks_obtained')))['sum_marks']

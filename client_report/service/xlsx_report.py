@@ -98,7 +98,6 @@ def get_summary_section(audit_store, sections, report_sections):
         rows.append(row)
         section_key += 1
     return rows
-
 def get_answers_section(sections, answers, report_sections):
     answer_key = 0
     section_key = 0
@@ -113,35 +112,77 @@ def get_answers_section(sections, answers, report_sections):
             rows.append(row)
             row = {'type': 'line', 'content': ["", "", "", "", ""]}
             rows.append(row)
+            while answer_key < len(answers) and answers[answer_key].question.section.sequence == section.sequence:
+                answer_key += 1
             section_key += 1
             continue
         content = [section.sequence, section.name, "", report_sections[section_key].marks_obtained(), report_sections[section_key].max_marks()]
         row = {'type': 'header', 'content': content}
         rows.append(row)
-        for key in range(answer_key, len(answers)):
-            answer = answers[key]
-            if (answer.question.section.sequence == section.sequence):
-                if (answer.not_applicable):
-                    content = ["", answers[key].question.question_txt, not_applicable_text, not_applicable_text, not_applicable_text]
-                else:
-                    answer_text = answers[key].answer_text
-                    if answers[key].question.question_type == "MULTISELECT":
-                        answer_text = (answers[key].answer_text).replace(";", ", ")
-                    content = ["", answers[key].question.question_txt, answer_text,
-                               answers[key].marks_obtained, answers[key].question.max_marks]
-                row = {'type': 'line', 'content': content}
-                rows.append(row)
-            else:
-                answer_key = key
+        while answer_key < len(answers):
+            answer = answers[answer_key]
+            if answer.question.section.sequence != section.sequence:
                 break
+            if answer.not_applicable:
+                content = ["", answer.question.question_txt, not_applicable_text, not_applicable_text, not_applicable_text]
+            else:
+                answer_text = answer.answer_text
+                if answer.question.question_type == "MULTISELECT":
+                    answer_text = answer_text.replace(";", ", ")
+                content = ["", answer.question.question_txt, answer_text, answer.marks_obtained, answer.question.max_marks]
+
+            row = {'type': 'line', 'content': content}
+            rows.append(row)
+            answer_key += 1
         content = ["", "Section Summary", report_sections[section_key].auditor_comment, "", ""]
         row = {'type': 'comment', 'content': content}
         rows.append(row)
-        # content = ["", "PM Comment", report_sections[section_key].pm_comment, "", ""]
-        # row = {'type': 'pm_comment', 'content': content}
-        # rows.append(row)
         section_key += 1
     return rows
+
+# def get_answers_section(sections, answers, report_sections):
+#     answer_key = 0
+#     section_key = 0
+#     rows = []
+#     content = ["", "Question", "Auditor Response", "Marks", "Max Marks"]
+#     row = {'type': 'title', 'content': content}
+#     rows.append(row)
+#     for section in sections:
+#         if report_sections[section_key].not_applicable:
+#             content = [section.sequence, section.name, not_applicable_text, not_applicable_text, not_applicable_text]
+#             row = {'type': 'header', 'content': content}
+#             rows.append(row)
+#             row = {'type': 'line', 'content': ["", "", "", "", ""]}
+#             rows.append(row)
+#             section_key += 1
+#             continue
+#         content = [section.sequence, section.name, "", report_sections[section_key].marks_obtained(), report_sections[section_key].max_marks()]
+#         row = {'type': 'header', 'content': content}
+#         rows.append(row)
+#         for key in range(answer_key, len(answers)):
+#             answer = answers[key]
+#             if (answer.question.section.sequence == section.sequence):
+#                 if (answer.not_applicable):
+#                     content = ["", answers[key].question.question_txt, not_applicable_text, not_applicable_text, not_applicable_text]
+#                 else:
+#                     answer_text = answers[key].answer_text
+#                     if answers[key].question.question_type == "MULTISELECT":
+#                         answer_text = (answers[key].answer_text).replace(";", ", ")
+#                     content = ["", answers[key].question.question_txt, answer_text,
+#                                answers[key].marks_obtained, answers[key].question.max_marks]
+#                 row = {'type': 'line', 'content': content}
+#                 rows.append(row)
+#             else:
+#                 answer_key = key
+#                 break
+#         content = ["", "Section Summary", report_sections[section_key].auditor_comment, "", ""]
+#         row = {'type': 'comment', 'content': content}
+#         rows.append(row)
+#         # content = ["", "PM Comment", report_sections[section_key].pm_comment, "", ""]
+#         # row = {'type': 'pm_comment', 'content': content}
+#         # rows.append(row)
+#         section_key += 1
+#     return rows
 
 def write_data(sections):
     odd_color = '#DFF0D8'

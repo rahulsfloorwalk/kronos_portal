@@ -80,6 +80,7 @@ def upload_for_object(proof_type: str, mime_type: str, file_name: str, file_size
         file_size = file_size,
         file_slug = file_slug,
         content_object = content_object,
+        old_file_name = file_name,
     )
 
 def upload_prooftag_not_available_for_object(audit_store_id, proof_tag, description, user_id):
@@ -200,6 +201,15 @@ def complete(attachment_id):
 def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     check_file_size(file_size)
+    duplicate_exists = Attachment.objects.filter(
+        content_type=ContentType.objects.get_for_model(AuditStore),
+        object_id=audit_store.id,
+        old_file_name=file_name
+    ).exists()
+
+    if duplicate_exists:
+        raise ValidationError({"detail": "Duplicate file detected — this file has already been used."})
+    
     basename, file_extension = parse_file_name(file_name)
     valid_file_type(mime_type, file_extension)
     proof_type = get_proof_type(mime_type)
@@ -442,6 +452,7 @@ def find_by_profile_info(profile_info_id):
 
 def delete(attachment_id):
     attachment = find_by_id(attachment_id)
+    attachment.old_file_name = None
     attachment.status = Attachment.DELETED
     attachment.save()
 

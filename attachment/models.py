@@ -40,6 +40,7 @@ class Attachment(Model):
     proof_type = CharField(db_column='proof_type', max_length=20, choices=PROOF_TYPE, blank=False)
     mime_type = CharField(db_column='mime_type', max_length=256, blank=False)
     file_name = CharField(db_column='file_name', max_length=256, blank=False)
+    old_file_name = CharField(db_column='old_file_name', max_length=256,null=True, blank=True, default="")
     file_size = IntegerField(db_column='file_size')
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
 
