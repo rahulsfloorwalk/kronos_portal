@@ -14,7 +14,8 @@ from audit_store import service as audit_store_service
 from audit_store.models import AuditStore
 
 def find_all():
-    return Group.objects.get(name=GROUP_NAME_MODERATOR).user_set
+    # return Group.objects.get(name=GROUP_NAME_MODERATOR).user_set
+    return Group.objects.get(name=GROUP_NAME_MODERATOR).user_set.filter(is_active=True) 
 
 def find_by_id(user_id):
     try:

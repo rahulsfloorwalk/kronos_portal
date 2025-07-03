@@ -8,7 +8,7 @@ from audit_store import service_client as client_service
 from answer.models import ReportSection, Answer
 # from registration.service import client as client_registration_service
 from client.service import client_user as client_user_service
-
+from questionnaire.models import Section
 
 def get_audit_cycle_section_averages_for_client(user, questionnaire_type_id):
     qs = AuditCycle.objects.filter(client__id=user.clientuser.client_id) \
@@ -18,7 +18,7 @@ def get_audit_cycle_section_averages_for_client(user, questionnaire_type_id):
     # prefetch related sections, report_sections, questions and answers
     qs = qs.prefetch_related(
         'sections',
-        Prefetch('sections__report_sections', queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
+        Prefetch('sections__report_sections', queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],not_applicable=False )),
         'sections__questions',
         Prefetch('sections__questions__answers', queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
     )
@@ -31,7 +31,7 @@ def get_audit_cycle_section_averages_for_client_by_audit_cycle_id(audit_cycle_id
     # prefetch related sections, report_sections, questions and answers
     qs = qs.prefetch_related(
         'sections',
-        Prefetch('sections__report_sections', queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
+        Prefetch('sections__report_sections', queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],not_applicable=False)),
         # 'sections__questions',
         # Prefetch('sections__questions__answers', queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
     )
@@ -49,7 +49,14 @@ def get_audit_cycle_section_averages(qs, user_id):
     audit_cycle_master = [audit_cycle.name for audit_cycle in audit_cycles]
     # print("audit_cycles", [(ac.name, ac.end_date) for ac in audit_cycles])
     for audit_cycle in audit_cycles:
-        section_averages = get_averages_for_sections_for_client_user(audit_cycle.sections.all(), user_id)
+        valid_sections = Section.objects.filter(
+            audit_cycle=audit_cycle.id,
+            report_sections__not_applicable=False,
+            report_sections__report_section_percentage__isnull=False
+        ).distinct()
+
+        section_averages = get_averages_for_sections_for_client_user(valid_sections, user_id)
+        # section_averages = get_averages_for_sections_for_client_user(audit_cycle.sections.all(), user_id)
         for section_average in section_averages:
             sec_name = section_average.get('section').name
             try:
@@ -62,7 +69,14 @@ def get_audit_cycle_section_averages(qs, user_id):
     # print("section_master", section_master)
     for audit_cycle in audit_cycles:
         yval = audit_cycle_master.index(audit_cycle.name)
-        section_averages = get_averages_for_sections_for_client_user(audit_cycle.sections.all(), user_id)
+        valid_sections = Section.objects.filter(
+            audit_cycle=audit_cycle.id,
+            report_sections__not_applicable=False,
+            report_sections__report_section_percentage__isnull=False
+        ).distinct()
+
+        section_averages = get_averages_for_sections_for_client_user(valid_sections, user_id)
+        # section_averages = get_averages_for_sections_for_client_user(audit_cycle.sections.all(), user_id)
         for section_average in section_averages:
             sec_name = section_average['section'].name
             try:
@@ -95,12 +109,12 @@ def get_averages_for_sections_for_client_user(sections, user_id):
             if client_admin:
                 filtered_report_sections = ReportSection.objects\
                     .filter(audit_store__in=visible_audit_stores)\
-                    .filter(section=section)
+                    .filter(section=section,not_applicable=False)
             else:
                 filtered_report_sections = ReportSection.objects \
                     .filter(audit_store__in=visible_audit_stores,
                             audit_store__audit__store__id__in=non_admin_user_store_list) \
-                    .filter(section=section)
+                    .filter(section=section,not_applicable=False)
             sec['average'] = get_average_for_report_sections(filtered_report_sections)
         # if section.max_marks() > 0:
             section_averages.append(sec)

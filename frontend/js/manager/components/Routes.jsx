@@ -145,6 +145,8 @@ import DashProofsTags from "./dashboard/prooftags/DashProofTags.jsx";
 import DetailsForm from "./dashboard/details/DetailsForm.jsx";
 import SolutionAttachmentUploadBox from "./dashboard/attachments/SolutionAttachmentUploadBox.jsx";
 import CategoryAttachmentUploadBox from "./dashboard/category/CategoryAttachmentUploadBox.jsx";
+import QAReportPanel from "./reports/QAReportPanel.jsx";
+import QAPerformance from "./reports/QAPerformance.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -169,9 +171,9 @@ const Routes = () => (
 						<Route path="add" component={DashQuestionForm} />
 						<Route path=":questionId/edit" component={DashQuestionForm} />
 					</Route>
-					<Route path=":solutionId/prooftags" component={DashProofsTags}/>
-					<Route path=":solutionId/details" component={DetailsForm}/>
-					<Route path=":solutionId/details/:detailsId/edit" component={DetailsForm}/>
+					<Route path=":solutionId/prooftags" component={DashProofsTags} />
+					<Route path=":solutionId/details" component={DetailsForm} />
+					<Route path=":solutionId/details/:detailsId/edit" component={DetailsForm} />
 					<Route path=":solutionId/attachment" component={SolutionAttachmentUploadBox} />
 				</Route>
 				<Route path="archivedsolution" component={ArchivedSolution} />
@@ -211,8 +213,8 @@ const Routes = () => (
 					<Route path=":clientTrainerId/edit" component={ClientTrainerForm} />
 				</Route>
 				<Route path="client_requirements" component={ClientRequirementsList}>
-					<Route path="add" component={ClientRequirementsForm}/>
-					<Route path=":clientRequirementId/edit" component={ClientRequirementsForm}/>
+					<Route path="add" component={ClientRequirementsForm} />
+					<Route path=":clientRequirementId/edit" component={ClientRequirementsForm} />
 				</Route>
 				<Route path="questionnaire_type" component={QuestionnaireTypeList}>
 					<Route path="add" component={QuestionnaireTypeForm} />
@@ -323,6 +325,8 @@ const Routes = () => (
 				</Route>
 				<Route path="client_profitability" component={ClientWiseProfitibilityReport}></Route>
 				<Route path="qa_report" component={QAReport}></Route>
+				<Route path="qa_report_panel" component={QAReportPanel}></Route>
+				<Route path="qa_performance" component={QAPerformance}></Route>
 			</Route>
 			<Route path="analytics" component={AnalyticDetails}>
 				<Route path="project_cycle_wise" component={ProjectAnalyticsCycleWise} />

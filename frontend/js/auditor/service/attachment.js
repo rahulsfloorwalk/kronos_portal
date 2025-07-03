@@ -1,48 +1,48 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 
-export function findAttachmentsByUser(){
+export function findAttachmentsByUser() {
 	return $.get(url.api_base_path + "auditor/id_proof/attachment");
 }
 
-export function findAttachmentsByAuditStore(auditStoreId){
-	return $.get( url.api_base_path + `auditor/audit_store/${auditStoreId}/attachment`);
+export function findAttachmentsByAuditStore(auditStoreId) {
+	return $.get(url.api_base_path + `auditor/audit_store/${auditStoreId}/attachment`);
 }
 
-export function findAttachmentsByAuditStoreAndSection(auditStoreId, sectionId){
-	return $.get( url.api_base_path + `auditor/audit_store/${auditStoreId}/section/${sectionId}/attachment`);
+export function findAttachmentsByAuditStoreAndSection(auditStoreId, sectionId) {
+	return $.get(url.api_base_path + `auditor/audit_store/${auditStoreId}/section/${sectionId}/attachment`);
 }
 
-export function deleteAttachment(attachmentId){
+export function deleteAttachment(attachmentId) {
 	return $.ajax({
 		url: url.api_base_path + `auditor/attachment/${attachmentId}`,
 		type: "DELETE"
 	});
 }
 
-export function completeAttachment(attachmentId){
+export function completeAttachment(attachmentId) {
 	return $.ajax({
 		url: url.api_base_path + `auditor/attachment/${attachmentId}/complete`,
 		type: "POST"
 	});
 }
 
-export function uploadFileForUser(file){
+export function uploadFileForUser(file) {
 	var req_url = url.api_base_path + "auditor/id_proof/attachment";
 	return doAttachmentUpload(req_url, file);
 }
 
-export function uploadFileForAuditStore(auditStoreId, file){
+export function uploadFileForAuditStore(auditStoreId, file) {
 	var req_url = url.api_base_path + `auditor/audit_store/${auditStoreId}/attachment`;
 	return doAttachmentUpload(req_url, file);
 }
 
-export function uploadFileForReportSection(auditStoreId, sectionId, file){
+export function uploadFileForReportSection(auditStoreId, sectionId, file) {
 	var req_url = url.api_base_path + `auditor/audit_store/${auditStoreId}/section/${sectionId}/attachment`;
 	return doAttachmentUpload(req_url, file);
 }
 
-export function doAttachmentUpload(url, file){
+export function doAttachmentUpload(url, file) {
 	let mainPromise = $.Deferred();
 
 	let payload = {
@@ -59,7 +59,7 @@ export function doAttachmentUpload(url, file){
 		contentType: "application/json"
 	});
 
-	req.done(function(post_data){
+	req.done(function (post_data) {
 		mainPromise.notify("STARTING_UPLOAD");
 
 		var formData = new FormData();
@@ -79,35 +79,47 @@ export function doAttachmentUpload(url, file){
 			data: formData,
 			processData: false,
 			contentType: false,
-			xhr: function() {
+			xhr: function () {
 				let myXhr = $.ajaxSettings.xhr();
-				if(myXhr.upload){
-					myXhr.upload.addEventListener("progress",function(e){
-						if(e.lengthComputable){
+				if (myXhr.upload) {
+					myXhr.upload.addEventListener("progress", function (e) {
+						if (e.lengthComputable) {
 							let max = e.total;
 							let current = e.loaded;
 
-							let percentage = (current * 100)/max;
+							let percentage = (current * 100) / max;
 							mainPromise.notify("UPLOAD_PROGRESS", percentage);
 						}
 					}, false);
 				}
 				return myXhr;
 			},
-		}).then(function(){
-			completeAttachment(post_data.attachment.id).then(function(){
+		}).then(function () {
+			completeAttachment(post_data.attachment.id).then(function () {
 				mainPromise.resolve();
-			}, function(){
+			}, function () {
 				mainPromise.reject("There was an error, please try again.");
 			});
-		}, function(){
+		}, function () {
 			mainPromise.reject("There was an error, please try again.");
 		});
 	});
 
-	req.fail(function(err){
-		if(err && err.responseJSON && err.responseJSON.non_field_errors){
-			mainPromise.reject(err.responseJSON.non_field_errors[0]);
+	// req.fail(function(err){
+	// 	if(err && err.responseJSON && err.responseJSON.non_field_errors){
+	// 		mainPromise.reject(err.responseJSON.non_field_errors[0]);
+	// 	} else {
+	// 		mainPromise.reject("There was an error, please try again.");
+	// 	}
+	// });
+
+	req.fail(function (err) {
+		if (err && err.responseJSON) {
+			if (err.responseJSON.non_field_errors) {
+				mainPromise.reject(err.responseJSON.non_field_errors[0]);
+			} else if (err.responseJSON.detail) {
+				mainPromise.reject(err.responseJSON.detail);
+			}
 		} else {
 			mainPromise.reject("There was an error, please try again.");
 		}
@@ -116,11 +128,11 @@ export function doAttachmentUpload(url, file){
 	return mainPromise;
 }
 
-export function moveAttachmentToSection(auditStoreId,sectionId,attachmentIdList){
+export function moveAttachmentToSection(auditStoreId, sectionId, attachmentIdList) {
 	return $.ajax({
 		url: url.api_base_path + `auditor/attachment/${auditStoreId}/movetosection_auditor`,
 		type: "POST",
-		data: JSON.stringify({section_id: sectionId , attachment_list: attachmentIdList}),
+		data: JSON.stringify({ section_id: sectionId, attachment_list: attachmentIdList }),
 		contentType: "application/json"
 	});
 }

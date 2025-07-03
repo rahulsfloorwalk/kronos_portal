@@ -349,6 +349,8 @@ urlpatterns = ([
     url(r'reports/manager_wise_profitability/', report_views.ManagerWiseProfitabilityView.as_view(), name="manager_wise_profitability_report"),
     url(r'reports/client_wise_profitability/', report_views.ClientWiseProfitabilityView.as_view(), name="client_wise_profitability_report"),
     url(r'reports/qa_report/', report_views.QAWiseReport.as_view(), name="qa_report"),
+    url(r'reports/qa_performance/', report_views.QAWiseReportPerformance.as_view(), name="qa_report"),
+    url(r'reports/qa_report_pannel/', report_views.QAWiseReportpanel.as_view(), name="qa_report_pannel"),
     url(r'reports/follow_up_report/', report_views.FollowUpReport.as_view(), name="follow_up_report"),
 
     url(r'analytics/project_analytic_cycle_wise$', auditor_views.ProjectAnalyticCycleWiseView.as_view(), name='project_analytic_cycle_wise'),

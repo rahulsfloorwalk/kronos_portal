@@ -13,7 +13,7 @@ from faker import Faker
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo
-from registration.models import GROUP_NAME_AUDITOR
+from registration.models import GROUP_NAME_AUDITOR,GROUP_NAME_MODERATOR
 from questionnaire.models import Section, Question
 from answer.models import ReportSection, Answer
 
@@ -47,7 +47,7 @@ class AuditStoreIdAcknowledgeTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["status"], AuditStore.ACKNOWLEDGED)
 
-
+import uuid
 class AuditStoreIdSubmitTestCase(APITestCase):
     fixtures = ['groups']
 
@@ -59,6 +59,9 @@ class AuditStoreIdSubmitTestCase(APITestCase):
         self.auditor_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
                                        groups=[self.auditor_group])
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+        self.moderator_group = Group.objects.get(name=GROUP_NAME_MODERATOR)
+        self.moderator_user = mommy.make( User, username="moderator_" + uuid.uuid4().hex[:8], email=uuid.uuid4().hex[:8] + "@test.com", is_active=True )
+        self.moderator_user.groups.add(self.moderator_group)
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
 
     def create_submittable_report(self):

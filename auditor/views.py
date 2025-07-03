@@ -62,6 +62,14 @@ from manager.models import AuditProoftagNotAvailable
 from attachment import service as attachment_service
 import answer.service.answer_moderator as answer_moderator_service
 from rest_framework.serializers import Serializer, IntegerField, CharField
+from manager.service import moderator as moderator_service
+from django.contrib.auth.models import Group
+from django.db.models import Count
+from registration.models import GROUP_NAME_MODERATOR
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Permission
+
+from guardian.models import UserObjectPermission
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -543,11 +551,37 @@ class AuditStoreIdSubmitView(APIView):
     required_groups = {
         'POST': [GROUP_NAME_AUDITOR],
     }
+    class DeSerializer(Serializer):
+        user_id = IntegerField()
+    
     def post(self, request, audit_store_id):
         audit_store = audit_store_auditor_service.submit_report(audit_store_id, request.user.id)
         if 'report_submission_time' in request.data:
             audit_store.report_submission_time = request.data['report_submission_time']
             audit_store.save()
+        try:
+            moderator_group = Group.objects.get(name=GROUP_NAME_MODERATOR)
+            reports = AuditStore.objects.filter(status=AuditStore.SUBMITTED).values("id")
+            report_ids = [str(report["id"]) for report in reports]
+
+            content_type = ContentType.objects.get_for_model(AuditStore)
+            permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
+            perms = UserObjectPermission.objects.filter( content_type=content_type, object_pk__in=report_ids, permission=permission, user__is_active=True )
+            moderator_counts = {}
+            for perm in perms:
+                if perm.user_id not in moderator_counts:
+                    moderator_counts[perm.user_id] = 0
+                moderator_counts[perm.user_id] += 1
+
+            moderators = moderator_group.user_set.filter(is_active=True)
+            if not moderators.exists():
+                return Response({"error": "No moderators available to assign."}, status=400)
+            selected_moderator = min( moderators, key=lambda m: moderator_counts.get(m.id, 0) )
+            audit_store = moderator_service.assign_audit_store( selected_moderator.id, audit_store_id)
+
+        except Exception as e:
+            _logger.info("Moderator not assigned due to error: " + str(e))
+
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdSubmitReportView(APIView):
