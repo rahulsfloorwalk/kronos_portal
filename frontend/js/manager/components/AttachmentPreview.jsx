@@ -92,23 +92,25 @@ class AttachmentRenderer extends React.Component {
 			}
 		}
 	}
-	convertHeicToJpeg = async (url) => {
-		try {
-			this.setLoading(true);
-			this.setError(false);
-			const response = await fetch(url);
-			const blob = await response.blob();
-			const convertedBlob = await heic2any({
+	convertHeicToJpeg = (url) => {
+		this.setLoading(true);
+		this.setError(false);
+
+		fetch(url)
+			.then((response) => response.blob())
+			.then((blob) => heic2any({
 				blob,
 				toType: "image/jpeg",
 				quality: 0.8,
+			}))
+			.then((convertedBlob) => {
+				const convertedUrl = URL.createObjectURL(convertedBlob);
+				this.setState({ convertedUrl, loading: false });
+			})
+			.catch(() => {
+				this.setError(true);
+				this.setLoading(false);
 			});
-			const convertedUrl = URL.createObjectURL(convertedBlob);
-			this.setState({ convertedUrl, loading: false });
-		} catch (err) {
-			this.setError(true);
-			this.setLoading(false);
-		}
 	};
 
 	zoomIn = () => {
