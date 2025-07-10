@@ -8,7 +8,7 @@ import Jumbotron from "../../components/Jumbotron.jsx";
 import AmrAudioPlayer from "../../components/AmrAudioPlayer.jsx";
 import attachmentErrorImageUrl from "../../../img/error_100.png";
 import "../../../css/bs_overrides.scss";
-
+import heic2any from "heic2any";
 
 class AttachmentRenderer extends React.Component {
 	static propTypes = {
@@ -20,6 +20,7 @@ class AttachmentRenderer extends React.Component {
 		this.state = {
 			loading: true,
 			error: false,
+			convertedUrl: null,
 		};
 	}
 
@@ -40,18 +41,34 @@ class AttachmentRenderer extends React.Component {
 	};
 
 	componentDidMount() {
+		const slug = this.props.attachment.file_slug || "";
+		const Ext = slug.split(".").pop().toLowerCase();
 		if (this.props.attachment.proof_type === "PHOTO") {
 			this.setLoading(true);
 			this.setError(false);
 		}
+		if (this.props.attachment.proof_type === "OTHER" && Ext === "heic") {
+			this.convertHeicToJpeg(this.props.attachment.direct_url);
+		}
 	}
 
 	componentWillReceiveProps(nextProps) {
+		const prevId = this.props.attachment.id;
+		const nextId = nextProps.attachment.id;
+		const nextSlug = nextProps.attachment.file_slug || "";
+		const nextExt = nextSlug.split(".").pop().toLowerCase();
 		if (nextProps.attachment.proof_type === "PHOTO") {
 			if (nextProps.attachment.id !== this.props.attachment.id) {
 				this.setLoading(true);
 				this.setError(false);
 			}
+		}
+		if (
+			nextProps.attachment.proof_type === "OTHER" &&
+			nextExt === "heic" &&
+			nextId !== prevId
+		) {
+			this.convertHeicToJpeg(nextProps.attachment.direct_url);
 		}
 		if (nextProps.attachment.proof_type === "AUDIO") {
 			if (nextProps.attachment.proof_type === this.props.attachment.proof_type) {
@@ -72,6 +89,29 @@ class AttachmentRenderer extends React.Component {
 			}
 		}
 	}
+	convertHeicToJpeg = (url) => {
+		this.setLoading(true);
+		this.setError(false);
+
+		fetch(url)
+			.then((response) => response.blob())
+			.then((blob) =>
+				heic2any({
+					blob,
+					toType: "image/jpeg",
+					quality: 0.8,
+				})
+			)
+			.then((convertedBlob) => {
+				const convertedUrl = URL.createObjectURL(convertedBlob);
+				this.setState({ convertedUrl, loading: false });
+			})
+			.catch((err) => {
+				console.error("HEIC conversion error:", err);
+				this.setError(true);
+				this.setLoading(false);
+			});
+	};
 
 	zoomIn = () => {
 		var imgProof = this.zoomImg;
@@ -96,7 +136,9 @@ class AttachmentRenderer extends React.Component {
 	};
 
 	render() {
-
+		const file_slug = this.props.attachment.file_slug || "";
+		const file_extensionheic = file_slug.split(".").pop().toLowerCase();
+		const isHeic = file_extensionheic === "heic";
 		let file_extension_arr = (this.props.attachment.file_slug).split(".");
 		let file_extension = file_extension_arr[file_extension_arr.length - 1];
 		switch (this.props.attachment.proof_type) {
@@ -198,6 +240,54 @@ class AttachmentRenderer extends React.Component {
 			// return (<p>Please download this file.</p>);
 		}
 		case "OTHER":
+			if (isHeic) {
+				let error;
+				if (this.state.error) {
+					error = (
+						<div className="text-center">
+							<img src={attachmentErrorImageUrl} alt="error" />
+							<p>Cannot load image</p>
+						</div>
+					);
+				}
+
+				let imageStyle = {
+					display: this.state.loading ? "none" : "block",
+					margin: "auto",
+					width: "500px",
+				};
+
+				return (
+					<div>
+						{error}
+						{this.state.loading ? (
+							<Loading />
+						) : (
+							this.state.convertedUrl && (
+								<div>
+									<button type="button" className="btn btn-sm btn-default" onClick={this.zoomIn} >
+										<Plus /> Zoom In
+									</button>
+									&nbsp;&nbsp;&nbsp;
+									<button type="button" className="btn btn-sm btn-default" onClick={this.zoomOut} >
+										<Minus /> Zoom Out
+									</button>
+									<div className="zoom-div">
+										<img
+											ref={(node) => (this.zoomImg = node)}
+											className="zoom-img"
+											style={imageStyle}
+											src={this.state.convertedUrl}
+											onLoad={this.onLoad}
+											onError={this.onError}
+										/>
+									</div>
+								</div>
+							)
+						)}
+					</div>
+				);
+			}
 			if (file_extension == "amr") {
 				let audio_transcipt_table_data;
 				let audio_transcipt_rows = [];

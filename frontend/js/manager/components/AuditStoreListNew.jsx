@@ -462,7 +462,7 @@ class AuditStoreList extends Component{
 		if(users.length > 0){
 			for(let user of users){
 				// user_option_list.push(<option key={user.user.id} value={user.user.id}>{user.user.email}</option>);
-				user_option_list.push(<option key={user.user.id} value={user.user.id}>{user.user.profile_info.first_name + " " + user.user.profile_info.last_name ? user.user.profile_info.last_name : ""}</option>);
+				user_option_list.push(<option key={user.user.id} value={user.user.id}>{user.user.profile_info.first_name}{user.user.profile_info.last_name ? " " + user.user.profile_info.last_name : ""}</option>);
 			}
 		}
 
