@@ -114,6 +114,7 @@ def upload_for_object_with_proof_tag(proof_type: str, mime_type: str, file_name:
         file_slug = file_slug,
         content_object = content_object,
         proof_tag = proof_tag,
+        old_file_name = file_name,
     )
 
 def upload_for_object_order(
@@ -205,6 +206,8 @@ def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
         content_type=ContentType.objects.get_for_model(AuditStore),
         object_id=audit_store.id,
         old_file_name=file_name
+    ).exclude(
+        status__in=['DELETED', 'UPLOADING']
     ).exists()
 
     if duplicate_exists:
@@ -220,6 +223,17 @@ def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
 def upload_for_audit_store_with_proof_tag(audit_store_id, file_name, file_size, mime_type,proof_tag):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     check_file_size(file_size)
+    
+    duplicate_exists = Attachment.objects.filter(
+        content_type=ContentType.objects.get_for_model(AuditStore),
+        object_id=audit_store.id,
+        old_file_name=file_name
+    ).exclude(
+        status__in=['DELETED', 'UPLOADING']
+    ).exists()
+
+    if duplicate_exists:
+        raise ValidationError({"detail": "Duplicate file detected — this file has already been used."})
     basename, file_extension = parse_file_name(file_name)
     valid_file_type(mime_type, file_extension)
     proof_type = get_proof_type(mime_type)

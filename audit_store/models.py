@@ -198,6 +198,7 @@ class AuditStore(Model):
 
     report_summary = CharField(db_column='report_summary', max_length=16384, blank=True)
     report_summary_original = CharField(db_column='report_summary_original', max_length=16384, blank=True)
+    report_summary_old = CharField(db_column='report_summary_old', max_length=66384, blank=True, null=True)
 
     check_points = JSONField(db_column='check_points', default=dict, blank=False)
 
@@ -472,6 +473,21 @@ class AuditStore(Model):
 
     def set_report_summary(self, report_summary):
         self.report_summary = report_summary
+        self.save()
+
+    def set_report_summary_by_auditor(self, report_summary):
+        self.report_summary = report_summary
+        self.report_summary_old = report_summary
+        self.save()
+
+    def set_report_summary_updated(self, report_summary):
+        self.report_summary = report_summary
+        self.report_summary_original = report_summary
+        self.save()
+
+    def set_report_summary_back_to_original(self,summary):
+        self.report_summary = summary
+        self.report_summary_original = summary
         self.save()
 
     def set_nps_section(self, nps_section):

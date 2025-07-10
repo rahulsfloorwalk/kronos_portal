@@ -537,6 +537,7 @@ class AuditStoreSerializer(ModelSerializer):
             'audit_date',
             'audit',
             'report_summary',
+            'report_summary_old',
             'nps_section',
             'user',
             'get_date_diff',

@@ -16,6 +16,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from guardian.shortcuts import assign_perm
 from datetime import date
+from collections import defaultdict
 
 User = get_user_model()
 
@@ -325,53 +326,113 @@ def get_qa_wise_report_performance(raw_day, raw_month, raw_year, raw_qa):
         "audit_store_data": []
     }
 
-    day_list = [day] if day else list(range(1, 32))
-    month_list = [month] if month else list(range(1, 13))
-    audit_stores = AuditStore.objects.filter(status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW]).exclude(moderator_submission_date__isnull=True)
+    audit_store_filter = {
+        "status__in": [AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW],
+        "moderator_submission_date__isnull": False,
+        "moderator_submission_date__year": year
+    }
 
+    if month:
+        audit_store_filter["moderator_submission_date__month"] = month
+    if day:
+        audit_store_filter["moderator_submission_date__day"] = day
+
+    # day_list = [day] if day else list(range(1, 32))
+    # month_list = [month] if month else list(range(1, 13))
+    # audit_stores = AuditStore.objects.filter(status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW]).exclude(moderator_submission_date__isnull=True)
+    audit_stores = AuditStore.objects.filter(**audit_store_filter).select_related("user")
     content_type = ContentType.objects.get_for_model(AuditStore)
     permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
 
     perms_all = UserObjectPermission.objects.filter(content_type=content_type, permission=permission, user__is_active=True)
-    perms = perms_all.filter(user_id=qa) if qa else perms_all
-    user_list = perms.order_by('user_id').distinct('user_id').values('user_id', 'user__email')
 
-    for m in month_list:
-        for d in day_list:
-            try:
-                filter_date = date(year, m, d)
-            except ValueError:
-                continue 
+    # perms = perms_all.filter(user_id=qa) if qa else perms_all
+    # user_list = perms.order_by('user_id').distinct('user_id').values('user_id', 'user__email')
 
-            stores = audit_stores.filter(moderator_submission_date__date=filter_date)
-            if not stores.exists():
-                continue
-            # stores = audit_stores.filter(moderator_submission_date__year=year, moderator_submission_date__month=m, moderator_submission_date__day=d)
-            # if stores.exists():
-            store_ids = [str(s.id) for s in stores]
-            filtered_perms = perms.filter(object_pk__in=store_ids)
-            total_count = perms_all.filter(object_pk__in=store_ids).count()
+    # for m in month_list:
+    #     for d in day_list:
+    #         try:
+    #             filter_date = date(year, m, d)
+    #         except ValueError:
+    #             continue 
 
-            for user in user_list:
-                audit_count = filtered_perms.filter(user_id=user['user_id']).count()
+    #         stores = audit_stores.filter(moderator_submission_date__date=filter_date)
+    #         if not stores.exists():
+    #             continue
+    #         # stores = audit_stores.filter(moderator_submission_date__year=year, moderator_submission_date__month=m, moderator_submission_date__day=d)
+    #         # if stores.exists():
+    #         store_ids = [str(s.id) for s in stores]
+    #         filtered_perms = perms.filter(object_pk__in=store_ids)
+    #         total_count = perms_all.filter(object_pk__in=store_ids).count()
 
-                for store in stores:
-                    if filtered_perms.filter(user_id=user['user_id'], object_pk=str(store.id)).exists():
-                        response["audit_store_data"].append({
-                            "audit_store_id": store.id,
-                            "moderator_submission_date": store.moderator_submission_date,
-                            "audit_status": store.status,
-                            "report_submission_time": store.report_submission_time,
-                            "moderator_submission_time": store.moderator_submission_time,
-                            "qa_rating": store.qa_rating,
-                            "user_id": store.user_id,
-                            "qa_email": user['user__email'],
-                            "qa_id": user['user_id'],
-                            "year": year,
-                            "month": m,
-                            "day": d,
-                            "audit_count": audit_count
-                        })
+    #         for user in user_list:
+    #             audit_count = filtered_perms.filter(user_id=user['user_id']).count()
+
+    #             for store in stores:
+    #                 if filtered_perms.filter(user_id=user['user_id'], object_pk=str(store.id)).exists():
+    #                     response["audit_store_data"].append({
+    #                         "audit_store_id": store.id,
+    #                         "moderator_submission_date": store.moderator_submission_date,
+    #                         "audit_status": store.status,
+    #                         "report_submission_time": store.report_submission_time,
+    #                         "moderator_submission_time": store.moderator_submission_time,
+    #                         "qa_rating": store.qa_rating,
+    #                         "user_id": store.user_id,
+    #                         "qa_email": user['user__email'],
+    #                         "qa_id": user['user_id'],
+    #                         "year": year,
+    #                         "month": m,
+    #                         "day": d,
+    #                         "audit_count": audit_count
+    #                     })
+
+    # return response
+
+
+
+    if qa:
+        perms_qs = perms_all.filter(user_id=qa)
+    else:
+        perms_qs = perms_all
+
+    # Build permission map: store_id -> set of user_ids
+    store_perm_map = defaultdict(set)
+    for perm in perms_qs.filter(object_pk__in=audit_stores.values_list("id", flat=True)):
+        store_perm_map[int(perm.object_pk)].add(perm.user_id)
+
+    # Build user info map: user_id -> email
+    user_info = {
+        u["user_id"]: u["user__email"]
+        for u in perms_qs.order_by('user_id').distinct('user_id').values('user_id', 'user__email')
+    }
+
+    # Count how many audits each QA did
+    audit_count_by_user = defaultdict(int)
+    for store_id, user_ids in store_perm_map.items():
+        for uid in user_ids:
+            audit_count_by_user[uid] += 1
+
+    # Construct final report
+    for store in audit_stores:
+        store_id = store.id
+        if store_id not in store_perm_map:
+            continue
+        for qa_id in store_perm_map[store_id]:
+            response["audit_store_data"].append({
+                "audit_store_id": store.id,
+                "moderator_submission_date": store.moderator_submission_date,
+                "audit_status": store.status,
+                "report_submission_time": store.report_submission_time,
+                "moderator_submission_time": store.moderator_submission_time,
+                "qa_rating": store.qa_rating,
+                "user_id": store.user_id,
+                "qa_email": user_info.get(qa_id),
+                "qa_id": qa_id,
+                "year": store.moderator_submission_date.year,
+                "month": store.moderator_submission_date.month,
+                "day": store.moderator_submission_date.day,
+                "audit_count": audit_count_by_user[qa_id]
+            })
 
     return response
 

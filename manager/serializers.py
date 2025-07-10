@@ -482,13 +482,22 @@ class AuditCycleProofTagListSerializer(ModelSerializer):
 
 
 class UserSerializerWithUserDetails(ModelSerializer):
+    profile_info = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = (
             'id',
-            'email'
+            'email',
+            'profile_info',
         )
         read_only_fields = fields
+
+    def get_profile_info(self, user):
+        try:
+            profile = ProfileInfo.objects.get(user=user)
+            return ProfileInfoSmallSerializer(profile).data
+        except ProfileInfo.DoesNotExist:
+            return None
 
 
 class AuditStoreSerializerWithUser(ModelSerializer):

@@ -105,11 +105,22 @@ export function doAttachmentUpload(req_url, file){
 		});
 	});
 
-	req.fail(function(err){
-		if( err.responseJSON && err.responseJSON.non_field_errors){
-			mainPromise.reject(err.responseJSON.non_field_errors[0]);
+	// req.fail(function(err){
+	// 	if( err.responseJSON && err.responseJSON.non_field_errors){
+	// 		mainPromise.reject(err.responseJSON.non_field_errors[0]);
+	// 	} else {
+	// 		mainPromise.reject();
+	// 	}
+	// });
+	req.fail(function (err) {
+		if (err && err.responseJSON) {
+			if (err.responseJSON.non_field_errors) {
+				mainPromise.reject(err.responseJSON.non_field_errors[0]);
+			} else if (err.responseJSON.detail) {
+				mainPromise.reject(err.responseJSON.detail);
+			}
 		} else {
-			mainPromise.reject();
+			mainPromise.reject("There was an error, please try again.");
 		}
 	});
 

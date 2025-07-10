@@ -115,6 +115,8 @@ def get_averages_for_sections_for_client_user(sections, user_id):
                     .filter(audit_store__in=visible_audit_stores,
                             audit_store__audit__store__id__in=non_admin_user_store_list) \
                     .filter(section=section,not_applicable=False)
+            if not filtered_report_sections.exists():
+                continue
             sec['average'] = get_average_for_report_sections(filtered_report_sections)
         # if section.max_marks() > 0:
             section_averages.append(sec)

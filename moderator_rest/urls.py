@@ -9,7 +9,7 @@ from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditVi
 from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorCommentView, AuditStoreIdCheckPoints
 from .views import AttachmentProofTagList, AttachmentIdProofTagView,AuditGuidelinesByAuditStore
 from .views import AttachmentIdRotateView,StoreViewByClientView,AuditIdView
-from .views import AuditStoreIdArrangeAttachment,AuditStoreProofTagNotAvailableView,ReportSubmissionTimeView
+from .views import AuditStoreIdArrangeAttachment,AuditStoreProofTagNotAvailableView,ReportSubmissionTimeView,AuditStoreIdRewriteReportSummaryView,AuditStoreIdBackToOriginalReportSummaryView
 from .views import ClientView
 from .views import ConfigView
 from .views import AuditorRatingView
@@ -42,6 +42,8 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', AnswerView.as_view(), name='answer_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', AuditStoreAttachmentView.as_view(), name='audit_store_attachment_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_summary$', AuditStoreIdReportSummaryView.as_view(), name='audit_store_id_report_summary_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/rewrite_report_summary$', AuditStoreIdRewriteReportSummaryView.as_view(), name='audit_store_id_rewrite_report_summary_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/back_to_original_report_summary$', AuditStoreIdBackToOriginalReportSummaryView.as_view(), name='audit_store_id_back_to_original_report_summary_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/mandatory_proof_tag$', AuditStoreMandatoryProofTagView.as_view(), name='audit_store_mandatory_proof_tag_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/guildlines$', AuditGuidelinesByAuditStore.as_view(), name='audit_guidelines_by_audit_store'),

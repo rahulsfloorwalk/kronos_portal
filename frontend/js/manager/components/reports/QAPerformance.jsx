@@ -106,21 +106,26 @@ export default class QAPerformance extends Component {
 	getDaysInMonth(month, year) {
 		return new Date(year, month, 0).getDate(); // month is 1-based (01 for Jan, 02 for Feb, etc.)
 	}
+	getTotalSeconds = (timeStr) => {
+		const [h, m, s] = timeStr.split(":").map(Number);
+		return h * 3600 + m * 60 + s;
+	};
+
+	formatSecondsToTime = (totalSeconds) => {
+		const h = Math.floor(totalSeconds / 3600)
+			.toString()
+			.padStart(2, "0");
+		const m = Math.floor((totalSeconds % 3600) / 60)
+			.toString()
+			.padStart(2, "0");
+		const s = (totalSeconds % 60).toString().padStart(2, "0");
+		return `${h}:${m}:${s}`;
+	};
 
 	render() {
 		if (this.state.loading) {
 			return <Loading />;
 		}
-		// let day_option_list = [];
-		// for (let d = 1; d <= 31; d++) {
-		//   const val = ("0" + d).slice(-2);
-		//   day_option_list.push(
-		//     <option key={d} value={val}>
-		//       {val}
-		//     </option>
-		//   );
-		// }
-
 		let day_option_list = [];
 		const daysInMonth = this.state.month && this.state.year ? this.getDaysInMonth(this.state.month, this.state.year) : 31;
 		for (let d = 1; d <= daysInMonth; d++) {
@@ -141,13 +146,22 @@ export default class QAPerformance extends Component {
 				</option>
 			);
 		}
-
-
 		const qa_option_list = this.state.qas.map((m, i) => (
 			<option key={i} value={m.id}>
 				{m.email}
 			</option>
 		));
+		let totalQaSeconds = 0;
+
+		this.state.reports.forEach((value) => {
+			if (value.moderator_submission_time) {
+				totalQaSeconds += this.getTotalSeconds(
+					value.moderator_submission_time
+				);
+			}
+		});
+
+		const totalQaTime = this.formatSecondsToTime(totalQaSeconds);
 
 		let report_blocks = this.state.reports.map((value, index) => {
 			return (
@@ -158,8 +172,8 @@ export default class QAPerformance extends Component {
 					<td className="text-center">
 						<small>{value.qa_email}</small>
 					</td>
-					<td className="text-center">{value.moderator_submission_time ? value.moderator_submission_time : "00:00:00"}</td>
 					<td className="text-center">{getAuditStoreStatus(value.audit_status)}</td>
+					<td className="text-center">{value.moderator_submission_time ? value.moderator_submission_time : "00:00:00"}</td>
 					{/* <td className="text-center"><Link to={/audit_store/${this.props.auditStore.id}/report} className="btn btn-default" target="_blank">View</Link></td> */}
 					<td className="text-center">
 						<Link
@@ -233,22 +247,34 @@ export default class QAPerformance extends Component {
 										{qa_option_list}
 									</select>
 								</th>
-								<th className="text-center">QA time</th>
 								<th className="text-center">Report Status</th>
+								<th className="text-center">QA time</th>
 								<th></th>
 							</tr>
 						</thead>
 						<tbody>
-							{report_blocks}
-							<tr>
-								<td className="text-center" colSpan="6">
-									<b>Total</b>
-								</td>
-								<td className="text-center">
-									<b>{this.state.reports.length}</b>
-								</td>
+							{this.state.reports.length === 0 ? (
+								<tr>
+									<td className="text-center" colSpan="9">
+										<b>No data</b>
+									</td>
+								</tr>
+							) : (
+								<>
+									{report_blocks}
+									<tr>
+										<td className="text-center" colSpan="5">
+											<b>Total</b>
+										</td>
+										<td className="text-center">
+											<b>{totalQaTime}</b>
+										</td>
+										<td className="text-center">
+											<b>{this.state.reports.length}</b>
+										</td>
 
-							</tr>
+									</tr>
+								</>)}
 						</tbody>
 					</table>
 				</div>
