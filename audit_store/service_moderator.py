@@ -305,6 +305,22 @@ def set_report_summary(audit_store_id, report_summary, user_id):
     else:
         raise AppLogicError("cannot set report summary now")
 
+def set_back_to_original_report_summary(audit_store_id,summary, user_id):
+    audit_store = find_by_id_for_moderator(audit_store_id, user_id)
+    if audit_store.is_editable_by_moderator():
+        audit_store.set_report_summary_back_to_original(summary)
+        return audit_store
+    else:
+        raise AppLogicError("cannot set report summary now")
+
+def set_report_summary_updated(audit_store_id, report_summary, user_id):
+    audit_store = find_by_id_for_moderator(audit_store_id, user_id)
+    if audit_store.is_editable_by_moderator():
+        audit_store.set_report_summary_updated(report_summary)
+        return audit_store
+    else:
+        raise AppLogicError("cannot set report summary now")
+
 def set_moderator_status(audit_store_id, moderator_status, user_id):
     audit_store = find_by_id_for_moderator(audit_store_id,user_id)
     audit_store.set_moderator_status(moderator_status)

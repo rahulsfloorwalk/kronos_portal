@@ -559,6 +559,16 @@ class AuditStoreIdSubmitView(APIView):
         if 'report_submission_time' in request.data:
             audit_store.report_submission_time = request.data['report_submission_time']
             audit_store.save()
+
+        excluded_client_ids = [344, 345, 346]
+        client_id = audit_store.audit.audit_cycle.client_id
+
+        if client_id in excluded_client_ids:
+            _logger.info("Auto-assign skipped for audit_store ID: " + str(audit_store_id) + " (client_id " + str(client_id) + " is in excluded list)")
+            return Response(AuditStoreSerializer(audit_store).data)
+
+        eligible_moderator_ids = [503761,454714,45590,7450] 
+        # eligible_moderator_ids = [6,32,33] 
         try:
             moderator_group = Group.objects.get(name=GROUP_NAME_MODERATOR)
             reports = AuditStore.objects.filter(status=AuditStore.SUBMITTED).values("id")
@@ -566,18 +576,29 @@ class AuditStoreIdSubmitView(APIView):
 
             content_type = ContentType.objects.get_for_model(AuditStore)
             permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
-            perms = UserObjectPermission.objects.filter( content_type=content_type, object_pk__in=report_ids, permission=permission, user__is_active=True )
+
+            assigned_perms_for_this_store = UserObjectPermission.objects.filter( content_type=content_type, object_pk=str(audit_store_id), permission=permission, user__is_active=True )
+            if assigned_perms_for_this_store.exists():
+                assigned_users = [perm.user for perm in assigned_perms_for_this_store]
+                return Response(AuditStoreSerializer(audit_store).data)
+
+            reports = AuditStore.objects.filter(status=AuditStore.SUBMITTED).values("id")
+            report_ids = [str(report["id"]) for report in reports]
+
+            perms = UserObjectPermission.objects.filter( content_type=content_type, object_pk__in=report_ids, permission=permission, user__is_active=True,user__id__in=eligible_moderator_ids )
+
             moderator_counts = {}
             for perm in perms:
                 if perm.user_id not in moderator_counts:
                     moderator_counts[perm.user_id] = 0
                 moderator_counts[perm.user_id] += 1
+            moderators = moderator_group.user_set.filter(is_active=True, id__in=eligible_moderator_ids)
+            selected_moderator = min(
+                moderators,
+                key=lambda m: moderator_counts.get(m.id, 0)
+            )
 
-            moderators = moderator_group.user_set.filter(is_active=True)
-            if not moderators.exists():
-                return Response({"error": "No moderators available to assign."}, status=400)
-            selected_moderator = min( moderators, key=lambda m: moderator_counts.get(m.id, 0) )
-            audit_store = moderator_service.assign_audit_store( selected_moderator.id, audit_store_id)
+            audit_store = moderator_service.assign_audit_store(selected_moderator.id, audit_store_id)
 
         except Exception as e:
             _logger.info("Moderator not assigned due to error: " + str(e))
@@ -594,6 +615,49 @@ class AuditStoreIdSubmitReportView(APIView):
         if 'report_submission_time' in request.data:
             audit_store.report_submission_time = request.data['report_submission_time']
             audit_store.save()
+
+        excluded_client_ids = [344, 345, 346]
+        client_id = audit_store.audit.audit_cycle.client_id
+
+        if client_id in excluded_client_ids:
+            _logger.info("Auto-assign skipped for audit_store ID: " + str(audit_store_id) + " (client_id " + str(client_id) + " is in excluded list)")
+            return Response(AuditStoreSerializer(audit_store).data)
+        
+        eligible_moderator_ids = [503761,454714,45590,7450] 
+        try:
+            moderator_group = Group.objects.get(name=GROUP_NAME_MODERATOR)
+            reports = AuditStore.objects.filter(status=AuditStore.SUBMITTED).values("id")
+            report_ids = [str(report["id"]) for report in reports]
+
+            content_type = ContentType.objects.get_for_model(AuditStore)
+            permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
+
+            assigned_perms_for_this_store = UserObjectPermission.objects.filter( content_type=content_type, object_pk=str(audit_store_id), permission=permission, user__is_active=True)
+            if assigned_perms_for_this_store.exists():
+                assigned_users = [perm.user for perm in assigned_perms_for_this_store]
+                return Response(AuditStoreSerializer(audit_store).data)
+
+            reports = AuditStore.objects.filter(status=AuditStore.SUBMITTED).values("id")
+            report_ids = [str(report["id"]) for report in reports]
+
+            perms = UserObjectPermission.objects.filter( content_type=content_type, object_pk__in=report_ids, permission=permission, user__is_active=True,user__id__in=eligible_moderator_ids )
+
+            moderator_counts = {}
+            for perm in perms:
+                if perm.user_id not in moderator_counts:
+                    moderator_counts[perm.user_id] = 0
+                moderator_counts[perm.user_id] += 1
+            moderators = moderator_group.user_set.filter(is_active=True, id__in=eligible_moderator_ids)
+            selected_moderator = min(
+                moderators,
+                key=lambda m: moderator_counts.get(m.id, 0)
+            )
+
+            audit_store = moderator_service.assign_audit_store(selected_moderator.id, audit_store_id)
+
+        except Exception as e:
+            _logger.info("Moderator not assigned due to error: " + str(e))
+
         return Response(AuditStoreSerializer(audit_store).data)
 
 

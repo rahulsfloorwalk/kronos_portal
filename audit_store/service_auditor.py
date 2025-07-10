@@ -59,7 +59,7 @@ def acknowledge_report(audit_store_id, user_id):
 def set_report_summary(audit_store_id, user_id, report_summary):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
     if audit_store.is_editable_by_auditor():
-        audit_store.set_report_summary(report_summary)
+        audit_store.set_report_summary_by_auditor(report_summary)
         audit_store.copy_report_summary()
         return audit_store
     else:

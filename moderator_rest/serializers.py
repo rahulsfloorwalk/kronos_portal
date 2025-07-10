@@ -212,6 +212,8 @@ class AuditStoreSerializer(ModelSerializer):
             'audit_store_percentage',
             'earnings_per_audit',
             'report_summary',
+            'report_summary_original',
+            'report_summary_old',
             'reimbursement',
             'moderator_status',
             'moderator_comment',

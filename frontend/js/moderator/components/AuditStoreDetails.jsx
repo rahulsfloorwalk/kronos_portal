@@ -815,7 +815,7 @@ export default class AuditStoreDetails extends React.Component {
 					<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} />
 					: null}
 				<AuditStoreSections
-					key={this.state.reloadKey} // to force remount when mandatoryproofbox changes
+					// key={this.state.reloadKey} // to force remount when mandatoryproofbox changes
 					handleSectionProofChange={this.handleSectionProofChange}
 					auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore} />
 				{this.props.children}

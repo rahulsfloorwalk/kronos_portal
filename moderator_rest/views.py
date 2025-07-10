@@ -35,7 +35,7 @@ from attachment import service_auditor
 from answer.models import Answer, ReportSection
 from django.utils import timezone
 # from .serializers import AuditCycleProoftagListSerializer
-
+import requests
 
 class AuditCycleView(APIView):
     permission_classes = [HasGroupPermission]
@@ -196,6 +196,41 @@ class AuditStoreIdReportSummaryView(APIView):
         audit_store = audit_store_service.set_report_summary(audit_store_id, report_summary, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
+class AuditStoreIdBackToOriginalReportSummaryView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR]
+    }
+    def post(self, request, audit_store_id, format=None):
+        summary = request.data.get('report_summary', '').strip()
+        audit_store = audit_store_service.set_back_to_original_report_summary(audit_store_id, summary, request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+class AuditStoreIdRewriteReportSummaryView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR]
+    }
+
+    def post(self, request, audit_store_id, format=None):
+        summary = request.data.get('report_summary', '').strip()
+        if not summary:
+            return Response({"error": "Missing 'report_summary'"}, status=400)
+        try:
+            api_response = requests.post(
+                "http://api.floorwalk.in/rewrite/",
+                data={"sentence": summary},
+            )
+            rewritten = api_response.json().get("result", "").strip()
+            print(rewritten)
+            if not rewritten:
+                return Response({"error": "Empty response from rewrite API"}, status=500)
+
+            audit_store = audit_store_service.set_report_summary_updated(audit_store_id, rewritten, request.user.id)
+            return Response(AuditStoreSerializer(audit_store).data)
+
+        except Exception as e:
+            return Response({"error": "Rewrite API call failed", "details": str(e)}, status=500)
 
 class AuditStoreIdReimbursementView(APIView):
     permission_classes = [HasGroupPermission]
@@ -494,7 +529,7 @@ class AttachmentIdProofTagView(APIView):
         'POST': [GROUP_NAME_MODERATOR]
     }
     def post(self, request, attachment_id):
-        attachment = attachment_service.save_attachment_proof_tag(attachment_id, request.data['proof_tag_id'], request.data['object_id'])
+        attachment = attachment_service.save_attachment_proof_tag(attachment_id, request.data['proof_tag_id'])
         return Response(AttachmentSerializer(attachment).data)
 
 

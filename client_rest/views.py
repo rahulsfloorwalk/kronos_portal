@@ -654,7 +654,7 @@ class AuditStoreUpcoming(APIView):
     }
     def get(self, request, format=None):
         audit_stores = audit_store_client_service.find_upcoming_for_client(request.user.clientuser.client_id)
-        return Response(AuditStoreSerializer(audit_stores, many=True).data)
+        return Response(AuditStoreSerializer(audit_stores, many=True).data) 
 
 class AuditCycleTimeSeriesReport(APIView):
     permission_classes = [HasGroupPermission]

@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { getQAReportPanels } from "../../service/reports.js";
 import { findModerators } from "../../service/moderator.js";
 
-import { getAuditStoreStatus,getMonthName } from "../../../utils.js";
+import { getAuditStoreStatus, getMonthName } from "../../../utils.js";
 
 import Loading from "../../../components/Loading.jsx";
 import { Link } from "react-router";
@@ -127,6 +127,21 @@ export default class QAReportPanel extends Component {
 			this.state.qa
 		);
 	};
+	getTotalSeconds = (timeStr) => {
+		const [h, m, s] = timeStr.split(":").map(Number);
+		return h * 3600 + m * 60 + s;
+	};
+
+	formatSecondsToTime = (totalSeconds) => {
+		const h = Math.floor(totalSeconds / 3600)
+			.toString()
+			.padStart(2, "0");
+		const m = Math.floor((totalSeconds % 3600) / 60)
+			.toString()
+			.padStart(2, "0");
+		const s = (totalSeconds % 60).toString().padStart(2, "0");
+		return `${h}:${m}:${s}`;
+	};
 	render() {
 		if (this.state.loading) {
 			return <Loading />;
@@ -146,6 +161,22 @@ export default class QAReportPanel extends Component {
 				{m.email}
 			</option>
 		));
+		let totalQaSeconds = 0;
+		let totalAuditorSeconds = 0;
+
+		this.state.reports.forEach((value) => {
+			if (value.report_submission_time) {
+				totalAuditorSeconds += this.getTotalSeconds(
+					value.report_submission_time
+				);
+			}
+			if (value.moderator_submission_time) {
+				totalQaSeconds += this.getTotalSeconds(value.moderator_submission_time);
+			}
+		});
+
+		const totalQaTime = this.formatSecondsToTime(totalQaSeconds);
+		const totalAuditorTime = this.formatSecondsToTime(totalAuditorSeconds);
 
 		let report_blocks = this.state.reports.map((value, index) => {
 			return (
@@ -161,6 +192,7 @@ export default class QAReportPanel extends Component {
 					<td className="text-center">
 						<small>{value.qa_email}</small>
 					</td>
+					<td className="text-center">{getAuditStoreStatus(value.audit_store_status)}</td>
 					<td className="text-center">
 						{value.report_submission_time
 							? value.report_submission_time
@@ -171,7 +203,7 @@ export default class QAReportPanel extends Component {
 							? value.moderator_submission_time
 							: "00:00:00"}
 					</td>
-					<td className="text-center">{getAuditStoreStatus(value.audit_store_status)}</td>
+
 					<td className="text-center">
 						<Link
 							to={`/audit_store/${value.audit_store_id}/report`}
@@ -265,22 +297,38 @@ export default class QAReportPanel extends Component {
 										{qa_option_list}
 									</select>
 								</th>
+								<th className="text-center">Report Status</th>
 								<th className="text-center">Auditor time</th>
 								<th className="text-center">QA time</th>
-								<th className="text-center">Report Status</th>
 								<th></th>
 							</tr>
 						</thead>
 						<tbody>
-							{report_blocks}
-							<tr>
-								<td className="text-center" colSpan="8">
-									<b>Total</b>
-								</td>
-								<td className="text-center">
-									<b>{this.state.reports.length}</b>
-								</td>
-							</tr>
+							{this.state.reports.length === 0 ? (
+								<tr>
+									<td className="text-center" colSpan="9">
+										<b>No data</b>
+									</td>
+								</tr>
+							) : (
+								<>
+									{report_blocks}
+									<tr>
+										<td className="text-center" colSpan="6">
+											<b>Total</b>
+										</td>
+										<td className="text-center">
+											<b>{totalAuditorTime}</b>
+										</td>
+										<td className="text-center">
+											<b>{totalQaTime}</b>
+										</td>
+										<td className="text-center">
+											<b>{this.state.reports.length}</b>
+										</td>
+									</tr>
+								</>
+							)}
 						</tbody>
 					</table>
 				</div>

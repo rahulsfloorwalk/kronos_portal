@@ -17,6 +17,7 @@ import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
 import AttachmentLegend from "../../components/AttachmentLegend.jsx";
 import ProofTagLabel from "../../components/ProofTagLabel.jsx";
+// import Alert from "react-s-alert";
 
 export default class AttachmentBox extends React.Component {
 	static propTypes = {
@@ -176,11 +177,18 @@ export default class AttachmentBox extends React.Component {
 					uploadMessage: "upload successful",
 				});
 				this.reloadState();
-			}, (errorMessage) => {
+			},
+			(errorMessage) => {
+				const maxLength = 30;
+				const truncatedMessage =
+					errorMessage.length > maxLength
+						? errorMessage.slice(0, maxLength) + "..."
+						: errorMessage;
+				alert(errorMessage);
+				// Alert.error(errorMessage)
 				this.setProgressState(tempId, {
-					uploadMessage: errorMessage,
+					uploadMessage: truncatedMessage,
 					error: true,
-					progress: ""
 				});
 			});
 		}
