@@ -68,7 +68,7 @@ from django.db.models import Count
 from registration.models import GROUP_NAME_MODERATOR
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
-
+from kronos.exceptions import AppLogicError,ObjectNotFound
 from guardian.models import UserObjectPermission
 
 import logging
@@ -354,13 +354,20 @@ class ReportSubmissionTimeView(APIView):
         input_serializer = self.ReportSubmissionTimeItemSerializer(data=request.data, many=True)
         input_serializer.is_valid(raise_exception=True)
         updated_audit_stores = []
+        skipped_items = []
         for item in input_serializer.validated_data:
-            audit_store = audit_store_auditor_service.set_report_submission_time(
-                item["audit_store_id"],
-                request.user.id,
-                item["report_submission_time"]
-            )
-            updated_audit_stores.append(audit_store)
+            try:
+                audit_store = audit_store_auditor_service.set_report_submission_time(
+                    item["audit_store_id"],
+                    request.user.id,
+                    item["report_submission_time"]
+                )
+                updated_audit_stores.append(audit_store)
+            except (ObjectNotFound, AppLogicError) as e:
+                skipped_items.append({
+                    "audit_store_id": item["audit_store_id"],
+                    "error": str(e)
+                })
         output_serializer = AuditStoreSerializer(updated_audit_stores, many=True)
         return Response(output_serializer.data, status=200)
 

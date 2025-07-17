@@ -456,7 +456,7 @@ class AuditStoreList extends Component{
 		if(this.state.loading){
 			rows.push(<Loading key="loading"/>);
 		}
-		let users = this.state.userList;
+		let users = this.state.userList.sort((a,b)=>a.user.profile_info.first_name.toLowerCase().localeCompare(b.user.profile_info.first_name.toLowerCase()));
 		let citys = this.state.cityList;
 		let user_option_list = [];
 		if(users.length > 0){

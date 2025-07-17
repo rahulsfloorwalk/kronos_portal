@@ -68,12 +68,13 @@ export function unsubmit(auditStoreId, reason, missing_proofs){
 export function fail(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/fail`);
 }
-export function failReport(auditStoreId, message){
+export function failReport(auditStoreId, message, moderator_submission_time){
 	return $.ajax({
 		url:url.api_base_path + `moderator/audit_store/${auditStoreId}/fail`,
 		method: "POST",
 		data: JSON.stringify({
-			message
+			message,
+			moderator_submission_time
 		}),
 		contentType: "application/json"
 	});
