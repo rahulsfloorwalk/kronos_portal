@@ -186,7 +186,7 @@ def get_qa_wise_report_pannel(client=None, audit_cycle_id=None, day=None,month=N
         "audit_cycle_list": []
     }
 
-    VALID_STATUSES = [AuditStore.PM_REVIEW, AuditStore.COMPLETED, AuditStore.ACCEPTED]
+    VALID_STATUSES = [AuditStore.PM_REVIEW, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.FAILED, AuditStore.REJECTED]
 
     store_filter = {
         'status__in': VALID_STATUSES,
@@ -327,7 +327,7 @@ def get_qa_wise_report_performance(raw_day, raw_month, raw_year, raw_qa):
     }
 
     audit_store_filter = {
-        "status__in": [AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW],
+        "status__in": [AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.REJECTED],
         "moderator_submission_date__isnull": False,
         "moderator_submission_date__year": year
     }
@@ -397,7 +397,8 @@ def get_qa_wise_report_performance(raw_day, raw_month, raw_year, raw_qa):
 
     # Build permission map: store_id -> set of user_ids
     store_perm_map = defaultdict(set)
-    for perm in perms_qs.filter(object_pk__in=audit_stores.values_list("id", flat=True)):
+    store_ids = list(map(str, audit_stores.values_list("id", flat=True)))
+    for perm in perms_qs.filter(object_pk__in=store_ids):
         store_perm_map[int(perm.object_pk)].add(perm.user_id)
 
     # Build user info map: user_id -> email

@@ -34,34 +34,46 @@ class AnswerComment extends Component {
 		audit_store_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		question_id: PropTypes.number,
 		editable: PropTypes.bool,
-		required : PropTypes.bool,
+		required: PropTypes.bool,
 	};
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
 			answer_comment: this.props.answer_comment || "",
 			error: false,
 			success: false,
 		};
+		this.answerCommentRef = React.createRef();
 	}
 
 	setError = (error) => {
-		this.setState( prevState => Object.assign({}, prevState, { error }));
+		this.setState(prevState => Object.assign({}, prevState, { error }));
 	};
 
 	setSuccess = (success) => {
-		this.setState( prevState => Object.assign({}, prevState, { success }));
+		this.setState(prevState => Object.assign({}, prevState, { success }));
 	};
 
+	// commentChanged = (e) => {
+	// 	this.setState({
+	// 		answer_comment: e.target.value,
+	// 	});
+	// };
+
 	commentChanged = (e) => {
-		this.setState({
-			answer_comment: e.target.value,
-		});
+		this.setState(
+			{
+				answer_comment: e.target.value,
+			},
+			() => {
+				this.autoResizeTextarea(); // Resize on input change
+			}
+		);
 	};
 
 	onBlur = (e) => {
 		this.commentChanged(e);
-		setAnswerComment(this.props.audit_store_id, this.props.question_id, e.target.value).then( () => {
+		setAnswerComment(this.props.audit_store_id, this.props.question_id, e.target.value).then(() => {
 			this.setSuccess(true);
 			this.setError(false);
 		}, () => {
@@ -69,14 +81,35 @@ class AnswerComment extends Component {
 			this.setError(true);
 		});
 	};
+	componentDidMount() {
+		// Resize textarea on mount
+		this.autoResizeTextarea();
+	}
 
-	render(){
-		if(this.props.editable){
+	componentDidUpdate(prevProps, prevState) {
+		// Resize when answer_comment changes
+		if (
+			prevState.answer_comment !== this.state.answer_comment &&
+			this.answerCommentRef.current
+		) {
+			this.autoResizeTextarea();
+		}
+	}
+	autoResizeTextarea = () => {
+		const textarea = this.answerCommentRef.current;
+		if (textarea) {
+			textarea.style.height = "auto"; // Reset height
+			textarea.style.height = `${textarea.scrollHeight}px`; // Set to scroll height
+		}
+	};
+
+	render() {
+		if (this.props.editable) {
 			let hasSuccess = this.state.success ? "has-success" : "";
 			let hasError = this.state.error ? "has-error" : "";
 			return (
 				<div className={`${hasSuccess} ${hasError}`}>
-					<textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" style={(this.props.required ?{border: "solid 2px #a94442"}: null)}rows="1"/>
+					<textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" style={(this.props.required ? { border: "solid 2px #a94442" } : null)} rows="1" ref={this.answerCommentRef} />
 				</div>
 			);
 		} else {
@@ -99,7 +132,7 @@ class __QuestionRow extends React.Component {
 			question_type: PropTypes.string.isRequired,
 			question_txt: PropTypes.string.isRequired,
 			hide_question: PropTypes.bool,
-			optional_comment_required : PropTypes.bool,
+			optional_comment_required: PropTypes.bool,
 			question_data: PropTypes.shape({
 				options: PropTypes.arrayOf(PropTypes.shape({
 				})),
@@ -112,6 +145,7 @@ class __QuestionRow extends React.Component {
 	static defaultProps = {
 		marking: false
 	};
+	textareaRef = React.createRef();
 
 	state = {
 		answer: {},
@@ -121,28 +155,68 @@ class __QuestionRow extends React.Component {
 		answerSuccess: false
 	};
 
+	// componentDidMount() {
+	// 	if(this.props.answer){
+	// 		this.setState({
+	// 			answer: this.props.answer
+	// 		});
+	// 	}
+	// }
+
 	componentDidMount() {
-		if(this.props.answer){
-			this.setState({
-				answer: this.props.answer
-			});
+		if (this.props.answer) {
+			this.setState(
+				{
+					answer: this.props.answer,
+				},
+				() => {
+					this.autoResizeTextarea(); // Resize on mount
+				}
+			);
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		// Resize when answer_text changes
+		if (
+			prevState.answer.answer_text !== this.state.answer.answer_text &&
+			this.textareaRef.current
+		) {
+			this.autoResizeTextarea();
 		}
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if(nextProps.answer){
+		if (nextProps.answer) {
 			this.setState({
 				answer: nextProps.answer
 			});
 		}
 	}
 
+	autoResizeTextarea = () => {
+		const textarea = this.textareaRef.current;
+		if (textarea) {
+			textarea.style.height = "auto"; // Reset height
+			textarea.style.height = `${textarea.scrollHeight}px`; // Set to scroll height
+		}
+	};
+
 	answerChanged = (e) => {
-		this.setState({
-			answer: Object.assign({}, this.state.answer, {
-				answer_text: e.target.value
-			})
-		});
+		// this.setState({
+		// 	answer: Object.assign({}, this.state.answer, {
+		// 		answer_text: e.target.value
+		// 	})
+		// });
+		this.setState(
+			{
+				answer: Object.assign({}, this.state.answer, {
+					answer_text: e.target.value,
+				}),
+			},
+			() => {
+				this.autoResizeTextarea(); // Resize on input change
+			});
 	};
 
 	saveAnswer = (e) => {
@@ -152,11 +226,11 @@ class __QuestionRow extends React.Component {
 			this.props.q.id,
 			this.state.answer.answer_text,
 			true
-		).then((a)=> this.setState({answer: a, answerError: false, answerSuccess: true}), ()=> this.setState({answerError: true, answerSuccess: false}));
+		).then((a) => this.setState({ answer: a, answerError: false, answerSuccess: true }), () => this.setState({ answerError: true, answerSuccess: false }));
 	};
 
 	submitMultiSelectAnswer = (e) => {
-		setAnswerText(this.props.auditStoreId, this.props.q.id, e.target.value, e.target.checked).then((answer) => this.setState({answer, answerError: false, answerSuccess: true}));
+		setAnswerText(this.props.auditStoreId, this.props.q.id, e.target.value, e.target.checked).then((answer) => this.setState({ answer, answerError: false, answerSuccess: true }));
 	};
 
 	marksChanged = (e) => {
@@ -173,7 +247,7 @@ class __QuestionRow extends React.Component {
 			auditStoreId: this.props.auditStoreId,
 			questionId: this.props.q.id,
 			marks: this.state.answer.marks_obtained,
-		})).then(()=> this.setState({error: false, marksObtainedSuccess: true}), ()=> this.setState({error: true, marksObtainedSuccess: false}));
+		})).then(() => this.setState({ error: false, marksObtainedSuccess: true }), () => this.setState({ error: true, marksObtainedSuccess: false }));
 	};
 
 	notApplicableClicked = () => {
@@ -181,51 +255,52 @@ class __QuestionRow extends React.Component {
 	};
 
 	render() {
-		if(this.props.q.hide_question && (this.state.answer.answer_text === "" || this.state.answer.answer_text === undefined)){
+		if (this.props.q.hide_question && (this.state.answer.answer_text === "" || this.state.answer.answer_text === undefined)) {
 			return null;
 		}
 		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
 		let answerElement = (
 			<span>
 				<big>{this.state.answer.answer_text}</big>
-				{ this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT"
-					?  <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} required={this.props.q.optional_comment_required}/>
+				{this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT"
+					? <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} required={this.props.q.optional_comment_required} />
 					: null
 				}
 			</span>
 		);
 
-		let notApplicableIcon = this.state.answer.not_applicable ? <Checked/> : <Unchecked/>;
+		let notApplicableIcon = this.state.answer.not_applicable ? <Checked /> : <Unchecked />;
 
 		let notApplicableElement = (notApplicableIcon);
 
-		if( this.props.marking){
+		if (this.props.marking) {
 			let hasError = this.state.error ? "has-error" : "";
 			let hasMarksObtainedSuccess = this.state.marksObtainedSuccess ? "has-success" : "";
-			let answerMarksBg = this.props.q.max_marks && this.state.answer.marks_obtained == 0 ? {backgroundColor: "#ffc299"} : {} ;
+			let answerMarksBg = this.props.q.max_marks && this.state.answer.marks_obtained == 0 ? { backgroundColor: "#ffc299" } : {};
 			markElement = (
 				<div className={`input-group ${hasError} ${hasMarksObtainedSuccess}`}>
 					<input className="form-control text-right"
 						style={answerMarksBg}
 						onChange={this.marksChanged}
 						onBlur={this.saveMarks}
-						value={this.state.answer.marks_obtained}/>
+						value={this.state.answer.marks_obtained} />
 					<span className="input-group-addon">/&nbsp;{this.props.q.max_marks}</span>
 				</div>
 			);
 
 			let hasAnswerError = this.state.answerError ? "has-error" : "";
 			let hasAnswerSuccess = this.state.answerSuccess ? "has-success" : "";
-			if(this.props.q.question_type === "PLAIN"){
+			if (this.props.q.question_type === "PLAIN") {
 				answerElement = (
 					<div className={hasAnswerError + hasAnswerSuccess}>
 						<textarea className="form-control"
+							ref={this.textareaRef}
 							onChange={this.answerChanged}
 							onBlur={this.saveAnswer}
 							value={this.state.answer.answer_text}></textarea>
 					</div>
 				);
-			} else if(this.props.q.question_type === "MUTEX") {
+			} else if (this.props.q.question_type === "MUTEX") {
 				answerElement = (
 					<div className="row">
 						<div className="col-xs-5">
@@ -240,33 +315,33 @@ class __QuestionRow extends React.Component {
 							</div>
 						</div>
 						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} required={this.props.q.optional_comment_required}/>
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} required={this.props.q.optional_comment_required} />
 						</div>
 					</div>
 				);
-			} else if(this.props.q.question_type === "MULTISELECT") {
+			} else if (this.props.q.question_type === "MULTISELECT") {
 				let checkbox_list = [];
 				let multiselect_answer_list = [];
-				if(this.props.answer){
+				if (this.props.answer) {
 					multiselect_answer_list = this.props.answer.get_answer_text_list;
 				}
-				for(let o of this.props.q.question_data.options){
-					if(multiselect_answer_list.includes(o.value)){
-						checkbox_list.push(<label style={{fontSize:"14px",marginBottom:"10px"}} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} defaultChecked style={{verticalAlign:"bottom",width:"20px",height:"20px"}} /><span> {o.value}</span>&nbsp;</label>);
+				for (let o of this.props.q.question_data.options) {
+					if (multiselect_answer_list.includes(o.value)) {
+						checkbox_list.push(<label style={{ fontSize: "14px", marginBottom: "10px" }} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} defaultChecked style={{ verticalAlign: "bottom", width: "20px", height: "20px" }} /><span> {o.value}</span>&nbsp;</label>);
 					}
-					else{
-						checkbox_list.push(<label style={{fontSize:"14px",marginBottom:"10px"}} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} style={{verticalAlign:"bottom",width:"20px",height:"20px"}} /><span> {o.value}</span>&nbsp;</label>);
+					else {
+						checkbox_list.push(<label style={{ fontSize: "14px", marginBottom: "10px" }} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} style={{ verticalAlign: "bottom", width: "20px", height: "20px" }} /><span> {o.value}</span>&nbsp;</label>);
 					}
 				}
 				answerElement = (
 					<div className="row">
 						<div className="col-xs-5">
 							{checkbox_list}
-							<br/>
+							<br />
 							{this.state.answer.answer_text}
 						</div>
 						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required}/>
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required} />
 						</div>
 					</div>
 				);
@@ -279,7 +354,7 @@ class __QuestionRow extends React.Component {
 			);
 		}
 
-		if( this.state.answer.not_applicable){
+		if (this.state.answer.not_applicable) {
 			markElement = (<span className="text-muted">&nbsp;</span>);
 			answerElement = (<span className="text-muted">not applicable</span>);
 		}
@@ -287,7 +362,7 @@ class __QuestionRow extends React.Component {
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
-				<td><MarkdownViewer markdown={this.props.q.question_txt || ""}/></td>
+				<td><MarkdownViewer markdown={this.props.q.question_txt || ""} /></td>
 				<td>{answerElement}</td>
 				<td className="text-right">{markElement}</td>
 				<td className="">{notApplicableElement}</td>
@@ -296,11 +371,11 @@ class __QuestionRow extends React.Component {
 	}
 }
 
-var mapStoreToQuestionRowProps = function(store, ownProps){
+var mapStoreToQuestionRowProps = function (store, ownProps) {
 	return {
-		answer: (function(answers){
-			for(let id in answers){
-				if(answers[id].question === ownProps.q.id && answers[id].audit_store === parseInt(ownProps.auditStoreId)){
+		answer: (function (answers) {
+			for (let id in answers) {
+				if (answers[id].question === ownProps.q.id && answers[id].audit_store === parseInt(ownProps.auditStoreId)) {
 					return answers[id];
 				}
 			}
@@ -310,7 +385,7 @@ var mapStoreToQuestionRowProps = function(store, ownProps){
 
 var QuestionRow = connect(mapStoreToQuestionRowProps)(__QuestionRow);
 
-class SectionAttachmentBox extends React.Component{
+class SectionAttachmentBox extends React.Component {
 
 	static propTypes = {
 		editable: PropTypes.bool.isRequired,
@@ -327,10 +402,10 @@ class SectionAttachmentBox extends React.Component{
 		proof_tags: PropTypes.array
 	};
 
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
-			attachments : [],
+			attachments: [],
 			inProgress: {},
 			selectedAttachmentId: null,
 			attachmentSectionId: "",
@@ -341,7 +416,7 @@ class SectionAttachmentBox extends React.Component{
 		};
 	}
 
-	reloadAttachments = (auditStoreId, sectionId) =>  {
+	reloadAttachments = (auditStoreId, sectionId) => {
 		findAttachmentsByAuditStoreAndSection(auditStoreId, sectionId).then((attachments) => {
 			this.setState({
 				attachments
@@ -349,12 +424,12 @@ class SectionAttachmentBox extends React.Component{
 		});
 	};
 
-	componentDidMount(){
+	componentDidMount() {
 		this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 	}
 
-	componentWillReceiveProps(nextProps){
-		if(! (this.props.auditStoreId === nextProps.auditStoreId && this.props.sectionId === nextProps.sectionId)){
+	componentWillReceiveProps(nextProps) {
+		if (!(this.props.auditStoreId === nextProps.auditStoreId && this.props.sectionId === nextProps.sectionId)) {
 			this.reloadAttachments(nextProps.auditStoreId, nextProps.sectionId);
 		}
 	}
@@ -364,7 +439,7 @@ class SectionAttachmentBox extends React.Component{
 	};
 
 	setProgressState = (tempId, progressState) => {
-		this.setState((prevState)=>{
+		this.setState((prevState) => {
 			return Object.assign({}, prevState, {
 				inProgress: Object.assign({}, prevState.inProgress, {
 					[tempId]: Object.assign({}, prevState.inProgress[tempId], progressState)
@@ -374,47 +449,47 @@ class SectionAttachmentBox extends React.Component{
 	};
 
 	uploadFile = () => {
-		if( this.uploadInput.files.length > 10){
+		if (this.uploadInput.files.length > 10) {
 			alert("You can only upload 10 attachments at once");
 			return;
 		}
-		for( let toUploadFile of this.uploadInput.files){
+		for (let toUploadFile of this.uploadInput.files) {
 			let tempId = Math.random().toString(36).substring(7);
 			this.setProgressState(tempId, {
 				uploading: true,
 				file: toUploadFile
 			});
 			var promise = uploadFileForReportSection(this.props.auditStoreId, this.props.sectionId, toUploadFile);
-			promise.progress((type, percent)=>{
-				if(type === "INIT"){
+			promise.progress((type, percent) => {
+				if (type === "INIT") {
 					this.setProgressState(tempId, {
-						uploadMessage :"initializing upload",
+						uploadMessage: "initializing upload",
 						active: false,
 					});
 				}
-				if(type === "STARTING_UPLOAD"){
+				if (type === "STARTING_UPLOAD") {
 					this.setProgressState(tempId, {
-						uploadMessage :"starting upload",
+						uploadMessage: "starting upload",
 						active: true,
 					});
 				}
-				if(type === "UPLOAD_PROGRESS"){
+				if (type === "UPLOAD_PROGRESS") {
 					this.setProgressState(tempId, {
-						uploadMessage :"",
+						uploadMessage: "",
 						progress: Math.floor(percent)
 					});
 				}
 			});
-			promise.always(()=>{
+			promise.always(() => {
 				this.setProgressState(tempId, {
-					progress :"",
-					uploading:false,
+					progress: "",
+					uploading: false,
 					active: false
 				});
 			});
-			promise.then(()=>{
+			promise.then(() => {
 				this.setProgressState(tempId, {
-					uploadMessage :"upload successful",
+					uploadMessage: "upload successful",
 				});
 				this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 			}, (errorMessage) => {
@@ -427,54 +502,54 @@ class SectionAttachmentBox extends React.Component{
 	};
 
 	attachmentDeleteClicked = (attachment) => {
-		deleteAttachment(attachment.id).then(()=>{
+		deleteAttachment(attachment.id).then(() => {
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
 	};
 
 	selectedAttachmentRenamed = (newName) => {
-		renameAttachment(this.state.selectedAttachmentId, newName).then(()=>{
+		renameAttachment(this.state.selectedAttachmentId, newName).then(() => {
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
 	};
 
 	saveAttachmentTag = (attachmentId, e) => {
-		saveAttachmentTag(attachmentId, e.target.value).then(()=>{
+		saveAttachmentTag(attachmentId, e.target.value).then(() => {
 			Alert.success("PROOF TAG SAVED");
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
 	};
 
 	selectAttachment = (attachmentId) => {
-		if( this.state.selectedAttachmentId === attachmentId){
+		if (this.state.selectedAttachmentId === attachmentId) {
 			this.setState({
-				selectedAttachmentId : null
+				selectedAttachmentId: null
 			});
 		} else {
 			this.setState({
-				selectedAttachmentId : attachmentId
+				selectedAttachmentId: attachmentId
 			});
 		}
 	};
 
 	getAttachmentSectionId = (e) => {
 		this.setState({
-			attachmentSectionId : e.target.value
+			attachmentSectionId: e.target.value
 		});
 	};
 
 	moveAttachmentSection = () => {
 		let attachmentlist = [];
-		$(`.attachment_checkbox_section${this.props.sectionId} input:checked`).each(function() {
+		$(`.attachment_checkbox_section${this.props.sectionId} input:checked`).each(function () {
 			let val = $(this).attr("value");
 			attachmentlist.push(val);
 		});
 
-		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then(() => {
+		moveAttachmentToSection(this.props.auditStoreId, this.state.attachmentSectionId, attachmentlist).then(() => {
 			window.location.reload();
-		},(err) => {
+		}, (err) => {
 			this.setState({
-				submitMessage : err.responseJSON.non_field_errors[0],
+				submitMessage: err.responseJSON.non_field_errors[0],
 				submitStatus: "danger",
 				showErrors: true,
 			});
@@ -482,30 +557,30 @@ class SectionAttachmentBox extends React.Component{
 	};
 
 	rotateImage = (angle) => {
-		this.setState({disableRotateButton: true});
-		rotateImageAngle(this.state.selectedAttachmentId, angle).then(()=>{
+		this.setState({ disableRotateButton: true });
+		rotateImageAngle(this.state.selectedAttachmentId, angle).then(() => {
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
-			this.setState({disableRotateButton: false});
+			this.setState({ disableRotateButton: false });
 		});
 	};
 
-	render(){
+	render() {
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
 		let uploadButton;
 
-		if(this.props.editable) {
-			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Paperclip/> Upload</button>);
+		if (this.props.editable) {
+			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Paperclip /> Upload</button>);
 		}
 
 		let attachmentRows = [];
-		for(let a of this.state.attachments){
+		for (let a of this.state.attachments) {
 			attachmentRows.push(
-				<AttachmentThumbnail key={a.id} attachment={a} deletable={this.props.editable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId} user="manager" editable={this.props.editable} faulty_report_id={a.faulty_report_id} proof_tags={this.props.proof_tags} section_id={this.props.sectionId} onChange={(e) => this.saveAttachmentTag(a.id, e)}/>
+				<AttachmentThumbnail key={a.id} attachment={a} deletable={this.props.editable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId} user="manager" editable={this.props.editable} faulty_report_id={a.faulty_report_id} proof_tags={this.props.proof_tags} section_id={this.props.sectionId} onChange={(e) => this.saveAttachmentTag(a.id, e)} />
 			);
 		}
-		for(let id in this.state.inProgress){
-			if(this.state.inProgress[id].uploading || this.state.inProgress[id].error){
+		for (let id in this.state.inProgress) {
+			if (this.state.inProgress[id].uploading || this.state.inProgress[id].error) {
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
 				attachmentRows.push(<AttachmentInProgressThumbnail
 					key={id}
@@ -532,7 +607,7 @@ class SectionAttachmentBox extends React.Component{
 
 		let sectionSelect = null;*/
 
-		if( attachmentRows.length === 0){
+		if (attachmentRows.length === 0) {
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
 		}
 		/*else{
@@ -554,13 +629,13 @@ class SectionAttachmentBox extends React.Component{
 			}
 		}*/
 
-		let selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
+		let selectedAttachment = this.state.attachments.filter(a => a.id === this.state.selectedAttachmentId)[0];
 
 		const section_proof_tags = this.props.proof_tags.filter((val) => val.section_id == this.props.sectionId);
-		const attachment_tags = this.state.attachments.map((value)=> value.proof_tag);
+		const attachment_tags = this.state.attachments.map((value) => value.proof_tag);
 
 		const proof_tag_list = [];
-		for(let tag of section_proof_tags){
+		for (let tag of section_proof_tags) {
 			const attach = attachment_tags.includes(tag.id);
 			proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={tag.is_required} />);
 		}
@@ -578,14 +653,14 @@ class SectionAttachmentBox extends React.Component{
 
 				<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`}>
 					<div className="row">
-						<div className={`col-md-${this.state.selectedAttachmentId ? "4" : "12"} attachment_checkbox`} style={{maxHeight:"500px", overflowY: "auto"}}>
+						<div className={`col-md-${this.state.selectedAttachmentId ? "4" : "12"} attachment_checkbox`} style={{ maxHeight: "500px", overflowY: "auto" }}>
 							{attachmentRows}
 							<input type="file" multiple
 								onChange={this.uploadFile}
-								ref={(input)=>this.uploadInput = input}
-								style={{"display":"none"}}/>
+								ref={(input) => this.uploadInput = input}
+								style={{ "display": "none" }} />
 						</div>
-						<div className="col-md-8" style={{display: this.state.selectedAttachmentId ? "block" : "none"}}>
+						<div className="col-md-8" style={{ display: this.state.selectedAttachmentId ? "block" : "none" }}>
 							<AttachmentPreview attachment={selectedAttachment} editable={this.props.editable}
 								proof_tags={this.props.proof_tags}
 								onRename={this.selectedAttachmentRenamed}
@@ -593,7 +668,7 @@ class SectionAttachmentBox extends React.Component{
 								onChange={(e) => this.saveAttachmentTag(selectedAttachment.id, e)}
 								rotateImage={this.rotateImage}
 								section_id={this.props.sectionId}
-								disableRotateButton={this.state.disableRotateButton}/>
+								disableRotateButton={this.state.disableRotateButton} />
 						</div>
 					</div>
 				</div>
@@ -602,7 +677,7 @@ class SectionAttachmentBox extends React.Component{
 	}
 }
 
-class __Section extends React.Component{
+class __Section extends React.Component {
 
 	static propTypes = {
 		editable: PropTypes.bool.isRequired,
@@ -625,7 +700,7 @@ class __Section extends React.Component{
 		proof_tags: PropTypes.array
 	};
 
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
 			//pmCommentError: false,
@@ -646,8 +721,8 @@ class __Section extends React.Component{
 		};
 	}
 
-	componentDidMount(){
-		if(this.props.reportSection){
+	componentDidMount() {
+		if (this.props.reportSection) {
 			this.setState({
 				auditor_comment: this.props.reportSection.auditor_comment,
 				pm_comment: this.props.reportSection.pm_comment,
@@ -656,8 +731,8 @@ class __Section extends React.Component{
 		}
 	}
 
-	componentWillReceiveProps(nextProps){
-		if(nextProps.reportSection){
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.reportSection) {
 			this.setState({
 				auditor_comment: nextProps.reportSection.auditor_comment,
 				pm_comment: nextProps.reportSection.pm_comment,
@@ -677,7 +752,7 @@ class __Section extends React.Component{
 			auditorCommentError: false,
 			auditorCommentSuccess: false,
 		});
-		this.props.dispatch(submitAuditorComment(this.props.auditStoreId, this.props.section.id, this.state.auditor_comment)).then(()=> {
+		this.props.dispatch(submitAuditorComment(this.props.auditStoreId, this.props.section.id, this.state.auditor_comment)).then(() => {
 			this.setState({
 				auditorCommentError: false,
 				auditorCommentSuccess: true,
@@ -688,7 +763,7 @@ class __Section extends React.Component{
 				auditorCommentError: true,
 			});
 		}).always(() => {
-			this.setState({savingAuditorComment: false});
+			this.setState({ savingAuditorComment: false });
 		});
 	};
 
@@ -721,15 +796,15 @@ class __Section extends React.Component{
 		this.props.dispatch(setNotApplicable(this.props.auditStoreId, this.props.section.id, !this.state.not_applicable));
 	};
 
-	render(){
+	render() {
 		/* QUESTION ROWS */
 		let questionRows = [];
-		if( this.props.section.questions){
-			for(let q of this.props.section.questions){
-				questionRows.push(<QuestionRow q={q} key={q.id} marking={this.props.editable} auditStoreId={this.props.auditStoreId}/>);
+		if (this.props.section.questions) {
+			for (let q of this.props.section.questions) {
+				questionRows.push(<QuestionRow q={q} key={q.id} marking={this.props.editable} auditStoreId={this.props.auditStoreId} />);
 			}
 		}
-		if(questionRows.length === 0){
+		if (questionRows.length === 0) {
 			questionRows.push(<tr key="empty"><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
 		}
 
@@ -737,26 +812,26 @@ class __Section extends React.Component{
 		// let pmCommentElement = (<span className="text-muted">PM comment is empty</span>);
 		let marksObtained = 0;
 		let maxMarks = this.props.section.max_marks;
-		let notApplicableCheckboxIcon = <Unchecked/>;
+		let notApplicableCheckboxIcon = <Unchecked />;
 		let notApplicableElement = (<span className="">{notApplicableCheckboxIcon}</span>);
 
 		/* AUDITOR COMMENT, PM COMMENT */
-		if(this.props.reportSection){
+		if (this.props.reportSection) {
 			marksObtained = this.props.reportSection.marks_obtained;
 			maxMarks = this.props.reportSection.max_marks;
 
 			//pmCommentElement = this.state.pm_comment ? (<span>{this.state.pm_comment}</span>) : pmCommentElement;
 			auditorCommentElement = this.state.auditor_comment ? (<span>{this.state.auditor_comment}</span>) : auditorCommentElement;
-			notApplicableCheckboxIcon = this.props.reportSection.not_applicable ? <Checked/> : <Unchecked/>;
+			notApplicableCheckboxIcon = this.props.reportSection.not_applicable ? <Checked /> : <Unchecked />;
 			notApplicableElement = (<span className="">{notApplicableCheckboxIcon}</span>);
 
 			var pmCommentElement = null;
-			if(this.state.pm_comment != "--"){
-				pmCommentElement = (<div><hr/><div><b>PM Comment:</b> <span>{this.state.pm_comment}</span></div></div>);
+			if (this.state.pm_comment != "--") {
+				pmCommentElement = (<div><hr /><div><b>PM Comment:</b> <span>{this.state.pm_comment}</span></div></div>);
 			}
 		}
 
-		if(this.props.editable){
+		if (this.props.editable) {
 			/* let hasPmCommentError = this.state.pmCommentError ? "has-error" : "";
 			let hasPmCommentSuccess = this.state.pmCommentSuccess ? "has-success" : "";
 			pmCommentElement = (
@@ -803,10 +878,10 @@ class __Section extends React.Component{
 		};
 		let panelBody;
 
-		if( this.state.not_applicable){
+		if (this.state.not_applicable) {
 			panelBody = (<div className="panel-footer text-center text-muted">section not applicable</div>);
 		} else {
-			panelBody = ( <div>
+			panelBody = (<div>
 				<table className="table table-striped">
 					<thead>
 						<tr>
@@ -825,12 +900,12 @@ class __Section extends React.Component{
 					<div>
 						<b>Total Marks:</b> {marksObtained} out of {maxMarks}
 					</div>
-					{this.props.section.hide_comment == false ? <div><hr/><b>Auditor Comment:</b> {auditorCommentElement}</div> : null}
+					{this.props.section.hide_comment == false ? <div><hr /><b>Auditor Comment:</b> {auditorCommentElement}</div> : null}
 					{/* <hr/>
 					<div><b>PM Comment:</b> {pmCommentElement}</div> */}
 					{pmCommentElement}
 				</div>
-				{this.props.auditStore.status == "ACKNOWLEDGED" ? null : <SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={this.props.editable} proof_tags={this.props.proof_tags}/>}
+				{this.props.auditStore.status == "ACKNOWLEDGED" ? null : <SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={this.props.editable} proof_tags={this.props.proof_tags} />}
 			</div>);
 		}
 
@@ -849,11 +924,11 @@ class __Section extends React.Component{
 	}
 }
 
-var mapStoreToSectionProps = function(store, ownProps){
+var mapStoreToSectionProps = function (store, ownProps) {
 	return {
-		reportSection: (function(reportSections){
-			for(let id in reportSections){
-				if(reportSections[id].section === ownProps.section.id){
+		reportSection: (function (reportSections) {
+			for (let id in reportSections) {
+				if (reportSections[id].section === ownProps.section.id) {
 					return reportSections[id];
 				}
 			}
@@ -864,7 +939,7 @@ var mapStoreToSectionProps = function(store, ownProps){
 
 var Section = connect(mapStoreToSectionProps)(__Section);
 
-export class AuditStoreReport extends React.Component{
+export class AuditStoreReport extends React.Component {
 	static propTypes = {
 		dispatch: PropTypes.func.isRequired,
 		params: PropTypes.shape({
@@ -874,7 +949,7 @@ export class AuditStoreReport extends React.Component{
 		sections: PropTypes.object,
 		children: PropTypes.node,
 	};
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
 			loading: false,
@@ -885,7 +960,7 @@ export class AuditStoreReport extends React.Component{
 	componentDidMount() {
 		this.props.dispatch(fetchAnswers(this.props.params.auditStoreId));
 		this.props.dispatch(fetchReportSections(this.props.params.auditStoreId));
-		if( this.props.auditStore && ! this.state.loading){
+		if (this.props.auditStore && !this.state.loading) {
 			this.setState({
 				loading: true
 			});
@@ -899,34 +974,34 @@ export class AuditStoreReport extends React.Component{
 		}
 	}
 
-	componentWillReceiveProps( nextProps){
-		if( nextProps.auditStore && ! this.state.loading ){
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.auditStore && !this.state.loading) {
 			this.setState({
 				loading: true
 			});
-			this.props.dispatch(fetchSections(nextProps.auditStore.audit.audit_cycle.id)).always(() => this.setState({loading: false}));
+			this.props.dispatch(fetchSections(nextProps.auditStore.audit.audit_cycle.id)).always(() => this.setState({ loading: false }));
 		}
 	}
 
-	render(){
-		if(this.state.loading){
-			return <Loading/>;
+	render() {
+		if (this.state.loading) {
+			return <Loading />;
 		}
 		const editable = this.props.auditStore && (this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW");
-		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
+		var orderedKeys = orderKeys(this.props.sections, function (s1, s2) {
 			return s1.sequence - s2.sequence;
 		});
 		var sectionRows = [];
-		for(var sectionId of orderedKeys) {
+		for (var sectionId of orderedKeys) {
 			// sectionRows.push(<Section auditStoreId={this.props.params.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} editable={editable} sections={this.props.sections} proof_tags={this.state.proof_tags}/>);
-			sectionRows.push(<Section auditStoreId={this.props.params.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} editable={editable} proof_tags={this.state.proof_tags}/>);
+			sectionRows.push(<Section auditStoreId={this.props.params.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} editable={editable} proof_tags={this.state.proof_tags} />);
 		}
-		if( sectionRows.length === 0){
-			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please add a section from the questionnaire"/>);
+		if (sectionRows.length === 0) {
+			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please add a section from the questionnaire" />);
 		}
 		return (
 			<div>
-				<h3 className="page-header"><Tasks/> Questionnaire</h3>
+				<h3 className="page-header"><Tasks /> Questionnaire</h3>
 				{sectionRows}
 				{this.props.children}
 			</div>
@@ -934,7 +1009,7 @@ export class AuditStoreReport extends React.Component{
 	}
 }
 
-var mapStoreToProps = function(store, ownProps){
+var mapStoreToProps = function (store, ownProps) {
 	return {
 		auditStore: store.auditStores[ownProps.params.auditStoreId],
 		sections: store.sections

@@ -322,6 +322,10 @@ class AuditStoreIdFailView(APIView):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         audit_store = audit_store_service.fail_for_moderator(audit_store_id, request.user.id, ds.validated_data['message'])
+        if "moderator_submission_time" in request.data:
+            audit_store.moderator_submission_time = request.data["moderator_submission_time"]
+            audit_store.moderator_submission_date = timezone.now()
+            audit_store.save(update_fields=["moderator_submission_time", "moderator_submission_date"])
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdQAOKView(APIView):

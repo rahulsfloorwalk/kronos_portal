@@ -26,6 +26,14 @@ export default class ReportFail extends Component {
 			isDisabled: false,
 		};
 	}
+	formatTime = (seconds) => {
+		const hrs = Math.floor(seconds / 3600);
+		const mins = Math.floor((seconds % 3600) / 60);
+		const secs = seconds % 60;
+		return `${hrs.toString().padStart(2, "0")}:${mins
+			.toString()
+			.padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+	};
 
 	onSubmit = (e) => {
 		e.preventDefault();
@@ -33,9 +41,18 @@ export default class ReportFail extends Component {
 			this.setState({ errormsg: "Text field can't be empty" });
 			return;
 		}
+		const totalTime = localStorage.getItem(
+			`timer_${this.props.params.auditStoreId}`
+		);
+		let moderatorSubmissionTime;
+		if (totalTime) {
+			const seconds = parseInt(totalTime, 10);
+			moderatorSubmissionTime = this.formatTime(seconds);
+		}
 		this.setState({ isDisabled: true });
-		let promise = failReport(this.props.params.auditStoreId, this.state.message);
+		let promise = failReport(this.props.params.auditStoreId, this.state.message,moderatorSubmissionTime);
 		promise.then(() => {
+			localStorage.removeItem(`timer_${this.props.params.auditStoreId}`);
 			this.setState({
 				successMessage: "Audit Report Failed successfully",
 				message: ""
