@@ -14,11 +14,13 @@ if __name__ == "__main__":
         call(["npm","install"])
         call(["npm","run","build-prod"])
         os.chdir('..')
-
         sys.exit()
 
     if sys.argv[-2] == 'bump':
-        call(["bumpversion", "--commit", "--tag", "--current-version", version, "--tag-name", "{new_version}", sys.argv[-1], "setup.py", "./frontend/package.json"])
+        env = {k: str(v) for k, v in os.environ.items() if isinstance(v, str)}
+        env["HGENCODING"] = "utf-8"
+
+        call(["bumpversion", "--commit", "--tag", "--current-version", version, "--tag-name", "{new_version}", sys.argv[-1], "setup.py", "./frontend/package.json"], env=env)
         sys.exit()
 
     if sys.argv[-1] == 'test':
