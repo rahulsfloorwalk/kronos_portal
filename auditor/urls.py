@@ -14,6 +14,7 @@ urlpatterns = ([
     url(r'city_id/(?P<city_id>[0-9]+)$', views.CityGetByIdView.as_view(), name='city_get_by_id_view'),
     url(r'id_proof/attachment$', views.UserIdProofAttachmentView.as_view(), name="id_proof_upload_view"),
 
+
     url(r'dashboard/stats$', views.StatsView.as_view(), name="auditor_stats_view"),
     url(r'dashboard/score$', views.ScoreView.as_view(), name="auditor_score_view"),
 
