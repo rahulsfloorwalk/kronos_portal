@@ -12,7 +12,7 @@ from client.models import Client, Store
 from manager.models import City, ProofTag
 from audit.models import AuditCycle, Audit, AuditCycleProofTagList
 from auditor.models import ProfileInfo
-from audit_store.models import AuditStore
+from audit_store.models import AuditStore,ReportStatusLog
 from questionnaire.models import Section, Question
 from answer.models import ReportSection, Answer
 from attachment.models import Attachment
@@ -187,6 +187,18 @@ class AuditProoftagSerializer(serializers.ModelSerializer):
         ).select_related('proof_tag').first()
         return proof_tag.proof_tag.name if proof_tag and proof_tag.proof_tag else None
 
+class ReportStatusLogSerializer(serializers.ModelSerializer):
+    user_actor = serializers.StringRelatedField()
+    class Meta:
+        model = ReportStatusLog
+        fields = (
+            'id',
+            'user_actor',
+            'status',
+            'message',
+            'report_data',
+            'created_at',
+        )
 
 class AuditStoreSerializer(ModelSerializer):
       
@@ -195,6 +207,7 @@ class AuditStoreSerializer(ModelSerializer):
         manager_info = get_manager_info_list_by_audit_store_obj(audit_store_obj)
         return [{'name': info.get('name', ''), 'mobile': info.get('mobile', '')} for info in manager_info]
     
+    failed_status_log = serializers.SerializerMethodField()    
     audit = AuditSerializerWithoutApplications()
     user = UserSerializer()
     class Meta:
@@ -202,6 +215,7 @@ class AuditStoreSerializer(ModelSerializer):
         fields = (
             'id',
             'status',
+            'failed_by',
             'audit_date',
             'audit',
             'auto_assigned',
@@ -224,9 +238,17 @@ class AuditStoreSerializer(ModelSerializer):
             'report_submission_time',
             'moderator_submission_time',
             'moderator_submission_date',
+            'failed_status_log'
         )
         read_only_fields = fields
 
+    def get_failed_status_log(self, obj):
+        # Get the first log with status == 'FAILED', ordered by created_at
+        failed_log = obj.audit_store_status_log.filter(status=AuditStore.FAILED).order_by('-created_at').first()
+        if failed_log:
+            return ReportStatusLogSerializer(failed_log).data
+        return None
+    
 class StoreSerializer(ModelSerializer):
     # client = ClientSerializer()
     # city = CitySerializer()

@@ -52,11 +52,45 @@ def find_rem_store_by_audit_cycle_id(audit_cycle_id):
     audit_store_list = Audit.objects.filter(audit_cycle = audit_cycle_id).values_list('store', flat=True)
     return Store.objects.filter(client_id=audit.client_id).order_by('city__name').select_related('client','city').exclude(id__in = audit_store_list)
 
+# def create_audit_by_multiple_store(data):
+#     if not data.get('addStore'):
+#         raise AppLogicError("Please Choose at least One Store")
+#     audit_cycle_id = data.get('audit_cycle', '')
+#     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+#     store_exists = Store.objects.filter(client = audit_cycle.client.id).exists()
+#     if not store_exists:
+#         raise AppLogicError("Stores are not found in This Client")
+
+#     audit_store_list = Audit.objects.filter(audit_cycle = audit_cycle_id,store_id__in=data['addStore']).values_list('store', flat=True)
+#     client_store_list = Store.objects.filter(client = audit_cycle.client,id__in=data['addStore']).exclude(id__in = audit_store_list)
+#     if not client_store_list:
+#         raise AppLogicError("Audits are already created for this stores")
+
+#     audit_list = []
+#     for store in client_store_list:
+#         audit = {
+#             'count': data.get('count', 1),
+#             'earnings_per_audit': data.get('earnings_per_audit',audit_cycle.earnings_per_audit),
+#             'reimbursement': data.get('reimbursement',audit_cycle.reimbursement),
+#             'store': store,
+#             'audit_cycle': audit_cycle,
+#             'post_approval_description': data.get('post_approval_description','')
+#         }
+#         audit_list.append(Audit(**audit))
+#     audits = Audit.objects.bulk_create(audit_list)
+#     return audits
+
 def create_audit_by_multiple_store(data):
     if not data.get('addStore'):
         raise AppLogicError("Please Choose at least One Store")
-    audit_cycle_id = data.get('audit_cycle', '')
+    audit_cycle_id = data.get('audit_cycle')
+    if not audit_cycle_id:
+        raise AppLogicError("Audit cycle is required")
+
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    if not audit_cycle:
+        raise AppLogicError("Audit cycle not found")
+
     store_exists = Store.objects.filter(client = audit_cycle.client.id).exists()
     if not store_exists:
         raise AppLogicError("Stores are not found in This Client")
@@ -68,17 +102,17 @@ def create_audit_by_multiple_store(data):
 
     audit_list = []
     for store in client_store_list:
-        audit = {
-            'count': data.get('count', 1),
-            'earnings_per_audit': data.get('earnings_per_audit',audit_cycle.earnings_per_audit),
-            'reimbursement': data.get('reimbursement',audit_cycle.reimbursement),
-            'store': store,
-            'audit_cycle': audit_cycle,
-            'post_approval_description': data.get('post_approval_description','')
-        }
-        audit_list.append(Audit(**audit))
-    audits = Audit.objects.bulk_create(audit_list)
-    return audits
+        audit = Audit(
+            count=data.get('count') or 1,
+            earnings_per_audit=data.get('earnings_per_audit') or audit_cycle.earnings_per_audit,
+            reimbursement=data.get('reimbursement') or audit_cycle.reimbursement,
+            store=store,
+            audit_cycle=audit_cycle,
+            post_approval_description=data.get('post_approval_description') or ''
+        )
+        audit_list.append(audit)
+
+    return Audit.objects.bulk_create(audit_list)
 
 def find_audit_by_id(audit_id):
     try:
@@ -141,8 +175,98 @@ def delete(audit_id):
     except IntegrityError as e:
         raise AppLogicError("audit cannot be delete now") from e
 
-def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
+# def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
 
+#     city = City.objects.get(pk=city_id)
+#     country_code = city.country
+
+#     if pincode is not None:
+#         location = geo.get_lat_lon_from_pincode(pincode, country_code)
+#         if location:
+#             lat1 = location.get('lat')
+#             lon1 = location.get('lon')
+#         else:
+#             lat1 = city.lat
+#             lon1 = city.lon
+#     else:
+#         lat1 = city.lat
+#         lon1 = city.lon
+
+#     # if pincode is not None:
+#     #     lat1=geo.get_lat_lon_from_pincode(pincode,country_code).get('lat')
+#     #     lon1=geo.get_lat_lon_from_pincode(pincode,country_code).get('lon')
+#     # else:
+#     #     lat1=city.lat
+#     #     lon1=city.lon
+#     today = now().date()
+    
+#     active_audits = Audit.objects.filter(
+#         count__gt = 0,
+#         hidden = False,
+#         audit_cycle__status__in=[
+#             AuditCycle.UPCOMING,
+#             AuditCycle.ACTIVE
+#         ]
+#     )
+#     active_audits = active_audits.exclude( audit_cycle__end_date__isnull=False,audit_cycle__end_date__lte=today  )
+
+#     # get the bounding box
+#     lon_max, lon_min, lat_max, lat_min = geo.bounding_box(lat1, lon1, kms)
+
+#     available_audits = active_audits.filter(
+#         # Q(audit_cycle__type__in=[AuditCycle.WEB, AuditCycle.PHONE]) |
+#         Q(audit_cycle__type=AuditCycle.GENERAL) |
+#         Q(
+#             store__city__lat__lte=lat_max,
+#             store__city__lat__gte=lat_min,
+#             store__city__lon__lte=lon_max,
+#             store__city__lon__gte=lon_min
+#         )
+#     )
+#     available_audit_list = []
+#     nearDis=[]
+#     for i in available_audits:
+#         lat2, lon2 = None, None
+#         if i.store.pincode:
+#             if geo.get_lat_lon_from_pincode(i.store.pincode,country_code):
+#                 lat2=geo.get_lat_lon_from_pincode(i.store.pincode,country_code).get('lat')
+#                 lon2=geo.get_lat_lon_from_pincode(i.store.pincode,country_code).get('lon')
+#         elif i.store.address and re.findall("\d{6}", i.store.address):
+#             if geo.get_lat_lon_from_pincode(pincode,country_code).get('lat') and geo.get_lat_lon_from_pincode(pincode,country_code).get('lon'):
+#                 lat2=geo.get_lat_lon_from_pincode(pincode,country_code).get('lat')
+#                 lon2=geo.get_lat_lon_from_pincode(pincode,country_code).get('lon')
+#         elif i.store.city_id:
+#             city = City.objects.get(pk=i.store.city_id)
+#             if city:
+#                 lat2 = city.lat
+#                 lon2 = city.lon
+
+#         if lat2 is None or lon2 is None:
+#             lat2, lon2 = city.lat, city.lon
+#         distance=geo.get_distance_from_lat1_lon1_and_lat2_lon2(lat1,lon1,lat2,lon2)
+#         nearDis.append({'distance':distance,'id':i.id})
+#     sorted_data = sorted(nearDis, key=lambda x: x["distance"])
+#     # nearest_three = sorted_data[:5]
+#     nearest_three = sorted_data 
+#     for i in nearest_three:
+#         audit_count = Audit.objects.get(id=i.get('id')).count
+#         if audit_count > 1:
+#             if not AuditStore.objects \
+#                     .filter(audit__id=i.get('id'), status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]) \
+#                     .count() == audit_count:
+#                 available_audit_list.append(i.get('id'))
+#         else:
+#             if AuditStore.objects.filter(audit__id=i.get('id')).exists():
+#                 if not AuditStore.objects.filter(audit__id=i.get('id'), status__in=[AuditStore.COMPLETED,
+#                                                                              AuditStore.ACCEPTED]) \
+#                         .exists():
+#                     available_audit_list.append(i.get('id'))
+#             else:
+#                 available_audit_list.append(i.get('id'))
+#     available_audits = Audit.objects.filter(id__in=available_audit_list)
+#     return available_audits  
+
+def find_audits_around_pincode_and_city(city_id: int, kms: int, pincode: int):
     city = City.objects.get(pk=city_id)
     country_code = city.country
 
@@ -158,12 +282,6 @@ def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
         lat1 = city.lat
         lon1 = city.lon
 
-    # if pincode is not None:
-    #     lat1=geo.get_lat_lon_from_pincode(pincode,country_code).get('lat')
-    #     lon1=geo.get_lat_lon_from_pincode(pincode,country_code).get('lon')
-    # else:
-    #     lat1=city.lat
-    #     lon1=city.lon
     today = now().date()
     
     active_audits = Audit.objects.filter(
@@ -194,13 +312,15 @@ def find_audits_around_pincode_and_city(city_id:int,kms:int,pincode:int):
     for i in available_audits:
         lat2, lon2 = None, None
         if i.store.pincode:
-            if geo.get_lat_lon_from_pincode(i.store.pincode,country_code):
-                lat2=geo.get_lat_lon_from_pincode(i.store.pincode,country_code).get('lat')
-                lon2=geo.get_lat_lon_from_pincode(i.store.pincode,country_code).get('lon')
+            store_loc = geo.get_lat_lon_from_pincode(i.store.pincode, country_code)
+            if store_loc:
+                lat2 = store_loc.get('lat')
+                lon2 = store_loc.get('lon')
         elif i.store.address and re.findall("\d{6}", i.store.address):
-            if geo.get_lat_lon_from_pincode(pincode,country_code).get('lat') and geo.get_lat_lon_from_pincode(pincode,country_code).get('lon'):
-                lat2=geo.get_lat_lon_from_pincode(pincode,country_code).get('lat')
-                lon2=geo.get_lat_lon_from_pincode(pincode,country_code).get('lon')
+            addr_loc = geo.get_lat_lon_from_pincode(pincode, country_code)
+            if addr_loc:
+                lat2 = addr_loc.get('lat')
+                lon2 = addr_loc.get('lon')
         elif i.store.city_id:
             city = City.objects.get(pk=i.store.city_id)
             if city:
@@ -295,7 +415,7 @@ def find_applied_audits_by_auditor_id(user_id,is_load_more, last_total_count):
         profileinfo_id=auditor.profileinfo.id,
         status__in=(AuditApplication.APPLIED,AuditApplication.REJECTED,AuditApplication.WAITLISTED,AuditApplication.WITHDRAWN, AuditApplication.WAITLISTED,AuditApplication.APPROVED),
         audit__audit_cycle__status=AuditCycle.ACTIVE).exclude(
-        audit__audit_stores__status__in=["FAILED", "SUBMITTED", "PM_REVIEW", "COMPLETED", "ACCEPTED", "REJECTED"] ).order_by('-id')
+        audit__audit_stores__status__in=["FAILED", "SUBMITTED", "PM_REVIEW", "COMPLETED", "ACCEPTED", "REJECTED"],audit__audit_stores__user_id=auditor.profileinfo.user.id)
     total_count = applied_audits.count()
     if is_load_more:
         start = int(last_total_count)

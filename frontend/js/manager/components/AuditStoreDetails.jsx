@@ -67,6 +67,7 @@ export class AuditStoreDetails extends React.Component{
 			reason: "",
 			errMsg: "",
 			proof_not_available: [],
+			isFailModalOpen:false,
 			config: {},
 		};
 	}
@@ -87,6 +88,13 @@ export class AuditStoreDetails extends React.Component{
 
 	hideModal = () => {
 		this.setState({ display:"none", errMsg: "" });
+	};
+	showFailModal = () => {
+		this.setState({ isFailModalOpen:true });
+	};
+
+	hideFailModal = () => {
+		this.setState({ isFailModalOpen:false });
 	};
 	submit_hideModal = () => {
 		if (this.state.reason === ""){
@@ -431,6 +439,7 @@ export class AuditStoreDetails extends React.Component{
 				{checkpointButton}
 				<h2 className="page-header">
 					<File/> Audit Report - {this.props.auditStore.id}
+					{(this.props.auditStore.status && this.props.auditStore.status==="FAILED") ? (<span style={{marginLeft:"3rem",fontSize:"2rem"}}><span style={{color: "red"}}>Failed by:</span> {this.props.auditStore.failed_by && this.props.auditStore.failed_by.toLowerCase()} {this.props.auditStore.failed_by && this.props.auditStore.failed_by.toLowerCase()==="manual" ? (<span onClick={this.showFailModal} style={{textDecoration:"underline",textUnderlineOffset:"2px",color:"#007dc1",cursor:"pointer"}}>View</span>): null}</span>) : null}
 					<div className="pull-right">
 						{faultyReportMessage}
 						<a className="btn btn-default" href={url.api_base_path + "manager/client/" + this.props.auditStore.audit.store.client.id + "/audit_store/" + this.props.auditStore.id + "/xlsx_report"}>
@@ -596,6 +605,25 @@ export class AuditStoreDetails extends React.Component{
 						</div>
 					</div>
 				</div>
+				{this.state.isFailModalOpen ?
+					<div className="modal" tabIndex="-1" style={{ display: "block", overflow: "scroll" }}>
+						<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideFailModal}/>
+						<div className="modal-dialog" style={modalDialogStyle}>
+							<div className="modal-content">
+								<div className="modal-header">
+									<button type="button" className="close" onClick={this.hideFailModal}>&times;</button>
+									<h4 className="modal-title">Reason to Fail the Report</h4>
+								</div>
+								<div className="modal-body">
+									<p>Failed By : {(this.props.auditStore.failed_status_log && this.props.auditStore.failed_status_log.user_actor ) ? this.props.auditStore.failed_status_log.user_actor : "" }</p>
+									<p>Message : {(this.props.auditStore.failed_status_log && this.props.auditStore.failed_status_log.message) ? this.props.auditStore.failed_status_log.message : "No failure message available"}</p>
+								</div>
+								<div className="modal-footer">
+									<button type="button" className="btn btn-default" onClick={this.hideFailModal}>Close</button>
+								</div>
+							</div>
+						</div>
+					</div>:null}
 
 			</div>
 		);

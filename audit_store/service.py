@@ -364,17 +364,29 @@ def find_audit_store_city_by_audit_cycle_id(audit_cycle_id, user_id):
         'city_list': list(city_list)
     }
 
-def find_audit_by_audit_cycle_audit_store_id(audit_cycle_id, audit_store_id,user_id,is_load_more,last_total_count):
+def find_audit_by_audit_cycle_audit_store_id(audit_cycle_id,audit_store_id, last_audit_id=None, status=None, user_id=None,city=None, start_date=None, end_date=None, is_load_more=False, last_total_count=0):
     audit_reports = []
     total_audit_count = 0
 
-    audit_store_obj = AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle_id, audit__id=audit_store_id)
-    total_audit_count = audit_store_obj.count()
+    audit_store_objs = AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle_id, audit__id=audit_store_id).order_by('id')
+    if status:
+        audit_store_objs = audit_store_objs.filter(status=status)
+    if user_id:
+        audit_store_objs = audit_store_objs.filter(user=user_id)
+    if city:
+        audit_store_objs = audit_store_objs.filter(audit__store__city__name=city)
+    if last_audit_id:
+        audit_store_objs = audit_store_objs.filter(audit__id__gt=last_audit_id)
+    if start_date and end_date:
+        audit_store_objs = audit_store_objs.filter(audit_date__range=[start_date, end_date])
 
-    for audit_report in audit_store_obj:
+    total_audit_count = audit_store_objs.count()
+
+    for audit_report in audit_store_objs:
         audit_report_dict = {}
         audit_report_dict['id'] = audit_report.id
         audit_report_dict['status'] = audit_report.status
+        audit_report_dict['failed_by'] = audit_report.failed_by
         audit_report_dict['auto_assigned'] = audit_report.auto_assigned
         audit_report_dict['instant_assigned'] = audit_report.instant_assigned
         audit_report_dict['audit_date'] = audit_report.audit_date

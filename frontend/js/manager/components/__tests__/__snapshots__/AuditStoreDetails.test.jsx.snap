@@ -3552,6 +3552,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
     <File />
      Audit Report - 
     5
+    <span
+      style={
+        Object {
+          "fontSize": "2rem",
+          "marginLeft": "3rem",
+        }
+      }
+    >
+      <span
+        style={
+          Object {
+            "color": "red",
+          }
+        }
+      >
+        Failed by:
+      </span>
+       
+       
+    </span>
     <div
       className="pull-right"
     >

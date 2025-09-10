@@ -87,8 +87,11 @@ def send_reminder_for_audit_store(audit_store_id, reminder_type):
         params['subject'] = "We hope your {} audit went well".format(params['client'])
     elif reminder_type == "POST":
         params['html_template'] = "notify/post_reminder.html"
-        params['txt_template'] = "notify/post_reminder.txt"
-        params['subject'] = "Let's get this {} report filled.".format(params['client'])
+        # params['txt_template'] = "notify/post_reminder.txt"
+        # params['html_template'] = "notify/latest_post_reminder.html"
+        params['txt_template'] = "notify/latest_post_reminder.txt"
+        # params['subject'] = "Let's get this {} report filled.".format(params['client'])
+        params['subject'] = "Reminder to submit your {} report.".format(params['client'])
     else:
         raise ValueError("invalid reminder_type: {}".format(reminder_type))
 

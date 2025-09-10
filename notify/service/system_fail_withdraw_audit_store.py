@@ -31,6 +31,7 @@ def fail_withdraw_audit_stores():
         send_audit_report_failed_withdraw_email.delay(in_progress_report.user.email, in_progress_report.id, "fail",
                                                       "auditor")
         in_progress_report.status = AuditStore.FAILED
+        in_progress_report.failed_by = AuditStore.SYSTEM
         in_progress_report.save()
         return len(assigned_reports)
 
@@ -43,4 +44,5 @@ def fail_audit_stores_of_auto_align():
     for not_submitted_report in filtered_non_submitted_reports:
         send_audit_report_failed_email_for_auto_align.delay(not_submitted_report.user.email, not_submitted_report.id, "fail", "auditor")
         not_submitted_report.status = AuditStore.FAILED
+        not_submitted_report.failed_by = AuditStore.SYSTEM
         not_submitted_report.save()

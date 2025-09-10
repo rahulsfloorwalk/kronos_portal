@@ -75,12 +75,27 @@ class AuditIdView(APIView):
         audit = audit_service.find_audit_by_id(audit_id)
         return Response(AuditSerializer(audit).data)
 
+    # def post(self, request, audit_id):
+    #     audit = Audit.objects.get(id=audit_id)
+    #     audit.earnings_per_audit =request.data.get('earnings_per_audit')
+    #     audit.reimbursement =request.data.get('reimbursement')
+    #     audit.post_approval_description = request.data.get('post_approval_description')
+    #     audit.count = request.data.get('count')
+    #     audit.modified_at = timezone.now()
+    #     audit.save()
+    #     return Response(AuditSerializer(audit).data)
+    
     def post(self, request, audit_id):
         audit = Audit.objects.get(id=audit_id)
-        audit.earnings_per_audit =request.data.get('earnings_per_audit')
-        audit.reimbursement =request.data.get('reimbursement')
-        audit.post_approval_description = request.data.get('post_approval_description')
-        audit.count = request.data.get('count')
+        earnings = request.data.get('earnings_per_audit')
+        reimbursement = request.data.get('reimbursement')
+        count = request.data.get('count')
+
+        audit.earnings_per_audit = int(earnings) if earnings not in [None, ''] else None
+        audit.reimbursement = int(reimbursement) if reimbursement not in [None, ''] else None
+        audit.count = int(count) if count not in [None, ''] else audit.count
+
+        audit.post_approval_description = request.data.get('post_approval_description', '')
         audit.modified_at = timezone.now()
         audit.save()
         return Response(AuditSerializer(audit).data)
