@@ -18,10 +18,13 @@ if __name__ == "__main__":
         sys.exit()
 
     if sys.argv[-2] == 'bump':
-        call(["bump2version", "--commit", "--tag", "--current-version", version, "--tag-name", "{new_version}", sys.argv[-1], "setup.py", "./frontend/package.json"])
+        call([ "bump2version", "--commit", "--tag", "--current-version", version, "--tag-name", "{new_version}", sys.argv[-1], "setup.py", "./frontend/package.json"])
+        sys.exit()
+
+        # call(["bump2version", "--commit", "--tag", "--current-version", version, "--tag-name", "{new_version}", sys.argv[-1], "setup.py", "./frontend/package.json"])
         # call(["bumpversion", "--commit", "--tag", "--current-version", version, "--tag-name", "{new_version}", sys.argv[-1], "setup.py", "./frontend/package.json"])
         # call([sys.executable, "-m", "bumpversion", "--commit", "--tag","--current-version", version, "--tag-name", "{new_version}",sys.argv[-1], "setup.py", "./frontend/package.json"])
-        sys.exit()
+        # sys.exit()
 
     if sys.argv[-1] == 'test':
         call(["pytest"])
