@@ -17,11 +17,19 @@ export default class ModeratorAssignDropdown extends Component{
 		onUpdate: PropTypes.func.isRequired,
 	};
 
-	state = {};
+	state = {selectedId: this.props.selectedModeratorId[0] || ""};
+	componentDidUpdate(prevProps) {
+		if (prevProps.selectedModeratorId[0] !== this.props.selectedModeratorId[0]) {
+			this.setState({ selectedId: this.props.selectedModeratorId[0] || "" });
+		}
+	}
 
 	onChange = (e) => {
-		if(e.target.value){
-			assignToModerator(this.props.auditStoreId, e.target.value).then((auditStore) => {
+		const newId = e.target.value;
+		this.setState({ selectedId: newId });
+
+		if (newId) {
+			assignToModerator(this.props.auditStoreId, newId).then((auditStore) => {
 				this.props.onUpdate(auditStore);
 			});
 		} else {
@@ -31,7 +39,8 @@ export default class ModeratorAssignDropdown extends Component{
 		}
 	};
 	render(){
-		let selectedId = this.props.selectedModeratorId[0] || "";
+		// let selectedId = this.props.selectedModeratorId[0] || "";
+		const { selectedId } = this.state;
 		return (<select className="form-control" onChange={this.onChange} value={selectedId}>
 			<option value=""></option>
 			{ this.props.moderators.filter((m) => m.is_active).map((m)=> <option key={m.id} value={m.id}>{m.email}</option>) }

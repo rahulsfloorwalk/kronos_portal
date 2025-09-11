@@ -20,6 +20,7 @@ def setup_periodic_tasks(sender, **kwargs):
     from notify.service.mail_notify_client import send_mail_to_client
     from notify.service.reporting_stats_mail_notify import reporting_stats_send_mail
     # from notify.service.mail_reminders import send_pre_audit_reminders, send_on_audit_reminders, send_post_audit_reminders
+    from notify.service.mail_reminders import send_post_audit_reminders
     from notify.service.alert_faulty_report import find_faulty_report
     # from attachment.save_audio_transcription import save_audio_transcription
     from notify.service.reject_audit_application import reject_audit_application
@@ -42,6 +43,7 @@ def setup_periodic_tasks(sender, **kwargs):
     queue_at = crontab(hour=12, minute=30)
     sender.add_periodic_task(queue_at, send_pre_audit_reminders.s())
     # sender.add_periodic_task(queue_at, send_post_audit_reminders.s()) --comment-- stopped to send post audit email
+    sender.add_periodic_task(queue_at, send_post_audit_reminders.s()) 
     # setup schedules for sending completed reports to client
     sender.add_periodic_task(queue_at, send_mail_to_client.s())
 
@@ -73,6 +75,7 @@ def setup_periodic_tasks(sender, **kwargs):
     # schedules for find repeated image attachment
     # Execute cron every five hours : midnight, 5am, 10am, 3pm, 8pm.
     queue_at_attachment = crontab(hour='*/5', minute=0)
+    # queue_at_attachment = crontab(hour=17, minute=30)
     sender.add_periodic_task(queue_at_attachment, find_faulty_report.s())
 
     # Executes every day at 0230 UTC == 0800 IST

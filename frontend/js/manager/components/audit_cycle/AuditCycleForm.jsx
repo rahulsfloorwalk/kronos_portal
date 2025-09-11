@@ -114,7 +114,13 @@ export class AuditCycleForm extends Component{
 	};
 
 	fieldChanged = (e) => {
+		const { name, value} = e.target;
 		affectInputEventToComponent(e, this);
+		if (["earnings_per_audit", "reimbursement"].includes(name)) {
+			this.setState({
+				[name]: value === "" ? 0 : Number(value)
+			});
+		}
 	};
 
 	dateChanged = (name, date) => {

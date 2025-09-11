@@ -101,7 +101,12 @@ class AuditListByAuditCycleAuditStore(APIView):
 
     def get(self, request, audit_cycle_id,audit_store_id, format=None):
         audit_stores = audit_store_service.find_audit_by_audit_cycle_audit_store_id(audit_cycle_id,audit_store_id,
+                                                                   request.GET.get('lastAuditId'),
+                                                                   request.GET.get('status'),
                                                                    request.GET.get('userId'),
+                                                                   request.GET.get('city'),
+                                                                   request.GET.get('start_date'),
+                                                                   request.GET.get('end_date'),
                                                                    request.GET.get('is_load_more'),
                                                                    request.GET.get('last_total_count'))
         return Response(audit_stores)

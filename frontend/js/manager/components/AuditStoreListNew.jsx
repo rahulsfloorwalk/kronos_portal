@@ -71,7 +71,7 @@ class AuditStoreRow extends React.Component {
 				{/* <td className="text-right">{acceptButton}</td> */}
 				<td>
 					<tr>
-						<AuditStoreStatusLabel status={this.props.auditStore.status}/> {this.props.auditStore.report_revert_count>0 ? <span><i>Reverted({this.props.auditStore.report_revert_count})</i></span>:null}
+						<AuditStoreStatusLabel status={this.props.auditStore.status}/> {(this.props.auditStore.status && this.props.auditStore.failed_by && this.props.auditStore.status ==="FAILED")? <span> ({this.props.auditStore.failed_by.toLowerCase()})</span>:null }{this.props.auditStore.report_revert_count>0 ? <span><i>Reverted({this.props.auditStore.report_revert_count})</i></span>:null}
 					</tr>
 					<tr>
 						<td colSpan="10">
@@ -397,8 +397,15 @@ class AuditStoreList extends Component{
 	// 	);
 	// }
 	toggleAuditReportsVisibility(reportId) {
+		let lastAuditId = "";
+		let userId = this.state.userId;
+		let city = this.state.city;
+		let status = this.state.filterStatus;
+		let start_date = this.state.start_date;
+		let end_date = this.state.end_date;
+
 		if (!this.state.visibleReports.includes(reportId)) {
-			findAuditStoresByAuditCycleReportList(this.props.params.auditCycleId, reportId)
+			findAuditStoresByAuditCycleReportList(this.props.params.auditCycleId, reportId,  {lastAuditId, status, userId,city, start_date, end_date})
 				.then((result) => {
 					const updatedAuditReportRows = { ...this.state.auditReportRows };
 					updatedAuditReportRows[reportId] = result.audit_reports;
@@ -408,7 +415,6 @@ class AuditStoreList extends Component{
 					});
 				});
 		} else {
-			// If the report is already visible, simply toggle its visibility
 			this.setState(prevState => ({
 				visibleReports: prevState.visibleReports.filter(id => id !== reportId)
 			}));

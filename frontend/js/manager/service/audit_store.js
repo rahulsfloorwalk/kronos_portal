@@ -191,10 +191,13 @@ export function findAuditStoresCityByAuditCycleReportList(audit_cycle_id){
 	return $.get(url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/audit_store_city_list`);
 }
 
-export function findAuditStoresByAuditCycleReportList(audit_cycle_id,reportId){
-	return $.get(url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/audit_store/${reportId}/audit_list`);
-}
+// export function findAuditStoresByAuditCycleReportList(audit_cycle_id,reportId){
+// 	return $.get(url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/audit_store/${reportId}/audit_list`);
+// }
 
+export function findAuditStoresByAuditCycleReportList(audit_cycle_id,reportId, data){
+	return $.get(url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/audit_store/${reportId}/audit_list`, data);
+}
 export function assignToModerator(auditStoreId, userId){
 	return $.ajax({
 		url: url.api_base_path + `manager/audit_store/${auditStoreId}/moderator`,

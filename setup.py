@@ -5,7 +5,7 @@ import sys
 from subprocess import call
 from setuptools import setup, find_packages
 
-version = '4.0.155'
+version = '4.0.157'
 
 if __name__ == "__main__":
 
@@ -18,8 +18,13 @@ if __name__ == "__main__":
         sys.exit()
 
     if sys.argv[-2] == 'bump':
-        call(["bumpversion", "--commit", "--tag", "--current-version", version, "--tag-name", "{new_version}", sys.argv[-1], "setup.py", "./frontend/package.json"])
+        call([ "bump2version", "--commit", "--tag", "--current-version", version, "--tag-name", "{new_version}", sys.argv[-1], "setup.py", "./frontend/package.json"])
         sys.exit()
+
+        # call(["bump2version", "--commit", "--tag", "--current-version", version, "--tag-name", "{new_version}", sys.argv[-1], "setup.py", "./frontend/package.json"])
+        # call(["bumpversion", "--commit", "--tag", "--current-version", version, "--tag-name", "{new_version}", sys.argv[-1], "setup.py", "./frontend/package.json"])
+        # call([sys.executable, "-m", "bumpversion", "--commit", "--tag","--current-version", version, "--tag-name", "{new_version}",sys.argv[-1], "setup.py", "./frontend/package.json"])
+        # sys.exit()
 
     if sys.argv[-1] == 'test':
         call(["pytest"])
@@ -34,4 +39,5 @@ if __name__ == "__main__":
         packages=find_packages(),
         include_package_data=True,
     )
+
 

@@ -4,7 +4,7 @@ from auditor.service.profile_info_service import get_avg_auditor_rating_by_user
 from kronos.exceptions import AppLogicError
 from agency.models import AgencyUser, Agency
 from audit.models import Audit, AuditCycle, AuditCycleProofTagList
-from audit_store.models import AuditStore, ReportFollowUpLog
+from audit_store.models import AuditStore, ReportFollowUpLog, ReportStatusLog
 from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store,ClientForEcomm,StateCityMapping
 from payment.models import Payment
@@ -405,15 +405,30 @@ class UserSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class ReportStatusLogSerializer(serializers.ModelSerializer):
+    user_actor = serializers.StringRelatedField()
+    class Meta:
+        model = ReportStatusLog
+        fields = (
+            'id',
+            'user_actor',
+            'status',
+            'message',
+            'report_data',
+            'created_at',
+        )
+
 class AuditStoreSerializer(ModelSerializer):
     audit = AuditSerializer()
     user = UserSerializer()
     assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
+    failed_status_log = serializers.SerializerMethodField()
     class Meta:
         model = AuditStore
         fields = (
             'id',
             'status',
+            'failed_by',
             'audit_date',
             'audit',
             'user',
@@ -433,9 +448,17 @@ class AuditStoreSerializer(ModelSerializer):
             'report_revert_count',
             'report_submission_time',
             'moderator_submission_time',
-            'moderator_submission_date'
+            'moderator_submission_date',
+            'failed_status_log'
         )
         read_only_fields = fields
+
+    def get_failed_status_log(self, obj):
+        # Get the first log with status == 'FAILED', ordered by created_at
+        failed_log = obj.audit_store_status_log.filter(status=AuditStore.FAILED).order_by('-created_at').first()
+        if failed_log:
+            return ReportStatusLogSerializer(failed_log).data
+        return None
 
 class AuditStoreSerializerWithoutAudit(ModelSerializer):
     user = UserSerializer()

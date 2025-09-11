@@ -485,7 +485,14 @@ export class AuditList extends Component{
 
 		let serial = 1;
 		let rows = Object.values(this.props.audits)
-			.sort((a,b) => this.cityComparator(a.store.city, b.store.city))
+			// .sort((a,b) => this.cityComparator(a.store.city, b.store.city))
+			.sort((a, b) => {
+				const cityComp = this.cityComparator(a.store.city, b.store.city);
+				if (cityComp !== 0) return cityComp;
+				if (a.store.name < b.store.name) return -1;
+				if (a.store.name > b.store.name) return 1;
+				return 0;
+			})
 			.filter((a) => {
 				switch(this.state.selectedAuditDate){
 				case "":

@@ -170,6 +170,13 @@ class AuditStore(Model):
         (ONE, 1),
     )
 
+    SYSTEM = 'SYSTEM'
+    MANUAL = 'MANUAL'
+    FAILED_BY = (
+        (SYSTEM, "System"),
+        (MANUAL, "Manual"),
+    )
+
     id = AutoField(db_column='id', primary_key=True)
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     audit_date = DateField(db_column='audit_date')
@@ -218,6 +225,7 @@ class AuditStore(Model):
     report_submission_time = CharField(db_column="report_submission_time",max_length=50,null=True, blank=True)
     moderator_submission_time = CharField(db_column="moderator_submission_time",max_length=50,null=True, blank=True)
     moderator_submission_date = DateTimeField(db_column="moderator_submission_date", null=True, blank=True)
+    failed_by = CharField(db_column='failed_by',max_length=120,choices=(FAILED_BY),blank=True,null=True)
     objects = AuditStoreQuerySet.as_manager()
 
     class Meta:
@@ -642,6 +650,7 @@ class AuditStore(Model):
             raise AppLogicError("Report cannot be failed now")
 
         self.qa_rating = AuditStore.BAD
+        self.failed_by = AuditStore.MANUAL
         self.save()
         self._change_status(AuditStore.FAILED, by, message)
 
