@@ -86,29 +86,30 @@ def get_auditor_list_by_filter(filters: dict) -> list:
     elif filters.get('channel_name')=="sms":
         query['preferences__receive_new_opportunities_sms']=True
     
-    if filters.get('city',None):
-        query['profileinfo__city'] = filters.get('city','')
+    if filters.get('city'):
+        print("sdfsdfds",filters.get('city'))
+        query['profileinfo__city_id'] = int(filters['city'])
 
     if filters.get('gender',''):
-        query['profileinfo__gender__in'] = filters.get('gender','')
+        query['profileinfo__gender__in'] = filters.get('gender')
 
     if filters.get('education',[]):
-        query['profileinfo__education__in'] = filters.get('education',[])
+        query['profileinfo__education__in'] = filters.get('education')
 
     if filters.get('occupation',[]):
-        query['additionalinfo__occupation__in'] = filters.get('occupation',[])
+        query['additionalinfo__occupation__in'] = filters.get('occupation')
 
     if filters.get('income',''):
-        query['additionalinfo__income__in'] = filters.get('income','')
+        query['additionalinfo__income__in'] = filters.get('income')
 
     if filters.get('industry',[]):
-        query['additionalinfo__industry__in'] = filters.get('industry',[])
+        query['additionalinfo__industry__in'] = filters.get('industry')
 
     if filters.get('interest_area',[]):
-        query['additionalinfo__interest_area__overlap'] = filters.get('interest_area',[])
+        query['additionalinfo__interest_area__overlap'] = filters.get('interest_area')
 
     if filters.get('car',[]):
-        query['additionalinfo__car_cost__in'] = filters.get('car',[])
+        query['additionalinfo__car_cost__in'] = filters.get('car')
     
     if filters.get('auditor_age_range'):
         age_range=filters.get('auditor_age_range').split('-')

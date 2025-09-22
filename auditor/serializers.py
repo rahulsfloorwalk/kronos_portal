@@ -58,8 +58,63 @@ class DashBoardCitySerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+import json
+from math import radians, sin, cos, acos
+from manager.service import geo
+
+def distance_km(lat1, lon1, lat2, lon2):
+    R = 6371
+    lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+    return R * acos(
+        cos(lat1) * cos(lat2) * cos(lon2 - lon1) + sin(lat1) * sin(lat2)
+    )
+
+def get_city_by_pincode(pincode, country_code, max_distance_km=20):
+    location = geo.get_lat_lon_from_pincode(pincode, country_code)
+    if not location:
+        return None
+    lat1, lon1 = location["lat"], location["lon"]
+
+    with open("manager/fixtures/city.json", "r", encoding="utf-8") as f:
+        cities = json.load(f)
+
+    nearest = None
+    min_dist = float("inf")
+
+    for city in cities:
+        fields = city["fields"]
+        lat2, lon2 = float(fields["lat"]), float(fields["lon"])
+        dist = distance_km(lat1, lon1, lat2, lon2)
+
+        if dist > max_distance_km:
+            continue
+
+        if dist < min_dist:
+            min_dist = dist
+            nearest = {
+                "id": city["pk"],
+                "name": fields["name"],
+                "state": fields["state"],
+                "country": fields["country"],
+                "lat": fields["lat"],
+                "lon": fields["lon"],
+            }
+
+    return nearest
+
 class ProfileInfoSerializer(ModelSerializer):
     city = DashBoardCitySerializer()
+    city_by_pincode = SerializerMethodField()
+
+    def get_city_by_pincode(self, obj):
+        if not obj.pincode:
+            return None
+        base_city = obj.city
+        if not base_city:
+            return None
+
+        nearest_city = get_city_by_pincode(obj.pincode, base_city.country)
+        return nearest_city  # dict return karega
     class Meta:
         model = ProfileInfo
         fields = (
@@ -78,6 +133,7 @@ class ProfileInfoSerializer(ModelSerializer):
             'address',
             'pincode',
             'city',
+            'city_by_pincode',
             'city_id',
             'user_id',
             'is_complete',
@@ -193,6 +249,7 @@ class AdditionalInfoSerializer(ModelSerializer):
             'referral_code',
             'is_complete',
             'income',
+            'designation',
             'is_tour_complete',
             'interest_area',
             'language_known'
@@ -225,6 +282,7 @@ class AdditionalInfoDeSerializer(ModelSerializer):
             'laptop_model',
             'mobile_model',
             'income',
+            'designation',
             'is_tour_complete',
             'interest_area',
             'language_known'
@@ -260,6 +318,7 @@ class AdditionalInfoDeSerializer(ModelSerializer):
         additional_info.laptop_model = self.validated_data.get('laptop_model', additional_info.laptop_model)
         additional_info.mobile_model = self.validated_data.get('mobile_model', additional_info.mobile_model)
         additional_info.income = self.validated_data.get('income', additional_info.income)
+        additional_info.designation = self.validated_data.get('designation', additional_info.designation)
         additional_info.is_tour_complete = self.validated_data.get('is_tour_complete', additional_info.is_tour_complete)
         additional_info.interest_area = self.validated_data.get('interest_area', additional_info.interest_area)
         additional_info.language_known = self.validated_data.get('language_known', additional_info.language_known)
@@ -1023,19 +1082,37 @@ class EducationSerializer(serializers.Serializer):
     education = serializers.ChoiceField(choices=EDUCATION, allow_blank=True, required=False)
 
 class IncomeSerializer(serializers.Serializer):
+    # NOT_ANSWERED = 0
+    # ONE = 1
+    # ONE_THREE = 2
+    # THREE_EIGHT = 3
+    # EIGHT_FIFTEEN = 4
+    # FIFTEEN_PLUS = 5
+    # INCOME = (
+    #     (NOT_ANSWERED, "not answered"),
+    #     (ONE, "less than 1 lpa"),
+    #     (ONE_THREE, "1 to 3 lpa"),
+    #     (THREE_EIGHT, "3 to 8 lpa"),
+    #     (EIGHT_FIFTEEN, "8 to 15 lpa"),
+    #     (FIFTEEN_PLUS, "15+ lpa"),
+    # )
     NOT_ANSWERED = 0
     ONE = 1
-    ONE_THREE = 2
-    THREE_EIGHT = 3
-    EIGHT_FIFTEEN = 4
-    FIFTEEN_PLUS = 5
+    FIVE_TEN = 2
+    TEN_FIFTEEN = 3
+    FIFTEEN_TWENTYFIVE = 4
+    TWENTYFIVE_FIFTY = 5
+    FIFTY_ONECR = 6
+    ONECR_PLUS = 7
     INCOME = (
         (NOT_ANSWERED, "not answered"),
-        (ONE, "less than 1 lpa"),
-        (ONE_THREE, "1 to 3 lpa"),
-        (THREE_EIGHT, "3 to 8 lpa"),
-        (EIGHT_FIFTEEN, "8 to 15 lpa"),
-        (FIFTEEN_PLUS, "15+ lpa"),
+        (ONE, "upto 5 lpa"),
+        (FIVE_TEN, "5 to 10 lpa"),
+        (TEN_FIFTEEN, "10 to 15 lpa"),
+        (FIFTEEN_TWENTYFIVE, "15 to 25 lpa"),
+        (TWENTYFIVE_FIFTY, "25 to 50 lpa"),
+        (FIFTY_ONECR, "50L to 1 cr"),
+        (ONECR_PLUS, "1+ cr"),
     )
 
     income = serializers.ChoiceField(choices=INCOME, allow_blank=True, required=False)

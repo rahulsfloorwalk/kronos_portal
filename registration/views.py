@@ -23,20 +23,21 @@ class Login(View):
     __auditor_url = settings.FRONTEND_CONFIG["AUDITOR"]["LOGIN_SUCCESS_REDIRECT_URL"]
 
     def get(self, request):
-        next_url = request.GET.get('next')
-        _logger.info("login page requested")
-        if request.user.is_authenticated() and request.user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
-            _logger.info("auto redirecting auditor logged in: %s", request.user)
-            if next_url and is_safe_url(next_url, request.get_host()):
-                return redirect(next_url)
-            else:
-                return redirect(self.__auditor_url)
-        else:
-            form = AuditorAuthenticationForm()
-            if next_url and is_safe_url(next_url, request.get_host()):
-                messages.add_message(request, messages.WARNING, 'You need to login to access this page.')
-            _logger.info("login page served")
-            return render(request, self.__template, {'form': form, 'next': next_url})
+        return redirect('https://auditor.floorwalk.in')
+        # next_url = request.GET.get('next')
+        # _logger.info("login page requested")
+        # if request.user.is_authenticated() and request.user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+        #     _logger.info("auto redirecting auditor logged in: %s", request.user)
+        #     if next_url and is_safe_url(next_url, request.get_host()):
+        #         return redirect(next_url)
+        #     else:
+        #         return redirect(self.__auditor_url)
+        # else:
+        #     form = AuditorAuthenticationForm()
+        #     if next_url and is_safe_url(next_url, request.get_host()):
+        #         messages.add_message(request, messages.WARNING, 'You need to login to access this page.')
+        #     _logger.info("login page served")
+        #     return render(request, self.__template, {'form': form, 'next': next_url})
 
     def post(self, request):
         next_url = request.POST.get('next')
@@ -68,9 +69,10 @@ class SignUp(View):
     __template = 'registration/signup.html'
 
     def get(self, request):
-        _logger.info("signup form requested")
-        form = SignUpForm()
-        return render(request, self.__template, {'form': form})
+        return redirect('https://auditor.floorwalk.in')
+        # _logger.info("signup form requested")
+        # form = SignUpForm()
+        # return render(request, self.__template, {'form': form})
 
     @atomic
     def post(self, request):

@@ -47,7 +47,9 @@ class SignupAPITestCase(TestCase):
     def test_normal_signup_flow(self):
         # check if the form loads correctly
         response = self.client.get(reverse('registration:signup'))
-        self.assertEqual(response.status_code, 200)
+        # self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "https://auditor.floorwalk.in")
 
         # post to registration endpoint with correct data
         email = fake.email()
@@ -96,7 +98,9 @@ class SignupAPITestCase(TestCase):
 
         # finally log the user out
         response = self.client.post(reverse("registration:logout"))
-        self.assertRedirects(response, reverse("registration:login"), status_code=302, target_status_code=200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse("registration:login"))
+        # self.assertRedirects(response, reverse("registration:login"), status_code=302, target_status_code=200)
 
     def test_non_matching_passwords(self):
 
