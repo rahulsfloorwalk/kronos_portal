@@ -25,6 +25,7 @@ def opportunity_notification_service_for_pincode(audit_cycle_id: int, filters: d
 
 
 def find_next_users_for_notification(city_id: int, audit_cycle_id: int, channel:str, filtered_auditors: list) -> list:
+    city_id = int(city_id)
     if channel == 'email':
         opportunity_list = OpportunityEmailRecord.objects.filter(city_id = city_id, audit_cycle_id = audit_cycle_id, record_data__has_key = 'user_list').values_list('record_data', flat = True)
     elif channel == 'sms':

@@ -77,17 +77,21 @@ class ProfileInfo(Model, CompletableMixin):
 
     NOT_ANSWERED = 0
     ONE = 1
-    ONE_THREE = 2
-    THREE_EIGHT = 3
-    EIGHT_FIFTEEN = 4
-    FIFTEEN_PLUS = 5
+    FIVE_TEN = 2
+    TEN_FIFTEEN = 3
+    FIFTEEN_TWENTYFIVE = 4
+    TWENTYFIVE_FIFTY = 5
+    FIFTY_ONECR = 6
+    ONECR_PLUS = 7
     INCOME = (
         (NOT_ANSWERED, "not answered"),
-        (ONE, "less than 1		 lpa"),
-        (ONE_THREE, "1 to 3 lpa"),
-        (THREE_EIGHT, "3 to 8 lpa"),
-        (EIGHT_FIFTEEN, "8 to 15 lpa"),
-        (FIFTEEN_PLUS, "15+ lpa"),
+        (ONE, "upto 5		 lpa"),
+        (FIVE_TEN, "5 to 10 lpa"),
+        (TEN_FIFTEEN, "10 to 15 lpa"),
+        (FIFTEEN_TWENTYFIVE, "15 to 25 lpa"),
+        (TWENTYFIVE_FIFTY, "25 to 50 lpa"),
+        (FIFTY_ONECR, "50 l to 1 cr"),
+        (ONECR_PLUS, "1+ cr"),
     )
 
     EXCELLENT = "E"
@@ -293,19 +297,21 @@ class AdditionalInfo(Model, CompletableMixin):
 
     NOT_ANSWERED = 0
     ONE = 1
-    ONE_THREE = 2
-    THREE_NINE = 3
-    NINE_EIGHTEEN = 4
-    EIGHTEEN_FIFTY = 5
-    FIFTY_PLUS = 6
+    FIVE_TEN = 2
+    TEN_FIFTEEN = 3
+    FIFTEEN_TWENTYFIVE = 4
+    TWENTYFIVE_FIFTY = 5
+    FIFTY_ONECR = 6
+    ONECR_PLUS = 7
     INCOME = (
         (NOT_ANSWERED, "not answered"),
-        (ONE, "less than 1200 $	"),
-        (ONE_THREE, "1200 $ to 3600 lpa"),
-        (THREE_NINE, "3600 $ to 9600 lpa"),
-        (NINE_EIGHTEEN, "9600 $ to 18000 $"),
-        (EIGHTEEN_FIFTY, "18000 $ to 50000 $"),
-        (FIFTY_PLUS, "50000 $ + pa"),
+        (ONE, "upto 5		 lpa"),
+        (FIVE_TEN, "5 to 10 lpa"),
+        (TEN_FIFTEEN, "10 to 15 lpa"),
+        (FIFTEEN_TWENTYFIVE, "15 to 25 lpa"),
+        (TWENTYFIVE_FIFTY, "25 to 50 lpa"),
+        (FIFTY_ONECR, "50 l to 1 cr"),
+        (ONECR_PLUS, "1+ cr"),
     )
 
     id = AutoField(db_column='id', primary_key=True)
@@ -328,6 +334,7 @@ class AdditionalInfo(Model, CompletableMixin):
     income = PositiveSmallIntegerField(db_column='income', choices=INCOME, blank=True, null=True)
     mspa_code = CharField(db_column='mspa_code', max_length=10, blank=True, null=True)
     company = CharField(db_column='company', max_length=50, blank=True, null=True)
+    designation = CharField(db_column='designation', max_length=50, blank=True, null=True)
     industry = CharField(db_column='industry', choices=INDUSTRY, max_length=50, blank=True, null=True)
     car_cost = CharField(db_column='car_cost', choices=CAR_COST, max_length=50, blank=True, null=True)
     car_model = CharField(db_column='car_model', max_length=50, blank=True, null=True)
