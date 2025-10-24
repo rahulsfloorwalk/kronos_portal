@@ -70,6 +70,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 from kronos.exceptions import AppLogicError,ObjectNotFound
 from guardian.models import UserObjectPermission
+from django.utils import timezone
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -409,6 +410,7 @@ class AuditApplicationApplyView(APIView):
     @atomic
     def post(self, request, audit_id, format=None):
         current_date = datetime.now().date()
+        six_months_ago = timezone.now() - timedelta(days=180)
         tomorrow_date = current_date + timedelta(days=1)
 
         request.data["audit_id"] = audit_id
@@ -416,6 +418,50 @@ class AuditApplicationApplyView(APIView):
 
         application_apply_ds = AuditApplicationApplyDeSerializer(data=request.data)
         application_apply_ds.is_valid(raise_exception=True)
+
+        # mising aidit aligment factor in auditor profile
+        audit = audit_service.find_audit_by_id(audit_id)
+        missing = []
+        factors = audit.audit_cycle.audit_alignment_factors or []
+        profileinfo = getattr(request.user, "profileinfo", None)
+        additionalinfo = getattr(request.user, "additionalinfo", None)
+
+
+        user_joined_before_6_months = request.user.date_joined < six_months_ago
+        # Check if user joined and updated profile before 6 months
+        if user_joined_before_6_months:
+            if additionalinfo:
+                last_updated = additionalinfo.modified_at or additionalinfo.created_at
+            else:
+                last_updated = None
+
+            if not last_updated or last_updated < six_months_ago:
+                return Response(
+                    {"detail": "Please update your profile before applying for audits."},
+                    status=400
+                )
+        
+        #  Check missing audit alignment factors
+        skip_keys = {"auditor_rating", "report_rating", "date_availability", "auditor_age_range"}
+        factors_with_value = [f for f in factors if f['value']]  
+
+        for factor in factors_with_value:
+            key = factor.get("key")
+            label = factor.get("label", key)
+            if not key or key in skip_keys:
+                continue
+
+            # get value from profileinfo or additionalinfo
+            value = getattr(profileinfo, key, None) or getattr(additionalinfo, key, None)
+
+            # check if this factor is missing
+            is_missing = value in [None, "", [], {}]
+
+            if is_missing:
+                missing.append(label)
+
+        if missing:
+            return Response({"detail": "Please fill these fields first: " + ", ".join(missing)},status=400)
 
         application = application_service.apply(
             application_apply_ds.validated_data["audit_id"].id,

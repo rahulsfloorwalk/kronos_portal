@@ -333,6 +333,13 @@ def find_by_auditcycle_id_for_client(audit_cycle_id, client=None):
         return audit_cycle
     except AuditCycle.DoesNotExist:
         return None
+
+def get_audit_cycle_by_id(audit_cycle_id):
+    try:
+        audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+        return audit_cycle
+    except AuditCycle.DoesNotExist:
+        return None
         
 def set_post_approval_description(audit_cycle_id, post_approval_description):
     audit_cycle = find_by_id(audit_cycle_id)

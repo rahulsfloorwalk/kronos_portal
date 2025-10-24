@@ -247,7 +247,9 @@ def create_text_structure(report_action_data, audit_cycle_name):
             'value': action.created_by,
             'color_code': get_color_code(0, 0)
         }
-        audit_report_url = settings.KRONOS_BASE_URL + "/auth/client/login?next=/static/client/index.html%23/audit_store/" + str(action.audit_store_id)
+        # audit_report_url = settings.KRONOS_BASE_URL + "/auth/client/login?next=/static/client/index.html%23/audit_store/" + str(action.audit_store_id)
+        audit_report_url = "https://client.floorwalk.in/auditReport/" + str(action.audit_store_id)
+
         url = {
             'value': "Click Here",
             'url': audit_report_url,

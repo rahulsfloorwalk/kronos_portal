@@ -87,7 +87,8 @@ def pm_revert_report(audit_store_id, user_id):
     return audit_store
 
 def get_sentiment_data(report_summary):
-    api_url = "http://api.floorwalk.in/text_analysis"
+    # api_url = "http://api.floorwalk.in/text_analysis"
+    api_url = "https://ai.floorwalk.in/text_analysis"
     # api_url = "http://13.203.250.157/text_analysis"
     token = "12345"
     payload = {

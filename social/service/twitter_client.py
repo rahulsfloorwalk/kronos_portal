@@ -169,7 +169,7 @@ def get_over_all_nps_score(client_id, audit_cycle_id):
             elif 9 <= nps_score <= 10:
                 promoters_count += 1
 
-    valid_replies = promoters_count + detractors_count
+    valid_replies = promoters_count + detractors_count + passives_count
 
     if valid_replies > 0:
         average_nps_percentage = round((promoters_count - detractors_count) / valid_replies * 100)

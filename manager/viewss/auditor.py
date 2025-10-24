@@ -82,6 +82,7 @@ class AdditionalInfoSerializer(ModelSerializer):
             'hair_color',
             'industry',
             'company',
+            'designation',
             'height',
             'weight',
             'distance',

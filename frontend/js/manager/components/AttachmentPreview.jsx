@@ -142,10 +142,10 @@ class AttachmentRenderer extends React.Component {
 
 	render() {
 		const file_slug = this.props.attachment.file_slug || "";
-		const file_extensionheic = file_slug.split(".").pop().toLowerCase();
-		const isHeic = file_extensionheic === "heic";
-		let file_extension_arr = (this.props.attachment.file_slug).split(".");
-		let file_extension = file_extension_arr[file_extension_arr.length - 1];
+		const { mime_type} = this.props.attachment;
+		const isAmrMime = mime_type === "audio/AMR" || mime_type === "audio/amr";
+		const isAmrExt = typeof file_slug === "string" && file_slug.toLowerCase().endsWith(".amr");
+
 		switch (this.props.attachment.proof_type) {
 		case "AUDIO": {
 			let audio_player_node;
@@ -180,9 +180,17 @@ class AttachmentRenderer extends React.Component {
 			else {
 				audio_transcipt_table_data = (<Jumbotron heading="Not found" para="Audio transcription not available for this attachment" />);
 			}
-			if (this.props.attachment.mime_type == "audio/AMR" || this.props.attachment.mime_type == "audio/amr") {
-				audio_player_node = <AmrAudioPlayer audioRef={node => this.audio_tag = node} attachment={this.props.attachment} />;
-			}
+			// if (this.props.attachment.mime_type == "audio/AMR" || this.props.attachment.mime_type == "audio/amr") {
+			// 	audio_player_node = <AmrAudioPlayer audioRef={node => this.audio_tag = node} attachment={this.props.attachment} />;
+			// }
+			if (isAmrMime || isAmrExt) {
+				audio_player_node = (
+					<AmrAudioPlayer
+					audioRef={(node) => (this.audio_tag = node)}
+					attachment={this.props.attachment}
+					/>
+				);
+				}
 			else {
 				audio_player_node = (<audio ref={node => this.audio_tag = node} controls>
 					<source src={this.props.attachment.direct_url}
@@ -363,105 +371,233 @@ class AttachmentRenderer extends React.Component {
 			);
 			// return (<p>Please download this file.</p>);
 		}
-		case "OTHER":
-			if (isHeic) {
-				let error;
-				if (this.state.error) {
-					error = (
-						<div className="text-center">
-							<img src={attachmentErrorImageUrl} alt="error" />
-							<p>Cannot load image</p>
+		case "OTHER": {
+    var slug = this.props.attachment.file_slug || "";
+    var fileExtension = slug.split(".").pop().toLowerCase();
+    var mimeType = (this.props.attachment.mime_type || "").toLowerCase();
+
+    // HEIC images
+    if (fileExtension === "heic") {
+        var errorNode = null;
+        if (this.state.error) {
+            errorNode = (
+                <div className="text-center">
+                    <img src={attachmentErrorImageUrl} alt="error" />
+                    <p>Cannot load image</p>
+                </div>
+            );
+        }
+
+        var imageStyle = {
+            display: this.state.loading ? "none" : "block",
+            margin: "auto",
+            width: "500px"
+        };
+
+        return (
+            <div>
+                {errorNode}
+                {this.state.loading ? (
+                    <Loading />
+                ) : (
+                    this.state.convertedUrl && (
+                        <div>
+                            <button 
+							type="button" 
+							className="btn btn-sm btn-default" 
+							onClick={this.zoomIn.bind(this)}
+							>
+                                <Plus /> Zoom In
+                            </button>
+                            &nbsp;&nbsp;&nbsp;
+                            <button 
+							type="button" 
+							className="btn btn-sm btn-default" 
+							onClick={this.zoomOut.bind(this)}
+							>
+                                <Minus /> Zoom Out
+                            </button>
+                            <div className="zoom-div">
+                                <img
+                                    ref={function(node) { this.zoomImg = node; }.bind(this)}
+                                    className="zoom-img"
+                                    style={imageStyle}
+                                    src={this.state.convertedUrl}
+                                    onLoad={this.onLoad.bind(this)}
+                                    onError={this.onError.bind(this)}
+                                />
+                            </div>
+                        </div>
+                    )
+                )}
+            </div>
+        );
+    }
+
+    // AMR audio
+    if (fileExtension === "amr" || mimeType === "audio/amr") {
+        var transcriptData = this.props.attachment.audio_transcript_data && this.props.attachment.audio_transcript_data.transcript_list || [];
+        var transcriptTable = null;
+
+        if (transcriptData.length > 0) {
+            transcriptTable = (
+                <table className="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Transcript data</th>
+                            <th>End Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {transcriptData.map(function(tl, idx) {
+                            return (
+                                <tr key={idx}>
+                                    <td>{tl.transcript_data}</td>
+                                    <td>{tl.end_time}</td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            );
+        } 
+		else {
+            transcriptTable = (
+                <Jumbotron heading="Not found" para="Audio transcription not available for this attachment" />
+            );
+        }
+
+        return (
+            <div>
+				<div
+						style={{
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+							gap: "5px",
+							marginBottom: "15px",
+						}}
+					>
+                <AmrAudioPlayer audioRef={function(node) { this.audio_tag = node; }.bind(this)} attachment={this.props.attachment} />
+				<button
+							onClick={() => this.skipAudio(-10)}
+							style={{
+								width: "40px",
+								height: "40px",
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								backgroundColor: "#007dc1",
+								border: "none",
+								borderRadius: "50%",
+								cursor: "pointer",
+								transition: "background-color 0.3s, transform 0.2s",
+								position: "relative",
+								overflow: "visible",
+							}}
+							onMouseOver={(e) =>
+								(e.currentTarget.style.backgroundColor = "#0056b3")
+							}
+							onMouseOut={(e) =>
+								(e.currentTarget.style.backgroundColor = "#007dc1")
+							}
+							aria-label="Skip backward 10 seconds"
+							title="10s Back"
+						>
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="#fff">
+								<polygon points="16,4 6,12 16,20" />
+							</svg>
+							<svg
+								style={{
+									position: "absolute",
+									top: "-5px",
+									left: "-5px",
+									width: "50px",
+									height: "50px",
+								}}
+								viewBox="0 0 100 100"
+							>
+								<path
+									id="curve-back"
+									d="M50,50 m-20,0 a20,20 0 1,1 40,0 a20,20 0 1,1 -40,0"
+									fill="none"
+								/>
+								<text fontSize="14" fill="#fff">
+									<textPath
+										href="#curve-back"
+										startOffset="25%"
+										textAnchor="middle"
+									>
+										10s
+									</textPath>
+								</text>
+							</svg>
+						</button>
+
+						<button
+							onClick={() => this.skipAudio(10)}
+							style={{
+								width: "40px",
+								height: "40px",
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								backgroundColor: "#28a745",
+								border: "none",
+								borderRadius: "50%",
+								cursor: "pointer",
+								transition: "background-color 0.3s, transform 0.2s",
+								position: "relative",
+								overflow: "visible",
+							}}
+							onMouseOver={(e) =>
+								(e.currentTarget.style.backgroundColor = "#218838")
+							}
+							onMouseOut={(e) =>
+								(e.currentTarget.style.backgroundColor = "#28a745")
+							}
+							aria-label="Skip forward 10 seconds"
+							title="10s Forward"
+						>
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="#fff">
+								<polygon points="8,4 18,12 8,20" />
+							</svg>
+							<svg
+								style={{
+									position: "absolute",
+									top: "-5px",
+									left: "-5px",
+									width: "50px",
+									height: "45px",
+								}}
+								viewBox="0 0 100 100"
+							>
+								<path
+									id="curve-forward"
+									d="M50,50 m-20,0 a20,20 0 1,1 40,0 a20,20 0 1,1 -40,0"
+									fill="none"
+								/>
+								<text fontSize="14" fill="#fff">
+									<textPath
+										href="#curve-forward"
+										startOffset="25%"
+										textAnchor="middle"
+									>
+										10s
+									</textPath>
+								</text>
+							</svg>
+						</button>
 						</div>
-					);
-				}
+                <div style={{ overflowY: "auto", maxHeight: "400px", marginTop: "10px" }}>
+                    {transcriptTable}
+                </div>
+            </div>
+        );
+    }
 
-				let imageStyle = {
-					display: this.state.loading ? "none" : "block",
-					margin: "auto",
-					width: "500px",
-				};
-
-				return (
-					<div>
-						{error}
-						{this.state.loading ? (
-							<Loading />
-						) : (
-							this.state.convertedUrl && (
-								<div>
-									<button
-										type="button"
-										className="btn btn-sm btn-default"
-										onClick={this.zoomIn}
-									>
-										<Plus /> Zoom In
-									</button>
-									&nbsp;&nbsp;&nbsp;
-									<button
-										type="button"
-										className="btn btn-sm btn-default"
-										onClick={this.zoomOut}
-									>
-										<Minus /> Zoom Out
-									</button>
-									<div className="zoom-div">
-										<img
-											ref={(node) => (this.zoomImg = node)}
-											className="zoom-img"
-											style={imageStyle}
-											src={this.state.convertedUrl}
-											onLoad={this.onLoad}
-											onError={this.onError}
-										/>
-									</div>
-								</div>
-							)
-						)}
-					</div>
-				);
-			}
-			if (file_extension == "amr") {
-				let audio_transcipt_table_data;
-				let audio_transcipt_rows = [];
-				const audio_transcript_data = (this.props.attachment.audio_transcript_data).hasOwnProperty("transcript_list") ? this.props.attachment.audio_transcript_data["transcript_list"] : [];
-				let count_key = 1;
-				for (let tl of audio_transcript_data) {
-					audio_transcipt_rows.push(
-						<tr key={count_key}>
-							<td>{tl.transcript_data}</td>
-							<td>{tl.end_time}</td>
-						</tr>
-					);
-					count_key += 1;
-				}
-				if (audio_transcipt_rows.length > 0) {
-					audio_transcipt_table_data = (
-						<table className="table table-bordered table-hover">
-							<thead>
-								<tr>
-									<th>Transcript data</th>
-									<th>End Time</th>
-								</tr>
-							</thead>
-							<tbody>
-								{audio_transcipt_rows}
-							</tbody>
-						</table>
-					);
-				}
-				else {
-					audio_transcipt_table_data = (<Jumbotron heading="Not found" para="Audio transcription not available for this attachment" />);
-				}
-				return (
-					<div style={{ overflowY: "auto", maxHeight: "400px" }}>
-						<p><b>.amr audio file does not support on browser, so you have to download the file.</b></p>
-						{audio_transcipt_table_data}
-					</div>
-				);
-			}
-			else {
-				return null;
-			}
+    return null;
+}
 		}
 	}
 }

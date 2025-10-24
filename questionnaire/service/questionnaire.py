@@ -4,6 +4,7 @@ from typing import Iterable
 from django.db.transaction import atomic
 
 from audit.service import audit_cycle as audit_cycle_service
+from audit.models import AuditCycle
 from questionnaire.service import section as section_service
 
 from questionnaire.models.question import Question
@@ -12,7 +13,7 @@ from questionnaire.models.questionnaire import Industry, ProblemStatement, Sampl
 
 from kronos.exceptions import AppLogicError
 from django.contrib.staticfiles import finders
-
+import openpyxl
 
 def export_questionnaire(audit_cycle_id):
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
@@ -199,6 +200,80 @@ def write_data(data, audit_cycle_name=""):
     output.seek(0)
     return output
 
+def import_questionnaire(file_obj, audit_cycle_id):
+    audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+    
+    wb = openpyxl.load_workbook(file_obj)
+    ws = wb.active
+
+    sections_created = []
+    questions_created = []
+    current_section = None
+
+    # Skip header row (assume row 1)
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        sequence = int(row[0] or 0)
+        text = row[1]
+        max_marks = int(row[2] or 0)
+        q_type = row[3] if len(row) > 3 else None
+        q_options = row[4] if len(row) > 4 else None
+        impact_factors = row[5] if len(row) > 5 else ""
+        hide_question = bool(row[6]) if len(row) > 6 else False
+        optional_comment_required = bool(row[7]) if len(row) > 7 else False
+
+        # Section row
+        if not q_type:
+            section_name = text
+            current_section, _ = Section.objects.get_or_create(
+                audit_cycle=audit_cycle,
+                name=section_name,
+                defaults={"sequence": sequence}
+            )
+            sections_created.append(current_section)
+            continue
+
+        if current_section is None:
+            raise Exception("Question row found before any section.")
+        # Prepare question_data
+        question_data = {"version": 1, "impact_factors": [impact_factors] if impact_factors else []}
+
+        # Parse options for MUTEX / MULTISELECT
+        if q_type in ["MUTEX", "MULTISELECT"] and q_options:
+            options_list = []
+            q_options_str = str(q_options)
+            for line in q_options_str.split("\n"):
+                parts = line.split(",")
+                option_data = {}
+                for part in parts:
+                    if ":" not in part:
+                        continue
+                    key, value = part.split(":", 1)
+                    key = key.strip().lower()
+                    value = value.strip()
+                    if key in ["marks", "sequence"]:
+                        value = int(value)  # convert numeric fields to int
+                    option_data[key] = value
+                if option_data:
+                    options_list.append(option_data)
+            question_data["options"] = options_list
+
+        # Create question
+        question = Question.objects.create(
+            section=current_section,
+            sequence=sequence,
+            question_txt=text,
+            max_marks=max_marks,
+            question_type=q_type,
+            question_data=question_data,
+            hide_question=hide_question,
+            optional_comment_required=optional_comment_required
+        )
+        questions_created.append(question)
+
+    return {
+        "sections": len(sections_created),
+        "questions": len(questions_created)
+    }
 
 def get_industry_list() -> Iterable[Industry]:
     """Get industry lists (Industry)"""
