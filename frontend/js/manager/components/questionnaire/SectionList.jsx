@@ -8,7 +8,7 @@ import Alert from "react-s-alert";
 import {url}  from "../../../../config.js";
 
 import Jumbotron from "../../../components/Jumbotron.jsx";
-import { Duplicate, Tasks, Plus, Download } from "../../../components/Icons.jsx";
+import { Duplicate, Tasks, Plus, Download,DownloadAlt } from "../../../components/Icons.jsx";
 
 import { orderKeys } from "../../../react_utils.js";
 import { fetchSections, deleteSection } from "../../actions/section.js";
@@ -77,6 +77,7 @@ class SectionList extends React.Component {
 			<div>
 				<h3 className="page-header">
 					<span className="pull-right">
+						<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/import`} className="btn btn-default pull-left" style={{marginRight:"10px"}}><DownloadAlt/> Import Questionnaire</Link>
 						<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/add`} className="btn btn-default">
 							<Plus/> Add Section
 						</Link>&nbsp;

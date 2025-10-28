@@ -83,101 +83,101 @@ import PropTypes from "prop-types";
 import Loading from "./Loading.jsx";
 
 export default class AmrAudioPlayer extends React.Component {
-  static propTypes = {
-    attachment: PropTypes.object.isRequired,
-    audioRef: PropTypes.func,
-  };
+	static propTypes = {
+		attachment: PropTypes.object.isRequired,
+		audioRef: PropTypes.func,
+	};
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      wavUrl: null,
-      loading: true,
-      error: false
-    };
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			wavUrl: null,
+			loading: true,
+			error: false
+		};
+	}
 
-  componentDidMount() {
-    var self = this;
+	componentDidMount() {
+		var self = this;
 
-    var script = document.createElement("script");
-    script.src =
-      "https://floorwalk-client-logos.s3.ap-south-1.amazonaws.com/extra/amrnb.js";
-    script.id = "amrScriptId";
-    script.async = true;
+		var script = document.createElement("script");
+		script.src =
+			"https://floorwalk-client-logos.s3.ap-south-1.amazonaws.com/extra/amrnb.js";
+		script.id = "amrScriptId";
+		script.async = true;
 
-    script.onload = function () {
-      self.convertAmrFileToWav(self.props.attachment.direct_url);
-    };
-    script.onerror = function () {
-      console.error("Failed to load amrnb.js");
-      self.setState({ error: true, loading: false });
-    };
+		script.onload = function () {
+			self.convertAmrFileToWav(self.props.attachment.direct_url);
+		};
+		script.onerror = function () {
+			console.error("Failed to load amrnb.js");
+			self.setState({ error: true, loading: false });
+		};
 
-    document.head.appendChild(script);
-  }
+		document.head.appendChild(script);
+	}
 
-  componentWillUnmount() {
-    var el = document.getElementById("amrScriptId");
-    if (el) el.parentNode.removeChild(el);
+	componentWillUnmount() {
+		var el = document.getElementById("amrScriptId");
+		if (el) el.parentNode.removeChild(el);
 
-    // Revoke blob URL on unmount
-    if (this.state.wavUrl) {
-      URL.revokeObjectURL(this.state.wavUrl);
-    }
-  }
+		// Revoke blob URL on unmount
+		if (this.state.wavUrl) {
+			URL.revokeObjectURL(this.state.wavUrl);
+		}
+	}
 
-  convertAmrFileToWav = function (url) {
-    var self = this;
+	convertAmrFileToWav = function (url) {
+		var self = this;
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
-    xhr.responseType = "arraybuffer"; // use arraybuffer
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", url);
+		xhr.responseType = "arraybuffer"; // use arraybuffer
 
-    xhr.onload = function () {
-      try {
-        var data = new Uint8Array(xhr.response);
-        var buffer = window.AMR.toWAV(data);
-        var wavBlob = new Blob([buffer], { type: "audio/wav" });
+		xhr.onload = function () {
+			try {
+				var data = new Uint8Array(xhr.response);
+				var buffer = window.AMR.toWAV(data);
+				var wavBlob = new Blob([buffer], { type: "audio/wav" });
 
-        // Revoke previous URL if exists
-        if (self.state.wavUrl) {
-          URL.revokeObjectURL(self.state.wavUrl);
-        }
+				// Revoke previous URL if exists
+				if (self.state.wavUrl) {
+					URL.revokeObjectURL(self.state.wavUrl);
+				}
 
-        var wavUrl = URL.createObjectURL(wavBlob);
+				var wavUrl = URL.createObjectURL(wavBlob);
 
-        self.setState({ wavUrl: wavUrl, loading: false });
-      } catch (err) {
-        console.error("AMR decoding failed:", err);
-        self.setState({ error: true, loading: false });
-      }
-    };
+				self.setState({ wavUrl: wavUrl, loading: false });
+			} catch (err) {
+				console.error("AMR decoding failed:", err);
+				self.setState({ error: true, loading: false });
+			}
+		};
 
-    xhr.onerror = function () {
-      console.error("Failed to fetch AMR file:", url);
-      self.setState({ error: true, loading: false });
-    };
+		xhr.onerror = function () {
+			console.error("Failed to fetch AMR file:", url);
+			self.setState({ error: true, loading: false });
+		};
 
-    xhr.send();
-  };
+		xhr.send();
+	};
 
-  render() {
-    if (this.state.error) {
-      return React.createElement("p", null, "Failed to load audio.");
-    }
+	render() {
+		if (this.state.error) {
+			return React.createElement("p", null, "Failed to load audio.");
+		}
 
-    if (this.state.loading) {
-      return React.createElement(Loading, { loading_text: "Please wait while loading AMR file" });
-    }
+		if (this.state.loading) {
+			return React.createElement(Loading, { loading_text: "Please wait while loading AMR file" });
+		}
 
-    return React.createElement("div", null,
-      React.createElement("audio", {
-        id: "audio_player_id",
-        ref: this.props.audioRef,
-        controls: true,
-        src: this.state.wavUrl
-      })
-    );
-  }
+		return React.createElement("div", null,
+			React.createElement("audio", {
+				id: "audio_player_id",
+				ref: this.props.audioRef,
+				controls: true,
+				src: this.state.wavUrl
+			})
+		);
+	}
 }

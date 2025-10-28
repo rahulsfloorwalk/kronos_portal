@@ -189,72 +189,21 @@ class CheckEligibilityOfAuditorView(APIView):
     required_groups = {
         'GET': [GROUP_NAME_MANAGER],
     }
+    def get(self, request, audit_cycle_id, store_id):
+        result = audit_cycle_service.eligibility_wise_auditor(audit_cycle_id, store_id)
+        if "error" in result:
+            return Response({"detail": result["error"]}, status=400)
+        return Response(result)
 
-    def get(self, request, audit_cycle_id, city_id):
-        audit_cycle = audit_cycle_service.get_audit_cycle_by_id(audit_cycle_id)
-        if not audit_cycle:
-            return Response({"detail": "Audit cycle not found."}, status=400)
-
-        factors = audit_cycle.audit_alignment_factors or []
-        skip_keys = {"auditor_rating", "report_rating", "date_availability", "auditor_age_range"}
-        factors_with_value = [f for f in factors if f.get("value") and f.get("key") not in skip_keys]
-
-        if not factors_with_value:
-            return Response({"detail": "No matching factors found."}, status=400)
-
-        auditors_qs = ProfileInfo.objects.filter(city_id=city_id).select_related("user").prefetch_related(
-            Prefetch('user__additionalinfo', queryset=AdditionalInfo.objects.all())
-        )
-        eligible_auditors = []
-
-        for profile in auditors_qs.iterator():
-            additional = getattr(profile.user, "additionalinfo", None)
-            total_factors = len(factors_with_value)
-            matched_factors = 0
-            matched = []
-            not_matched = []
-            for factor in factors_with_value:
-                key = factor.get("key")
-                expected_value = factor.get("value")
-                actual_value = getattr(profile, key, None) or (getattr(additional, key, None) if additional else None)
-
-                expected_str = str(expected_value).strip().lower()
-                actual_str = str(actual_value).strip().lower() if actual_value is not None else ""
-
-                is_match = False
-                if isinstance(expected_value, list):
-                    if actual_value in expected_value:
-                        is_match = True
-                elif expected_str == actual_str:
-                    is_match = True
-
-                if is_match:
-                    matched_factors += 1
-                    matched.append({"key": key, "expected": expected_value, "actual": actual_value})
-                else:
-                    not_matched.append({"key": key, "expected": expected_value, "actual": actual_value})
-
-            match_percentage = round((matched_factors / total_factors) * 100, 2)
-            if match_percentage == 100.0:
-                eligible_auditors.append({
-                    "auditor_id": profile.user.id,
-                    "first_name": profile.first_name,
-                    "last_name": profile.last_name,
-                    "email": profile.user.email,
-                    "match_percentage": match_percentage,
-                    # "matched_factors": matched,
-                    # "not_matched_factors": not_matched,
-                })
-
-        eligible_auditors = sorted(eligible_auditors, key=lambda x: x["match_percentage"], reverse=True)[:30]
-        # for auditor in eligible_auditors:
-        #     print(f"Auditor: {auditor['first_name']} {auditor['last_name']} -> {auditor['match_percentage']}% match")
-
-        return Response({
-            "audit_cycle_id": audit_cycle.id,
-            "eligible_auditors_count": len(eligible_auditors),
-            "eligible_auditors": eligible_auditors
-        })
+class DistanceWiseAuditorsView(APIView):
+    # permission_classes = [AllowAny]
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, store_id):
+        distance_wise_auditor_list = audit_cycle_service.distance_wise_auditor(store_id)
+        return Response (distance_wise_auditor_list)
 
 class AuditCycleIdEligibilityAuditorView(APIView):
     permission_classes = [HasGroupPermission]
@@ -331,7 +280,17 @@ class ExportQuestionnaire(APIView):
         response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response
-
+class QuestionnaireSampleXlsxView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER]
+    }
+    def get(self, request):
+        report, name = questionnaire_service.find_sample_xlsx_for_questionnaire_insert()
+        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
+    
 class ImportQuestionnaire(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

@@ -147,6 +147,7 @@ import SolutionAttachmentUploadBox from "./dashboard/attachments/SolutionAttachm
 import CategoryAttachmentUploadBox from "./dashboard/category/CategoryAttachmentUploadBox.jsx";
 import QAReportPanel from "./reports/QAReportPanel.jsx";
 import QAPerformance from "./reports/QAPerformance.jsx";
+import QuestionnaireImportForm from "./questionnaire/QuestionnaireImportForm.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -237,6 +238,7 @@ const Routes = () => (
 				<Route path="attachment_guideline" component={GuidelineAttachment} />
 				<Route path="details_from_client" component={DetailsFromClient} />
 				<Route path="questionnaire" component={SectionList}>
+					<Route path="section/import" component={QuestionnaireImportForm} />
 					<Route path="section/copy" component={SectionCopyForm} />
 					<Route path="section/add" component={SectionAddForm} />
 					<Route path="section/:sectionId/edit" component={SectionEditForm} />

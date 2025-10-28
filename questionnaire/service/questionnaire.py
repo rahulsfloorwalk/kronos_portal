@@ -202,77 +202,157 @@ def write_data(data, audit_cycle_name=""):
 
 def import_questionnaire(file_obj, audit_cycle_id):
     audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
-    
+
+    if Section.objects.filter(audit_cycle=audit_cycle).exists():
+        raise Exception("This audit cycle already has sections or questions. Import not allowed.")
+
     wb = openpyxl.load_workbook(file_obj)
     ws = wb.active
 
-    sections_created = []
-    questions_created = []
-    current_section = None
+    allowed_question_types = ["PLAIN", "MUTEX", "MULTISELECT"]
+    required_option_keys = {"sequence", "value", "marks"}
 
-    # Skip header row (assume row 1)
+    sections_data = []
+    questions_data = []
+    current_section = None
+    section_sequences = set()
+    section_question_sequences = {}
+
     for row in ws.iter_rows(min_row=2, values_only=True):
-        sequence = int(row[0] or 0)
+        sequence = row[0]
         text = row[1]
-        max_marks = int(row[2] or 0)
+        max_marks = row[2]
         q_type = row[3] if len(row) > 3 else None
         q_options = row[4] if len(row) > 4 else None
         impact_factors = row[5] if len(row) > 5 else ""
         hide_question = bool(row[6]) if len(row) > 6 else False
         optional_comment_required = bool(row[7]) if len(row) > 7 else False
 
-        # Section row
+        if sequence is None:
+            raise Exception("Missing sequence number in row with text '%s'." % text)
+
+        try:
+            sequence = int(sequence)
+        except ValueError:
+            raise Exception("Invalid sequence '%s' in row with text '%s'." % (sequence, text))
+
         if not q_type:
-            section_name = text
-            current_section, _ = Section.objects.get_or_create(
-                audit_cycle=audit_cycle,
-                name=section_name,
-                defaults={"sequence": sequence}
-            )
-            sections_created.append(current_section)
+            if not text:
+                raise Exception("Section name missing for sequence %s." % sequence)
+            if sequence in section_sequences:
+                raise Exception("Duplicate section sequence found: %s\n Section name: %s" % (sequence, text))
+            section_sequences.add(sequence)
+            current_section = {"sequence": sequence, "name": text.strip()}
+            sections_data.append(current_section)
             continue
 
         if current_section is None:
-            raise Exception("Question row found before any section.")
-        # Prepare question_data
-        question_data = {"version": 1, "impact_factors": [impact_factors] if impact_factors else []}
+            raise Exception("Question '%s' found before any section definition." % text)
 
-        # Parse options for MUTEX / MULTISELECT
-        if q_type in ["MUTEX", "MULTISELECT"] and q_options:
-            options_list = []
-            q_options_str = str(q_options)
-            for line in q_options_str.split("\n"):
-                parts = line.split(",")
-                option_data = {}
-                for part in parts:
-                    if ":" not in part:
-                        continue
-                    key, value = part.split(":", 1)
-                    key = key.strip().lower()
-                    value = value.strip()
-                    if key in ["marks", "sequence"]:
-                        value = int(value)  # convert numeric fields to int
-                    option_data[key] = value
-                if option_data:
-                    options_list.append(option_data)
-            question_data["options"] = options_list
+        sec_seq = current_section['sequence']
+        if sec_seq not in section_question_sequences:
+            section_question_sequences[sec_seq] = set()
 
-        # Create question
-        question = Question.objects.create(
-            section=current_section,
-            sequence=sequence,
-            question_txt=text,
-            max_marks=max_marks,
-            question_type=q_type,
-            question_data=question_data,
-            hide_question=hide_question,
-            optional_comment_required=optional_comment_required
+        if sequence in section_question_sequences[sec_seq]:
+            raise Exception("Duplicate question sequence %s found in section '%s'." % (sequence, current_section['name']))
+        section_question_sequences[sec_seq].add(sequence)
+
+        if q_type not in allowed_question_types:
+            raise Exception("Section %s : Question %s : Invalid question type '%s'" % (current_section['sequence'], sequence, q_type))
+
+        question_data = {
+            "sequence": sequence,
+            "text": text.strip(),
+            "max_marks": int(max_marks or 0),
+            "question_type": q_type,
+            "impact_factors": [impact_factors] if impact_factors else [],
+            "hide_question": hide_question,
+            "optional_comment_required": optional_comment_required,
+            "options": [],
+        }
+
+        if q_type in ["MUTEX", "MULTISELECT"]:
+            total_option_marks = 0
+            option_marks_list = []
+
+            if q_options:
+                for line in str(q_options).split("\n"):
+                    option_dict = {}
+                    for part in line.split(","):
+                        if ":" not in part:
+                            continue
+                        key, value = part.split(":", 1)
+                        key = key.strip().lower()
+                        value = value.strip()
+
+                        if key == "value":
+                            if value != value.strip():
+                                raise Exception( "Section %s : Question %s : Option '%s' has leading/trailing spaces." % (current_section["sequence"], sequence, value) )
+                            value = value.strip()
+
+                        if key in ["marks", "sequence"]:
+                            try:
+                                value = int(value)
+                            except ValueError:
+                                value = 0
+                        option_dict[key] = value
+
+                    if set(option_dict.keys()) != required_option_keys:
+                        raise Exception( "Section %s : Question %s : Option keys mismatch. Found %s." % (current_section['sequence'], sequence, list(option_dict.keys())) )
+
+                    question_data["options"].append(option_dict)
+                    option_marks_list.append(option_dict["marks"])
+                    total_option_marks += int(option_dict["marks"])
+
+            if q_type == "MULTISELECT" and total_option_marks != question_data["max_marks"]:
+                raise Exception( "Section %s : Question %s : Marks mismatch." % (current_section["sequence"], sequence) )
+            
+            elif q_type == "MUTEX" and option_marks_list:
+                highest = max(option_marks_list)
+                if highest != question_data["max_marks"]:
+                    raise Exception( "Section %s : Question %s : Marks mismatch." % (current_section["sequence"], sequence) )
+
+        questions_data.append((current_section, question_data))
+
+    sorted_sections = sorted(section_sequences)
+    expected_sections = list(range(1, len(sorted_sections) + 1))
+    if sorted_sections != expected_sections:
+        raise Exception( "Section sequences invalid: found %s, expected consecutive sequence %s." % (sorted_sections, expected_sections) )
+
+    created_sections = {}
+    created_questions = []
+
+    for sec_data, ques_data in questions_data:
+        sec_key = sec_data["sequence"]
+        if sec_key not in created_sections:
+            section_obj = Section.objects.create(
+                audit_cycle=audit_cycle,
+                sequence=sec_data["sequence"],
+                name=sec_data["name"],
+            )
+            created_sections[sec_key] = section_obj
+        else:
+            section_obj = created_sections[sec_key]
+
+        question_obj = Question.objects.create(
+            section=section_obj,
+            sequence=ques_data["sequence"],
+            question_txt=ques_data["text"],
+            max_marks=ques_data["max_marks"],
+            question_type=ques_data["question_type"],
+            question_data={
+                "version": 1,
+                "impact_factors": ques_data["impact_factors"],
+                "options": ques_data["options"],
+            },
+            hide_question=ques_data["hide_question"],
+            optional_comment_required=ques_data["optional_comment_required"],
         )
-        questions_created.append(question)
+        created_questions.append(question_obj)
 
     return {
-        "sections": len(sections_created),
-        "questions": len(questions_created)
+        "sections": len(created_sections),
+        "questions": len(created_questions),
     }
 
 def get_industry_list() -> Iterable[Industry]:
@@ -366,3 +446,73 @@ def insert_sample_questionnaire_to_audit_cycle(audit_cycle_id, sample_questionna
             question_obj.sequence = question['sequence']
             question_obj.section = section_obj
             question_obj.save()
+
+def find_sample_xlsx_for_questionnaire_insert():
+    import io
+    import xlsxwriter
+
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+    worksheet = workbook.add_worksheet("Questionnaire Sample")
+
+    # Formats
+    header_format = workbook.add_format({'bold': True, 'bg_color': '#D7E4BC', 'border': 1, 'align': 'center', 'valign': 'vcenter'})
+    section_format = workbook.add_format({'bold': True, 'bg_color': '#FCE4D6', 'border': 1, 'align': 'left'})
+    normal_format = workbook.add_format({'border': 1})
+    center_format = workbook.add_format({'border': 1, 'align': 'center', 'valign': 'vcenter'})
+    wrap_format = workbook.add_format({'border': 1, 'text_wrap': True, 'valign': 'top'})
+
+    # Sample data
+    sample_data = [
+        ["Sequence", "Question/Section", "Max Marks", "Question Type", "Question Options", "Impact Factors", "Hide Question", "Optional comment required?"],
+        [1, "section 1", "", "", "", "", "", ""],
+        [1, "question 11", 5, "PLAIN", "", "impact factor text", "", ""],
+        [2, "multiple", 1, "MULTISELECT",
+         "sequence: 1, value: Yes, marks: 1\nsequence: 2, value: No, marks: 0",
+         "", "", "TRUE"],
+        [2, "question 2", 5, "PLAIN", "", "", "", ""],
+        [3, "question 3", 5, "PLAIN", "", "", "", ""],
+        [4, "question 4", 1, "MUTEX",
+         "sequence: 1, value: Yes, marks: 1\nsequence: 2, value: No, marks: 0",
+         "", "", ""],
+        [5, "question 5", 2, "MUTEX",
+         "sequence: 1, value: Yes, marks: 1\nsequence: 2, value: No, marks: 0\nsequence: 3, value: other, marks: 1",
+         "", "", ""],
+        [6, "question 6", 8, "MULTISELECT",
+         "sequence: 1, value: Yes, marks: 6\nsequence: 2, value: No, marks: 0\nsequence: 3, value: other, marks: 2",
+         "impact factor text", "", "TRUE"],
+        [2, "section 2", "", "", "", "", "", ""],
+        [1, "question 1", 5, "PLAIN", "", "", "", ""],
+        [3, "section 3", "", "", "", "", "", ""],
+        [1, "question 1", 5, "PLAIN", "", "", "", "TRUE"],
+        [4, "section 4", "", "", "", "", "", ""],
+        [1, "question 1", 5, "MUTEX",
+         "sequence: 1, value: Yes, marks: 5\nsequence: 2, value: No, marks: 0",
+         "", "", ""],
+    ]
+
+    # Set column widths
+    worksheet.set_column(0, 0, 10)
+    worksheet.set_column(1, 1, 35)
+    worksheet.set_column(2, 2, 12)
+    worksheet.set_column(3, 3, 15)
+    worksheet.set_column(4, 4, 40)
+    worksheet.set_column(5, 5, 25)
+    worksheet.set_column(6, 7, 25)
+
+    # Write data
+    for row_num, row_data in enumerate(sample_data):
+        for col_num, cell_value in enumerate(row_data):
+            if row_num == 0:
+                worksheet.write(row_num, col_num, cell_value, header_format)
+            elif isinstance(cell_value, str) and row_data[3] == "" and col_num == 1:  # section row
+                worksheet.write(row_num, col_num, cell_value, section_format)
+            elif col_num == 4 and cell_value:  # question options (wrap text)
+                worksheet.write(row_num, col_num, cell_value, wrap_format)
+            else:
+                worksheet.write(row_num, col_num, cell_value, center_format)
+
+    workbook.close()
+    output.seek(0)
+    name = "Sample_Questionnaire.xlsx"
+    return output, name

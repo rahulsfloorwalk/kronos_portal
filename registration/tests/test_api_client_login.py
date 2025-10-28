@@ -25,7 +25,7 @@ class ClientLoginAPITestCase(TestCase):
     def test_normal_email_login_flow(self):
         """tests client login with correct email and password"""
         # post to login endpoint with correct data
-        response = self.client.post(reverse('registration:client_login'), {
+        response = self.client.post(reverse('registration:client_old_login'), {
             "username": self.email,
             "password": self.password,
         })
@@ -38,7 +38,7 @@ class ClientLoginAPITestCase(TestCase):
 
         # finally log the user out
         response = self.client.post(reverse("registration:client_logout"))
-        self.assertRedirects(response, reverse("registration:client_login"), status_code=302, target_status_code=200)
+        self.assertRedirects(response, reverse("registration:client_login"), status_code=302, target_status_code=302)
 
     def test_correct_email_incorrect_password_login_flow(self):
         """tests client login with correct email and incorrect password"""
