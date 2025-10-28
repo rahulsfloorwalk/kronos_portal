@@ -164,7 +164,7 @@ def find_faulty_report():
         attachments_to_compare = Attachment.objects.filter(
             Q(content_type_id=audit_store_content_type_id, object_id__in=last_audit_ids_qs, mime_type__contains="image", status="ATTACHED") |
             Q(content_type_id=report_section_content_type_id,
-              object_id__in=ReportSection.objects.filter(audit_store_id__in=last_audit_ids_qs).values_list('id', flat=True),
+              object_id__in=ReportSection.objects.filter(audit_store_id__in=last_audit_ids_qs).exclude(audit_store_id=audit_store_id).values_list('id', flat=True),
               mime_type__contains="image", status="ATTACHED")
         ).exclude(image_hash__isnull=True).exclude(image_hash="").only('id', 'image_hash', 'attachment_id')
 

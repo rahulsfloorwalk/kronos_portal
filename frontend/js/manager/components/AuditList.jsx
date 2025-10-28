@@ -34,6 +34,8 @@ import AuditApplicationList from "./application/AuditApplicationList.jsx";
 import AgencyListForAudit from "./audit/AgencyListForAudit.jsx";
 
 import { auditPropType } from "../prop_types";
+import AuditorListForEligibility from "./audit/AuditorListForEligibility.jsx";
+import AuditorListForDistance from "./audit/AuditorListForDistance.jsx";
 
 class AuditStoreTableForAudit extends Component{
 	static propTypes = {
@@ -192,6 +194,12 @@ export class __AuditRow extends Component{
 		case "agencies":
 			currentTab = <AgencyListForAudit auditId={this.props.audit.id}/>;
 			break;
+		case "elegibility_auditor":
+			currentTab = <AuditorListForEligibility auditId={this.props.audit.id}/>;
+			break;
+		case "distance_auditor":
+			currentTab = <AuditorListForDistance auditId={this.props.audit.id}/>;
+			break;
 		}
 
 		return(
@@ -308,6 +316,12 @@ export class __AuditRow extends Component{
 								</li>
 								<li className={this.state.selectedTab === "reports" ? "active" : ""} style={pointerStyle} role="presentation">
 									<a onClick={() => this.setState({selectedTab:"reports"})}><File/> Reports</a>
+								</li>
+								<li className={this.state.selectedTab === "elegibility_auditor" ? "active" : ""} style={pointerStyle} role="presentation">
+									<a onClick={() => this.setState({selectedTab:"elegibility_auditor"})}><Inbox/> EligibilityWise auditor</a>
+								</li>
+								<li className={this.state.selectedTab === "distance_auditor" ? "active" : ""} style={pointerStyle} role="presentation">
+									<a onClick={() => this.setState({selectedTab:"distance_auditor"})}><Rook/> DistanceWise auditor</a>
 								</li>
 							</ul>
 							<CSSTransitionGroup

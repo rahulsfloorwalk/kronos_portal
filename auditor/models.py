@@ -142,6 +142,15 @@ class ProfileInfo(Model, CompletableMixin):
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='profile_infos')
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        super(ProfileInfo, self).save(*args, **kwargs)
 
     def average_rating(self):
         from audit_store.service import average_rating_for_auditor
@@ -346,6 +355,15 @@ class AdditionalInfo(Model, CompletableMixin):
     interest_area = ArrayField(CharField(max_length=50), db_column='interest_area', blank=True, null = True)
     language_known = ArrayField(CharField(max_length=50), db_column='language_known', blank=True, null = True)
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        super(AdditionalInfo, self).save(*args, **kwargs)
 
     is_complete_attrs = [
         "occupation",
@@ -356,6 +374,8 @@ class AdditionalInfo(Model, CompletableMixin):
         "camera_resoulution",
         "has_car",
         "laptop_owned",
+        "designation",
+        "income",
     ]
 
     def __str__(self):

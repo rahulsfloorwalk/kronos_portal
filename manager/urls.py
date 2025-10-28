@@ -190,7 +190,6 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/application_stats$', audit_cycle_views.AuditCycleApplicationStats.as_view(), name='audit_cycle_application_stats'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/application/deny_all$', audit_cycle_views.AuditCycleRejectAllApplicationsView.as_view(), name='audit_cycle_reject_all_applications_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store_stats$', audit_cycle_views.AuditCycleAuditStoreStats.as_view(), name='audit_cycle_audit_store_stats'),
-    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/export_questionnaire', audit_cycle_views.ExportQuestionnaire.as_view(), name='export_questionnaire'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/post_approval_description$', audit_cycle_views.AuditCycleIdPostApprovalDescriptionView.as_view(), name='audit_cycle_id_post_approval_description_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/eligibility_auditors$', audit_cycle_views.AuditCycleIdEligibilityAuditorView.as_view(), name='audit_cycle_id_eligibility_auditor_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/checkpoints$', audit_cycle_views.AuditCycleIdCheckPointsView.as_view(), name='audit_cycle_id_checkpoints'),
@@ -216,6 +215,12 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/proof_tag', proof_tag_views.AuditCycleProofTag.as_view(), name='audit_cycle_proof_tag'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list', proof_tag_views.AttachmentAuditCycleProofTagList.as_view(), name='attachment_audit_cycle_proof_tag'),
 
+    url(r'questionnaire/import/sample$', audit_cycle_views.QuestionnaireSampleXlsxView.as_view(), name='sample_import_store_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/import_questionnaire', audit_cycle_views.ImportQuestionnaire.as_view(), name='import_questionnaire'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/export_questionnaire', audit_cycle_views.ExportQuestionnaire.as_view(), name='export_questionnaire'),
+
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/store/(?P<store_id>[0-9]+)/eligibility_wise_auditors$', audit_cycle_views.CheckEligibilityOfAuditorView.as_view(), name='eligibility_wise_auditors_view'),
+    url(r'store/(?P<store_id>[0-9]+)/distance_wise_auditors$', audit_cycle_views.DistanceWiseAuditorsView.as_view(), name='distance_wise_auditors_view'),
     url(r'store/(?P<store_id>[0-9]+)/client_user$', client_user_views.ClientUserByStoreIdView.as_view(), name='client_user_by_store_id_view'),
     url(r'store/(?P<store_id>[0-9]+)$', store_views.StoreIdView.as_view(), name='store_id_view'),
 

@@ -15,6 +15,12 @@ from audit_store.models import AuditStore
 from . import audit_cycle_proof_tag
 from manager.models import ManagerProfileInfo
 from client.models import Client
+from client.models import Store
+from manager.models import City
+from auditor.models import ProfileInfo, AdditionalInfo
+from django.db.models import Prefetch
+from manager.service import geo
+from audit.service import audit_cycle as audit_cycle_service
 import logging
 
 logger = logging.getLogger(__name__)
@@ -333,6 +339,13 @@ def find_by_auditcycle_id_for_client(audit_cycle_id, client=None):
         return audit_cycle
     except AuditCycle.DoesNotExist:
         return None
+
+def get_audit_cycle_by_id(audit_cycle_id):
+    try:
+        audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+        return audit_cycle
+    except AuditCycle.DoesNotExist:
+        return None
         
 def set_post_approval_description(audit_cycle_id, post_approval_description):
     audit_cycle = find_by_id(audit_cycle_id)
@@ -489,3 +502,135 @@ def find_by_quotation_id(quotation_id: int) -> AuditCycle:
     except AuditCycle.DoesNotExist as e:
         raise AppLogicError("Audit cycle not found")
     return audit_cycle
+
+def  eligibility_wise_auditor(audit_cycle_id, store_id):
+    audit_cycle = audit_cycle_service.get_audit_cycle_by_id(audit_cycle_id)
+    if not audit_cycle:
+        return {"error": "Audit cycle not found."}
+
+    factors = audit_cycle.audit_alignment_factors or []
+    skip_keys = {"auditor_rating", "report_rating", "date_availability", "auditor_age_range"}
+    factors_with_value = [f for f in factors if f.get("value") and f.get("key") not in skip_keys]
+
+    if not factors_with_value:
+        return {"error": "No matching factors found."}
+
+    lat1 = lon1 = None
+    try:
+        store = Store.objects.get(id=store_id)
+        city = City.objects.get(pk=store.city_id)
+        country_code = city.country
+        lat1, lon1 = city.lat, city.lon
+        if store.pincode:
+            loc = geo.get_lat_lon_from_pincode(store.pincode, country_code)
+            if loc:
+                lat1, lon1 = loc['lat'], loc['lon']
+    except Store.DoesNotExist:
+        return {"error": "Store not found."}
+
+    auditors_qs = ProfileInfo.objects.filter(city_id=store.city_id).select_related("user").prefetch_related(
+        Prefetch('user__additionalinfo', queryset=AdditionalInfo.objects.all())
+    )
+    eligible_auditors = []
+
+    for profile in auditors_qs.iterator():
+        additional = getattr(profile.user, "additionalinfo", None)
+        total_factors = len(factors_with_value)
+        matched_factors = 0
+        matched_keys = []
+
+        for factor in factors_with_value:
+            key = factor.get("key")
+            expected_value = factor.get("value")
+            actual_value = getattr(profile, key, None) or (getattr(additional, key, None) if additional else None)
+
+            actual_str = str(actual_value).strip().lower() if actual_value is not None else ""
+            if isinstance(expected_value, list):
+                is_match = actual_value in expected_value
+            else:
+                is_match = str(expected_value).strip().lower() == actual_str
+
+            if is_match:
+                matched_factors += 1
+                matched_keys.append(key)
+        match_percentage = round((matched_factors / total_factors) * 100, 2)
+
+        if match_percentage == 100.0:
+        # if match_percentage >= 50:
+            aud_lat, aud_lon = None, None
+            if profile.pincode:
+                loc = geo.get_lat_lon_from_pincode(profile.pincode, country_code)
+                if loc:
+                    aud_lat, aud_lon = loc['lat'], loc['lon']
+            if aud_lat is None or aud_lon is None:
+                aud_lat, aud_lon = lat1, lon1
+
+            distance = geo.get_distance_from_lat1_lon1_and_lat2_lon2(lat1, lon1, aud_lat, aud_lon)
+            eligible_auditors.append({
+                "auditor_id": profile.user.id,
+                "first_name": profile.first_name,
+                "last_name": profile.last_name,
+                "mobile_number": profile.mobile_number,
+                "email": profile.user.email,
+                "match_percentage": match_percentage,
+                "distance_km": round(distance, 2)
+            })
+
+    eligible_auditors = eligible_auditors[:20]
+    return {
+        "audit_cycle_id": audit_cycle.id,
+        "store_id": store.id,
+        "eligible_auditors_count": len(eligible_auditors),
+        "eligible_auditors": eligible_auditors
+    }
+
+def distance_wise_auditor(store_id):
+    try:
+        store = Store.objects.get(id=store_id)
+    except Store.DoesNotExist:
+        return {"detail": "Store not found."}
+
+    city_id = store.city_id
+    pincode = store.pincode
+    city = City.objects.get(pk=city_id)
+    country_code = city.country
+
+    lat1, lon1 = city.lat, city.lon
+    if pincode:
+        loc = geo.get_lat_lon_from_pincode(pincode, country_code)
+        if loc:
+            lat1, lon1 = loc['lat'], loc['lon']
+
+    auditors_qs = ProfileInfo.objects.filter(city_id=city_id).select_related('user').prefetch_related(
+        Prefetch('user__additionalinfo', queryset=AdditionalInfo.objects.all())
+    )
+    auditor_distances = []
+
+    for profile in auditors_qs.iterator():
+        aud_lat, aud_lon = None, None
+        if profile.pincode:
+            loc = geo.get_lat_lon_from_pincode(profile.pincode, country_code)
+            if loc:
+                aud_lat, aud_lon = loc['lat'], loc['lon']
+
+        if aud_lat is None or aud_lon is None:
+            aud_lat, aud_lon = lat1, lon1
+        distance = geo.get_distance_from_lat1_lon1_and_lat2_lon2(lat1, lon1, aud_lat, aud_lon)
+
+        auditor_distances.append({
+            "auditor_id": profile.user.id,
+            "first_name": profile.first_name,
+            "last_name": profile.last_name,
+            "mobile_number": profile.mobile_number,
+            "email": profile.user.email,
+            "distance_km": round(distance, 2)
+        })
+    nearest_auditors = sorted(auditor_distances, key=lambda x: x["distance_km"])[:20]
+
+    return {
+        "store_id": store.id,
+        "city_id": city_id,
+        "pincode": pincode,
+        "nearest_auditors_count": len(nearest_auditors),
+        "nearest_auditors": nearest_auditors
+    }

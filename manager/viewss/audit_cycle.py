@@ -17,6 +17,8 @@ from kronos.exceptions import AppLogicError
 from manager.models import ManagerProfileInfo
 from client.models import Client,ClientManager
 from rest_framework.permissions import AllowAny,IsAuthenticated
+from auditor.models import ProfileInfo,AdditionalInfo
+from django.db.models import Prefetch
 
 class AuditCycleDeSerializer(ModelSerializer):
     class Meta:
@@ -181,6 +183,28 @@ class AuditCycleIdPostApprovalDescriptionView(APIView):
         saved_audit_cycle = audit_cycle_service.set_post_approval_description(audit_cycle_id, ds.validated_data["post_approval_description"])
         return Response(AuditCycleSerializer(saved_audit_cycle).data)
 
+class CheckEligibilityOfAuditorView(APIView):
+    # permission_classes = [AllowAny]
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id, store_id):
+        result = audit_cycle_service.eligibility_wise_auditor(audit_cycle_id, store_id)
+        if "error" in result:
+            return Response({"detail": result["error"]}, status=400)
+        return Response(result)
+
+class DistanceWiseAuditorsView(APIView):
+    # permission_classes = [AllowAny]
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, store_id):
+        distance_wise_auditor_list = audit_cycle_service.distance_wise_auditor(store_id)
+        return Response (distance_wise_auditor_list)
+
 class AuditCycleIdEligibilityAuditorView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -256,6 +280,32 @@ class ExportQuestionnaire(APIView):
         response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response
+class QuestionnaireSampleXlsxView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER]
+    }
+    def get(self, request):
+        report, name = questionnaire_service.find_sample_xlsx_for_questionnaire_insert()
+        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
+    
+class ImportQuestionnaire(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, audit_cycle_id, format=None):
+        file_obj = request.FILES.get("file")
+        if not file_obj:
+            return Response({"detail": "No file uploaded"}, status=400)
+        try:
+            imported_data = questionnaire_service.import_questionnaire(file_obj, audit_cycle_id)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=400)
+
+        return Response({"detail": "Questionnaire imported successfully", "imported": imported_data})
 
 # class AuditCycleDetailsFromClientView(APIView):
 #     permission_classes=[HasGroupPermission]

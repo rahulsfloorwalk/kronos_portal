@@ -89,7 +89,8 @@ class Attachment(Model):
                 'Bucket': AWS["S3_ATTACHMENTS"]["BUCKET"],
                 'Key': self.file_slug,
                 'ResponseContentType': content_type,
-            }
+            },
+            ExpiresIn=172800  # 2 days in seconds
         )
 
         return presigned_url

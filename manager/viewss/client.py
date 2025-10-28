@@ -9,6 +9,7 @@ from client.service import client_service,client_user_service
 from rest_framework.throttling import AnonRateThrottle
 from manager.models import ManagerProfileInfo
 from client.models import Client,ClientManager
+from client.service import client_manager as client_manager_service
 
 class ClientView(APIView):
     permission_classes = [HasGroupPermission]
@@ -25,6 +26,15 @@ class ClientView(APIView):
         client_s.is_valid(raise_exception=True)
         client = client_s.deserialize()
         savedClient = client_service.save(client)
+
+        manager_profile = ManagerProfileInfo.objects.filter(user=request.user).first()
+        if manager_profile and not manager_profile.is_admin:
+            client_manager_service.insert(
+                client=savedClient,
+                manager_id=request.user.id,
+                receive_email_notification=True,
+                is_active=True
+            )
         return Response(ClientSerializer(savedClient).data)
 
 class ClientIdView(APIView):

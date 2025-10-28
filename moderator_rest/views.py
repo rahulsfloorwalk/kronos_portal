@@ -217,8 +217,9 @@ class AuditStoreIdRewriteReportSummaryView(APIView):
         if not summary:
             return Response({"error": "Missing 'report_summary'"}, status=400)
         try:
+                # "http://api.floorwalk.in/rewrite/",
             api_response = requests.post(
-                "http://api.floorwalk.in/rewrite/",
+                "https://ai.floorwalk.in/rewrite/",
                 data={"sentence": summary},
             )
             rewritten = api_response.json().get("result", "").strip()
