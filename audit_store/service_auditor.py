@@ -98,26 +98,28 @@ def submit_report(audit_store_id, user_id):
 
     if audit_cycle_audit_report_summary:
         if not audit_store.report_summary or not audit_store.report_summary.strip():
-            raise AppLogicError("Please fill in the report summary before submitting.")
-    
-    if not isinstance(audit_store.nps_section, int):
-        raise AppLogicError("Please complete NPS Section before submitting")
-    if audit_store.nps_section not in range(1, 11):
-        raise AppLogicError("NPS Section rating should be between 1 and 10")
-    
+            raise AppLogicError("Please fill in the report summary before submitting.")      
+
     if audit_cycle_audit_report_summary:
         if len(audit_store.report_summary.strip()) < 150:
-            raise AppLogicError("Report summary should be at least 150 characters")
-    if not audit_store.is_submittable_for_auditor():
-        raise AppLogicError("Please complete all answers and all section summaries before submitting")
-    if not audit_store.check_auditor_comment_len():
-        raise AppLogicError("Section summary should be greater than {} characters".format(ReportSection.MIN_AUDITOR_COMMENT_LEN))
+            raise AppLogicError("Report summary should be at least 150 characters") 
+    if not audit_store.is_report_submittable_for_auditor():
+        raise AppLogicError("Please complete all answers and all section summaries before submitting")    
+    # if not audit_store.check_auditor_comment_len():
+    #     raise AppLogicError("Section summary should be greater than {} characters".format(ReportSection.MIN_AUDITOR_COMMENT_LEN))
+    check_comment, section_seq = audit_store.check_auditor_comment_len()
+    if not check_comment:
+        raise AppLogicError("Section %s: Section summary should be greater than %s characters" % (section_seq, ReportSection.MIN_AUDITOR_COMMENT_LEN))
     if not audit_store.check_required_proof_attached():
         raise AppLogicError("Please attach mandatory proof tags before submitting")
     if audit_cycle_proof_tag:
         if audit_store.is_proof_tag_not_given_for_attachments():
             raise AppLogicError("Please select a tag for all attachments. You can select a tag by clicking on the "
                                 "drop-down present below the attachment.")
+    if not isinstance(audit_store.nps_section, int):
+        raise AppLogicError("Please complete Overall Experience Section before submitting")
+    if audit_store.nps_section not in range(1, 11):
+        raise AppLogicError("Overall Experience Section rating should be between 1 and 10")
     set_attachment_by_proof_tag(audit_store_id)
     report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
     for report in report_obj:
@@ -127,6 +129,48 @@ def submit_report(audit_store_id, user_id):
     remove_answer_revert_message_for_auditor(audit_store_id, user_id)
     report_section_auditor.remove_section_revert_message_for_auditor(audit_store_id, user_id)
     return audit_store
+
+
+# @atomic
+# def submit_report(audit_store_id, user_id):
+#     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
+#     audit_cycle_proof_tag = get_status_of_audit_cycle_proof_tag_by_audit_cycle_id(audit_store.audit.audit_cycle.id)
+#     audit_cycle_audit_report_summary = get_status_of_audit_cycle_audit_report_summary_by_audit_cycle_id(audit_store.audit.audit_cycle.id)
+#     user = auditor_service.find_auditor_by_id(user_id)
+#     if user != audit_store.user:
+#         raise AppLogicError("Report cannot be submitted by user")
+
+#     if audit_cycle_audit_report_summary:
+#         if not audit_store.report_summary or not audit_store.report_summary.strip():
+#             raise AppLogicError("Please fill in the report summary before submitting.")
+    
+#     if not isinstance(audit_store.nps_section, int):
+#         raise AppLogicError("Please complete NPS Section before submitting")
+#     if audit_store.nps_section not in range(1, 11):
+#         raise AppLogicError("NPS Section rating should be between 1 and 10")
+    
+#     if audit_cycle_audit_report_summary:
+#         if len(audit_store.report_summary.strip()) < 150:
+#             raise AppLogicError("Report summary should be at least 150 characters")
+#     if not audit_store.is_submittable_for_auditor():
+#         raise AppLogicError("Please complete all answers and all section summaries before submitting")
+#     if not audit_store.check_auditor_comment_len():
+#         raise AppLogicError("Section summary should be greater than {} characters".format(ReportSection.MIN_AUDITOR_COMMENT_LEN))
+#     if not audit_store.check_required_proof_attached():
+#         raise AppLogicError("Please attach mandatory proof tags before submitting")
+#     if audit_cycle_proof_tag:
+#         if audit_store.is_proof_tag_not_given_for_attachments():
+#             raise AppLogicError("Please select a tag for all attachments. You can select a tag by clicking on the "
+#                                 "drop-down present below the attachment.")
+#     set_attachment_by_proof_tag(audit_store_id)
+#     report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
+#     for report in report_obj:
+#         report.save_percentage()
+#     audit_store.submit_auditor(by=user)
+#     add_multiselect_answer_questions(audit_store_id, user_id)
+#     remove_answer_revert_message_for_auditor(audit_store_id, user_id)
+#     report_section_auditor.remove_section_revert_message_for_auditor(audit_store_id, user_id)
+#     return audit_store
 
 
 @atomic

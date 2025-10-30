@@ -92,6 +92,7 @@ def get_payment_summary_by_user(user_id):
         total_audits = Count('audit_store', distinct=True),
         total_transfered = Sum(Case(When(status=Payment.PAID,then=F('amount')), default=0)),
         total_pending = Sum(Case(When(status__in=[Payment.PENDING],then=F('amount')), default=0)),
-        total_reimbursement = Sum('audit_store__reimbursement')
+        # total_reimbursement = Sum('audit_store__reimbursement'),
+        total_reimbursement = Sum(Case(When(status=Payment.PAID,then=F('audit_store__reimbursement')), default=0)),
     )
     return summary

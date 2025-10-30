@@ -259,6 +259,9 @@ def import_questionnaire(file_obj, audit_cycle_id):
 
         if q_type not in allowed_question_types:
             raise Exception("Section %s : Question %s : Invalid question type '%s'" % (current_section['sequence'], sequence, q_type))
+        
+        if q_type == "PLAIN" and optional_comment_required:
+            raise Exception("Section %s : Question %s : 'Optional comment required' cannot be TRUE for PLAIN type questions."% (current_section["sequence"], sequence))
 
         question_data = {
             "sequence": sequence,
@@ -466,25 +469,25 @@ def find_sample_xlsx_for_questionnaire_insert():
     sample_data = [
         ["Sequence", "Question/Section", "Max Marks", "Question Type", "Question Options", "Impact Factors", "Hide Question", "Optional comment required?"],
         [1, "section 1", "", "", "", "", "", ""],
-        [1, "question 11", 5, "PLAIN", "", "impact factor text", "", ""],
+        [1, "question 11", 0, "PLAIN", "", "impact factor text", "", ""],
         [2, "multiple", 1, "MULTISELECT",
          "sequence: 1, value: Yes, marks: 1\nsequence: 2, value: No, marks: 0",
          "", "", "TRUE"],
-        [2, "question 2", 5, "PLAIN", "", "", "", ""],
-        [3, "question 3", 5, "PLAIN", "", "", "", ""],
-        [4, "question 4", 1, "MUTEX",
+        [3, "question 2", 0, "PLAIN", "", "", "", ""],
+        [4, "question 3", 0, "PLAIN", "", "", "", ""],
+        [5, "question 4", 1, "MUTEX",
          "sequence: 1, value: Yes, marks: 1\nsequence: 2, value: No, marks: 0",
          "", "", ""],
-        [5, "question 5", 2, "MUTEX",
+        [6, "question 5", 2, "MUTEX",
          "sequence: 1, value: Yes, marks: 1\nsequence: 2, value: No, marks: 0\nsequence: 3, value: other, marks: 1",
          "", "", ""],
-        [6, "question 6", 8, "MULTISELECT",
+        [7, "question 6", 8, "MULTISELECT",
          "sequence: 1, value: Yes, marks: 6\nsequence: 2, value: No, marks: 0\nsequence: 3, value: other, marks: 2",
          "impact factor text", "", "TRUE"],
         [2, "section 2", "", "", "", "", "", ""],
-        [1, "question 1", 5, "PLAIN", "", "", "", ""],
+        [1, "question 1", 0, "PLAIN", "", "", "", ""],
         [3, "section 3", "", "", "", "", "", ""],
-        [1, "question 1", 5, "PLAIN", "", "", "", "TRUE"],
+        [1, "question 1", 0, "PLAIN", "", "", "", "TRUE"],
         [4, "section 4", "", "", "", "", "", ""],
         [1, "question 1", 5, "MUTEX",
          "sequence: 1, value: Yes, marks: 5\nsequence: 2, value: No, marks: 0",

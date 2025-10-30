@@ -109,6 +109,10 @@ def find_content_id_by_object_name(app_label,model):
 def find_faulty_report():
     attachment_obj = Attachment.objects.filter(completed_at__date=date.today(),proof_type="PHOTO",status="ATTACHED").exclude(image_hash__isnull=True).exclude(image_hash="")
 
+    if not attachment_obj.exists():
+        _logger.info("No new attachments found. Nothing to compare.")
+        return False 
+
     audit_store_content_type_id = find_content_id_by_object_name("audit_store", "auditstore")
     report_section_content_type_id = find_content_id_by_object_name("answer", "reportsection")
 
@@ -138,7 +142,7 @@ def find_faulty_report():
         else:
             continue
 
-        # Step 1: Get last 6 distinct audit_cycle_ids for this auditor + store (order preserved)
+        # Step 1: Get last 3 distinct audit_cycle_ids for this auditor + store (order preserved)
         last_cycles_qs = AuditStore.objects.filter(audit__store_id=store_id, user_id=auditor_id
                 ).order_by('-audit__audit_cycle_id').values_list('audit__audit_cycle_id', flat=True)
 
@@ -148,13 +152,16 @@ def find_faulty_report():
             if c not in seen:
                 seen.add(c)
                 last_cycles.append(c)
-            if len(last_cycles) >= 6:
+            if len(last_cycles) >= 3:
                 break
+
+        # exclude current audit store (self report)
+        last_audit_ids_qs = [aid for aid in last_audit_ids_qs if aid != audit_store_id]
 
         if not last_cycles:
             continue
 
-        # Step 2: Get all AuditStore IDs in these last 6 cycles
+        # Step 2: Get all AuditStore IDs in these last 3 cycles
         last_audit_ids_qs = AuditStore.objects.filter(
             audit__store_id=store_id, user_id=auditor_id, audit__audit_cycle_id__in=last_cycles
         ).values_list('id', flat=True)

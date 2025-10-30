@@ -503,7 +503,7 @@ def find_by_quotation_id(quotation_id: int) -> AuditCycle:
         raise AppLogicError("Audit cycle not found")
     return audit_cycle
 
-def  eligibility_wise_auditor(audit_cycle_id, store_id):
+def eligibility_wise_auditor(audit_cycle_id, store_id):
     audit_cycle = audit_cycle_service.get_audit_cycle_by_id(audit_cycle_id)
     if not audit_cycle:
         return {"error": "Audit cycle not found."}
@@ -515,7 +515,6 @@ def  eligibility_wise_auditor(audit_cycle_id, store_id):
     if not factors_with_value:
         return {"error": "No matching factors found."}
 
-    lat1 = lon1 = None
     try:
         store = Store.objects.get(id=store_id)
         city = City.objects.get(pk=store.city_id)
@@ -524,64 +523,84 @@ def  eligibility_wise_auditor(audit_cycle_id, store_id):
         if store.pincode:
             loc = geo.get_lat_lon_from_pincode(store.pincode, country_code)
             if loc:
-                lat1, lon1 = loc['lat'], loc['lon']
+                lat1, lon1 = loc["lat"], loc["lon"]
     except Store.DoesNotExist:
         return {"error": "Store not found."}
 
-    auditors_qs = ProfileInfo.objects.filter(city_id=store.city_id).select_related("user").prefetch_related(
-        Prefetch('user__additionalinfo', queryset=AdditionalInfo.objects.all())
-    )
+    auditors_qs = (ProfileInfo.objects.filter(city_id=store.city_id,user__is_active=True).select_related("user").prefetch_related("user__additionalinfo"))
+    pincode_cache = {}
     eligible_auditors = []
 
     for profile in auditors_qs.iterator():
         additional = getattr(profile.user, "additionalinfo", None)
         total_factors = len(factors_with_value)
         matched_factors = 0
-        matched_keys = []
+        matched_list = []
+        unmatched_list = []
 
         for factor in factors_with_value:
             key = factor.get("key")
             expected_value = factor.get("value")
-            actual_value = getattr(profile, key, None) or (getattr(additional, key, None) if additional else None)
 
-            actual_str = str(actual_value).strip().lower() if actual_value is not None else ""
-            if isinstance(expected_value, list):
-                is_match = actual_value in expected_value
-            else:
-                is_match = str(expected_value).strip().lower() == actual_str
+            actual_value = getattr(profile, key, None)
+            if actual_value is None and additional:
+                actual_value = getattr(additional, key, None)
 
-            if is_match:
+            expected_list = expected_value if isinstance(expected_value, list) else [expected_value]
+            expected_list = [str(v).strip().lower() for v in expected_list]
+            actual_str = str(actual_value).strip().lower() if actual_value is not None else None
+
+            if actual_str in expected_list:
                 matched_factors += 1
-                matched_keys.append(key)
+                matched_list.append({"key": key,"expected": expected_value,"actual": actual_value})
+            else:
+                unmatched_list.append({"key": key,"expected": expected_value,"actual": actual_value})
+
+        if total_factors == 0:
+            continue
+
         match_percentage = round((matched_factors / total_factors) * 100, 2)
+        if match_percentage == 0:
+            continue
 
-        if match_percentage == 100.0:
-        # if match_percentage >= 50:
-            aud_lat, aud_lon = None, None
-            if profile.pincode:
+        aud_lat = aud_lon = None
+        if profile.pincode:
+            if profile.pincode in pincode_cache:
+                loc = pincode_cache[profile.pincode]
+            else:
                 loc = geo.get_lat_lon_from_pincode(profile.pincode, country_code)
-                if loc:
-                    aud_lat, aud_lon = loc['lat'], loc['lon']
-            if aud_lat is None or aud_lon is None:
-                aud_lat, aud_lon = lat1, lon1
+                pincode_cache[profile.pincode] = loc
+            if loc:
+                aud_lat, aud_lon = loc["lat"], loc["lon"]
 
-            distance = geo.get_distance_from_lat1_lon1_and_lat2_lon2(lat1, lon1, aud_lat, aud_lon)
-            eligible_auditors.append({
-                "auditor_id": profile.user.id,
-                "first_name": profile.first_name,
-                "last_name": profile.last_name,
-                "mobile_number": profile.mobile_number,
-                "email": profile.user.email,
-                "match_percentage": match_percentage,
-                "distance_km": round(distance, 2)
-            })
+        if not aud_lat or not aud_lon:
+            aud_lat, aud_lon = lat1, lon1
 
-    eligible_auditors = eligible_auditors[:20]
+        distance = geo.get_distance_from_lat1_lon1_and_lat2_lon2(lat1, lon1, aud_lat, aud_lon)
+
+        eligible_auditors.append({
+            "auditor_id": profile.id,
+            "user_id": profile.user.id,
+            "first_name": profile.first_name,
+            "last_name": profile.last_name,
+            "mobile_number": profile.mobile_number,
+            "email": profile.user.email,
+            "match_percentage": match_percentage,
+            "distance_km": round(distance, 2),
+            "last_login": profile.user.last_login,
+            "matched_factors": matched_list,
+            "unmatched_factors": unmatched_list,
+        })
+
+    # eligible_auditors.sort(key=lambda x: (-x["match_percentage"], x["distance_km"]))
+    eligible_auditors = sorted(eligible_auditors,key=lambda x: (-x["match_percentage"], x["last_login"] or "", x["distance_km"]))[:20]
+    # eligible_auditors.sort(key=lambda x: (-x["match_percentage"], x["last_login"] or "", x["distance_km"]))
+
     return {
         "audit_cycle_id": audit_cycle.id,
         "store_id": store.id,
         "eligible_auditors_count": len(eligible_auditors),
-        "eligible_auditors": eligible_auditors
+        "eligible_auditors": eligible_auditors[:20],
     }
 
 def distance_wise_auditor(store_id):
@@ -601,7 +620,7 @@ def distance_wise_auditor(store_id):
         if loc:
             lat1, lon1 = loc['lat'], loc['lon']
 
-    auditors_qs = ProfileInfo.objects.filter(city_id=city_id).select_related('user').prefetch_related(
+    auditors_qs = ProfileInfo.objects.filter(city_id=city_id,user__is_active=True).select_related('user').prefetch_related(
         Prefetch('user__additionalinfo', queryset=AdditionalInfo.objects.all())
     )
     auditor_distances = []
@@ -618,12 +637,14 @@ def distance_wise_auditor(store_id):
         distance = geo.get_distance_from_lat1_lon1_and_lat2_lon2(lat1, lon1, aud_lat, aud_lon)
 
         auditor_distances.append({
-            "auditor_id": profile.user.id,
+            "auditor_id": profile.id,
+            "user_id": profile.user.id,
             "first_name": profile.first_name,
             "last_name": profile.last_name,
             "mobile_number": profile.mobile_number,
             "email": profile.user.email,
-            "distance_km": round(distance, 2)
+            "distance_km": round(distance, 2),
+            "last_login": profile.user.last_login,
         })
     nearest_auditors = sorted(auditor_distances, key=lambda x: x["distance_km"])[:20]
 

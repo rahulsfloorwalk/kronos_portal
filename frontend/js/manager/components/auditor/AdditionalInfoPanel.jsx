@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { getCameraResolution, getOccupation } from "../../../utils.js";
+import { getCameraResolution, getIncomeText, getOccupation } from "../../../utils.js";
 import { fetchAdditionalInfoForAuditor } from "../../service/auditor.js";
 import { Check, Cross } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
@@ -41,6 +41,8 @@ export default class AdditionalInfoPanel extends React.Component {
 					<p>Preferred Distance (km): { this.state.additionalInfo.distance }</p>
 					<p>Industry: { this.state.additionalInfo.industry }</p>
 					<p>Company: { this.state.additionalInfo.company }</p>
+					<p>Income: { getIncomeText(this.state.additionalInfo.income) }</p>
+					<p>Designation: { this.state.additionalInfo.designation || "---" }</p>
 					<p>Car Owned: { has_car }</p>
 					<p>Car Model: { this.state.additionalInfo.car_model }</p>
 					<p>Car Cost: { this.state.additionalInfo.car_cost }</p>
