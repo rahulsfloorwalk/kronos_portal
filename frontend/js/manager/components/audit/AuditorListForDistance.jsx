@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { withRouter } from "react-router";
+import { withRouter,Link  } from "react-router";
 
 import { findDistanceAuditorByPresenceInStoreId } from "../../service/agency_user.js";
 
@@ -55,16 +55,36 @@ class AuditorListForDistance extends Component {
 	componentDidMount() {
 		this.reloadDistanceAuditorList(this.props.audit.store.id);
 	}
+	formatDate = (dateString) => {
+		if (!dateString) return "-";
+		const date = new Date(dateString);
 
+		const day = date.getDate();
+		const month = date.toLocaleString("en-GB", { month: "short" });
+		const year = date.getFullYear();
+
+		const getOrdinalSuffix = (n) => {
+			const j = n % 10,
+				k = n % 100;
+			if (j === 1 && k !== 11) return "st";
+			if (j === 2 && k !== 12) return "nd";
+			if (j === 3 && k !== 13) return "rd";
+			return "th";
+		};
+
+		return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+	};
 	render() {
 		if (this.state.loading) {
 			return <Loading />;
 		}
 		const rows = this.state.distanceAuditors.map((au) => <tr key={au.id}>
-			<td>{au.first_name} {" "}{au.last_name}</td>
+			{/* <td>{au.first_name} {" "}{au.last_name}</td> */}
+			<td><Link to={`/auditor/${au.user_id}`} target="_blank">{au.first_name} {" "}{au.last_name}</Link></td>
 			<td><Earphone /> {au.mobile_number}</td>
 			<td><Envelope /> {au.email}</td>
 			<td>{au.distance_km} Km</td>
+			<td>{au.last_login ? this.formatDate(au.last_login): "---"}</td>
 		</tr>);
 
 		if (rows.length === 0) {
@@ -78,6 +98,7 @@ class AuditorListForDistance extends Component {
 						<th>Phone Number</th>
 						<th>Email</th>
 						<th>Distance</th>
+						<th>Last login</th>
 					</tr>
 				</thead>
 				<tbody>

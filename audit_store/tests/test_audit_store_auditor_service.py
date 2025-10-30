@@ -127,7 +127,15 @@ class AuditStoreAuditorServiceTestCase(TestCase):
         for i in range(3):
             section_recipe.make()
 
-        with self.assertRaisesRegex(AppLogicError, "Please complete all answers and all section summaries before submitting"):
+        first_section = Section.objects.filter(audit_cycle=self.audit_cycle).first()
+        mommy.make(ReportSection, audit_store=audit_store_incomplete_sections, section=first_section)
+
+        self.assertNotEqual(
+            Section.objects.filter(audit_cycle=self.audit_cycle).count(),
+            ReportSection.objects.filter(audit_store=audit_store_incomplete_sections).count()
+        )
+
+        with self.assertRaisesRegex(AppLogicError, "Report not submittable, section length does not match report section length"):
             service_auditor.submit_report(audit_store_incomplete_sections.id, self.auditor_user.id)
 
     def test_submit_report_changes_report_status(self):

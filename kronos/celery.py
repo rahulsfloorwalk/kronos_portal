@@ -74,9 +74,15 @@ def setup_periodic_tasks(sender, **kwargs):
     
     # schedules for find repeated image attachment
     # Execute cron every five hours : midnight, 5am, 10am, 3pm, 8pm.
-    queue_at_attachment = crontab(hour='*/5', minute=0)
-    # queue_at_attachment = crontab(hour=17, minute=30)
-    sender.add_periodic_task(queue_at_attachment, find_faulty_report.s())
+    # queue_at_attachment = crontab(hour='*/5', minute=0)
+    # # queue_at_attachment = crontab(hour=17, minute=30)
+    # sender.add_periodic_task(queue_at_attachment, find_faulty_report.s())
+
+    queue_at_attachment_1 = crontab(hour=18, minute=00)
+    # queue_at_attachment_2 = crontab(hour=4, minute=30)
+
+    sender.add_periodic_task(queue_at_attachment_1, find_faulty_report.s())
+    # sender.add_periodic_task(queue_at_attachment_2, find_faulty_report.s())
 
     # Executes every day at 0230 UTC == 0800 IST
     queue_at_8 = crontab(hour=2, minute=30)

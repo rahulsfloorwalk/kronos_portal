@@ -664,7 +664,8 @@ class AuditStoreIdSubmitReportView(APIView):
         'POST': [GROUP_NAME_AUDITOR],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_auditor_service.submit_report_api(audit_store_id, request.user.id)
+        audit_store = audit_store_auditor_service.submit_report(audit_store_id, request.user.id)
+        # audit_store = audit_store_auditor_service.submit_report_api(audit_store_id, request.user.id)
         if 'report_submission_time' in request.data:
             audit_store.report_submission_time = request.data['report_submission_time']
             audit_store.save()
@@ -676,7 +677,7 @@ class AuditStoreIdSubmitReportView(APIView):
             _logger.info("Auto-assign skipped for audit_store ID: " + str(audit_store_id) + " (client_id " + str(client_id) + " is in excluded list)")
             return Response(AuditStoreSerializer(audit_store).data)
         
-        eligible_moderator_ids = [503761,454714,45590,7450] 
+        eligible_moderator_ids = [503761,454714,45590,7450,519284] 
         try:
             moderator_group = Group.objects.get(name=GROUP_NAME_MODERATOR)
             reports = AuditStore.objects.filter(status=AuditStore.SUBMITTED).values("id")

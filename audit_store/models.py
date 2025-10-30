@@ -385,16 +385,72 @@ class AuditStore(Model):
         if self.is_attachment_limit_exceed():
             raise AppLogicError("Attached proof limit exceed. Please remove unnecessary proofs.")
         return True
+    
+    def is_report_submittable_for_auditor(self):
+        if self.status != AuditStore.ACKNOWLEDGED:
+            _logger.debug("Report not acknowledged")
+            raise AppLogicError("Report not acknowledged")
+
+        sections = self.audit.audit_cycle.sections.all()
+        report_sections = self.report_sections.all()
+        if len(sections) != len(report_sections):
+            _logger.debug("Report not submittable, section length does not match report section length")
+            raise AppLogicError("Report not submittable, section length does not match report section length")
+
+        for report_section in report_sections.order_by("section__sequence"):
+            section_seq = report_section.section.sequence
+            if report_section.not_applicable:
+                continue
+
+            questions = Question.objects.filter(section_id=report_section.section_id).order_by("sequence")
+            answers = Answer.objects.filter(audit_store_id=self.id,question__section_id=report_section.section_id)
+
+            answered_question_ids = set(answers.values_list("question_id", flat=True))
+            for question in questions:
+                q_seq = question.sequence
+
+                if question.id not in answered_question_ids:
+                    raise AppLogicError("Section : %s, Question : %s : Answer not given." % (section_seq, q_seq))
+
+                answer = next((a for a in answers if a.question_id == question.id), None)
+                if not answer or answer.not_applicable:
+                    continue
+
+                if not answer.answer_text or answer.answer_text.strip() == "":
+                    raise AppLogicError("Section : %s, Question : %s : Answer not given." % (section_seq, q_seq))
+
+                if question.optional_comment_required and not answer.not_applicable:
+                    if not answer.answer_comment or answer.answer_comment.strip() == '':
+                        raise AppLogicError("Section : %s, Question : %s : Required answer comment is missing" % (section_seq, q_seq))
+
+            if not report_section.section.hide_comment:
+                if report_section.auditor_comment in (None, ''):
+                    _logger.debug("Report not submittable, some Section Summary is incomplete")
+                    raise AppLogicError("Section : %s : Section Summary is incomplete" % (section_seq))
+
+        if self.is_attachment_limit_exceed():
+            raise AppLogicError("Attached proof limit exceed. Please remove unnecessary proofs.")
+        return True
 
     def check_auditor_comment_len(self):
         report_sections = self.report_sections.all()
         for report_section in report_sections:
             if report_section.section.hide_comment:
-                return True
+                return True,None
+            section_seq = report_section.section.sequence
             auditor_comment = report_section.auditor_comment
             if len(auditor_comment) < ReportSection.MIN_AUDITOR_COMMENT_LEN:
-                return False
-        return True
+                return False,section_seq
+        return True,None
+    # def check_auditor_comment_len(self):
+    #     report_sections = self.report_sections.all()
+    #     for report_section in report_sections:
+    #         if report_section.section.hide_comment:
+    #             return True
+    #         auditor_comment = report_section.auditor_comment
+    #         if len(auditor_comment) < ReportSection.MIN_AUDITOR_COMMENT_LEN:
+    #             return False
+    #     return True
 
     def check_required_proof_attached(self):
         required_proof_tag_list = self.audit.audit_cycle.proof_tags_list.filter(section_proof_tag__is_required = True).values_list('section_proof_tag__audit_cycle_proof_tag__proof_tag', flat = True).distinct('proof_tag')
@@ -714,7 +770,8 @@ class AuditStore(Model):
         for report_section in report_sections:
             check_proof_tag_in_reports_section = report_section.is_proof_tag_not_given_for_attachments()
             if check_proof_tag_in_reports_section:
-                return check_proof_tag_in_reports_section
+                # return check_proof_tag_in_reports_section
+                raise AppLogicError("Please select a tag for all attachments in Section %s." % report_section.section.sequence)
         check_proof_tag_in_audit_store = self.attachments.filter(status=Attachment.ATTACHED, proof_tag=None).exists()
         if check_proof_tag_in_audit_store:
             return check_proof_tag_in_audit_store
