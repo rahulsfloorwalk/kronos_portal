@@ -512,8 +512,8 @@ def eligibility_wise_auditor(audit_cycle_id, store_id):
     skip_keys = {"auditor_rating", "report_rating", "date_availability", "auditor_age_range"}
     factors_with_value = [f for f in factors if f.get("value") and f.get("key") not in skip_keys]
 
-    if not factors_with_value:
-        return {"error": "No matching factors found."}
+    # if not factors_with_value:
+    #     return {"error": "No matching factors found."}
 
     try:
         store = Store.objects.get(id=store_id)
@@ -593,8 +593,7 @@ def eligibility_wise_auditor(audit_cycle_id, store_id):
         })
 
     # eligible_auditors.sort(key=lambda x: (-x["match_percentage"], x["distance_km"]))
-    eligible_auditors = sorted(eligible_auditors,key=lambda x: (-x["match_percentage"], x["last_login"] or "", x["distance_km"]))[:20]
-    # eligible_auditors.sort(key=lambda x: (-x["match_percentage"], x["last_login"] or "", x["distance_km"]))
+    eligible_auditors = sorted(eligible_auditors,key=lambda x: (-x["match_percentage"],x["distance_km"],(x["last_login"].timestamp() if x["last_login"] else 0)))[:20]
 
     return {
         "audit_cycle_id": audit_cycle.id,
