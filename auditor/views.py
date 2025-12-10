@@ -856,14 +856,19 @@ class AuditStoreAttachmentProofTagView(APIView):
 
     def post(self, request, audit_store_id):
         try:
+            file_name = request.data.get("file_name")
+            file_type = request.data.get("file_type")
+            file_size = request.data.get("file_size")
+            if file_name.lower().endswith(".heic"):
+                file_type = '' 
             proof_tag_id = request.data.get("proof_tag", None)
             proof_tag = find_proof_tag_by_id(proof_tag_id)
             post_data, attachment = attachment_auditor_service.upload_for_audit_store_by_auditor_with_proof_tag(
                 audit_store_id,
                 request.user.id,
-                request.data["file_name"],
-                request.data["file_size"],
-                request.data["file_type"],
+                file_name,
+                file_size,
+                file_type,
                 proof_tag)
             post_data["attachment"] = AttachmentSerializer(attachment).data
             prooftag_not_available =  AuditProoftagNotAvailable.objects.filter(proof_tag=proof_tag_id,user=request.user.id,audit_store_id=audit_store_id)
@@ -888,12 +893,17 @@ class AuditStoreAttachmentView(APIView):
 
     def post(self, request, audit_store_id):
         try:
+            file_name = request.data.get("file_name")
+            file_type = request.data.get("file_type")
+            file_size = request.data.get("file_size")
+            if file_name.lower().endswith(".heic"):
+                file_type = '' 
             post_data, attachment = attachment_auditor_service.upload_for_audit_store_by_auditor(
                 audit_store_id,
                 request.user.id,
-                request.data["file_name"],
-                request.data["file_size"],
-                request.data["file_type"])
+                file_name,
+                file_size,
+                file_type)
             post_data["attachment"] = AttachmentSerializer(attachment).data
             return Response(post_data)
         except KeyError as e:

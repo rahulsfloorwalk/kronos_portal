@@ -13,11 +13,16 @@ class Question(Model):
     PLAIN = "PLAIN"
     MUTEX = "MUTEX"
     MULTISELECT = "MULTISELECT"
+    DATE = "DATE"
+    TIME = "TIME"
+
 
     QUESTION_TYPE = (
         (PLAIN, "Plain"),
         (MUTEX, "Mutually Exclusive"),
         (MULTISELECT, "Multiple Select"),
+        (DATE, "Date"),
+        (TIME, "Time"),
     )
 
     QUESTION_DATA_V1 = 1
@@ -77,6 +82,31 @@ class Question(Model):
             "impact_factors": IMPACT_FACTORS_SCHEMA,
         },
     }
+
+    DATE_SCHEMA = {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+            "version": {"type": "integer"},
+            "format": {
+                "type": "string",
+                "enum": ["DD-MM-YYYY", "YYYY-MM-DD"]
+            }
+        }
+    }
+
+    TIME_SCHEMA = {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+            "version": {"type": "integer"},
+            "format": {
+                "type": "string",
+                "enum": ["HH:mm", "HH:mm:ss"]
+            }
+        }
+    }
+
 
     id = AutoField(db_column = 'id', primary_key=True)
     question_txt = CharField(db_column="question_txt", max_length=1024, blank=False)
@@ -148,6 +178,18 @@ class Question(Model):
             # check for unique values
             if not self.__has_unique_key(data["options"], "value"):
                 raise AppLogicError("option values must be unique")
+            
+        elif self.question_type == self.DATE:
+            try:
+                validate(data, self.DATE_SCHEMA)
+            except ValidationError as v:
+                raise AppLogicError(v.message)
+
+        elif self.question_type == self.TIME:
+            try:
+                validate(data, self.TIME_SCHEMA)
+            except ValidationError as v:
+                raise AppLogicError(v.message)
         else:
             raise AppLogicError("unknown question_type")
 
@@ -162,6 +204,17 @@ class Question(Model):
             return version
 
     def clean(self):
+        if self.question_type == self.DATE and self.question_data == {}:
+            self.question_data = {
+                "version": 1,
+                "format": "DD-MM-YYYY"
+            }
+
+        if self.question_type == self.TIME and self.question_data == {}:
+            self.question_data = {
+                "version": 1,
+                "format": "HH:mm"
+            }
         question_data_version = self.__question_data_version()
         if question_data_version == self.QUESTION_DATA_V1:
             self.__validate_v1_data()

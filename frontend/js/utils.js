@@ -362,6 +362,10 @@ export function getQuestionType(value){
 		return "Mutually Exclusive";
 	case "MULTISELECT":
 		return "Multiple Select";
+	case "DATE":
+		return "Date";
+	case "TIME":
+		return "Time";
 	case "":
 	case null:
 	case undefined:

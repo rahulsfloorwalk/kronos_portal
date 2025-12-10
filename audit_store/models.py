@@ -393,9 +393,17 @@ class AuditStore(Model):
 
         sections = self.audit.audit_cycle.sections.all()
         report_sections = self.report_sections.all()
+
         if len(sections) != len(report_sections):
-            _logger.debug("Report not submittable, section length does not match report section length")
-            raise AppLogicError("Report not submittable, section length does not match report section length")
+            existing_section_ids = {rs.section_id for rs in report_sections}
+            for sec in sections:
+                if sec.id not in existing_section_ids:
+                    ReportSection.objects.create(audit_store=self,section=sec)
+
+            report_sections = self.report_sections.all()
+            if len(sections) != len(report_sections):
+                _logger.debug("Report not submittable, section length does not match report section length")
+                raise AppLogicError("Report not submittable, section length does not match report section length")
 
         for report_section in report_sections.order_by("section__sequence"):
             section_seq = report_section.section.sequence
@@ -422,6 +430,10 @@ class AuditStore(Model):
                 if question.optional_comment_required and not answer.not_applicable:
                     if not answer.answer_comment or answer.answer_comment.strip() == '':
                         raise AppLogicError("Section : %s, Question : %s : Required answer comment is missing" % (section_seq, q_seq))
+                    
+                # if (question.max_marks > 0 and question.question_type == Question.MUTEX and answer.marks_obtained == 0):
+                #     if not answer.answer_comment or answer.answer_comment.strip() == "":
+                #         raise AppLogicError("Section : %s, Question : %s : Required answer comment is missing" % (section_seq, q_seq))
 
             if not report_section.section.hide_comment:
                 if report_section.auditor_comment in (None, ''):

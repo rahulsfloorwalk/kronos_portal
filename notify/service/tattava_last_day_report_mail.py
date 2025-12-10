@@ -4,7 +4,8 @@ from .mail import send_email
 from kronos.celery import app
 from registration.context import registration_context
 from celery import shared_task
-from audit_store.service_client import find_yesterday_client_review_status_reports,find_audit_store_completed_yesterday
+from audit_store.service_client import find_yesterday_client_review_status_reports,find_audit_store_completed_yesterday,find_audit_store_completed_yesterday_non_admin
+from audit.service.audit_cycle_client_service import find_all_client_with_active_report_and_clearing_audit_cycle_status
 from client.service import client_service
 _logger = logging.getLogger(__name__)
 
@@ -104,3 +105,50 @@ def tattava_send_live_report_mail_for_locations(email, report_list):
     html_message = get_template("notify/tattava_client_notify_report_email.html").render(params)
     txt_message = get_template("notify/tattava_client_notify_report_email.txt").render(params)
     send_email(to_email, subject, html_message, txt_message)
+
+DEFAULT_CC_EMAIL = "rahul.solanki@floorwalk.in"
+def auto_mail_for_last_day_completed_report_for_specific_location():
+    client_id_list = find_all_client_with_active_report_and_clearing_audit_cycle_status()
+    mail_count = 0
+
+    for client_id in client_id_list:
+        if int(client_id) == 157:
+            continue
+        yesterday_reports = find_yesterday_client_review_status_reports(client_id)
+        if not yesterday_reports:
+            continue
+        report_per_user = {}
+        for rep in yesterday_reports:
+            audit_store_id = rep.audit_store.id
+            if not find_audit_store_completed_yesterday_non_admin(audit_store_id):
+                continue
+            store = rep.audit_store.audit.store
+            report_data = {
+                "audit_store_id": str(audit_store_id),
+                "audit_cycle_name": rep.audit_store.audit.audit_cycle.name,
+                'store_details': store.name + ", " + store.city.name
+            }
+            non_admin_emails = client_service.find_non_admin_user_emails_by_audit_store_id(audit_store_id)
+            for email in non_admin_emails:
+                if email not in report_per_user:
+                    report_per_user[email] = []
+                report_per_user[email].append(report_data)
+
+        for email, reports in report_per_user.items():
+            report_list = reports
+            send_live_report_mail_for_locations(email, report_list)
+            mail_count += 1
+    return mail_count
+
+def send_live_report_mail_for_locations(email, report_list):
+    params = {}
+    subject = "{} report is live".format(str(len(report_list)))
+    if len(report_list) > 1:
+        subject = "{} reports are live".format(str(len(report_list)))
+
+    params["subject_text"] = subject
+    params["report_list"] = report_list
+
+    html_message = get_template("notify/tattava_client_notify_report_email.html").render(params)
+    txt_message = get_template("notify/tattava_client_notify_report_email.txt").render(params)
+    send_email([email], subject, html_message, txt_message)

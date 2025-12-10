@@ -27,6 +27,20 @@ def find_client_user_email_by_audit_store_id(audit_store_id):
             result.append({'email':i.client_user.user.email})
     return result
 
+def find_non_admin_user_emails_by_audit_store_id(audit_store_id):
+    try:
+        audit_store = AuditStore.objects.get(id=audit_store_id)
+    except AuditStore.DoesNotExist:
+        return []
+    matched_mappings= NonClientAdminUserStore.objects.filter(stores__store_list__contains=audit_store.audit.store_id)
+    email_list = []
+    for m in matched_mappings:
+        user = m.client_user.user
+        if user.is_active:
+            if not m.client_user.is_client_admin():
+                email_list.append(user.email)
+    return email_list
+
 def find_client_by_id(client_id):
     try:
         return Client.objects.get(id=client_id)

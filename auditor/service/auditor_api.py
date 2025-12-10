@@ -109,20 +109,32 @@ def get_auditor_dashboard_data_for_app(user_id):
    
    
 def get_report_completion_percentage(audit_store_id):
-    audit_store = AuditStore.objects.get(id=audit_store_id)
+    audit_store = AuditStore.objects.select_related('audit__audit_cycle').only('id', 'status', 'audit__audit_cycle', 'report_summary').get(id=audit_store_id)
     audit_cycle = audit_store.audit.audit_cycle
-    questions = Question.objects.filter(section__audit_cycle=audit_cycle)
+    if audit_store.status == AuditStore.ASSIGNED:
+        return 0
+    
+    skip_statuses = [ AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.FAILED, ]
+    if audit_store.status in skip_statuses:
+        return 100
+    valid_statuses = {
+        AuditStore.ACKNOWLEDGED,
+    }
+    if audit_store.status not in valid_statuses:
+        return None
 
     total_questions_count = 0 
     attended_questions_count = 0
 
-    sections = Section.objects.filter(audit_cycle=audit_cycle, hide_comment=False)
-    total_questions_count = len(questions) + sections.count() + 1 # Considering report_summary as one point
-
+    sections = list(Section.objects.filter(audit_cycle=audit_cycle, hide_comment=False))
+    questions = list(Question.objects.filter(section__audit_cycle=audit_cycle))
     proof_tags = AuditCycleProofTagList.objects.filter(audit_cycle=audit_cycle)
+    total_questions_count += len(sections) + len(questions)
 
-    if audit_store.report_summary is not None and audit_store.report_summary.strip() != '':
-        attended_questions_count += 1  
+    if getattr(audit_cycle, "audit_report_summary", False):
+        total_questions_count += 1
+        if audit_store.report_summary and audit_store.report_summary.strip():
+            attended_questions_count += 1  
 
     if proof_tags.exists():
         audit_cycle_proof_tags = proof_tags
