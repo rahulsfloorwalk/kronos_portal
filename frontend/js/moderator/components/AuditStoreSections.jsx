@@ -25,6 +25,10 @@ import ProofTagLabel from "../../components/ProofTagLabel.jsx";
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 // import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
 // import { ClientID } from "../../constants.js";
+import TimePicker from "rc-time-picker";
+import moment from "moment";
+import "rc-time-picker/assets/index.css";
+import "../../../css/bs_overrides.scss";
 
 class AnswerComment extends Component {
 
@@ -104,7 +108,7 @@ class AnswerComment extends Component {
 			return (
 				<div className={`${hasSuccess} ${hasError}`}>
 					{/* <textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" rows="1" style={this.props.optional_comment_required ? { border: "1px solid red" } : {}} /> */}
-					<textarea className="form-control" ref={this.answerCommentRef} value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" rows="1" style={{  resize: "none", overflow: "hidden", ...(this.props.optional_comment_required ? { border: "1px solid red" } : {}) }} />
+					<textarea className="form-control" ref={this.answerCommentRef} value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" rows="1" style={{ resize: "none", overflow: "hidden", ...(this.props.optional_comment_required ? { border: "1px solid red" } : {}) }} />
 				</div>
 			);
 		} else {
@@ -256,6 +260,26 @@ export class QuestionRow extends React.Component {
 			setAnswerRevertMessage(this.props.auditStoreId, this.props.q.id, this.state.answer.revert_message).then(() => this.toggleRevertForm());
 		}
 	};
+	formatDateToDDMMYYYY = (value) => {
+		if (!value) return "";
+		const [y, m, d] = value.split("-");
+		return `${d}-${m}-${y}`;
+	};
+
+	formatDateToYYYYMMDD = (value) => {
+		if (!value) return "";
+		const [d, m, y] = value.split("-");
+		return `${y}-${m}-${d}`;
+	};
+	formatTimeToHHMM = (value) => {
+		if (!value) return "";
+		return value.replace(":", ".");
+	};
+
+	formatTimeToInput = (value) => {
+		if (!value) return "";
+		return value.replace(".", ":");
+	};
 	render() {
 		if (this.props.q.hide_question && (this.state.answer.answer_text === "" || this.state.answer.answer_text === undefined)) {
 			return null;
@@ -348,7 +372,88 @@ export class QuestionRow extends React.Component {
 					</div>
 				);
 			}
+			else if (this.props.q.question_type === "DATE") {
+				const inputValue = this.formatDateToYYYYMMDD(this.state.answer.answer_text);
 
+				answerElement = (
+					<div>
+						<input
+							type="date"
+							className="form-control"
+							value={inputValue}
+							onChange={(e) => {
+								const formatted = this.formatDateToDDMMYYYY(e.target.value);
+								this.setState({
+									answer: { ...this.state.answer, answer_text: formatted },
+								});
+							}}
+							onBlur={(e) => {
+								const formatted = this.formatDateToDDMMYYYY(e.target.value);
+								setAnswerText(
+									this.props.auditStoreId,
+									this.props.q.id,
+									formatted,
+									true
+								).then(
+									(a) =>
+										this.setState({ answer: a, answerError: false, answerSuccess: true }),
+									() => this.setState({ answerError: true, answerSuccess: false })
+								);
+							}}
+							onClick={(e) => {
+								try {
+									e.target.showPicker();
+								} catch (err) {
+									console.warn("showPicker not supported", err);
+								}
+							}}
+							style={{ cursor: "pointer" }}
+						/>
+					</div>
+				);
+			}
+			else if (this.props.q.question_type === "TIME") {
+				const rawValue = this.state.answer.answer_text;
+				const timeValue =
+					rawValue && typeof rawValue === "string"
+						? moment(rawValue.replace(".", ":"), "HH:mm")
+						: null;
+
+				answerElement = (
+					<div className="timepicker-wrapper">
+						<TimePicker
+							style={{
+								width: "100%",
+							}}
+							showSecond={false}
+							allowEmpty={false}
+							value={timeValue}
+							className="rc-time-picker bs-timepicker"
+							format="HH:mm"
+							onChange={(value) => {
+								if (!value || !value.isValid()) return;
+
+								const formatted = value.format("HH.mm");
+								this.setState({
+									answer: {
+										...this.state.answer,
+										answer_text: formatted
+									}
+								});
+								setAnswerText(
+									this.props.auditStoreId,
+									this.props.q.id,
+									formatted,
+									true
+								).then(
+									(a) => this.setState({ answer: a, answerError: false, answerSuccess: true }),
+									() => this.setState({ answerError: true, answerSuccess: false })
+								);
+							}}
+						/>
+					</div>
+				);
+			}
 			notApplicableElement = (
 				<button className="btn btn-default" onClick={this.notApplicableClicked}>
 					{notApplicableIcon}

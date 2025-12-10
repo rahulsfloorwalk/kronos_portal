@@ -72,6 +72,14 @@ class Answer(Model):
             self.answer_text = answer_text
             self.answer_text_original = answer_text
             self.save()
+        elif self.question.question_type == Question.DATE:
+            self.answer_text = answer_text
+            self.answer_text_original = answer_text
+            self.save()
+        elif self.question.question_type == Question.TIME:
+            self.answer_text = answer_text
+            self.answer_text_original = answer_text
+            self.save()
         elif answer_text and self.question.question_type == Question.MULTISELECT:
             result = [o for o in self.question.question_data["options"] if o["value"] == answer_text]
             if len(result) == 1:

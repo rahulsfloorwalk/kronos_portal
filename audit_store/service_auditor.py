@@ -110,12 +110,13 @@ def submit_report(audit_store_id, user_id):
     check_comment, section_seq = audit_store.check_auditor_comment_len()
     if not check_comment:
         raise AppLogicError("Section %s: Section summary should be greater than %s characters" % (section_seq, ReportSection.MIN_AUDITOR_COMMENT_LEN))
-    if not audit_store.check_required_proof_attached():
+    # if not audit_store.check_required_proof_attached():
+    if not audit_store.check_required_proof_attached_or_not_available():
         raise AppLogicError("Please attach mandatory proof tags before submitting")
-    if audit_cycle_proof_tag:
-        if audit_store.is_proof_tag_not_given_for_attachments():
-            raise AppLogicError("Please select a tag for all attachments. You can select a tag by clicking on the "
-                                "drop-down present below the attachment.")
+    # if audit_cycle_proof_tag:
+    #     if audit_store.is_proof_tag_not_given_for_attachments():
+    #         raise AppLogicError("Please select a tag for all attachments. You can select a tag by clicking on the "
+    #                             "drop-down present below the attachment.")
     if not isinstance(audit_store.nps_section, int):
         raise AppLogicError("Please complete Overall Experience Section before submitting")
     if audit_store.nps_section not in range(1, 11):

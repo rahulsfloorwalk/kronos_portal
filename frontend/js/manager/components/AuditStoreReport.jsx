@@ -27,6 +27,10 @@ import ProofTagLabel from "../../components/ProofTagLabel.jsx";
 
 import { auditStorePropType, sectionPropType } from "../prop_types";
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
+import TimePicker from "rc-time-picker";
+import moment from "moment";
+import "rc-time-picker/assets/index.css";
+import "../../../css/bs_overrides.scss";
 
 class AnswerComment extends Component {
 	static propTypes = {
@@ -253,6 +257,26 @@ class __QuestionRow extends React.Component {
 	notApplicableClicked = () => {
 		this.props.dispatch(setAnswerNotApplicable(this.props.auditStoreId, this.props.q.id, !this.state.answer.not_applicable));
 	};
+	formatDateToDDMMYYYY = (value) => {
+		if (!value) return "";
+		const [y, m, d] = value.split("-");
+		return `${d}-${m}-${y}`;
+	};
+
+	formatDateToYYYYMMDD = (value) => {
+		if (!value) return "";
+		const [d, m, y] = value.split("-");
+		return `${y}-${m}-${d}`;
+	};
+	formatTimeToHHMM = (value) => {
+		if (!value) return "";
+		return value.replace(":", ".");
+	};
+
+	formatTimeToInput = (value) => {
+		if (!value) return "";
+		return value.replace(".", ":");
+	};
 
 	render() {
 		if (this.props.q.hide_question && (this.state.answer.answer_text === "" || this.state.answer.answer_text === undefined)) {
@@ -261,7 +285,7 @@ class __QuestionRow extends React.Component {
 		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
 		let answerElement = (
 			<span>
-				<big>{this.state.answer.answer_text} {this.props.q.optional_comment_required ? <span style={{color:"#a94442", fontSize:"20px"}}>*</span>:null}</big>
+				<big>{this.state.answer.answer_text} {this.props.q.optional_comment_required ? <span style={{ color: "#a94442", fontSize: "20px" }}>*</span> : null}</big>
 				{this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT"
 					? <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} required={this.props.q.optional_comment_required} />
 					: null
@@ -346,7 +370,88 @@ class __QuestionRow extends React.Component {
 					</div>
 				);
 			}
+			else if (this.props.q.question_type === "DATE") {
+				const inputValue = this.formatDateToYYYYMMDD(this.state.answer.answer_text);
 
+				answerElement = (
+					<div>
+						<input
+							type="date"
+							className="form-control"
+							value={inputValue}
+							onChange={(e) => {
+								const formatted = this.formatDateToDDMMYYYY(e.target.value);
+								this.setState({
+									answer: { ...this.state.answer, answer_text: formatted },
+								});
+							}}
+							onBlur={(e) => {
+								const formatted = this.formatDateToDDMMYYYY(e.target.value);
+								setAnswerText(
+									this.props.auditStoreId,
+									this.props.q.id,
+									formatted,
+									true
+								).then(
+									(a) =>
+										this.setState({ answer: a, answerError: false, answerSuccess: true }),
+									() => this.setState({ answerError: true, answerSuccess: false })
+								);
+							}}
+							onClick={(e) => {
+								try {
+									e.target.showPicker();
+								} catch (err) {
+									console.warn("showPicker not supported", err);
+								}
+							}}
+							style={{ cursor: "pointer" }}
+						/>
+					</div>
+				);
+			}
+			else if (this.props.q.question_type === "TIME") {
+				const rawValue = this.state.answer.answer_text;
+				const timeValue =
+					rawValue && typeof rawValue === "string"
+						? moment(rawValue.replace(".", ":"), "HH:mm")
+						: null;
+
+				answerElement = (
+					<div className="timepicker-wrapper">
+						<TimePicker
+							style={{
+								width: "100%",
+							}}
+							showSecond={false}
+							allowEmpty={false}
+							value={timeValue}
+							className="rc-time-picker bs-timepicker"
+							format="HH:mm"
+							onChange={(value) => {
+								if (!value || !value.isValid()) return;
+
+								const formatted = value.format("HH.mm");
+								this.setState({
+									answer: {
+										...this.state.answer,
+										answer_text: formatted
+									}
+								});
+								setAnswerText(
+									this.props.auditStoreId,
+									this.props.q.id,
+									formatted,
+									true
+								).then(
+									(a) => this.setState({ answer: a, answerError: false, answerSuccess: true }),
+									() => this.setState({ answerError: true, answerSuccess: false })
+								);
+							}}
+						/>
+					</div>
+				);
+			}
 			notApplicableElement = (
 				<button className="btn btn-default" onClick={this.notApplicableClicked}>
 					{notApplicableIcon}

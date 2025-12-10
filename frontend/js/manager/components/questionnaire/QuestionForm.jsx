@@ -156,6 +156,8 @@ class QuestionForm extends React.Component {
 							<option value="PLAIN">{getQuestionType("PLAIN")}</option>
 							<option value="MUTEX">{getQuestionType("MUTEX")}</option>
 							<option value="MULTISELECT">{getQuestionType("MULTISELECT")}</option>
+							<option value="DATE">{getQuestionType("DATE")}</option>
+							<option value="TIME">{getQuestionType("TIME")}</option>
 						</FormSelect>
 					</div>
 					<div className="col-md-12">

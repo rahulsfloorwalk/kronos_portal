@@ -135,7 +135,7 @@ class AuditStoreAuditorServiceTestCase(TestCase):
             ReportSection.objects.filter(audit_store=audit_store_incomplete_sections).count()
         )
 
-        with self.assertRaisesRegex(AppLogicError, "Report not submittable, section length does not match report section length"):
+        with self.assertRaisesRegexp( AppLogicError, r"Section\s*:\s*\d+\s*:\s*Section Summary is incomplete"):
             service_auditor.submit_report(audit_store_incomplete_sections.id, self.auditor_user.id)
 
     def test_submit_report_changes_report_status(self):

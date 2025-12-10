@@ -8,6 +8,8 @@ import { findEligibileAuditorByPresenceInCityId } from "../../service/agency_use
 
 import { Earphone, Envelope } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
+import StarRating from "../../../components/StarRating.jsx";
+import { FaWhatsapp } from "react-icons/fa";
 
 class AuditorListForEligibility extends Component {
 	static propTypes = {
@@ -79,14 +81,46 @@ class AuditorListForEligibility extends Component {
 		if (this.state.loading) {
 			return <Loading />;
 		}
-		const rows = this.state.eligibleAuditors.map((au) => <tr key={au.id}>
-			<td><Link to={`/auditor/${au.user_id}`} target="_blank">{au.first_name} {" "}{au.last_name}</Link></td>
-			<td><Earphone />  {au.mobile_number}</td>
-			<td><Envelope /> {au.email}</td>
-			<td>{au.match_percentage}%</td>
-			<td>{au.distance_km} Km</td>
-			<td>{au.last_login ? this.formatDate(au.last_login): "---"}</td>
-		</tr>);
+		const rows = this.state.eligibleAuditors.map((au) => (
+			<tr key={au.id}>
+				<td><Link to={`/auditor/${au.user_id}`} target="_blank">{au.first_name} {au.last_name}</Link></td>
+				<td><a href={`tel:${au.mobile_number}`}><Earphone /> {au.mobile_number}</a></td>
+				<td>
+					<a href={`https://wa.me/${au.whatsapp_number ? au.whatsapp_number : au.mobile_number}`} target="_blank" rel="noopener noreferrer" >
+						<FaWhatsapp size={17} color="#25D366" />{" "} {au.whatsapp_number ? au.whatsapp_number : au.mobile_number}
+					</a>
+				</td>
+				{/* <td><a href={`mailto:${au.email}`}><Envelope /> {au.email}</a></td> */}
+				<td><a href={`https://mail.google.com/mail/?view=cm&fs=1&to=${au.email}`} target="_blank" rel="noopener noreferrer"><Envelope /> {au.email}</a></td>
+				<td>{au.match_percentage}%</td>
+				<td>{au.distance_km} Km</td>
+				<td><StarRating rating={au.auditor_rating} /></td>
+				<td>{au.last_login ? this.formatDate(au.last_login) : "---"}</td>
+			</tr>
+		));
+
+		// const rows = this.state.eligibleAuditors.map((au) => <tr key={au.id}>
+		// 	    <td>
+		// 			<Link to={`/auditor/${au.user_id}`} target="_blank">
+		// 				{au.first_name} {au.last_name}
+		// 			</Link>
+		// 		</td>
+
+		// 	<td><a href={`tel:${au.mobile_number}}`><Earphone />  {au.mobile_number}</a></td>
+		// 	<td><a href={`https://wa.me/${au.whatsapp_number ? au.whatsapp_number : au.mobile_number}} target="_blank" rel="noopener noreferrer"><FaWhatsapp size={17} color="#25D366"/>  {au.whatsapp_number ? au.whatsapp_number : au.mobile_number}</a>`</td>
+		// 	<td><a href={`mailto:${au.email}`}><Envelope /> {au.email}</a></td>
+		// 	{/* <td><a href={https://mail.google.com/mail/?view=cm&fs=1&to=${au.email}}
+		// 			target="_blank"
+		// 			rel="noopener noreferrer"><Envelope /> {au.email}</a>
+		// 	</td> */}
+
+		// 	// <td><Earphone />  {au.mobile_number}</td>
+		// 	// <td><Envelope /> {au.email}</td>
+		// 	<td>{au.match_percentage}%</td>
+		// 	<td>{au.distance_km} Km</td>
+		// 	<td><StarRating rating={au.auditor_rating} /></td>
+		// 	<td>{au.last_login ? this.formatDate(au.last_login): "---"}</td>
+		// </tr>);
 
 		if (rows.length === 0) {
 			rows.push(<tr key="empty"><td colSpan={5} className="text-center text-muted">No Eligible Auditor is found for this Store</td></tr>);
@@ -97,9 +131,11 @@ class AuditorListForEligibility extends Component {
 					<tr>
 						<th>Auditor Name</th>
 						<th>Phone Number</th>
+						<th>Whatsapp Number</th>
 						<th>Email</th>
 						<th>Eligibility Match</th>
 						<th>Distance</th>
+						<th>Star Rating</th>
 						<th>Last login</th>
 					</tr>
 				</thead>

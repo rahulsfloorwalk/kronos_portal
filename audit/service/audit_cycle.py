@@ -22,6 +22,7 @@ from django.db.models import Prefetch
 from manager.service import geo
 from audit.service import audit_cycle as audit_cycle_service
 import logging
+from auditor.service.profile_info_service import get_avg_auditor_rating_by_user
 
 logger = logging.getLogger(__name__)
 
@@ -565,25 +566,30 @@ def eligibility_wise_auditor(audit_cycle_id, store_id):
 
         aud_lat = aud_lon = None
         if profile.pincode:
-            if profile.pincode in pincode_cache:
-                loc = pincode_cache[profile.pincode]
+            pin = str(profile.pincode).strip()
+
+            if pin in pincode_cache:
+                loc = pincode_cache[pin]
             else:
-                loc = geo.get_lat_lon_from_pincode(profile.pincode, country_code)
-                pincode_cache[profile.pincode] = loc
+                loc = geo.get_lat_lon_from_pincode(pin, country_code)
+                pincode_cache[pin] = loc
             if loc:
                 aud_lat, aud_lon = loc["lat"], loc["lon"]
-
-        if not aud_lat or not aud_lon:
-            aud_lat, aud_lon = lat1, lon1
+            else:
+                continue
+        else:
+            continue
 
         distance = geo.get_distance_from_lat1_lon1_and_lat2_lon2(lat1, lon1, aud_lat, aud_lon)
-
+        avg_rating = get_avg_auditor_rating_by_user(profile.user)
         eligible_auditors.append({
             "auditor_id": profile.id,
             "user_id": profile.user.id,
             "first_name": profile.first_name,
             "last_name": profile.last_name,
             "mobile_number": profile.mobile_number,
+            "whatsapp_number": profile.whatsapp_number,
+            "auditor_rating": avg_rating,
             "email": profile.user.email,
             "match_percentage": match_percentage,
             "distance_km": round(distance, 2),

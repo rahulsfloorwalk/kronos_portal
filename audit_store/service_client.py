@@ -111,11 +111,25 @@ def find_yesterday_client_review_status_reports(client_id):
                 status=AuditStore.COMPLETED, created_at__date=today_ist()-timedelta(days=1)) \
         .distinct('audit_store_id')
 
+def find_yesterday_client_review_status_reports_for_non_admin(client_id):
+    return ReportStatusLog.objects.filter(
+        audit_store__audit__audit_cycle__client_id=client_id,
+        status=AuditStore.COMPLETED,
+        created_at__date=today_ist() - timedelta(days=1)
+    ).distinct('audit_store_id')
+
 def find_audit_store_completed_yesterday(audit_store_id):
     return ReportStatusLog.objects \
         .filter(audit_store_id=audit_store_id, status=AuditStore.COMPLETED) \
         .exclude(created_at__date= today_ist()-timedelta(days=1)) \
         .exists()
+
+def find_audit_store_completed_yesterday_non_admin(audit_store_id):
+    return ReportStatusLog.objects.filter(
+        audit_store_id=audit_store_id,
+        status=AuditStore.COMPLETED,
+        created_at__date=today_ist() - timedelta(days=1)
+    ).exists()
 
 
 def get_reports_action_plan(client_user, audit_cycle_id):
