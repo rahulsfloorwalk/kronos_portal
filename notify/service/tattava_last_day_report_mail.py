@@ -9,7 +9,8 @@ from audit.service.audit_cycle_client_service import find_all_client_with_active
 from client.service import client_service
 _logger = logging.getLogger(__name__)
 
-@app.task(iqnore_result=True)
+# @app.task(iqnore_result=True)
+@app.task(ignore_result=True)
 def auto_tattava_mail_for_last_day_completed_report():
     client_id = 157 #hardcoded
     client_review_reports = find_yesterday_client_review_status_reports(client_id)
@@ -33,7 +34,8 @@ def auto_tattava_mail_for_last_day_completed_report():
     return mail_count
     
     
-@app.task(iqnore_result=True)
+# @app.task(iqnore_result=True)
+@app.task(ignore_result=True)
 def tattava_send_live_report_mail(report_list):
     params={
         **registration_context(),
@@ -60,7 +62,8 @@ def tattava_send_live_report_mail(report_list):
     txt_message = get_template("notify/tattava_client_notify_report_email.txt").render(params)
     send_email(to_email, subject, html_message, txt_message)
 
-@app.task(iqnore_result=True)
+# @app.task(iqnore_result=True)
+@app.task(ignore_result=True)
 def auto_tattava_mail_for_last_day_completed_report_for_specific_localition():
     client_id = 157 #hardcoded
     # client_id = 1 #hardcoded
@@ -90,7 +93,8 @@ def auto_tattava_mail_for_last_day_completed_report_for_specific_localition():
         _logger.info("Sent emails to %s users with their allocated store reports.", len(report_per_user))
     return mail_count
 
-@app.task(iqnore_result=True)
+# @app.task(iqnore_result=True)
+@app.task(ignore_result=True)
 def tattava_send_live_report_mail_for_locations(email, report_list):
     params={
         **registration_context(),
@@ -106,7 +110,8 @@ def tattava_send_live_report_mail_for_locations(email, report_list):
     txt_message = get_template("notify/tattava_client_notify_report_email.txt").render(params)
     send_email(to_email, subject, html_message, txt_message)
 
-DEFAULT_CC_EMAIL = "rahul.solanki@floorwalk.in"
+# DEFAULT_CC_EMAIL = "rahul.solanki@floorwalk.in"
+@app.task(ignore_result=True)
 def auto_mail_for_last_day_completed_report_for_specific_location():
     client_id_list = find_all_client_with_active_report_and_clearing_audit_cycle_status()
     mail_count = 0

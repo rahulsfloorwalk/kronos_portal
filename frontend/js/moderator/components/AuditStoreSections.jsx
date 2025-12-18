@@ -429,7 +429,9 @@ export class QuestionRow extends React.Component {
 							allowEmpty={false}
 							value={timeValue}
 							className="rc-time-picker bs-timepicker"
-							format="HH:mm"
+							// format="HH:mm"
+							use12Hours
+							format="hh:mm A"
 							onChange={(value) => {
 								if (!value || !value.isValid()) return;
 
