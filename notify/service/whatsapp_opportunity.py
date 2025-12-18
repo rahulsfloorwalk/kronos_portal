@@ -37,8 +37,9 @@ def schedule_opportunity_whatsapp_for_audit_cycle_with_filters_for_pincode(audit
         if audit_pincode_and_city ==[]:
             raise AppLogicError("Audits Are Not Available For Any City")
         for i in audit_pincode_and_city:
-            filters['pincode'] = i.get('pincode')
-            filtered_users_in_city = get_auditor_list_by_filter_for_pincode(filters)
+            filters_for_iteration = filters.copy()
+            filters_for_iteration['pincode'] = i.get('pincode')
+            filtered_users_in_city = get_auditor_list_by_filter_for_pincode(filters_for_iteration)
             next_user_list = opp_notification_service.find_next_users_for_notification(i.get('city').id, audit_cycle_id, CHANNEL, filtered_users_in_city)
             next_user_list = next_user_list[:MAX_WHATSAPP_SENT_COUNT]
 
@@ -56,7 +57,8 @@ def schedule_opportunity_whatsapp_for_audit_cycle_with_filters_for_pincode(audit
             send_opportunity_whatsapp_message_for_record.delay(opp.id)
     else:
         city = City.objects.get(pk=filters.get('city'))
-        filtered_users_in_city = get_auditor_list_by_filter_for_pincode(filters)
+        filters_for_iteration = filters.copy()
+        filtered_users_in_city = get_auditor_list_by_filter_for_pincode(filters_for_iteration)
         next_user_list = opp_notification_service.find_next_users_for_notification(city.id, audit_cycle_id, CHANNEL, filtered_users_in_city)
         next_user_list = next_user_list[:MAX_WHATSAPP_SENT_COUNT]
         print(filtered_users_in_city)
