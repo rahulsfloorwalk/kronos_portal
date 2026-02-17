@@ -279,6 +279,7 @@ def import_questionnaire(file_obj, audit_cycle_id):
             option_marks_list = []
 
             if q_options:
+                q_options = str(q_options).strip().strip('"')
                 for line in str(q_options).split("\n"):
                     option_dict = {}
                     for part in line.split(","):

@@ -4,12 +4,11 @@ from .mail import send_email
 from kronos.celery import app
 from registration.context import registration_context
 from celery import shared_task
-from audit_store.service_client import find_yesterday_client_review_status_reports,find_audit_store_completed_yesterday,find_audit_store_completed_yesterday_non_admin
+from audit_store.service_client import find_yesterday_client_review_status_reports,find_audit_store_completed_yesterday,find_audit_store_completed_yesterday_non_admin,find_last_month_client_review_status_reports
 from audit.service.audit_cycle_client_service import find_all_client_with_active_report_and_clearing_audit_cycle_status
 from client.service import client_service
 _logger = logging.getLogger(__name__)
 
-# @app.task(iqnore_result=True)
 @app.task(ignore_result=True)
 def auto_tattava_mail_for_last_day_completed_report():
     client_id = 157 #hardcoded
@@ -34,7 +33,6 @@ def auto_tattava_mail_for_last_day_completed_report():
     return mail_count
     
     
-# @app.task(iqnore_result=True)
 @app.task(ignore_result=True)
 def tattava_send_live_report_mail(report_list):
     params={
@@ -62,7 +60,6 @@ def tattava_send_live_report_mail(report_list):
     txt_message = get_template("notify/tattava_client_notify_report_email.txt").render(params)
     send_email(to_email, subject, html_message, txt_message)
 
-# @app.task(iqnore_result=True)
 @app.task(ignore_result=True)
 def auto_tattava_mail_for_last_day_completed_report_for_specific_localition():
     client_id = 157 #hardcoded
@@ -93,7 +90,6 @@ def auto_tattava_mail_for_last_day_completed_report_for_specific_localition():
         _logger.info("Sent emails to %s users with their allocated store reports.", len(report_per_user))
     return mail_count
 
-# @app.task(iqnore_result=True)
 @app.task(ignore_result=True)
 def tattava_send_live_report_mail_for_locations(email, report_list):
     params={

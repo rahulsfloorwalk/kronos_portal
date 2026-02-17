@@ -334,6 +334,25 @@ class ManagerProfileSerializer(ModelSerializer):
 
     def get_email(self, obj):
         return obj.user.email if obj.user else None
+    
+class ManagerAllowedCountriesSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(read_only=True)
+    allowed_countries = serializers.JSONField()
+
+    def validate_allowed_countries(self, value):
+        # form-data → string → list
+        if isinstance(value, str):
+            value = json.loads(value)
+
+        if not isinstance(value, list):
+            raise serializers.ValidationError("Must be a list")
+
+        for code in value:
+            if not isinstance(code, str) or len(code) > 5:
+                raise serializers.ValidationError(
+                    "Each country code must be a string (max 5 chars)"
+                )
+        return value
 
 class PlainUserSerializer(ModelSerializer):
     mobile_numbers = MobileNumberSerializer(many=True)

@@ -5,7 +5,7 @@ import { hashHistory } from "react-router";
 import Alert from "react-s-alert";
 import Select from "react-select";
 
-import { fetchStates, fetchCities } from "../service/location.js";
+import { fetchStatesByCountryCode, fetchCities } from "../service/location.js";
 import { findAuditorCountOpportunityEmail, saveOpportunityEmailRecord, fetchAuditAlignmentFactors } from "../service/opportunity_email.js";
 
 import { getInputEventChangeValue } from "../../react_utils.js";
@@ -41,7 +41,8 @@ export default class OpportunityEmailRecordForm extends React.Component {
 	};
 
 	componentDidMount() {
-		fetchStates().done((states) => this.setState({ states }));
+		// fetchStates().done((states) => this.setState({ states }));
+		fetchStatesByCountryCode().done((states) => this.setState({ states }));
 		fetchAuditAlignmentFactors(this.props.params.auditCycleId).done((audit_alignment_factors) => this.setState({ audit_alignment_factors }));
 
 	}

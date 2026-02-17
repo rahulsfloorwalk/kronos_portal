@@ -221,6 +221,7 @@ class AuditStoreIdRewriteReportSummaryView(APIView):
             api_response = requests.post(
                 "https://ai.floorwalk.in/rewrite/",
                 data={"sentence": summary},
+                verify=False
             )
             rewritten = api_response.json().get("result", "").strip()
             print(rewritten)

@@ -33,6 +33,9 @@ class ManagerRow extends React.Component {
 				<td>
 					<Link to={`/manager/${this.props.manager.id}/edit`} className="btn btn-default"><Pencil/></Link>
 				</td>
+				<td>
+					<Link to={`/manager/${this.props.manager.id}/addcountry`} className="btn btn-default">Add Country</Link>
+				</td>
 			</tr>
 		);
 	}
@@ -77,6 +80,7 @@ export default class ManagerList extends React.Component {
 							<th>Mobile</th>
 							<th>Active</th>
 							<th>Admin</th>
+							<th></th>
 							<th></th>
 						</tr>
 					</thead>

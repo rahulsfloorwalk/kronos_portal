@@ -378,6 +378,7 @@ class ManagerProfileInfo(Model):
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
     mobile = CharField(db_column='mobile', max_length=15, blank=True,null=True)
     is_admin = BooleanField(db_column='admin', blank=True,default=False)
+    allowed_countries = JSONField(db_column='allowed_countries',default=list, blank=True,null=True)
     
     def __str__(self):
         return "ManagerProfileInfo: {} {}".format(self.id, self.mobile, self.is_admin)

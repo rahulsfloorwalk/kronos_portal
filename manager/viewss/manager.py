@@ -5,12 +5,13 @@ from rest_framework.serializers import Serializer, EmailField, CharField, Boolea
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-from ..serializers import PlainUserSerializer
+from ..serializers import PlainUserSerializer, ManagerAllowedCountriesSerializer
 from ..service import manager as manager_service
 from manager.models import ManagerProfileInfo
 from django.contrib.auth.models import User
 from manager.serializers import ManagerProfileSerializer
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import AllowAny,IsAuthenticated
 
 
 
@@ -148,4 +149,34 @@ class ManagerIdView(APIView):
                 manager_profile_info.is_admin = is_admin
                 manager_profile_info.save()
         return Response(PlainUserSerializer(saved_user).data)
+    
+class ManagerAllowedCountriesView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, user_id):
+        user = manager_service.find_by_id(user_id)
 
+        try:
+            profile = ManagerProfileInfo.objects.get(user=user)
+            allowed_countries = profile.allowed_countries or []
+        except ManagerProfileInfo.DoesNotExist:
+            allowed_countries = []
+
+        serializer = ManagerAllowedCountriesSerializer({"user_id": user.id,"allowed_countries": allowed_countries})
+        return Response(serializer.data)
+
+    def post(self, request, user_id):
+        serializer = ManagerAllowedCountriesSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = manager_service.find_by_id(user_id)
+
+        profile, _ = ManagerProfileInfo.objects.get_or_create(user=user)
+        profile.allowed_countries = serializer.validated_data["allowed_countries"]
+        profile.save()
+
+        response_serializer = ManagerAllowedCountriesSerializer({"user_id": user.id,"allowed_countries": profile.allowed_countries})
+        return Response(response_serializer.data)

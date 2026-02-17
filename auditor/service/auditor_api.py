@@ -445,7 +445,7 @@ def sign_up_auditor_app(request):
             response = {'detail': 'User is Already Registered !! Please Login'}
             status = 400
             return response, status
-        profile_info = ProfileInfo.objects.get(user=user)
+        # profile_info = ProfileInfo.objects.get(user=user)
     except User.DoesNotExist:
         user = User()
         user.email = request.data.get("username")

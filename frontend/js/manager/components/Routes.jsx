@@ -148,6 +148,7 @@ import CategoryAttachmentUploadBox from "./dashboard/category/CategoryAttachment
 import QAReportPanel from "./reports/QAReportPanel.jsx";
 import QAPerformance from "./reports/QAPerformance.jsx";
 import QuestionnaireImportForm from "./questionnaire/QuestionnaireImportForm.jsx";
+import ManagerAddCountry from "./manager/ManagerAddCountry.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -309,6 +310,7 @@ const Routes = () => (
 				</Route>
 			</Route>
 			<Route path="manager" component={ManagerList}>
+				<Route path=":userId/addcountry" component={ManagerAddCountry} />
 				<Route path="add" component={ManagerForm} />
 				<Route path=":userId/edit" component={ManagerForm} />
 			</Route>

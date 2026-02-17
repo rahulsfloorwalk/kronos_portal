@@ -8,6 +8,8 @@ from rest_framework.test import APITestCase
 
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 from faker import Faker
+from manager.models import ManagerProfileInfo,City
+from auditor.models import ProfileInfo
 
 fake = Faker()
 class AuditorViewTestCase(APITestCase):
@@ -20,14 +22,21 @@ class AuditorViewTestCase(APITestCase):
         self.manager_user = mommy.make(User, username=self.email, email=self.email, groups=[self.manager_group])
         self.manager_user.set_password(self.password)
         self.manager_user.save()
+
+        self.city = mommy.make(City, country="India")
+        self.manager_profile = mommy.make(ManagerProfileInfo,user=self.manager_user)
+        self.manager_profile.allowed_countries = ["India"]
+        self.manager_profile.save()
+        
         self.create_auditors()
 
     def create_auditors(self):
         self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
         for i in range(10):
             email = fake.email()
-            mommy.make(User, username=email, email=email, groups=[self.auditor_group])
+            auditor = mommy.make(User, username=email, email=email, is_active=True, groups=[self.auditor_group])
 
+            mommy.make(ProfileInfo,user=auditor,city=self.city)
     def login(self):
         self.client.login(username=self.email, password=self.password)
 
