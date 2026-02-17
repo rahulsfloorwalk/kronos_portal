@@ -58,6 +58,7 @@ export default class OpportunityRecordList extends React.Component{
 			loading: false,
 			records: [],
 			type: "email",
+			disableAddCity: false,
 		};
 	}
 
@@ -116,6 +117,19 @@ export default class OpportunityRecordList extends React.Component{
 		}
 	};
 
+	handleAddCityClick = (e) => {
+		if (this.state.disableAddCity) {
+			e.preventDefault();
+			return;
+		}
+
+		this.setState({ disableAddCity: true });
+
+		setTimeout(() => {
+			this.setState({ disableAddCity: false });
+		}, 45000);
+	};
+
 	render(){
 		let rows = [];
 		let para = "";
@@ -160,9 +174,17 @@ export default class OpportunityRecordList extends React.Component{
 		return(
 			<div>
 				<h3 className="page-header">
-					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/opportunity_notification/schedule`} className="btn btn-default pull-right">
+					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/opportunity_notification/schedule`}
+						onClick={this.handleAddCityClick}
+						className="btn btn-default pull-right"
+						style={{cursor : this.state.disableAddCity ? "not-allowed" : "pointer",opacity: this.state.disableAddCity ? 0.6 : 1,}}
+						title={this.state.disableAddCity ? "Wait for 45sec" : "Add a City"}
+					>
 						<Plus/> Add City
 					</Link>
+					{/* <Link to={`/audit_cycle/${this.props.params.auditCycleId}/opportunity_notification/schedule`} className="btn btn-default pull-right">
+						<Plus/> Add City
+					</Link> */}
 					<div className="col-md-2 pull-right">
 						<select className="form-control" onChange={this.onChangeHandler}>
 							<option value="email">Email</option>

@@ -27,6 +27,7 @@ from auditor.models import ProfileInfo
 from referral.models import AuditorReferral
 from social.models import Facebook
 from registration.models import Verification
+from manager.models import ManagerProfileInfo
 from manager.serializers import CitySerializer
 from manager.service import auditor_summary as auditor_summery_service
 
@@ -159,7 +160,19 @@ class AuditorView(generics.ListAPIView):
     filter_class = AuditorFilterSet
     pagination_class = AuditorViewPaginationClass
     search_fields = ('email','profileinfo__first_name','profileinfo__last_name','profileinfo__mobile_number','profileinfo__city__name','profileinfo__pincode')
+    
+    def filter_queryset(self, queryset):
+        queryset = super().filter_queryset(queryset)
 
+        try:
+            manager = ManagerProfileInfo.objects.get(user=self.request.user)
+            allowed_countries = manager.allowed_countries or []
+        except ManagerProfileInfo.DoesNotExist:
+            return queryset.none()
+
+        if allowed_countries:
+            queryset = queryset.filter(profileinfo__city__country__in=allowed_countries)
+        return queryset
 
 class AuditorIdView(APIView):
     permission_classes = [HasGroupPermission]

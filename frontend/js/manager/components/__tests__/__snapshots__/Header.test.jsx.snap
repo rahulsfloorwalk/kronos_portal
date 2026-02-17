@@ -70,44 +70,6 @@ exports[`<Header/> is rendered correctly 1`] = `
           </span>
         </a>
       </li>
-      <li
-        className=""
-        role="presentation"
-      >
-        <a
-          onClick={[Function]}
-          style={Object {}}
-        >
-          <span
-            className="glyphicon glyphicon-tower"
-          />
-           
-          <span
-            className="hidden-xs"
-          >
-            Agency
-          </span>
-        </a>
-      </li>
-      <li
-        className=""
-        role="presentation"
-      >
-        <a
-          onClick={[Function]}
-          style={Object {}}
-        >
-          <span
-            className="glyphicon glyphicon-knight"
-          />
-           
-          <span
-            className="hidden-xs"
-          >
-            Moderators
-          </span>
-        </a>
-      </li>
     </ul>
     <ul
       className="nav navbar-nav navbar-right"

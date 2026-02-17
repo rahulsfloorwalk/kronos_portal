@@ -47,6 +47,7 @@ urlpatterns = ([
 
     url(r'country$', city_views.CountryView.as_view(), name='country_view'),
     url(r'state$', city_views.StateView.as_view(), name='state_view'),
+    url(r'state_by_country_code$', city_views.StateByCountryCodeView.as_view(), name='state_by_country_code_view'),
     url(r'(?P<country>[\w\-]+)/state_by_country_id$', city_views.StateViewByCountryId.as_view(), name='state_view_by_country_id'),
     url(r'city/(?P<state>[\w\-]+)$', city_views.CityView.as_view(), name='city_view'),
 
@@ -328,6 +329,7 @@ urlpatterns = ([
     url(r'manager/(?P<user_id>[0-9]+)$', manager_views.ManagerIdView.as_view(), name='manager_id_view'),
     url(r'manager$', manager_views.ManagerView.as_view(), name='manager_view'),
     url(r'manager_profile$', manager_views.ManagerprofileView.as_view(), name='manager_profile_view'),
+    url(r'^manager/(?P<user_id>\d+)/allowed_countries$',manager_views.ManagerAllowedCountriesView.as_view(),name='manager_allowed_countries'),
 
 
     url(r'trainer/(?P<user_id>[0-9]+)$', trainer_views.TrainerIdView.as_view(), name='trainer_id_view'),

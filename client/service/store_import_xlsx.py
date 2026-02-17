@@ -1,7 +1,7 @@
 import openpyxl
 import xlsxwriter
 import io
-from django.db import IntegrityError
+from django.db import IntegrityError, DataError
 from kronos.exceptions import AppLogicError
 
 from client.models import Store
@@ -53,6 +53,8 @@ def import_store_by_xlsx_sheet(client_id, xlsx_sheet)-> bool:
         Store.objects.bulk_create(store_list)
     except IntegrityError as e:
         raise AppLogicError("Client with code combination already exists")
+    except DataError:
+        raise AppLogicError("Some Excel fields are too long (code, phone, pincode, address, etc)")
     return True
 
 

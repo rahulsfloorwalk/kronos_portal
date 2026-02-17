@@ -620,7 +620,7 @@ class AuditStoreIdSubmitView(APIView):
             _logger.info("Auto-assign skipped for audit_store ID: " + str(audit_store_id) + " (client_id " + str(client_id) + " is in excluded list)")
             return Response(AuditStoreSerializer(audit_store).data)
 
-        eligible_moderator_ids = [503761,454714,45590,7450,519284] 
+        eligible_moderator_ids = [503761,454714,45590,7450] 
         # eligible_moderator_ids = [6,32,33] 
         try:
             moderator_group = Group.objects.get(name=GROUP_NAME_MODERATOR)
@@ -677,7 +677,7 @@ class AuditStoreIdSubmitReportView(APIView):
             _logger.info("Auto-assign skipped for audit_store ID: " + str(audit_store_id) + " (client_id " + str(client_id) + " is in excluded list)")
             return Response(AuditStoreSerializer(audit_store).data)
         
-        eligible_moderator_ids = [503761,454714,45590,7450,519284] 
+        eligible_moderator_ids = [503761,454714,45590,7450] 
         try:
             moderator_group = Group.objects.get(name=GROUP_NAME_MODERATOR)
             reports = AuditStore.objects.filter(status=AuditStore.SUBMITTED).values("id")
