@@ -154,13 +154,13 @@ def import_auditors_from_json():
                 try:
                     profile.save()
                 except DataError as e:
-                    print(" DATABASE ERROR for:", email)
-                    print(" Raw DB Error:", str(e))
+                    # print(" DATABASE ERROR for:", email)
+                    # print(" Raw DB Error:", str(e))
 
                     for field in profile._meta.fields:
                         value = getattr(profile, field.name)
-                        if isinstance(value, str):
-                            print(f"{field.name} = '{value}' (length={len(value)})")
+                        # if isinstance(value, str):
+                        #     print(f"{field.name} = '{value}' (length={len(value)})")
                     raise
 
                 additional = AdditionalInfo.objects.create(
@@ -168,7 +168,7 @@ def import_auditors_from_json():
                     camera_owned=clean(row.get("camera_owned")),
                 )
 
-                additional.referral_code = generate_ref_code(email, phone)
+                # additional.referral_code = generate_ref_code(email, phone)
                 additional.save()
                 BankInfo.objects.create(
                     user=user,
