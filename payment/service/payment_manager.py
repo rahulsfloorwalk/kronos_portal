@@ -117,7 +117,7 @@ def is_payment_payable(payment):
 
 def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_actor) -> (int, int):
     try:
-        audit_store = audit_store_service.find_by_id(audit_store_id)
+        audit_store = audit_store_service.find_by_id(audit_store_id) 
         payment = Payment()
         payment.audit_store = audit_store
         payment.user = audit_store.user
