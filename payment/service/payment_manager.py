@@ -187,7 +187,7 @@ def pay(payment_id, user_actor):
             if payment.status == Payment.PENDING:
                 payment.status = Payment.PAID
                 payment.paid_on = timezone.now()
-                payment.comment = get_payment_comment_for_paid_status(payment.audit_store)
+                # payment.comment = get_payment_comment_for_paid_status(payment.audit_store)
                 payment.save()
                 notify.send(
                     user_actor,
