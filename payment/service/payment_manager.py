@@ -23,9 +23,12 @@ from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NA
 def get_payment_comment_for_pending_status(audit_store):
     user = audit_store.user
     if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
-        payment_comment = "Payment for {first} {last} for audit done on {date} for {client}".format(
-            first=user.profileinfo.first_name,
-            last=user.profileinfo.last_name,
+        bi = user.bankinfo
+        # payment_comment = "Payment for {first} {last} for audit done on {date} for {client}".format(
+        payment_comment = "Payment for {first} for audit done on {date} for {client}".format(
+            # first=user.profileinfo.first_name,
+            # last=user.profileinfo.last_name,
+            first=bi.account_holder_name,
             date=audit_store.audit_date,
             client=audit_store.audit.audit_cycle.client.name
         )
@@ -46,9 +49,11 @@ def get_payment_comment_for_paid_status(audit_store):
         bi = user.bankinfo
         if not bi.is_payable():
             raise AppLogicError("Payment not payable due to incomplete fields")
-        payment_comment = "payment done for {first} {last} in bank - {bank} ({ifsc}) for account number - {account}".format(
-            first=user.profileinfo.first_name,
-            last=user.profileinfo.last_name,
+        # payment_comment = "payment done for {first} {last} in bank - {bank} ({ifsc}) for account number - {account}".format(
+        payment_comment = "payment done for {first} in bank - {bank} ({ifsc}) for account number - {account}".format(
+            # first=user.profileinfo.first_name,
+            # last=user.profileinfo.last_name,
+            first=bi.account_holder_name,
             bank=bi.bank_name,
             ifsc=bi.ifsc_code,
             account=bi.account_number
@@ -112,7 +117,7 @@ def is_payment_payable(payment):
 
 def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_actor) -> (int, int):
     try:
-        audit_store = audit_store_service.find_by_id(audit_store_id)
+        audit_store = audit_store_service.find_by_id(audit_store_id) 
         payment = Payment()
         payment.audit_store = audit_store
         payment.user = audit_store.user
@@ -182,7 +187,7 @@ def pay(payment_id, user_actor):
             if payment.status == Payment.PENDING:
                 payment.status = Payment.PAID
                 payment.paid_on = timezone.now()
-                payment.comment = get_payment_comment_for_paid_status(payment.audit_store)
+                # payment.comment = get_payment_comment_for_paid_status(payment.audit_store)
                 payment.save()
                 notify.send(
                     user_actor,

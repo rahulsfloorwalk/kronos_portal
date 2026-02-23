@@ -12,7 +12,7 @@ from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from questionnaire.models import Question
-from auditor.models import AuditorRating, ProfileInfo
+from auditor.models import AuditorRating, ProfileInfo, BankInfo
 from audit_store import service
 from audit.models import AuditCycle, Audit, ReportAttribute
 from audit_store.models import AuditStore
@@ -192,7 +192,7 @@ class AuditStoreServiceTestCase(TestCase):
 
     def test_accept_accepts_report_and_adds_payment(self):
         audit_store = mommy.make(AuditStore, user=self.auditor_user, earnings_per_audit=2000, reimbursement=5000, status=AuditStore.COMPLETED)
-
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name = "foobar", account_number = "123454321", ifsc_code = "SBIN0001", pan_number = "ADSFB780Y")
         audit_store = service.accept(audit_store.id, self.manager_user)
         expect(audit_store.status).to(equal(AuditStore.ACCEPTED))
         expect(audit_store.payments.count()).to(equal(1))
@@ -201,6 +201,7 @@ class AuditStoreServiceTestCase(TestCase):
     def test_accept_accepts_report_and_defaults_to_zero_for_earnings_per_audit(self):
         audit = mommy.make(Audit, earnings_per_audit=None, reimbursement=2000)
         audit_store = mommy.make(AuditStore, earnings_per_audit=None, reimbursement=None, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED)
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name = "foobar", account_number = "123454321", ifsc_code = "SBIN0001", pan_number = "ADSFB780Y")
 
         audit_store = service.accept(audit_store.id, self.manager_user)
         expect(audit_store.status).to(equal(AuditStore.ACCEPTED))
@@ -210,6 +211,7 @@ class AuditStoreServiceTestCase(TestCase):
     def test_accept_accepts_report_and_defaults_to_zero_for_reimbursement(self):
         audit = mommy.make(Audit, earnings_per_audit=5000, reimbursement=None)
         audit_store = mommy.make(AuditStore, earnings_per_audit=None, reimbursement=None, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED)
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name = "foobar", account_number = "123454321", ifsc_code = "SBIN0001", pan_number = "ADSFB780Y")
 
         audit_store = service.accept(audit_store.id, self.manager_user)
         expect(audit_store.status).to(equal(AuditStore.ACCEPTED))
@@ -219,6 +221,7 @@ class AuditStoreServiceTestCase(TestCase):
     def test_accept_accepts_report_and_defaults_to_audit_values(self):
         audit = mommy.make(Audit, earnings_per_audit=2000, reimbursement=5000)
         audit_store = mommy.make(AuditStore, earnings_per_audit=None, reimbursement=None, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED)
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name = "foobar", account_number = "123454321", ifsc_code = "SBIN0001", pan_number = "ADSFB780Y")
 
         audit_store = service.accept(audit_store.id, self.manager_user)
         expect(audit_store.status).to(equal(AuditStore.ACCEPTED))
@@ -228,6 +231,7 @@ class AuditStoreServiceTestCase(TestCase):
     def test_accept_all_accepts_all_reports(self):
         audit = mommy.make(Audit, earnings_per_audit=2000, reimbursement=5000)
         audit_stores = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED, _quantity=5)
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name = "foobar", account_number = "123454321", ifsc_code = "SBIN0001", pan_number = "ADSFB780Y")
 
         count = service.accept_all_audit_stores(audit.audit_cycle_id, self.manager_user, start_date="", end_date="")
         expect(count).to(equal(len(audit_stores)))

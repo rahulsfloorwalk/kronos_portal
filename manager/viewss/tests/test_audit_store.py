@@ -8,6 +8,7 @@ from faker import Faker
 from .utils import ManagerAPITestCase
 from audit.models import Audit, AuditCycle, ReportAttribute
 from audit_store.models import AuditStore
+from auditor.models import AuditorRating, ProfileInfo, BankInfo
 
 fake = Faker()
 
@@ -280,7 +281,9 @@ class AuditStoreIdAcceptTestCase(ManagerAPITestCase):
         self.login()
 
     def test_post_changes_status_to_accepted(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.create_auditor, reimbursement=5000, earnings_per_audit=2000)
+        auditor = self.create_auditor()
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=auditor, reimbursement=5000, earnings_per_audit=2000)
+        mommy.make(BankInfo, user=auditor, account_holder_name = "foobar", account_number = "123454321", ifsc_code = "SBIN0001", pan_number = "ADSFB780Y")
 
         response = self.client.post(reverse('manager:audit_store_id_accept_view', kwargs = {
             'audit_store_id': audit_store.id
@@ -296,9 +299,11 @@ class AcceptAllCompletedForAuditCycleTestCase(ManagerAPITestCase):
         self.login()
 
     def test_post_returns_the_correct_count(self):
+        auditor = self.create_auditor() 
         audit = mommy.make(Audit, reimbursement=5000, earnings_per_audit=2000)
-        mommy.make(AuditStore, status=AuditStore.COMPLETED, audit=audit, user=self.create_auditor, _quantity=5)
-        mommy.make(AuditStore, status=AuditStore.ASSIGNED, audit=audit, user=self.create_auditor, _quantity=2)
+        mommy.make(AuditStore, status=AuditStore.COMPLETED, audit=audit, user=auditor, _quantity=5)
+        mommy.make(AuditStore, status=AuditStore.ASSIGNED, audit=audit, user=auditor, _quantity=2)
+        mommy.make(BankInfo, user=auditor, account_holder_name = "foobar", account_number = "123454321", ifsc_code = "SBIN0001", pan_number = "ADSFB780Y")
 
         response = self.client.post(reverse('manager:accept_all_completed_for_audit_cycle', kwargs = {
             'audit_cycle_id': audit.audit_cycle_id
