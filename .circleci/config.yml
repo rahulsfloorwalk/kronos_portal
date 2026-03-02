@@ -116,6 +116,8 @@ jobs:
           command: |
             cd frontend
             npm run build-prod
+          environment:
+            NODE_OPTIONS: --max_old_space_size=4096
 
       - run:
           name: package the tar
