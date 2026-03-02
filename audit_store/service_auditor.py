@@ -338,7 +338,7 @@ def find_completed_audit_store_count_by_user_id(user_id):
 def complete_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     user = User.objects.get(id = user_id)
-    print(user,user_id)
+    # print(user,user_id)
     # set_attachment_by_proof_tag(audit_store_id)
     audit_store.qa_complete(by=user)
 

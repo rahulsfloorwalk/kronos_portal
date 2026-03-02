@@ -15,7 +15,8 @@ import attachmentErrorImageUrl from "../../../img/error_100.png";
 import { Player, BigPlayButton } from "video-react";
 import AmrAudioPlayer from "../../components/AmrAudioPlayer.jsx";
 import InPlaceEditable from "../../components/InPlaceEditable.jsx";
-import heic2any from "heic2any";
+// import heic2any from "heic2any";
+import libheif from "libheif-js";
 
 class AttachmentRenderer extends React.Component {
 	static propTypes = {
@@ -92,24 +93,96 @@ class AttachmentRenderer extends React.Component {
 			}
 		}
 	}
-	convertHeicToJpeg = (url) => {
-		this.setLoading(true);
-		this.setError(false);
+	// convertHeicToJpeg = (url) => {
+	// 	this.setLoading(true);
+	// 	this.setError(false);
 
-		fetch(url)
-			.then((response) => response.blob())
-			.then((blob) => heic2any({
-				blob,
-				toType: "image/jpeg",
-				quality: 0.8,
-			}))
-			.then((convertedBlob) => {
-				const convertedUrl = URL.createObjectURL(convertedBlob);
-				this.setState({ convertedUrl, loading: false });
+	// 	fetch(url)
+	// 		.then((response) => response.blob())
+	// 		.then((blob) => heic2any({
+	// 			blob,
+	// 			toType: "image/jpeg",
+	// 			quality: 0.8,
+	// 		}))
+	// 		.then((convertedBlob) => {
+	// 			const convertedUrl = URL.createObjectURL(convertedBlob);
+	// 			this.setState({ convertedUrl, loading: false });
+	// 		})
+	// 		.catch(() => {
+	// 			this.setError(true);
+	// 			this.setLoading(false);
+	// 		});
+	// };
+	convertHeicToJpeg = (url) => {
+		var self = this;
+		self.setLoading(true);
+		self.setError(false);
+
+		return fetch(url)
+			.then(function (response) {
+				if (!response.ok) {
+					throw new Error("Fetch failed: " + response.status);
+				}
+				return response.arrayBuffer();
 			})
-			.catch(() => {
-				this.setError(true);
-				this.setLoading(false);
+			.then(function (buffer) {
+				var decoder = new libheif.HeifDecoder();
+				var data = decoder.decode(new Uint8Array(buffer));
+
+				if (!data || data.length === 0) {
+					throw new Error("No images found in HEIF file");
+				}
+
+				var image = data[0];
+				var width = image.get_width();
+				var height = image.get_height();
+
+				return new Promise(function (resolve, reject) {
+					var pixelData = {
+						data: new Uint8ClampedArray(width * height * 4),
+						width: width,
+						height: height,
+						colorSpace: "srgb",
+					};
+
+					image.display(pixelData, function (displayResult) {
+						if (!displayResult) {
+							reject(new Error("Failed to display HEIF image"));
+							return;
+						}
+
+						var canvas = document.createElement("canvas");
+						canvas.width = width;
+						canvas.height = height;
+						var ctx = canvas.getContext("2d");
+
+						var imgData = new ImageData(
+							new Uint8ClampedArray(displayResult.data),
+							width,
+							height
+						);
+						ctx.putImageData(imgData, 0, 0);
+
+						canvas.toBlob(
+							function (blob) {
+								if (!blob) {
+									reject(new Error("Canvas toBlob failed"));
+									return;
+								}
+								resolve(URL.createObjectURL(blob));
+							},
+							"image/jpeg",
+							0.8
+						);
+					});
+				});
+			})
+			.then(function (convertedUrl) {
+				self.setState({ convertedUrl: convertedUrl, loading: false });
+			})
+			.catch(function (err) {
+				console.error("HEIC conversion failed:", err);
+				self.setState({ convertedUrl: url, loading: false, error: false });
 			});
 	};
 

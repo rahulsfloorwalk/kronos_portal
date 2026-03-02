@@ -52,6 +52,7 @@ from datetime import datetime, timedelta
 import registration.service.auditor as auditor_service
 from manager.viewss.auditor import AuditorSerializer
 from manager.models import ProofTag
+from client.models import ClientModerator
 from django.db import IntegrityError
 from rest_framework.permissions import AllowAny
 from auditor.serializers import AuditProoftagSerializer
@@ -620,12 +621,16 @@ class AuditStoreIdSubmitView(APIView):
             _logger.info("Auto-assign skipped for audit_store ID: " + str(audit_store_id) + " (client_id " + str(client_id) + " is in excluded list)")
             return Response(AuditStoreSerializer(audit_store).data)
 
-        eligible_moderator_ids = [503761,454714,45590,7450] 
+        # eligible_moderator_ids = [503761,454714,45590,7450] 
         # eligible_moderator_ids = [6,32,33] 
         try:
             moderator_group = Group.objects.get(name=GROUP_NAME_MODERATOR)
-            reports = AuditStore.objects.filter(status=AuditStore.SUBMITTED).values("id")
-            report_ids = [str(report["id"]) for report in reports]
+            client_moderators = ClientModerator.objects.filter(client_id=client_id,user__is_active=True).values_list("user_id", flat=True)
+
+            eligible_moderator_ids = list(client_moderators)
+            if not eligible_moderator_ids:
+                _logger.info("No client moderators configured for client_id " + {client_id} + " . Auto-assign skipped.")
+                return Response(AuditStoreSerializer(audit_store).data)
 
             content_type = ContentType.objects.get_for_model(AuditStore)
             permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
@@ -677,11 +682,15 @@ class AuditStoreIdSubmitReportView(APIView):
             _logger.info("Auto-assign skipped for audit_store ID: " + str(audit_store_id) + " (client_id " + str(client_id) + " is in excluded list)")
             return Response(AuditStoreSerializer(audit_store).data)
         
-        eligible_moderator_ids = [503761,454714,45590,7450] 
+        # eligible_moderator_ids = [503761,454714,45590,7450] 
         try:
             moderator_group = Group.objects.get(name=GROUP_NAME_MODERATOR)
-            reports = AuditStore.objects.filter(status=AuditStore.SUBMITTED).values("id")
-            report_ids = [str(report["id"]) for report in reports]
+            client_moderators = ClientModerator.objects.filter(client_id=client_id,user__is_active=True,is_active=True).values_list("user_id", flat=True)
+
+            eligible_moderator_ids = list(client_moderators)
+            if not eligible_moderator_ids:
+                _logger.info("No client moderators configured for client_id " + {client_id} + " . Auto-assign skipped.")
+                return Response(AuditStoreSerializer(audit_store).data)
 
             content_type = ContentType.objects.get_for_model(AuditStore)
             permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")

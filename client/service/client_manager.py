@@ -1,8 +1,8 @@
 from django.db.transaction import atomic
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
-from manager.service.manager import find_by_id
-from ..models import ClientManager
+from manager.service.manager import find_by_id,moderator_find_by_id
+from ..models import ClientManager , ClientModerator
 from manager.models import ManagerProfileInfo
 
 
@@ -12,6 +12,35 @@ def find_client_manager_by_id(client_manager_id):
     except ClientManager.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def find_client_moderator_by_id(client_moderator_id):
+    try:
+        return ClientModerator.objects.get(id=client_moderator_id)
+    except ClientModerator.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+@atomic
+def insert_moderators(client, moderator_id, receive_email_notification, is_active):
+    for moderator_id in moderator_id:
+        obj, created = ClientModerator.objects.get_or_create(
+            client=client,
+            user_id=moderator_id,
+            defaults={
+                "receive_email_notification": receive_email_notification,
+                "is_active": is_active
+            }
+        )
+        if not created:
+            obj.receive_email_notification = receive_email_notification
+            obj.is_active = is_active
+            obj.save()
+    return ClientModerator.objects.filter(client=client)
+
+def update_moderator(client_moderator_id, receive_email_notification, is_active):
+    client_moderator = find_client_moderator_by_id(client_moderator_id)
+    client_moderator.receive_email_notification = receive_email_notification
+    client_moderator.is_active = is_active
+    client_moderator.save()
+    return client_moderator
 
 @atomic
 def insert(client, manager_id, receive_email_notification, is_active):

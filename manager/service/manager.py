@@ -3,7 +3,7 @@ from django.db.utils import IntegrityError
 from django.contrib.auth.models import User, Group
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
-from registration.models import GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_MANAGER,GROUP_NAME_MODERATOR
 
 def find_all():
     return Group.objects.get(name=GROUP_NAME_MANAGER).user_set
@@ -11,6 +11,12 @@ def find_all():
 def find_by_id(user_id):
     try:
         return Group.objects.get(name=GROUP_NAME_MANAGER).user_set.get(pk=user_id)
+    except User.DoesNotExist as e:
+        raise ObjectNotFound from e
+    
+def moderator_find_by_id(user_id):
+    try:
+        return Group.objects.get(name=GROUP_NAME_MODERATOR).user_set.get(pk=user_id)
     except User.DoesNotExist as e:
         raise ObjectNotFound from e
 
