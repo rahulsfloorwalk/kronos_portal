@@ -106,6 +106,81 @@ def get_auditor_dashboard_data_for_app(user_id):
             'is_tour_complete': is_tour_complete,
         }
         return result
+
+# def get_report_completion_percentage(audit_store_id):
+
+#     audit_store = AuditStore.objects.select_related('audit__audit_cycle').only('id', 'status', 'audit__audit_cycle', 'report_summary').get(id=audit_store_id)
+#     if audit_store.status == AuditStore.ASSIGNED:
+#         return 0
+
+#     skip_statuses = [AuditStore.SUBMITTED,AuditStore.PM_REVIEW,AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.FAILED,]
+#     if audit_store.status in skip_statuses:
+#         return 100
+
+#     if audit_store.status != AuditStore.ACKNOWLEDGED:
+#         return None
+
+#     audit_cycle = audit_store.audit.audit_cycle
+#     sections = list(Section.objects.filter(audit_cycle=audit_cycle,hide_comment=False).only("id"))
+#     questions = list(Question.objects.filter(section__audit_cycle=audit_cycle).only("id", "optional_comment_required", "question_type"))
+#     answers = Answer.objects.filter(audit_store_id=audit_store_id).only("question_id", "answer_comment")
+#     report_sections = ReportSection.objects.filter(audit_store_id=audit_store_id).only("section_id", "auditor_comment")
+
+#     proof_tags = AuditCycleProofTagList.objects.filter(
+#         section__audit_cycle=audit_cycle
+#     )
+
+#     proof_uploads = AuditStoreProof.objects.filter(
+#         audit_store_id=audit_store_id
+#     )
+
+#     total_questions_count = 0
+#     attended_questions_count = 0
+
+#     total_questions_count += len(sections)
+#     total_questions_count += len(questions)
+
+#     report_section_dict = {rs.section_id: rs for rs in report_sections}
+
+#     for section in sections:
+#         rs = report_section_dict.get(section.id)
+#         if rs and rs.auditor_comment and rs.auditor_comment.strip():
+#             attended_questions_count += 1
+
+#     answer_dict = {}
+#     for ans in answers:
+#         answer_dict.setdefault(ans.question_id, []).append(ans)
+
+#     for question in questions:
+#         total_questions_count += 0
+
+#         q_answers = answer_dict.get(question.id, [])
+
+#         if question.optional_comment_required and question.question_type == Question.MUTEX:
+#             if q_answers and q_answers[0].answer_comment:
+#                 attended_questions_count += 1
+#         elif q_answers:
+#             attended_questions_count += 1
+#     total_questions_count += proof_tags.count()
+
+#     uploaded_proof_tag_ids = set(
+#         proof_uploads.values_list("proof_tag_id", flat=True)
+#     )
+
+#     for tag in proof_tags:
+#         if tag.id in uploaded_proof_tag_ids:
+#             attended_questions_count += 1
+
+#     if getattr(audit_cycle, "audit_report_summary", False):
+#         total_questions_count += 1
+#         if audit_store.report_summary and audit_store.report_summary.strip():
+#             attended_questions_count += 1
+
+#     if total_questions_count == 0:
+#         return 0
+#     percentage = int((attended_questions_count / total_questions_count) * 100)
+
+#     return percentage
    
    
 def get_report_completion_percentage(audit_store_id):

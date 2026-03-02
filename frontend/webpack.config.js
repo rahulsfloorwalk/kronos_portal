@@ -103,6 +103,9 @@ module.exports = {
 			PHOEBE_VERSION: JSON.stringify(require("./package.json").version),
 		}),
 	],
+	node: {
+		fs: "empty"
+	},
 	optimization: {
 		splitChunks: {
 			chunks: "initial",

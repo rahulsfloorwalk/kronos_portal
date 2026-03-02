@@ -337,9 +337,14 @@ class AuditStoreIdQAOKView(APIView):
     }
     def post(self, request, audit_store_id):
         audit_store = get_object_or_404(AuditStore.objects.for_moderator(request.user), pk=audit_store_id)
-        audit_store.moderator_submission_date = timezone.now()
-        audit_store.save(update_fields=["moderator_submission_date"])
+        # audit_store.moderator_submission_date = timezone.now()
+        # audit_store.save(update_fields=["moderator_submission_date"])
+        if not audit_store.moderator_submission_date:
+            audit_store.moderator_submission_date = timezone.now()
+            audit_store.save(update_fields=["moderator_submission_date"])
+
         moderator_submission_time = request.data.get("moderator_submission_time")
+        # if moderator_submission_time and not audit_store.moderator_submission_time:
         if moderator_submission_time:
             audit_store.moderator_submission_time = moderator_submission_time
             audit_store.save(update_fields=["moderator_submission_time"])
@@ -351,7 +356,7 @@ class AuditStoreIdQAOKView(APIView):
         audit_store.qa_ok(by=request.user)
         audit_store_detail = AuditStoreSerializer(audit_store).data
         client_id = audit_store.audit.audit_cycle.client.id
-        if client_id in [344, 345, 346]:
+        if client_id in [344, 345, 346, 378]:
             audit_store = complete_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
     

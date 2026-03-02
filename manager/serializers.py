@@ -392,6 +392,16 @@ class PlainUserSerializer(ModelSerializer):
         except ManagerProfileInfo.DoesNotExist:
             return None
 
+class PlainmoderatorUserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'is_active',
+        )
+        read_only_fields = fields
+
 class AgencyUserInfoSerializer(ModelSerializer):
     agency = AgencySerializer()
     user = PlainUserSerializer()

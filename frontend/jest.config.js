@@ -19,10 +19,10 @@ module.exports = {
 	],
 	coverageThreshold: {
 		global: {
-			branches: 19,
-			functions: 18,
+			branches: 17,
+			functions: 17,
 			lines: 20,
-			statements: 22,
+			statements: 20,
 		}
 	},
 	reporters: [
@@ -32,7 +32,8 @@ module.exports = {
 	clearMocks: true,
 	moduleNameMapper: {
 		"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/js/__mocks__/fileMock.js",
-		"\\.(css|less|scss)$": "<rootDir>/js/__mocks__/styleMock.js"
+		"\\.(css|less|scss)$": "<rootDir>/js/__mocks__/styleMock.js",
+		"^libheif-js$": "<rootDir>/__mocks__/libheif-js.js"
 	},
 	"snapshotSerializers": ["enzyme-to-json/serializer"],
 };

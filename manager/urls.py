@@ -296,6 +296,11 @@ urlpatterns = ([
     url(r'client_user$', client_user_views.ClientUserView.as_view(), name='client_user_view'),
     url(r'client_user/(?P<client_user_id>[0-9]+)/assign_stores$', client_user_views.ClientUserAssignStoresView.as_view(), name='client_user_assign_stores_view'),
 
+    url(r'client_moderator_insert$', client_manager_views.ClientModeratorView.as_view(), name='client_moderator_view'), # insert
+    url(r'client/(?P<client_id>[0-9]+)/client_moderator$', client_manager_views.ClientModeratorByClientView.as_view(), name='client_moderator_view_by_client'), # get list
+    url(r'client_moderator/(?P<client_moderator_id>[0-9]+)$', client_manager_views.ClientModeratorIdView.as_view(), name='client_moderator_id_view'), # get and post by id 
+    url(r'client/(?P<client_id>[0-9]+)/client_moderator_assign$', client_manager_views.ClientModeratorAssignView.as_view(), name='client_moderator_assign_view'), # non assignd moderator
+    
     url(r'client/(?P<client_id>[0-9]+)/client_manager$', client_manager_views.ClientManagerByClientView.as_view(), name='client_manager_view_by_client'),
     url(r'client_manager$', client_manager_views.ClientManagerView.as_view(), name='client_manager_view'),
     url(r'client_manager/(?P<client_manager_id>[0-9]+)$', client_manager_views.ClientManagerIdView.as_view(), name='client_manager_id_view'),

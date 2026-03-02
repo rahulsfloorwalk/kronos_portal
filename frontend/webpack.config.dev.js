@@ -12,6 +12,9 @@ module.exports = Object.assign({}, baseConfig, {
 			}
 		}),
 	]),
+	node: {
+		fs: "empty"
+	},
 	devServer: {
 		inline: true,
 		publicPath: "/static/",

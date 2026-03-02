@@ -149,6 +149,8 @@ import QAReportPanel from "./reports/QAReportPanel.jsx";
 import QAPerformance from "./reports/QAPerformance.jsx";
 import QuestionnaireImportForm from "./questionnaire/QuestionnaireImportForm.jsx";
 import ManagerAddCountry from "./manager/ManagerAddCountry.jsx";
+import ClientQaList from "./client_qa_listing/ClientQaList.jsx";
+import ClientQaForm from "./client_qa_listing/ClientQaForm.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -217,6 +219,10 @@ const Routes = () => (
 				<Route path="client_requirements" component={ClientRequirementsList}>
 					<Route path="add" component={ClientRequirementsForm} />
 					<Route path=":clientRequirementId/edit" component={ClientRequirementsForm} />
+				</Route>
+				<Route path="client_qa_listing" component={ClientQaList}>
+					<Route path="add" component={ClientQaForm} />
+					<Route path=":clientQaId/edit" component={ClientQaForm} />
 				</Route>
 				<Route path="questionnaire_type" component={QuestionnaireTypeList}>
 					<Route path="add" component={QuestionnaireTypeForm} />
