@@ -8,9 +8,17 @@ export default class ModeratorAssignDropdown extends Component{
 		auditStoreId: PropTypes.number.isRequired,
 		selectedModeratorId: PropTypes.arrayOf(PropTypes.number).isRequired,
 
+		// moderators: PropTypes.arrayOf(PropTypes.shape({
+		// 	id: PropTypes.number.isRequired,
+		// 	email: PropTypes.string.isRequired,
+		// 	is_active: PropTypes.bool.isRequired,
+		// })),
 		moderators: PropTypes.arrayOf(PropTypes.shape({
 			id: PropTypes.number.isRequired,
-			email: PropTypes.string.isRequired,
+			user: PropTypes.shape({
+				email: PropTypes.string.isRequired,
+				is_active: PropTypes.bool.isRequired,
+			}).isRequired,
 			is_active: PropTypes.bool.isRequired,
 		})),
 
@@ -43,7 +51,8 @@ export default class ModeratorAssignDropdown extends Component{
 		const { selectedId } = this.state;
 		return (<select className="form-control" onChange={this.onChange} value={selectedId}>
 			<option value=""></option>
-			{ this.props.moderators.filter((m) => m.is_active).map((m)=> <option key={m.id} value={m.id}>{m.email}</option>) }
+			{ this.props.moderators.filter((m) => m.is_active).map((m)=> <option key={m.user.id} value={m.user.id}>{m.user.email}</option>) }
+			{/* { this.props.moderators.filter((m) => m.is_active).map((m)=> <option key={m.id} value={m.id}>{m.email}</option>) } */}
 		</select>);
 	}
 }

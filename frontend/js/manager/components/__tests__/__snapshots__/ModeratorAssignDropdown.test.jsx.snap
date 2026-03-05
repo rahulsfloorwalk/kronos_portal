@@ -10,14 +10,14 @@ exports[`<ModeratorAssignDropdown/> renders the dropdown of moderators when a mo
     value=""
   />
   <option
-    value={1}
+    value={5744}
   >
-    alize@canberra.com
+    md@gmail.com
   </option>
   <option
-    value={2}
+    value={5315}
   >
-    bob@petersburg.ru
+    xdfd@gmail.com
   </option>
 </select>
 `;
@@ -32,14 +32,14 @@ exports[`<ModeratorAssignDropdown/> renders the dropdown of moderators when no m
     value=""
   />
   <option
-    value={1}
+    value={5744}
   >
-    alize@canberra.com
+    md@gmail.com
   </option>
   <option
-    value={2}
+    value={5315}
   >
-    bob@petersburg.ru
+    xdfd@gmail.com
   </option>
 </select>
 `;

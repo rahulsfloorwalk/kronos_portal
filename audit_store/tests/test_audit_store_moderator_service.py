@@ -14,7 +14,7 @@ from auditor.models import ProfileInfo
 from audit.models import AuditCycle
 
 from audit_store import service_moderator
-
+from django.utils import timezone
 
 class AuditStoreModeratorServiceTestCase(TestCase):
     fixtures = ['groups', 'city']
@@ -39,12 +39,13 @@ class AuditStoreModeratorServiceTestCase(TestCase):
     def create_reports(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         audit_store_recipe = Recipe(AuditStore, audit__audit_cycle=audit_cycle, user=self.auditor_user)
+        now = timezone.now()
 
         a1 = audit_store_recipe.make(status=AuditStore.ACKNOWLEDGED)
         a2 = audit_store_recipe.make(status=AuditStore.SUBMITTED)
-        a3 = audit_store_recipe.make(status=AuditStore.COMPLETED)
-        a4 = audit_store_recipe.make(status=AuditStore.ACCEPTED)
-        audit_store_recipe.make(status=AuditStore.COMPLETED)
+        a3 = audit_store_recipe.make(status=AuditStore.COMPLETED, moderator_submission_date=now)
+        a4 = audit_store_recipe.make(status=AuditStore.ACCEPTED, moderator_submission_date=now)
+        audit_store_recipe.make(status=AuditStore.COMPLETED,moderator_submission_date=now)
 
         assign_perm('moderator_manage', self.moderator_user, a1)
         assign_perm('moderator_manage', self.moderator_user, a2)
@@ -62,7 +63,7 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         self.create_reports()
         reports = service_moderator.find_qa_completed_audit_stores_for_moderator(self.moderator_user.id,
                                                                                  self.lastAuditStoreId,
-                                                                                 self.filterStatus, client_id='')
+                                                                                 self.filterStatus, client_id='',month='', year='')
         self.assertEqual(reports[0].count(), 2)
 
     def test_find_by_id_for_moderator_returns_audit_store(self):

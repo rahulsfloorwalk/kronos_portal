@@ -177,24 +177,24 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
         audit_list_obj = Audit.objects.filter(id__in=audit_ids) \
             .order_by('id', 'store__city__name', 'store__name','count') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count')
+            .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id')
     elif status != "" and last_audit_id != "":
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id, audit_stores__status=status) \
             .order_by('id', 'store__city__name', 'store__name','count') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count')
+            .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id')
     elif status != "" and last_audit_id != "" and city:
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id, audit_stores__status=status,store__city__name=city) \
             .order_by('id', 'store__city__name', 'store__name','count') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count')
+            .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id')
     elif status != "" and start_date and end_date:
         audit_store_objs = AuditStore.objects.filter( audit__audit_cycle__id=audit_cycle_id,status=status, audit_date__range=[start_date, end_date] ).order_by( 'audit__id', 'audit__store__city__name', 'audit__store__name' ).select_related( 'audit__store__name', 'audit__store__address', 'audit__store__city__name' ).values( 'audit__id', 'audit__store__name', 'audit__store__address', 'audit__store__city__name', 'audit__count' ).distinct('audit__id')
         audit_ids = [obj['audit__id'] for obj in audit_store_objs]
 
         audit_list_obj = Audit.objects.filter(id__in=audit_ids).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count') \
+            .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id') \
             .distinct('id')
         total_audit_count = audit_list_obj.count()
     elif status != "" and start_date and end_date and city:
@@ -203,7 +203,7 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
 
         audit_list_obj = Audit.objects.filter(id__in=audit_ids).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count') \
+            .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id') \
             .distinct('id')
         total_audit_count = audit_list_obj.count()
     elif status != "" and city:
@@ -212,12 +212,12 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
             qa_not_assign_audit_store_ids = list(qa_not_assign(audit_cycle_id,status))
             audit_list_obj = Audit.objects.filter( audit_cycle__id=audit_cycle_id, audit_stores__id__in=qa_not_assign_audit_store_ids, audit_stores__status=status ).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name', 'count') \
+            .values('id', 'store__name', 'store__address', 'store__city__name', 'count','audit_cycle__client__id') \
             .distinct('id')
         else:
             audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, audit_stores__status=status, store__city__name=city).order_by('id', 'store__city__name', 'store__name') \
                 .select_related('store__name', 'store__address', 'store__city__name') \
-                .values('id', 'store__name', 'store__address', 'store__city__name','count') \
+                .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id') \
                 .distinct('id')
             total_audit_count = audit_list_obj.count()
     elif status != "":
@@ -226,18 +226,18 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
             qa_not_assign_audit_store_ids = list(qa_not_assign(audit_cycle_id,status))
             audit_list_obj = Audit.objects.filter( audit_cycle__id=audit_cycle_id, audit_stores__id__in=qa_not_assign_audit_store_ids, audit_stores__status=status ).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name', 'count') \
+            .values('id', 'store__name', 'store__address', 'store__city__name', 'count','audit_cycle__client__id') \
             .distinct('id')
         else:
             audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, audit_stores__status=status).order_by('id', 'store__city__name', 'store__name') \
                 .select_related('store__name', 'store__address', 'store__city__name') \
-                .values('id', 'store__name', 'store__address', 'store__city__name','count') \
+                .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id') \
                 .distinct('id')
             total_audit_count = audit_list_obj.count()
     elif city != "" and city != None:
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, store__city__name=city).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count') \
+            .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id') \
             .distinct('id')
         total_audit_count = audit_list_obj.count()
     elif last_audit_id != "":
@@ -247,38 +247,38 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
     elif last_audit_id != ""and city:
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id,store__city__name=city).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count')
+            .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id')
     elif last_audit_id != "" and start_date and end_date:
         audit_store_objs = AuditStore.objects.filter( audit__audit_cycle__id=audit_cycle_id,audit__id__gt=last_audit_id, audit_date__range=[start_date, end_date] ).order_by( 'audit__id', 'audit__store__city__name', 'audit__store__name' ).select_related( 'audit__store__name', 'audit__store__address', 'audit__store__city__name' ).values( 'audit__id', 'audit__store__name', 'audit__store__address', 'audit__store__city__name', 'audit__count' ).distinct('audit__id')
         audit_ids = [obj['audit__id'] for obj in audit_store_objs]
 
         audit_list_obj = Audit.objects.filter(id__in=audit_ids).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count')
+            .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id')
     elif last_audit_id != "" and start_date and end_date and city:
         audit_store_objs = AuditStore.objects.filter( audit__audit_cycle__id=audit_cycle_id,audit__id__gt=last_audit_id,store__city__name=city, audit_date__range=[start_date, end_date] ).order_by( 'audit__id', 'audit__store__city__name', 'audit__store__name' ).select_related( 'audit__store__name', 'audit__store__address', 'audit__store__city__name' ).values( 'audit__id', 'audit__store__name', 'audit__store__address', 'audit__store__city__name', 'audit__count' ).distinct('audit__id')
         audit_ids = [obj['audit__id'] for obj in audit_store_objs]
 
         audit_list_obj = Audit.objects.filter(id__in=audit_ids).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count')
+            .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id')
     elif start_date and start_date and city:
         audit_store_objs = AuditStore.objects.filter( audit__audit_cycle__id=audit_cycle_id,store__city__name=city, audit_date__range=[start_date, end_date] ).order_by( 'audit__id', 'audit__store__city__name', 'audit__store__name' ).select_related( 'audit__store__name', 'audit__store__address', 'audit__store__city__name' ).values( 'audit__id', 'audit__store__name', 'audit__store__address', 'audit__store__city__name', 'audit__count' ).distinct('audit__id')
         audit_ids = [obj['audit__id'] for obj in audit_store_objs]
 
-        audit_list_obj = Audit.objects.filter( id__in=audit_ids ).order_by( 'id', 'store__city__name', 'store__name' ).select_related( 'store__name', 'store__address', 'store__city__name' ).values( 'id', 'store__name', 'store__address', 'store__city__name', 'count' )
+        audit_list_obj = Audit.objects.filter( id__in=audit_ids ).order_by( 'id', 'store__city__name', 'store__name' ).select_related( 'store__name', 'store__address', 'store__city__name' ).values( 'id', 'store__name', 'store__address', 'store__city__name', 'count','audit_cycle__client__id' )
         audit_list = list(audit_list_obj)
     elif start_date and start_date:
         audit_store_objs = AuditStore.objects.filter( audit__audit_cycle__id=audit_cycle_id, audit_date__range=[start_date, end_date] ).order_by( 'audit__id', 'audit__store__city__name', 'audit__store__name' ).select_related( 'audit__store__name', 'audit__store__address', 'audit__store__city__name' ).values( 'audit__id', 'audit__store__name', 'audit__store__address', 'audit__store__city__name', 'audit__count' ).distinct('audit__id')
         audit_ids = [obj['audit__id'] for obj in audit_store_objs]
 
-        audit_list_obj = Audit.objects.filter( id__in=audit_ids ).order_by( 'id', 'store__city__name', 'store__name' ).select_related( 'store__name', 'store__address', 'store__city__name' ).values( 'id', 'store__name', 'store__address', 'store__city__name', 'count' )
+        audit_list_obj = Audit.objects.filter( id__in=audit_ids ).order_by( 'id', 'store__city__name', 'store__name' ).select_related( 'store__name', 'store__address', 'store__city__name' ).values( 'id', 'store__name', 'store__address', 'store__city__name', 'count','audit_cycle__client__id' )
         audit_list = list(audit_list_obj)
 
     else:
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count')
+            .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id')
         total_audit_count = audit_list_obj.count()
     if user_id != "":
         audit_list_obj = audit_list_obj.filter(audit_stores__user__id=user_id).distinct('id')
@@ -313,6 +313,7 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
         audit_store_dict['store_address'] = audit['store__address']
         audit_store_dict['store_city'] = audit['store__city__name']
         audit_store_dict['store_audit_count'] = audit['count']
+        audit_store_dict['client_id'] = audit['audit_cycle__client__id']
        
         # audit_store_dict['reports'] = audit_report_list
         audit_store_list.append(audit_store_dict)
@@ -407,6 +408,7 @@ def find_audit_by_audit_cycle_audit_store_id(audit_cycle_id,audit_store_id, last
                     'mobile_number': audit_report.user.profileinfo.mobile_number,
                     'certification_score': audit_report.user.profileinfo.certification_score
                 },
+                'client_id': audit_report.audit.audit_cycle.client.id,
                 'agencyuser': None,
                 'mobile_numbers': []
             }
@@ -414,6 +416,7 @@ def find_audit_by_audit_cycle_audit_store_id(audit_cycle_id,audit_store_id, last
             audit_report_dict['user'] = {
                 'id': audit_report.user.id,
                 'email': audit_report.user.email,
+                'client_id': audit_report.audit.audit_cycle.client.id,
                 'agencyuser': {'full_name': audit_report.user.agencyuser.full_name},
                 'profileinfo': None,
                 'mobile_numbers': [{

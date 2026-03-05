@@ -27,7 +27,7 @@ export default class QuestionRow extends React.Component {
 					<MarkdownViewer markdown={this.props.q.question_txt || ""}/>
 					<span className="text-muted">{
 						this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT"
-							? this.props.q.question_data.options.map(o => o.value).join(" / ")
+							? this.props.q.question_data.options && this.props.q.question_data.options.map(o => o.value).join(" / ")
 							: null
 					}</span>
 				</td>

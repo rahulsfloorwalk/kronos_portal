@@ -116,7 +116,7 @@ export default class ClientQaForm extends React.Component {
 		var modalTitle = this.props.params.clientQaId ? "Edit QA" : "Add QAs";
 
 		return (
-			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
+			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack} size={"modal-lg"}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.state.errors.non_field_errors} />
 					<p>
@@ -131,7 +131,7 @@ export default class ClientQaForm extends React.Component {
 										a.email.localeCompare(b.email)
 									)
 									.map((qa) => (
-										<div className="col-sm-6 col-md-4" key={qa.id}>
+										<div className="col-sm-6 col-md-6" key={qa.id}>
 											<label
 												style={{
 													fontSize: "14px",

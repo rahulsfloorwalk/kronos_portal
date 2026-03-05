@@ -15,7 +15,7 @@ export function findPending(lastAuditStoreDate, filterStatus, client){
 	});
 }
 
-export function findCompleted(lastAuditStoreDate, filterStatus, client){
+export function findCompleted(lastAuditStoreDate, filterStatus, client, month, year){
 	// return $.get(url.api_base_path + "moderator/audit_store/completed");
 	return $.ajax({
 		url: url.api_base_path + "moderator/audit_store/completed",
@@ -23,7 +23,9 @@ export function findCompleted(lastAuditStoreDate, filterStatus, client){
 		data: JSON.stringify({
 			lastAuditStoreDate: lastAuditStoreDate,
 			filterStatus: filterStatus,
-			client_id: client
+			client_id: client,
+			month: month,
+			year: year
 		}),
 		contentType: "application/json"
 	});

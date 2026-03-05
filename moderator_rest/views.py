@@ -74,7 +74,8 @@ class AuditStoreCompletedView(APIView):
     def post(self, request):
         audit_stores, count = audit_store_service\
             .find_qa_completed_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'],
-                                                          request.data['filterStatus'], request.data.get('client_id'))
+                                                          request.data['filterStatus'], request.data.get('client_id'),
+                                                          request.data.get('month'), request.data.get('year'))
         return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
 
 class StoreViewByClientView(APIView):
@@ -326,8 +327,16 @@ class AuditStoreIdFailView(APIView):
         audit_store = audit_store_service.fail_for_moderator(audit_store_id, request.user.id, ds.validated_data['message'])
         if "moderator_submission_time" in request.data:
             audit_store.moderator_submission_time = request.data["moderator_submission_time"]
-            audit_store.moderator_submission_date = timezone.now()
-            audit_store.save(update_fields=["moderator_submission_time", "moderator_submission_date"])
+            if not audit_store.moderator_submission_date:
+                audit_store.moderator_submission_date = timezone.now()
+            # audit_store.moderator_submission_date = timezone.now()
+        #     audit_store.save(update_fields=["moderator_submission_time", "moderator_submission_date"])
+        # return Response(AuditStoreSerializer(audit_store).data)
+
+            fields_to_update = ["moderator_submission_time"]
+            if not audit_store.moderator_submission_date:
+                fields_to_update.append("moderator_submission_date")
+            audit_store.save(update_fields=fields_to_update)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdQAOKView(APIView):
