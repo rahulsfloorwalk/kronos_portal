@@ -103,12 +103,12 @@ exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
           <option
             value={5744}
           >
-            alize@canberra.com
+            md@gmail.com
           </option>
           <option
             value={5315}
           >
-            bob@petersburg.ru
+            xdfd@gmail.com
           </option>
         </select>
       </td>
@@ -197,12 +197,12 @@ exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
           <option
             value={5744}
           >
-            alize@canberra.com
+            md@gmail.com
           </option>
           <option
             value={5315}
           >
-            bob@petersburg.ru
+            xdfd@gmail.com
           </option>
         </select>
       </td>

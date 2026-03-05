@@ -26,6 +26,7 @@ class AuditStoreList2 extends Component{
 	static propTypes = {
 		auditStores: PropTypes.array,
 		client: PropTypes.object,
+		qaType: PropTypes.string,
 	};
 
 	constructor(props){
@@ -68,6 +69,7 @@ class AuditStoreList2 extends Component{
 				<td className="text-right">{as.audit.reimbursement}</td>
 				<td>{as.audit.store.city.name}</td>
 				<td>{moment(as.audit_date).format(momentDateFormat)}</td>
+				{this.props.qaType === "qa_done" && <td>{moment(as.moderator_submission_date).format(momentDateFormat)}</td>}
 				<td>
 					<tr>
 						<AuditStoreStatusLabel status={as.status}/> {as.report_revert_count>0 ? <span><i>Reverted({as.report_revert_count})</i></span>:null}
@@ -109,6 +111,7 @@ class AuditStoreList2 extends Component{
 							<th className="text-right">Reimbursement</th>
 							<th>City</th>
 							<th>Audit Date</th>
+							{this.props.qaType === "qa_done" && <th>Moderator Submition Date</th>}
 							<th>Report Status</th>
 							<th></th>
 						</tr>
@@ -125,6 +128,7 @@ class AuditStoreList2 extends Component{
 class AuditStoreTables extends Component {
 	static propTypes = {
 		auditStores: PropTypes.array,
+		qaType: PropTypes.string,
 	};
 
 	render(){
@@ -138,7 +142,7 @@ class AuditStoreTables extends Component {
 
 		let tables = [];
 		for(let client_id in client_dict){
-			tables.push(<AuditStoreList2 key={client_id} auditStores={client_dict[client_id]}/>);
+			tables.push(<AuditStoreList2 key={client_id} auditStores={client_dict[client_id]} qaType={this.props.qaType}/>);
 		}
 		return (<div className="container">
 			<h2 className="page-header">{this.props.auditStores.length} Reports</h2>
@@ -154,6 +158,8 @@ export default class AuditStoreDashboard extends Component {
 
 	constructor(props){
 		super(props);
+		const currentMonth = moment().month() + 1;
+		const currentYear = moment().format("YYYY");
 		this.state = {
 			clients: [],
 			qa_pending: [],
@@ -162,7 +168,9 @@ export default class AuditStoreDashboard extends Component {
 			totalAuditStoreCount: 0,
 			loading: false,
 			loadMoreLoader: false,
-			filterStatus: ""
+			filterStatus: "",
+			month: currentMonth,
+			year: currentYear
 		};
 	}
 
@@ -175,7 +183,7 @@ export default class AuditStoreDashboard extends Component {
 		let lastAuditStoreDate = "";
 		findActiveClients().then((clients)=>this.setState({clients}));
 		if(this.props.location.query.type === "qa_done"){
-			findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client, this.state.month, this.state.year).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		} else {
 			findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
@@ -186,7 +194,7 @@ export default class AuditStoreDashboard extends Component {
 			this.setLoading(true);
 			let lastAuditStoreDate = "";
 			if( nextProps.location.query.type === "qa_done"){
-				findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+				findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client, this.state.month, this.state.year).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 			} else {
 				findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 			}
@@ -200,7 +208,7 @@ export default class AuditStoreDashboard extends Component {
 		this.setLoading(true);
 		let lastAuditStoreDate = "";
 		if(qa_type === "qa_done"){
-			findCompleted(lastAuditStoreDate, e.target.value, this.state.client).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findCompleted(lastAuditStoreDate, e.target.value, this.state.client, this.state.month, this.state.year).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 		else{
 			findPending(lastAuditStoreDate, e.target.value, this.state.client).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
@@ -222,20 +230,63 @@ export default class AuditStoreDashboard extends Component {
 		this.setLoading(true);
 		let lastAuditStoreDate = "";
 		if(qa_type === "qa_done"){
-			findCompleted(lastAuditStoreDate, this.state.filterStatus, e.target.value).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findCompleted(lastAuditStoreDate, this.state.filterStatus, e.target.value, this.state.month, this.state.year).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 		else{
 			findPending(lastAuditStoreDate, this.state.filterStatus, e.target.value).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 	};
+	fetchData = (qa_type) => {
+		this.setLoading(true);
+		let lastAuditStoreDate = "";
 
+		if(qa_type === "qa_done"){
+			findCompleted(
+				lastAuditStoreDate,
+				this.state.filterStatus,
+				this.state.client,
+				this.state.month,
+				this.state.year
+			).then(auditStores =>
+				this.setState({
+					qa_done: auditStores["auditStores"],
+					totalAuditStoreCount: auditStores["count"]
+				})
+			).always(() => this.setLoading(false));
+		}
+		else{
+			findPending(
+				lastAuditStoreDate,
+				this.state.filterStatus,
+				this.state.client,
+				this.state.month,
+				this.state.year
+			).then(auditStores =>
+				this.setState({
+					qa_pending: auditStores["auditStores"],
+					totalAuditStoreCount: auditStores["count"]
+				})
+			).always(() => this.setLoading(false));
+		}
+	};
+	monthChanged = (e, qa_type) => {
+		this.setState({ month: e.target.value }, () => {
+			this.fetchData(qa_type);
+		});
+	};
+
+	yearChanged = (e, qa_type) => {
+		this.setState({ year: e.target.value }, () => {
+			this.fetchData(qa_type);
+		});
+	};
 	loadMore(qa_type){
 		this.setState({
 			loadMoreLoader: true
 		});
 		if(qa_type === "qa_done"){
 			let lastAuditStoreDate = this.state.qa_done[this.state.qa_done.length-1].audit_date;
-			findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client).then((auditStores) => {
+			findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client, this.state.month, this.state.year).then((auditStores) => {
 				let newAuditStores = this.state.qa_done;
 				for(let reports of auditStores.auditStores){
 					let check_report = this.state.qa_done.filter(function(report){ return (report.id === reports.id); });
@@ -279,13 +330,15 @@ export default class AuditStoreDashboard extends Component {
 
 		let statusFilter;
 		let clientFilter;
+		let monthFilter;
+		let yearFilter;
 		if(this.props.location.query.type === "qa_done"){
 			let loadMoreButton;
 			if(this.state.qa_done.length !== this.state.totalAuditStoreCount){
 				loadMoreButton = (<center><button className="btn btn-default" onClick={() => this.loadMore("qa_done")}>Load More</button></center>);
 			}
 			statusFilter = (
-				<select className="form-control" style={{display:"inline-block", width:"200px"}} value={this.state.filterStatus} onChange={(e) => this.statusChanged(e, "qa_done")}>
+				<select className="form-control" style={{display:"inline-block", width:"200px", marginBottom:"1rem"}} value={this.state.filterStatus} onChange={(e) => this.statusChanged(e, "qa_done")}>
 					<option value="">All Status</option>
 					<option value="PM_REVIEW">{getAuditStoreStatus("PM_REVIEW")}</option>
 					<option value="COMPLETED">{getAuditStoreStatus("COMPLETED")}</option>
@@ -300,15 +353,47 @@ export default class AuditStoreDashboard extends Component {
 					{client_option_list}
 				</select>
 			);
+			monthFilter = (
+				<select
+					className="form-control"
+					style={{display:"inline-block", width:"180px"}}
+					value={this.state.month}
+					onChange={(e) => this.monthChanged(e, "qa_done")}
+				>
+					{moment.months().map((m, index) => (
+						<option key={index} value={index + 1}>
+							{m}
+						</option>
+					))}
+				</select>
+			);
+
+			yearFilter = (
+				<select
+					className="form-control"
+					style={{display:"inline-block", width:"120px"}}
+					value={this.state.year}
+					onChange={(e) => this.yearChanged(e, "qa_done")}
+				>
+					{[...Array(5)].map((_, i) => {
+						const year = moment().year() - i;
+						return <option key={year} value={year}>{year}</option>;
+					})}
+				</select>
+			);
 			return (
 				<div>
 					<div className="container">
 						<label>Status Filter : </label> &nbsp;
 						{statusFilter} &nbsp;
 						<label>Client Filter : </label> &nbsp;
-						{clientFilter}
+						{clientFilter}&nbsp;
+						<label>Month : </label> &nbsp;
+						{monthFilter} &nbsp;
+						<label>Year : </label> &nbsp;
+						{yearFilter}
 					</div>
-					<AuditStoreTables auditStores={this.state.qa_done}/>
+					<AuditStoreTables auditStores={this.state.qa_done} qaType="qa_done"/>
 					{loadMoreButton}
 					{loadMoreLoading}
 				</div>
@@ -342,7 +427,7 @@ export default class AuditStoreDashboard extends Component {
 						<label>Client Filter : </label> &nbsp;
 						{clientFilter}
 					</div>
-					<AuditStoreTables auditStores={this.state.qa_pending}/>
+					<AuditStoreTables auditStores={this.state.qa_pending} qaType="qa_pending"/>
 					{loadMoreButton}
 					{loadMoreLoading}
 				</div>

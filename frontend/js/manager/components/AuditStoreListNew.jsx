@@ -18,12 +18,13 @@ import ModeratorAssignDropdown from "./ModeratorAssignDropdown.jsx";
 import AuditStoreStatusSummary from "./AuditStoreStatusSummary.jsx";
 import { findAuditStoresByAuditCycleNew, getUserList } from "../service/audit_store.js";
 import { acceptAllReports } from "../service/audit_store.js";
-import { findModerators } from "../service/moderator.js";
+// import { findModerators } from "../service/moderator.js";
 import { getAuditStoreStatus } from "../../utils.js";
 import { findAuditStoresByAuditCycleReportList,findAuditStoresCityByAuditCycleReportList } from "../service/audit_store.js";
 
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 import "../../../css/bs_overrides.scss";
+import { fetchClientModerators } from "../service/client_manager.js";
 
 const moderatorPropShape = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -170,7 +171,7 @@ class AuditStoreList extends Component{
 		let city= "";
 		let start_date = "";
 		let end_date = "";
-		findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId, status, userId,city, start_date, end_date}).then((response) => {
+		return findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId, status, userId,city, start_date, end_date}).then((response) => {
 			this.setState({
 				auditStores: response.audit_store_list,
 				totalAuditStoreCount: response.total_audit_count
@@ -185,9 +186,19 @@ class AuditStoreList extends Component{
 		// let start_date = "";
 		// let end_date = "";
 		// findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId, status, userId, start_date, end_date})
-		this.reloadReports(this.props.params.auditCycleId);
-		findModerators().then((moderators) => {
-			this.setState({ moderators });
+		// this.reloadReports(this.props.params.auditCycleId);
+		// findModerators().then((moderators) => {
+		// 	this.setState({ moderators });
+		// });
+		this.reloadReports(this.props.params.auditCycleId).then(() => {
+			const clientId = this.state.auditStores && this.state.auditStores.length > 0
+				? this.state.auditStores[0].client_id
+				: null;
+			if (clientId) {
+				fetchClientModerators(clientId).then((moderators) => {
+					this.setState({ moderators });
+				});
+			}
 		});
 		getUserList(this.props.params.auditCycleId).then((userList) => {
 			this.setState({ userList });

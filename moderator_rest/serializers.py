@@ -326,6 +326,7 @@ class AuditStoreSerializerForList(ModelSerializer):
             'critical_status',
             'report_submission_time',
             'moderator_submission_time',
+            'moderator_submission_date',
         )
         read_only_fields = fields
 

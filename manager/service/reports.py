@@ -314,12 +314,34 @@ def get_qa_wise_report_pannel(client=None, audit_cycle_id=None, day=None,month=N
 
     return response
 
+from datetime import datetime, timedelta
+
+def get_date_range(day=None, month=None, year=None):
+    if not year:
+        raise ValueError("Year is required")
+    if month:
+        if day:
+            start_date = datetime(year, month, day)
+            end_date = start_date + timedelta(days=1)
+        else:
+            start_date = datetime(year, month, 1)
+            if month == 12:
+                end_date = datetime(year + 1, 1, 1)
+            else:
+                end_date = datetime(year, month + 1, 1)
+    else:
+        start_date = datetime(year, 1, 1)
+        end_date = datetime(year + 1, 1, 1)
+    return start_date, end_date
 
 def get_qa_wise_report_performance(raw_day, raw_month, raw_year, raw_qa):
     day = int(raw_day) if raw_day and raw_day.strip() else None
     month = int(raw_month) if raw_month and raw_month.strip() else None
     year = int(raw_year) if raw_year and raw_year.strip() else None
     qa = int(raw_qa) if raw_qa and raw_qa.strip() else None
+
+    start_date, end_date = get_date_range(day=day, month=month, year=year)
+
     if not year:
         raise ValueError("Year is required")
     response = {
@@ -327,68 +349,23 @@ def get_qa_wise_report_performance(raw_day, raw_month, raw_year, raw_qa):
     }
 
     audit_store_filter = {
-        "status__in": [AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.REJECTED],
+        "status__in": [AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.REJECTED, AuditStore.ACKNOWLEDGED],
         "moderator_submission_date__isnull": False,
-        "moderator_submission_date__year": year
+        "moderator_submission_date__gte": start_date,
+        "moderator_submission_date__lt": end_date,
+        # "moderator_submission_date__year": year
     }
 
-    if month:
-        audit_store_filter["moderator_submission_date__month"] = month
-    if day:
-        audit_store_filter["moderator_submission_date__day"] = day
+    # if month:
+    #     audit_store_filter["moderator_submission_date__month"] = month
+    # if day:
+    #     audit_store_filter["moderator_submission_date__day"] = day
 
-    # day_list = [day] if day else list(range(1, 32))
-    # month_list = [month] if month else list(range(1, 13))
-    # audit_stores = AuditStore.objects.filter(status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW]).exclude(moderator_submission_date__isnull=True)
-    audit_stores = AuditStore.objects.filter(**audit_store_filter).select_related("user")
+    audit_stores = AuditStore.objects.filter(**audit_store_filter).select_related("user").order_by("moderator_submission_date") 
     content_type = ContentType.objects.get_for_model(AuditStore)
     permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
 
     perms_all = UserObjectPermission.objects.filter(content_type=content_type, permission=permission, user__is_active=True)
-
-    # perms = perms_all.filter(user_id=qa) if qa else perms_all
-    # user_list = perms.order_by('user_id').distinct('user_id').values('user_id', 'user__email')
-
-    # for m in month_list:
-    #     for d in day_list:
-    #         try:
-    #             filter_date = date(year, m, d)
-    #         except ValueError:
-    #             continue 
-
-    #         stores = audit_stores.filter(moderator_submission_date__date=filter_date)
-    #         if not stores.exists():
-    #             continue
-    #         # stores = audit_stores.filter(moderator_submission_date__year=year, moderator_submission_date__month=m, moderator_submission_date__day=d)
-    #         # if stores.exists():
-    #         store_ids = [str(s.id) for s in stores]
-    #         filtered_perms = perms.filter(object_pk__in=store_ids)
-    #         total_count = perms_all.filter(object_pk__in=store_ids).count()
-
-    #         for user in user_list:
-    #             audit_count = filtered_perms.filter(user_id=user['user_id']).count()
-
-    #             for store in stores:
-    #                 if filtered_perms.filter(user_id=user['user_id'], object_pk=str(store.id)).exists():
-    #                     response["audit_store_data"].append({
-    #                         "audit_store_id": store.id,
-    #                         "moderator_submission_date": store.moderator_submission_date,
-    #                         "audit_status": store.status,
-    #                         "report_submission_time": store.report_submission_time,
-    #                         "moderator_submission_time": store.moderator_submission_time,
-    #                         "qa_rating": store.qa_rating,
-    #                         "user_id": store.user_id,
-    #                         "qa_email": user['user__email'],
-    #                         "qa_id": user['user_id'],
-    #                         "year": year,
-    #                         "month": m,
-    #                         "day": d,
-    #                         "audit_count": audit_count
-    #                     })
-
-    # return response
-
-
 
     if qa:
         perms_qs = perms_all.filter(user_id=qa)
@@ -696,8 +673,13 @@ def get_qa_wise_report(month, year, qa):
     else:
         month_list = ["01","02","03","04","05","06","07","08","09","10","11","12"]
 
-    audit_stores = AuditStore.objects.filter(status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED])
+    # audit_stores = AuditStore.objects.filter(status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.REJECTED, AuditStore.ACKNOWLEDGED])
 
+    audit_stores = AuditStore.objects.filter(
+        status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.REJECTED, AuditStore.ACKNOWLEDGED],
+        moderator_submission_date__isnull=False,
+        moderator_submission_date__year=year
+    )
     content_type = ContentType.objects.get_for_model(AuditStore)
     permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
 
@@ -709,16 +691,18 @@ def get_qa_wise_report(month, year, qa):
     user_list = perms.order_by('user_id').distinct('user_id').values('user_id', 'user__email')
     for month in month_list:
 
-        reports = audit_stores.filter(audit_date__month=month, audit_date__year = year).values_list("id", flat=True)
+        # reports = audit_stores.filter(audit_date__month=month, audit_date__year = year).values_list("id", flat=True)
+        reports = audit_stores.filter(moderator_submission_date__month=month, moderator_submission_date__year = year).values_list("id", flat=True).distinct()
         if reports:
             report_ids = [str(report) for report in reports]
 
             filtered_perms = perms.filter(object_pk__in=report_ids)
-            monthly_count = perms_for_month.filter(object_pk__in=report_ids).count()
+            # monthly_count = perms_for_month.filter(object_pk__in=report_ids).count()
+            monthly_count = len(report_ids)
 
             for user in user_list:
 
-                audit_count = filtered_perms.filter(user_id = user['user_id']).count()
+                audit_count = filtered_perms.filter(user_id = user['user_id']).values('object_pk').distinct().count()
                 if monthly_count == 0:
                     report_per = 0
                 else:

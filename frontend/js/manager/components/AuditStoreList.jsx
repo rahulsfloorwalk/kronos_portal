@@ -22,9 +22,18 @@ import { fetchAudits } from "../actions/audit.js";
 
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 
+// const moderatorPropShape = PropTypes.shape({
+// 	id: PropTypes.number.isRequired,
+// 	email: PropTypes.string.isRequired,
+// 	is_active: PropTypes.bool.isRequired,
+// });
+
 const moderatorPropShape = PropTypes.shape({
 	id: PropTypes.number.isRequired,
-	email: PropTypes.string.isRequired,
+	user: PropTypes.shape({
+		email: PropTypes.string.isRequired,
+		is_active: PropTypes.bool.isRequired,
+	}).isRequired,
 	is_active: PropTypes.bool.isRequired,
 });
 

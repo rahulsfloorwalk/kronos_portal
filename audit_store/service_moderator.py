@@ -14,52 +14,108 @@ from attachment.service import set_attachment_by_audit_store, set_attachment_by_
 from audit.models import Audit
 from client.models import Store
 from datetime import date, timedelta
+from datetime import datetime
 
-def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id):
-    # TODO: move this in to the AuditStoreQuerySet
-    count = 0
+# def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id, month, year):
+#     # TODO: move this in to the AuditStoreQuerySet
+#     count = 0
+#     user = find_moderator_by_user_id(user_id)
+#     if filterStatus != "" and lastAuditStoreDate != "":
+#         query_set = AuditStore.objects.filter(
+#             audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
+#             status=filterStatus,
+#             audit_date__gte=lastAuditStoreDate
+#         ).prefetch_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
+#                            'audit__store__city').order_by('audit_date')
+#         if client_id:
+#             query_set = query_set.filter(audit__audit_cycle__client = client_id)
+#         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+#     elif filterStatus != "":
+#         query_set = AuditStore.objects.filter(
+#             audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
+#             status=filterStatus
+#         ).prefetch_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
+#                            'audit__store__city').order_by('audit_date')
+#         if client_id:
+#             query_set = query_set.filter(audit__audit_cycle__client = client_id)
+#         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+#     elif lastAuditStoreDate != "":
+#         query_set = AuditStore.objects.filter(
+#             audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
+#             status__in=(AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED, AuditStore.PM_REVIEW),
+#             audit_date__gte=lastAuditStoreDate
+#         ).prefetch_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
+#                            'audit__store__city').order_by('audit_date')
+#         if client_id:
+#             query_set = query_set.filter(audit__audit_cycle__client = client_id)
+#         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+#     else:
+#         query_set = AuditStore.objects.filter(
+#             audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
+#             status__in=(AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED, AuditStore.PM_REVIEW)
+#         ).prefetch_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
+#                            'audit__store__city').order_by('audit_date')
+#         if client_id:
+#             query_set = query_set.filter(audit__audit_cycle__client = client_id)
+#         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+#         count = data.count()
+#     return data[0:200], count
+
+from datetime import datetime
+
+def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id, month, year):
     user = find_moderator_by_user_id(user_id)
     if filterStatus != "" and lastAuditStoreDate != "":
-        query_set = AuditStore.objects.filter(
-            audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
-            status=filterStatus,
-            audit_date__gte=lastAuditStoreDate
-        ).prefetch_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
-                           'audit__store__city').order_by('audit_date')
-        if client_id:
-            query_set = query_set.filter(audit__audit_cycle__client = client_id)
-        data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+        query_set = AuditStore.objects.filter(status=filterStatus,audit_date__gte=lastAuditStoreDate)
+
     elif filterStatus != "":
-        query_set = AuditStore.objects.filter(
-            audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
-            status=filterStatus
-        ).prefetch_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
-                           'audit__store__city').order_by('audit_date')
-        if client_id:
-            query_set = query_set.filter(audit__audit_cycle__client = client_id)
-        data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+        query_set = AuditStore.objects.filter(status=filterStatus)
+
     elif lastAuditStoreDate != "":
         query_set = AuditStore.objects.filter(
-            audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
-            status__in=(AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED, AuditStore.PM_REVIEW),
-            audit_date__gte=lastAuditStoreDate
-        ).prefetch_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
-                           'audit__store__city').order_by('audit_date')
-        if client_id:
-            query_set = query_set.filter(audit__audit_cycle__client = client_id)
-        data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+            status__in=(AuditStore.FAILED,AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.REJECTED,AuditStore.PM_REVIEW),
+            audit_date__gte=lastAuditStoreDate)
     else:
         query_set = AuditStore.objects.filter(
-            audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
-            status__in=(AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED, AuditStore.PM_REVIEW)
-        ).prefetch_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
-                           'audit__store__city').order_by('audit_date')
-        if client_id:
-            query_set = query_set.filter(audit__audit_cycle__client = client_id)
-        data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
-        count = data.count()
-    return data[0:200], count
+            status__in=(AuditStore.FAILED,AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.REJECTED,AuditStore.PM_REVIEW))
 
+    now = datetime.now()
+
+    if month in [None, ""] and year in [None, ""]:
+        month = now.month
+        year = now.year
+    else:
+        try:
+            month = int(month) if month not in [None, ""] else now.month
+        except (ValueError, TypeError):
+            month = now.month
+
+        try:
+            year = int(year) if year not in [None, ""] else now.year
+        except (ValueError, TypeError):
+            year = now.year
+
+    query_set = query_set.filter(
+        moderator_submission_date__year=year,
+        moderator_submission_date__month=month,
+        moderator_submission_date__isnull=False
+    )
+
+    if client_id not in [None, ""]:
+        query_set = query_set.filter(audit__audit_cycle__client=client_id)
+
+    query_set = query_set.select_related(
+        'audit',
+        'audit__audit_cycle',
+        'audit__audit_cycle__client',
+        'audit__store',
+        'audit__store__city'
+    ).order_by('moderator_submission_date')
+
+    data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+    count = data.count()
+
+    return data, count
 
 def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id):
     # TODO: move this in to the AuditStoreQuerySet

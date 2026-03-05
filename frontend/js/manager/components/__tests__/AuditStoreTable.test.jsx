@@ -50,23 +50,47 @@ const sampleAuditStores = [
 	},
 ];
 
+// const sampleModerators = [
+// 	{
+// 		id: 5744,
+// 		email: "alize@canberra.com",
+// 		is_active: true,
+// 	},
+// 	{
+// 		id: 5315,
+// 		email: "bob@petersburg.ru",
+// 		is_active: true,
+// 	},
+// ];
 const sampleModerators = [
 	{
-		id: 5744,
-		email: "alize@canberra.com",
-		is_active: true,
+		"id": 5744,
+		"client": 1,
+		"user": {
+			"id": 5744,
+			"email": "md@gmail.com",
+			"is_active": true
+		},
+		"receive_email_notification": true,
+		"is_active": true
 	},
 	{
-		id: 5315,
-		email: "bob@petersburg.ru",
-		is_active: true,
+		"id": 5315,
+		"client": 1,
+		"user": {
+			"id": 5315,
+			"email": "xdfd@gmail.com",
+			"is_active": true
+		},
+		"receive_email_notification": true,
+		"is_active": true
 	},
 ];
 
 describe("<AuditStoreTable/>", () => {
 	it("renders the list of audit stores correctly", () => {
 		const onUpdate = jest.fn();
-		const r = renderer.create(<AuditStoreTable auditStores={sampleAuditStores} moderators={sampleModerators} onUpdate={onUpdate}/>);
+		const r = renderer.create(<AuditStoreTable auditStores={sampleAuditStores} moderators={sampleModerators} onUpdate={onUpdate} />);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 });
