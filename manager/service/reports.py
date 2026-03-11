@@ -349,7 +349,7 @@ def get_qa_wise_report_performance(raw_day, raw_month, raw_year, raw_qa):
     }
 
     audit_store_filter = {
-        "status__in": [AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.REJECTED, AuditStore.ACKNOWLEDGED],
+        "status__in": [AuditStore.COMPLETED,AuditStore.SUBMITTED, AuditStore.ACCEPTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.REJECTED, AuditStore.ACKNOWLEDGED],
         "moderator_submission_date__isnull": False,
         "moderator_submission_date__gte": start_date,
         "moderator_submission_date__lt": end_date,
