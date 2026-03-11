@@ -15,7 +15,7 @@ from audit_store.models import AuditStore
 
 def find_all():
     # return Group.objects.get(name=GROUP_NAME_MODERATOR).user_set
-    return Group.objects.get(name=GROUP_NAME_MODERATOR).user_set.filter(is_active=True) 
+    return Group.objects.get(name=GROUP_NAME_MODERATOR).user_set.filter(is_active=True).only("id", "email")
 
 def find_by_id(user_id):
     try:

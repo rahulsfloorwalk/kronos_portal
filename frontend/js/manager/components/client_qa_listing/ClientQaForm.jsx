@@ -63,7 +63,8 @@ export default class ClientQaForm extends React.Component {
 			fetchClientModeratorToCheck(this.props.params.clientId)
 				.done((moderators) => {
 					const assignedIds = moderators
-						.filter((qa) => qa.is_assigned)
+						// .filter((qa) => qa.is_assigned)
+						.filter((qa) => qa.assigned)
 						.map((qa) => qa.id);
 
 					this.setState({

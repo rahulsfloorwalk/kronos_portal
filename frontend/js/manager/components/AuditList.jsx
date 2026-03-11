@@ -26,7 +26,8 @@ import {fetchAudits, deleteAudit, hideAudit, unhideAudit} from "../actions/audit
 
 import { rejectAllForAudit, rejectAllForAuditCycle,notificationEmailSendForPincode,notificationWhatsappSendForPincode,notificationAllEmailSendForPincode,notificationAllWhatsappSendForPincode } from "../service/application.js";
 import { findAuditStoresByAudit } from "../service/audit_store.js";
-import { findModerators } from "../service/moderator.js";
+// import { findModerators } from "../service/moderator.js";
+import { fetchClientModerators } from "../service/client_manager.js";
 
 import { findAuditsByAuditCycleId } from "../selectors/audit";
 
@@ -57,15 +58,31 @@ class AuditStoreTableForAudit extends Component{
 		this.setState(prevState => Object.assign({}, prevState, { loading }));
 	};
 
-	componentDidMount(){
+	// componentDidMount(){
+	// 	this.setLoading(true);
+	// 	findAuditStoresByAudit(this.props.auditId).then((auditStores) => {
+	// 		this.setState({auditStores});
+	// 	}).always(()=>this.setLoading(false));
+
+	// 	findModerators().then((moderators) => {
+	// 		this.setState({ moderators });
+	// 	});
+	// }
+	componentDidMount() {
 		this.setLoading(true);
 		findAuditStoresByAudit(this.props.auditId).then((auditStores) => {
-			this.setState({auditStores});
-		}).always(()=>this.setLoading(false));
+			this.setState({ auditStores });
 
-		findModerators().then((moderators) => {
-			this.setState({ moderators });
-		});
+			const clientId = auditStores && auditStores.length > 0
+				? auditStores[0].client_id
+				: null;
+
+			if (clientId) {
+				fetchClientModerators(clientId).then((moderators) => {
+					this.setState({ moderators });
+				});
+			}
+		}).always(() => this.setLoading(false));
 	}
 	auditStoreUpdated = (auditStore) => {
 		let i = this.state.auditStores.findIndex(as => as.id === auditStore.id);

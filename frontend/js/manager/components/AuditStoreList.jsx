@@ -13,14 +13,16 @@ import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import Loading from "../../components/Loading.jsx";
 
 import ModeratorAssignDropdown from "./ModeratorAssignDropdown.jsx";
+// import ModeratorAssignDropdown from "./ModeratorAssignDropdownNew.jsx";
 import AuditStoreStatusSummary from "./AuditStoreStatusSummary.jsx";
 import { findAuditStoresByAuditCycle  } from "../service/audit_store.js";
 import { acceptAllReports } from "../service/audit_store.js";
-import { findModerators } from "../service/moderator.js";
+// import { findModerators } from "../service/moderator.js";
 import { getAuditStoreStatus } from "../../utils.js";
 import { fetchAudits } from "../actions/audit.js";
 
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
+import { fetchClientModerators } from "../service/client_manager.js";
 
 // const moderatorPropShape = PropTypes.shape({
 // 	id: PropTypes.number.isRequired,
@@ -162,7 +164,7 @@ class AuditStoreList extends Component{
 	};
 	reloadReports = (auditCycleId) => {
 		this.setLoading(true);
-		Promise.all([
+		return Promise.all([
 			this.props.dispatch(fetchAudits(auditCycleId)),
 			findAuditStoresByAuditCycle(auditCycleId),
 		]).then(([audits, auditStores]) => {
@@ -174,9 +176,19 @@ class AuditStoreList extends Component{
 		});
 	};
 	componentDidMount(){
-		this.reloadReports(this.props.params.auditCycleId);
-		findModerators().then((moderators) => {
-			this.setState({ moderators });
+		// this.reloadReports(this.props.params.auditCycleId);
+		// findModerators().then((moderators) => {
+		// 	this.setState({ moderators });
+		// });
+		this.reloadReports(this.props.params.auditCycleId).then(() => {
+			const clientId = this.state.auditStores && this.state.auditStores.length > 0
+				? this.state.auditStores[0].client_id
+				: null;
+			if (clientId) {
+				fetchClientModerators(clientId).then((moderators) => {
+					this.setState({ moderators });
+				});
+			}
 		});
 	}
 	componentWillReceiveProps(nextProps){

@@ -20,10 +20,12 @@ def find_client_moderator_by_id(client_moderator_id):
 
 @atomic
 def insert_moderators(client, moderator_id, receive_email_notification, is_active):
-    for moderator_id in moderator_id:
+    existing_ids = list(ClientModerator.objects.filter(client=client).values_list("user_id", flat=True))
+        
+    for mod_id  in moderator_id:
         obj, created = ClientModerator.objects.get_or_create(
             client=client,
-            user_id=moderator_id,
+            user_id=mod_id ,
             defaults={
                 "receive_email_notification": receive_email_notification,
                 "is_active": is_active
@@ -33,6 +35,10 @@ def insert_moderators(client, moderator_id, receive_email_notification, is_activ
             obj.receive_email_notification = receive_email_notification
             obj.is_active = is_active
             obj.save()
+            
+    remove_ids = [i for i in existing_ids if i not in moderator_id]
+    if remove_ids:ClientModerator.objects.filter(client=client,user_id__in=remove_ids).update(is_active=False)
+    
     return ClientModerator.objects.filter(client=client)
 
 def update_moderator(client_moderator_id, receive_email_notification, is_active):
