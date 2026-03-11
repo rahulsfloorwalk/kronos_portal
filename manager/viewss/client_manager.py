@@ -82,12 +82,12 @@ class ClientModeratorAssignView(APIView):
 
     def get(self, request, client_id):
         users = moderator_service.find_all()
-        assigned_ids = ClientModerator.objects.filter(client_id=client_id).values_list("user_id", flat=True)
+        assigned_ids = ClientModerator.objects.filter(client_id=client_id,is_active=True).values_list("user_id", flat=True)
 
         response_data = []
         for user in users:
-            if user.id not in assigned_ids:
-                response_data.append({"id": user.id,"email": user.email})
+            # if user.id not in assigned_ids:
+            response_data.append({"id": user.id,"email": user.email,"assigned": user.id in assigned_ids})
         return Response(response_data)
 
 class ClientModeratorView(APIView):

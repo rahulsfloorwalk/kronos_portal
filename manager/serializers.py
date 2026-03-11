@@ -492,6 +492,7 @@ class AuditStoreSerializer(ModelSerializer):
 class AuditStoreSerializerWithoutAudit(ModelSerializer):
     user = UserSerializer()
     assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
+    client_id = SerializerMethodField()
     class Meta:
         model = AuditStore
         fields = (
@@ -505,10 +506,16 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
             'qa_rating',
             'assigned_to_moderator',
             'attribute_data',
-            'report_revert_count'
+            'report_revert_count',
+            'client_id'
         )
         read_only_fields = fields
 
+    def get_client_id(self, obj):
+        try:
+            return obj.audit.audit_cycle.client.id
+        except AttributeError:
+            return None
 
 class ProofTagSerializer(ModelSerializer):
     class Meta:
