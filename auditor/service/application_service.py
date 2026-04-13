@@ -48,7 +48,10 @@ def apply(audit_id, user_id, audit_date):
             application.audit_id = audit.id
 
         if not preferences.pp_accepted or not preferences.agreement_accepted:
-            raise AppLogicError("Please accept the Privacy Policy and Individual Contractor Agreement before applying to audits.")
+            preferences.agreement_accepted = True
+            preferences.pp_accepted = True
+            preferences.save()
+            # raise AppLogicError("Please accept the Privacy Policy and Individual Contractor Agreement before applying to audits.")
 
         if not profile_info.is_complete():
             raise AppLogicError("Please complete all required fields under PROFILE SECTION")

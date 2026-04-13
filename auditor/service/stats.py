@@ -196,5 +196,6 @@ def get_profile_completion(user_id):
         "auditor_name": auditor_name,
         "auditor_email": auditor_email,
         "auditor_profile_completion": auditor_profile_completion,
+        "auditor_rating": profile_info.auditor_rating,
         "auditor_certification_score": auditor_certification_score,
     }

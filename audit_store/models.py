@@ -193,6 +193,7 @@ class AuditStore(Model):
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
     submit_at = DateTimeField(db_column="submit_at", null=True)
+    submission_source = CharField(db_column="submission_source", max_length=120, null=True, blank=True)
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='audit_stores')
 

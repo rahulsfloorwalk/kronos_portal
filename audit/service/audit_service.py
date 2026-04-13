@@ -307,6 +307,7 @@ def find_audits_around_pincode_and_city(city_id: int, kms: int, pincode: int):
             store__city__lon__gte=lon_min
         )
     )
+    
     available_audit_list = []
     nearDis=[]
     for i in available_audits:

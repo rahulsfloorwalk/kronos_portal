@@ -218,15 +218,20 @@ def import_questionnaire(file_obj, audit_cycle_id):
     section_sequences = set()
     section_question_sequences = {}
 
+    def parse_bool(val):
+        return str(val).strip().lower() == "true"
+    
     for row in ws.iter_rows(min_row=2, values_only=True):
+        if not any(row):
+            continue
         sequence = row[0]
         text = row[1]
         max_marks = row[2]
         q_type = row[3] if len(row) > 3 else None
         q_options = row[4] if len(row) > 4 else None
         impact_factors = row[5] if len(row) > 5 else ""
-        hide_question = bool(row[6]) if len(row) > 6 else False
-        optional_comment_required = bool(row[7]) if len(row) > 7 else False
+        hide_question = parse_bool(row[6]) if len(row) > 6 else False
+        optional_comment_required = parse_bool(row[7]) if len(row) > 7 else False
 
         if sequence is None:
             raise Exception("Missing sequence number in row with text '%s'." % text)
@@ -322,6 +327,10 @@ def import_questionnaire(file_obj, audit_cycle_id):
     expected_sections = list(range(1, len(sorted_sections) + 1))
     if sorted_sections != expected_sections:
         raise Exception( "Section sequences invalid: found %s, expected consecutive sequence %s." % (sorted_sections, expected_sections) )
+    
+    for sec in section_sequences:
+        if sec not in section_question_sequences or len(section_question_sequences[sec]) == 0:
+            raise Exception("Section %s has no questions." % sec)
 
     created_sections = {}
     created_questions = []
