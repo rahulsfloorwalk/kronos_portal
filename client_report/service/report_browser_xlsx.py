@@ -376,7 +376,8 @@ def write_questions_data(questions, answers,store_ids):
                     max_marks = question.max_marks or 0
 
                     worksheet.write(row_num, col, answer_text, cell_format)
-                    worksheet.write(row_num,col + 1,f"{obtained_marks}/{max_marks}",cell_format)
+                    # worksheet.write(row_num,col + 1,f"{obtained_marks}/{max_marks}",cell_format)
+                    worksheet.write(row_num, col + 1, "{}/{}".format(obtained_marks, max_marks), cell_format)
 
             else:
                 worksheet.write(row_num, col, "", cell_format)
