@@ -352,7 +352,8 @@ def write_questions_data(questions, answers,store_ids):
     for store in store_ids:
         store = Store.objects.get(id=store)
 
-        worksheet.write(row_num, 0, f"{store.name}", cell_format)
+        # worksheet.write(row_num, 0, f"{store.name}", cell_format)
+        worksheet.write(row_num, 0, str(store.name), cell_format)
         store_answers = [
             a for a in answers
             if a.audit_store.audit.store.id == store.id
