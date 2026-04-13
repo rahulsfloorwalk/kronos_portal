@@ -61,6 +61,7 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/section$', views.SectionByAuditCycle.as_view(), name='section_by_audit_cycle'),
     url(r'section/(?P<section_id>[0-9]+)/quetions$', views.QuestionsBySection.as_view(), name='questions_by_section'),
     url(r'quetions$', views.QuestionById.as_view(), name='questions_by_id'),
+    url(r'questions_filtered_xlsx_report$', views.QuiestionsFilteredXlsxReport.as_view(), name='questions_filtered_xlsx_report'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_action$', views.AuditStoreReportActionView.as_view(), name='audit_store_report_action_view'),
 

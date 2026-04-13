@@ -674,6 +674,9 @@ class AuditStoreIdSubmitReportView(APIView):
         if 'report_submission_time' in request.data:
             audit_store.report_submission_time = request.data['report_submission_time']
             audit_store.save()
+        if 'submission_source' in request.data:
+            audit_store.submission_source = request.data['submission_source']
+            audit_store.save()
 
         excluded_client_ids = [344, 345, 346]
         client_id = audit_store.audit.audit_cycle.client_id

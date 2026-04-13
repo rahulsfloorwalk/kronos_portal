@@ -91,19 +91,45 @@ def send_password_reset_email(user_id):
 # Data set while generating codes indicated 1 collision for every 1500 entries.
 # Thus, probability that same collision will happen more than 26 times is (1/1500)^26
 # Note that phone numbers are NOT random hence actual probability may be higher, but still negligible
+
+# def generate_ref_code(email_original, phone):
+#     email = (''.join(e for e in email_original if e.isalnum())).lower()
+#     ref_code = email[:4] + phone[-4:]
+#     ref_code_final = ref_code
+#     is_duplicate = AdditionalInfo.objects.filter(referral_code=ref_code)
+#     filler = 'a'
+#     while is_duplicate:
+#         ref_code_final = ref_code + filler
+#         filler = chr(ord(filler) + 1)
+#         is_duplicate = AdditionalInfo.objects.filter(referral_code=ref_code_final)
+
+#     return ref_code_final
+
+import uuid
+
 def generate_ref_code(email_original, phone):
-    email = (''.join(e for e in email_original if e.isalnum())).lower()
-    ref_code = email[:4] + phone[-4:]
-    ref_code_final = ref_code
-    is_duplicate = AdditionalInfo.objects.filter(referral_code=ref_code)
-    filler = 'a'
-    while is_duplicate:
-        ref_code_final = ref_code + filler
-        filler = chr(ord(filler) + 1)
-        is_duplicate = AdditionalInfo.objects.filter(referral_code=ref_code_final)
+    if not email_original:
+        email_original = "user"
+    if not phone:
+        phone = "0000"
 
-    return ref_code_final
+    email = ''.join(e for e in email_original if e.isalnum()).lower()
+    if not email:
+        email = "user"
 
+    email_part = email[:2] if len(email) >= 2 else email
+    phone_part = phone[-2:] if len(phone) >= 2 else phone
+
+    base_code = (email_part + phone_part).ljust(4, 'x')
+
+    for _ in range(5):
+        unique_part = uuid.uuid4().hex[:4]
+        ref_code = base_code + unique_part
+
+        if not AdditionalInfo.objects.filter(referral_code=ref_code).exists():
+            return ref_code
+
+    return base_code + uuid.uuid4().hex[:4]
 
 def check_email_exists(to_check_email):
     if User.objects.filter(Q(email__iexact=to_check_email) | Q(username__iexact=to_check_email)).exists():

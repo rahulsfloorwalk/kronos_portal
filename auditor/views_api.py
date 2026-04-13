@@ -82,6 +82,11 @@ class ForgotPasswordAPI(APIView):
         response,status = auditor_service_api.forgot_password(request.data)
         return JsonResponse(response,status=status)
 
+class ResendOtpAPI(APIView):
+    permission_classes=[AllowAny]
+    def post(self,request):
+        response,status = auditor_service_api.resend_otp(request.data)
+        return JsonResponse(response,status=status)
 
 class PasswordResetConfirmAPIView(APIView):
     permission_classes = [AllowAny]

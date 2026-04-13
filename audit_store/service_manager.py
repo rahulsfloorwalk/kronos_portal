@@ -97,7 +97,7 @@ def get_sentiment_data(report_summary):
     }
 
     try:
-        response = requests.post(api_url, data=payload)
+        response = requests.post(api_url, data=payload,verify=False)
         if response.status_code == 200:
             data = response.json()
             keywords = data.get('keywords', {})
@@ -138,13 +138,13 @@ def complete_report(audit_store_id, user_id):
     if audit_store.report_summary and audit_store.report_summary.strip():
         try:
             sentiment_data = get_sentiment_data(audit_store.report_summary)
-            audit_store.main_keywords = sentiment_data['keywords']
-            audit_store.bullet_points = sentiment_data['key_sentences']
-            audit_store.sentiment_emotions = sentiment_data['emotions']
-            audit_store.sentiment_positive_words = sentiment_data['positive_words']
-            audit_store.sentiment_negative_words = sentiment_data['negative_words']
-            audit_store.sentiment_score = sentiment_data['sentiment_score']
-            audit_store.sentiment_text = sentiment_data['sentiment_result']
+            audit_store.main_keywords = sentiment_data.get('keywords')
+            audit_store.bullet_points = sentiment_data.get('key_sentences')
+            audit_store.sentiment_emotions = sentiment_data.get('emotions')
+            audit_store.sentiment_positive_words = sentiment_data.get('positive_words')
+            audit_store.sentiment_negative_words = sentiment_data.get('negative_words')
+            audit_store.sentiment_score = sentiment_data.get('sentiment_score')
+            audit_store.sentiment_text = sentiment_data.get('sentiment_result')
             audit_store.save()
 
         except Exception as e:

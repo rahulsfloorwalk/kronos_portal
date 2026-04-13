@@ -427,6 +427,32 @@ class ReportBrowserFilteredXlsxReport(APIView):
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response
 
+class QuiestionsFilteredXlsxReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+
+    def get(self, request, format=None):
+        question_ids = request.query_params.getlist("question_ids")
+        store_ids = request.query_params.getlist("store_ids")
+
+        if not question_ids:
+            question_ids = []
+        if not store_ids:
+            store_ids = []
+
+        questions, answers,store_ids = report_browser_xlsx_service.get_aggregate_questions_data_with_filters(question_ids)
+        # excel_data = report_browser_xlsx_service.create_questions_text_structure(questions, audit_stores)
+        output = report_browser_xlsx_service.write_questions_data(questions, answers, store_ids)
+
+        response = HttpResponse(
+            output.read(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename="Store_Report.xlsx"'
+        return response
+        
 class AllStoresAuditCycleWiseXlsxReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

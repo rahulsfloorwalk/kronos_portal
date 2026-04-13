@@ -99,6 +99,7 @@ urlpatterns = ([
 
     url(r'app/change_password_api$', views_api.ChangePasswordAPI.as_view(), name="change_password_api"),   
     url(r'app/forgot_password_api$', views_api.ForgotPasswordAPI.as_view(), name="forgot_password_api"),
+    url(r'app/resend_otp_api$', views_api.ResendOtpAPI.as_view(), name="resend_otp_api"),
     url(r'^password-reset-confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views_api.PasswordResetConfirmAPIView.as_view(), name='password_reset_confirm'),
     # url(r'password-reset-confirm/<str:uidb64>/<str:token>$', views_api.auditor_service_api.PasswordResetConfirmAPIView.as_view(), name='password_reset_confirm'),
 

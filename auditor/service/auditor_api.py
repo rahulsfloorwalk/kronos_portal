@@ -370,6 +370,69 @@ def forgot_password(request):
 
     return response, status
 
+@atomic
+def resend_otp(request):
+    to_check_email = request.get('email')
+    purpose = request.get('purpose')
+    try:
+        validate_email(to_check_email)
+    except ValidationError:
+        response = {'details': 'Please enter a valid email'}
+        status = 400
+    
+    else:
+        if to_check_email:
+            to_check_email = to_check_email.strip().lower()
+        try:
+            user = User.objects.get(email__iexact=to_check_email)
+            group_name = user.groups.get()
+
+            if group_name.name == "Auditor":
+                otp_verification, created = OTPVerification.objects.get_or_create(user=user)
+                # if not created and not otp_verification.is_expired():
+                #     otp_to_send = otp_verification.otp
+
+                # else:
+                otp_verification.otp = generate_otp()
+                otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+                otp_verification.is_verified = False
+                otp_verification.save()
+
+                otp_to_send = otp_verification.otp
+                if purpose == "forgot_password":
+                    message = get_template('registration/market_place/forgot_password_otp_verification.html').render({
+                        'otp': otp_to_send,
+                        'email': user.email,
+                        **registration_context(),
+                    })
+                else:
+                    message = get_template('registration/market_place/otp_verification.html').render({
+                        'otp': otp_to_send,
+                        'email': user.email,
+                        **registration_context(),
+                    })
+                msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
+                msg.content_subtype = 'html'
+                if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+                    msg.send()
+                    _logger.info("forgot password email sent to user: %s", user.email)
+                else:
+                    _logger.info("forgot password email disabled. skipping email for user: %s", user.email)
+                    _logger.debug("DUMPING VERIFICATION EMAIL: %s", message)
+
+                response = {'details': 'OTP is Sent In Your Registered Mail !! ', 'user': user.id}
+                status = 200
+            if group_name.name != "Auditor":
+                response = {'details': 'Email is Registered as a {}!! Please use Auditor Account Email'.format(group_name.name)}
+                status = 200
+        except User.DoesNotExist:
+            response = {'details': 'Email ID does not Exist please Enter Valid Email ID'}
+            status = 404
+
+    _logger.info("Response: %s", response)
+    _logger.info("Status: %s", status)
+
+    return response, status
 
 # @atomic
 # def forgot_password(request):
@@ -487,6 +550,9 @@ def sign_up_auditor_app(request):
 
     if to_check_email:
         to_check_email = to_check_email.strip().lower()
+
+    phone = request.data.get("phone", "")
+    phone = phone.strip() if phone else ""
     
     # if not len(request.data.get("phone")) == 10:
     #     response = {'detail': 'Phone number should be 10 digit'}
@@ -503,11 +569,11 @@ def sign_up_auditor_app(request):
     #     response = {'detail': 'invalid phone number'}
     #     status = 400
     #     return response, status
-
-    if mobile_number_service.mobile_number_exists(request.data.get("phone")):
-        response = {'detail': 'a user with this phone number already exists'}
-        status = 400
-        return response, status
+    if phone:
+        if mobile_number_service.mobile_number_exists(phone):
+            response = {'detail': 'a user with this phone number already exists'}
+            status = 400
+            return response, status
 
     try:
         user = User.objects.get(email__iexact=to_check_email)
@@ -524,7 +590,8 @@ def sign_up_auditor_app(request):
     except User.DoesNotExist:
         user = User()
         user.email = request.data.get("username")
-        user.phone = request.data.get("phone")
+        # user.phone = request.data.get("phone","")
+        user.phone = phone if phone else None
         user.username = str.lower(request.data.get("username"))
         user.set_password(request.data.get("password"))
         user.is_active = True
@@ -676,7 +743,10 @@ def sign_up_auditor(request):
     if to_check_email:
         to_check_email = to_check_email.strip().lower()
 
-    if not len(request.POST.get("phone")) == 10:
+    phone = request.data.get("phone", "")
+    phone = phone.strip() if phone else ""
+
+    if not len(phone) == 10:
         response = {'detail': 'Phone number should be 10 digit'}
         status = 400
         return response, status
@@ -692,10 +762,16 @@ def sign_up_auditor(request):
         status = 400
         return response, status
 
-    if mobile_number_service.mobile_number_exists(request.POST.get("phone")):
-        response = {'detail': 'a user with this phone number already exists'}
-        status = 400
-        return response, status
+    # if mobile_number_service.mobile_number_exists(request.POST.get("phone")):
+    #     response = {'detail': 'a user with this phone number already exists'}
+    #     status = 400
+    #     return response, status
+
+    if phone:
+        if mobile_number_service.mobile_number_exists(phone):
+            response = {'detail': 'a user with this phone number already exists'}
+            status = 400
+            return response, status
 
     try :
         user = User.objects.get(email__iexact=to_check_email)
@@ -715,7 +791,8 @@ def sign_up_auditor(request):
     except User.DoesNotExist:
         user = User()
         user.email = request.POST.get("username")
-        user.phone = request.POST.get("phone")
+        # user.phone = request.data.get("phone","")
+        user.phone = phone if phone else None
         user.username = str.lower(request.POST.get("username"))
         user.set_password(request.POST.get("password"))
         user.save()

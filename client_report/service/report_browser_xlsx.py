@@ -11,6 +11,10 @@ from audit_store.models import AuditStore
 from manager.states import get_state_code
 from manager.country import get_country_code
 
+from questionnaire.models import Question
+from answer.models import Answer
+from client.models import Store
+
 
 # Get report for audit cycle client with filters
 def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
@@ -284,4 +288,102 @@ def write_data(data):
 
     workbook.close()
     output.seek(0)
+    return output
+
+def get_aggregate_questions_data_with_filters(question_ids):
+    questions = Question.objects.filter(id__in=question_ids)
+    if not questions.exists():
+        return [], [], []
+
+    answers = Answer.objects.filter(question__in=questions,audit_store__status__in=['ACCEPTED', 'COMPLETED']).select_related('audit_store__audit__store')
+    store_ids_qs = answers.values_list('audit_store__audit__store__id',flat=True).distinct()
+    return questions, answers, store_ids_qs
+
+def write_questions_data(questions, answers,store_ids):
+
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output)
+    worksheet = workbook.add_worksheet("Report")
+
+    header_format = workbook.add_format({
+        'bold': True,
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+        'bg_color': '#D9D9D9'
+    })
+
+    sub_header_format = workbook.add_format({
+        'bold': True,
+        'border': 1,
+        'align': 'center',
+        'bg_color': '#D9D9D9'
+    })
+
+    cell_format = workbook.add_format({
+        'border': 1,
+        'align': 'center'
+    })
+    row_format_even = workbook.add_format({
+        'border': 1,
+        'align': 'center',
+        'bg_color': '#F2F2F2'
+    })
+
+    row_format_odd = workbook.add_format({
+        'border': 1,
+        'align': 'center'
+    })
+
+    worksheet.set_column(0, 0, 25)   # Store Name
+    worksheet.set_column(1, 100, 30) # Questions
+    worksheet.merge_range(0, 0, 1, 0, "Store Name", header_format)
+
+    col = 1
+    for question in questions:
+        worksheet.merge_range(0, col, 0, col + 1, question.question_txt, sub_header_format)
+        worksheet.write(1, col, "Answer Text", sub_header_format)
+        worksheet.write(1, col + 1, "Obtain/Max Marks", sub_header_format)
+        col += 2
+
+    row_num = 2
+
+    worksheet.freeze_panes(2, 1)
+    for store in store_ids:
+        store = Store.objects.get(id=store)
+
+        worksheet.write(row_num, 0, f"{store.name}", cell_format)
+        store_answers = [
+            a for a in answers
+            if a.audit_store.audit.store.id == store.id
+        ]
+        answers_map = {}
+        for a in store_answers:
+            answers_map[a.question_id] = a
+        col = 1
+
+        for question in questions:
+            ans = answers_map.get(question.id)
+            if ans:
+                if ans.not_applicable:
+                    worksheet.write(row_num, col, "N/A", cell_format)
+                    worksheet.write(row_num, col + 1, "N/A", cell_format)
+
+                else:
+                    answer_text = ans.answer_text or ""
+                    obtained_marks = ans.marks_obtained or 0
+                    max_marks = question.max_marks or 0
+
+                    worksheet.write(row_num, col, answer_text, cell_format)
+                    worksheet.write(row_num,col + 1,f"{obtained_marks}/{max_marks}",cell_format)
+
+            else:
+                worksheet.write(row_num, col, "", cell_format)
+                worksheet.write(row_num, col + 1, "", cell_format)
+            col += 2
+        row_num += 1
+
+    workbook.close()
+    output.seek(0)
+
     return output
