@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
-from django.db.models import PROTECT
+from django.db.models import PROTECT, TextField
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, NullBooleanField, OneToOneField, \
     PositiveSmallIntegerField, DateTimeField, BooleanField
 
@@ -620,3 +620,21 @@ class AuditorRating(Model):
         if not self.id:
             self.created_at = timezone.now()
         return super(AuditorRating, self).save(*args, **kwargs)
+    
+class AuditorAppConfig(Model):
+    PLATFORM_CHOICES = (
+        ("android", "Android"),
+        ("ios", "iOS"),
+    )
+    platform = CharField(max_length=10, choices=PLATFORM_CHOICES, unique=True)
+
+    latest_version = CharField(db_column="latest_version",max_length=20,blank=True, null=True)
+    min_supported_version = CharField(db_column="min_supported_version",max_length=20,blank=True, null=True)
+    force_update = BooleanField(db_column="force_update",default=False)
+    update_message = TextField(db_column="update_message",blank=True, null=True)
+    store_url = CharField(db_column="store_url",max_length=500,blank=True, null=True)
+
+    app_enabled = BooleanField(db_column="app_enabled",default=True)
+
+    def __str__(self):
+        return self.platform

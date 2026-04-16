@@ -72,6 +72,7 @@ from django.contrib.auth.models import Permission
 from kronos.exceptions import AppLogicError,ObjectNotFound
 from guardian.models import UserObjectPermission
 from django.utils import timezone
+from auditor.service import stats as auditor_stats_service
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -510,7 +511,22 @@ class CityView(APIView):
             cities = City.objects.filter(state=state)
             return Response(CitySerializer(cities, many=True).data)
         raise NotFound
+    
+class AuditorAppConfigAPIView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
 
+    def get(self, request):
+        android_data = auditor_stats_service.get_platform_config("android")
+        ios_data = auditor_stats_service.get_platform_config("ios")
+        app_enabled = auditor_stats_service.get_app_status()
+
+        return Response({
+            "android": android_data,
+            "ios": ios_data,
+            "appEnabled": app_enabled
+        }, status=200)
+    
 class CityGetByIdView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
