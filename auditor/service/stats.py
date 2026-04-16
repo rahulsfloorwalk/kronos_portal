@@ -3,7 +3,7 @@ import math
 from django.contrib.auth.models import User
 
 from audit_store.models import AuditStore
-from auditor.models import AuditApplication, ProfileInfo
+from auditor.models import AuditApplication, ProfileInfo,AuditorAppConfig
 from kronos.exceptions import ObjectNotFound
 from payment.models import Payment
 from registration.models import GROUP_NAME_AUDITOR
@@ -199,3 +199,24 @@ def get_profile_completion(user_id):
         "auditor_rating": profile_info.auditor_rating,
         "auditor_certification_score": auditor_certification_score,
     }
+
+def get_platform_config(platform):
+    try:
+        obj = AuditorAppConfig.objects.filter(platform=platform)[0]
+    except:
+        return {}
+
+    return {
+        "latestVersion": obj.latest_version,
+        "minSupportedVersion": obj.min_supported_version,
+        "forceUpdate": obj.force_update,
+        "updateMessage": obj.update_message,
+        "storeUrl": obj.store_url
+    }
+
+def get_app_status():
+    try:
+        obj = AuditorAppConfig.objects.all()[0]
+        return obj.app_enabled
+    except:
+        return True

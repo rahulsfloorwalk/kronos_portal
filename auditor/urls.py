@@ -104,7 +104,9 @@ urlpatterns = ([
     # url(r'password-reset-confirm/<str:uidb64>/<str:token>$', views_api.auditor_service_api.PasswordResetConfirmAPIView.as_view(), name='password_reset_confirm'),
 
     url(r'app/verify_and_forgot_password_api$', views_api.VerifyAndForgotPasswordAPI.as_view(), name="verify_and_forgot_password_api"),
-    url(r'app/verify_and_forgot_password_set_api$', views_api.SetPasswordAPI.as_view(), name="verify_and_forgot_password_set_api"),   
+    url(r'app/verify_and_forgot_password_set_api$', views_api.SetPasswordAPI.as_view(), name="verify_and_forgot_password_set_api"),
+    # url(r'auditor_app_version$', views.AuditorAppConfigAPIView.as_view(), name="auditor_app_config_api"),
+    url(r'^app_version_detail$', views.AuditorAppConfigAPIView.as_view(), name="auditor_app_config_api"),
 
     url(r'profile_info/pronouns$', views.ProfileInfoPronounsView.as_view(), name="profile_info_pronouns_view"), 
     url(r'profile_info/gender$', views.ProfileInfoGenderView.as_view(), name="profile_info_gender_view"), 

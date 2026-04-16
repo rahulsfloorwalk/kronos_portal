@@ -8,6 +8,7 @@ from .service import auditor_api as auditor_service_api
 from .service import preferences_service
 from registration.service import auditor as auditor_registration
 from .serializers import UserAPISerializer, PreferencesSerializer
+from auditor.service import stats as auditor_stats_service
 
 from django.views import View
 from django.db.transaction import atomic
@@ -15,6 +16,7 @@ from django.http import JsonResponse
 import json
 from registration.mixins import HasGroupPermission
 from rest_framework.permissions import AllowAny,IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 class AppSignUpAPI(APIView):
     permission_classes=[AllowAny]
@@ -110,7 +112,21 @@ class SetPasswordAPI(APIView):
     def post(self,request):
         response,status = auditor_service_api.set_password(request)
         return JsonResponse(response,status=status) 
-  
+
+class AuditorAppConfigAPIView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def get(self, request):
+        android_data = auditor_stats_service.get_platform_config("android")
+        ios_data = auditor_stats_service.get_platform_config("ios")
+        app_enabled = auditor_stats_service.get_app_status()
+
+        return Response({
+            "android": android_data,
+            "ios": ios_data,
+            "appEnabled": app_enabled
+        }, status=200)
 
 class DashboardView(APIView):
     permission_classes = [HasGroupPermission]
