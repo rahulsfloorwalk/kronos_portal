@@ -524,6 +524,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -564,6 +565,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -652,6 +654,10 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -1179,6 +1185,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -1219,6 +1226,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -1307,6 +1315,10 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -1834,6 +1846,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -1874,6 +1887,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -1962,6 +1976,10 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -2489,6 +2507,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -2529,6 +2548,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -2617,6 +2637,10 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -3144,6 +3168,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -3184,6 +3209,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -3272,6 +3298,10 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -3796,6 +3826,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -3836,6 +3867,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -3924,6 +3956,10 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -4458,6 +4494,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -4498,6 +4535,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -4586,6 +4624,10 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -5113,6 +5155,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -5153,6 +5196,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -5241,6 +5285,10 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -5750,6 +5798,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -5790,6 +5839,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -5878,6 +5928,10 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -6387,6 +6441,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -6427,6 +6482,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -6515,6 +6571,10 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -7024,6 +7084,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -7064,6 +7125,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -7152,6 +7214,10 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -7661,6 +7727,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -7701,6 +7768,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -7789,6 +7857,10 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -8365,6 +8437,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={true}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -8405,6 +8478,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -8493,6 +8567,10 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;
 
@@ -9002,6 +9080,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
     editable={false}
+    onReload={[Function]}
   />
   <AuditStoreSections
     auditStore={
@@ -9042,6 +9121,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onReload={[Function]}
   />
   <div
     className="modal"
@@ -9130,5 +9210,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
+  <GlobalLoader
+    show={false}
+    text="Let the magic begin!..."
+  />
 </div>
 `;

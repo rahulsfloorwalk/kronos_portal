@@ -299,6 +299,26 @@ def previous_report_exists(profile_info, audit, audit_date):
     # return profile_info.user.auditstore_set.filter(audit__store=audit.store, audit_date__range=[start_date, audit_date], status = AuditStore.ACCEPTED).only('audit__audit_cycle', 'audit_date').last()
 
     auditor = profile_info.user
+    client_id = audit.audit_cycle.client.id
+    if client_id == 375:
+        valid_status = [
+            AuditStore.ASSIGNED,
+            AuditStore.ACKNOWLEDGED,
+            AuditStore.SUBMITTED,
+            AuditStore.PM_REVIEW,
+            AuditStore.COMPLETED,
+            AuditStore.ACCEPTED,
+            AuditStore.REJECTED,
+            AuditStore.FAILED
+        ]
+
+        audit_stores = profile_info.user.auditstore_set.filter(audit__audit_cycle__client_id=client_id,status__in=valid_status).only('audit__audit_cycle', 'audit_date').first()
+        profile_info_store = audit_stores
+        if profile_info_store:
+            return audit_stores, profile_info_store
+        else:
+            return audit_stores, None
+        
     audit_stores = AuditStore.objects.filter( user=auditor, audit__store=audit.store, audit_date__range=[start_date, audit_date], status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED] ).only('audit__audit_cycle', 'audit_date').last()
     profile_info_store = profile_info.user.auditstore_set.filter( audit__store=audit.store, audit_date__range=[start_date, audit_date], status=AuditStore.ACCEPTED ).only('audit__audit_cycle', 'audit_date').last()
 

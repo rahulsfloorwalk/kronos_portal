@@ -11,7 +11,7 @@ import { momentDateFormat } from "../../../config.js";
 
 import { findById, qaOk, fail, unsubmit, submit, setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment, findProofNotAvailable } from "../service/audit_store.js";
 
-import { Calendar, File, Envelope } from "../../components/Icons.jsx";
+import { Calendar, File, Envelope, Tasks } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
@@ -28,6 +28,13 @@ import { FetchGuidlineByAuditStoreModerator } from "../service/audit_store.js";
 import ProofNotAvailable from "./ProofNotAvailable.jsx";
 import "../../../css/bs_overrides.scss";
 import MandatoryProofBox from "./MandatoryProofBox.jsx";
+import { fetchSections, aiAnalysis } from "../service/section.js";
+import { findAttachmentsByAuditStore } from "../service/attachment.js";
+import { findAttachmentsByAuditStoreAndSection } from "../service/attachment.js";
+import { fetchAnswers } from "../service/answer.js";
+import AudioUrlBox from "./AudioUrlBox.jsx";
+import Alert from "react-s-alert";
+import GlobalLoader from "../../components/GlobalLoader.jsx";
 
 export default class AuditStoreDetails extends React.Component {
 	static propTypes = {
@@ -52,10 +59,12 @@ export default class AuditStoreDetails extends React.Component {
 			reason: "",
 			errMsg: "",
 			proof_tags: [],
+			aiLoading: false,
 			guideline: "",
 			proof_not_available: [],
 			reloadKey: 0,
 			sectionproof_change: false,
+			isAnyTranscribing: false,
 			// timerValue: 0,
 			// isTimerRunning: false,
 			// forwardLoading: false,
@@ -69,7 +78,78 @@ export default class AuditStoreDetails extends React.Component {
 			auditStore
 		});
 	};
+	loadAttachments = () => {
+		const auditStoreId = this.props.params.auditStoreId;
+
+		fetchSections(auditStoreId).then((sections) => {
+			this.setState({ sections });
+
+			const sectionIds = (sections || []).map(sec => sec.id);
+
+			const sectionAttachmentCalls = sectionIds.map(sectionId =>
+				findAttachmentsByAuditStoreAndSection(auditStoreId, sectionId)
+			);
+
+			Promise.all([
+				findAttachmentsByAuditStore(auditStoreId),
+				...sectionAttachmentCalls
+			]).then((results) => {
+
+				const auditStoreAttachments = results[0] || [];
+				const sectionAttachments = results.slice(1).flat();
+
+				const allAttachments = [
+					...auditStoreAttachments,
+					...sectionAttachments
+				];
+
+				const uniqueAttachments = [];
+				const seen = new Set();
+
+				allAttachments.forEach(att => {
+					if (!seen.has(att.id)) {
+						seen.add(att.id);
+						uniqueAttachments.push(att);
+					}
+				});
+
+				const audioExtRegex = /\.(m4a|mp3|wav|aac|ogg|flac|wma|amr|3gp|opus)/;
+
+				const audioAttachments = uniqueAttachments.filter(att => {
+					const fileName = (att.file_name || "").toLowerCase();
+					const fileSlug = (att.file_slug || "").toLowerCase();
+					const url = (att.direct_url || "").toLowerCase();
+					const mime = (att.mime_type || "").toLowerCase();
+
+					if (att.proof_type === "AUDIO") return true;
+					if (mime.includes("audio")) return true;
+
+					return (
+						audioExtRegex.test(fileName) ||
+						audioExtRegex.test(fileSlug) ||
+						audioExtRegex.test(url)
+					);
+				});
+
+				this.setState({
+					attachments: uniqueAttachments,
+					audioAttachments
+				});
+			});
+		});
+	};
 	componentDidMount() {
+		// fetchSections(this.props.params.auditStoreId).then((sections) => {
+		// 	this.setState({ sections });
+		// });
+
+		// findAttachmentsByAuditStore(this.props.params.auditStoreId).then((attachments) => {
+		// 	this.setState({ attachments });
+		// });
+		fetchAnswers(this.props.params.auditStoreId).then((answers) => {
+			this.setState({ answers });
+		});
+		this.loadAttachments();
 		findById(this.props.params.auditStoreId).then((auditStore) => {
 			this.setAuditStore(auditStore);
 			this.initializeTimer(); // Initialize timer after auditStore is set
@@ -114,6 +194,63 @@ export default class AuditStoreDetails extends React.Component {
 		document.removeEventListener("visibilitychange", this.handleVisibilityChange);
 		window.removeEventListener("storage", this.handleStorageChange);
 	}
+	handleAiAnalysis = () => {
+		const { sections, auditStore, answers, audioAttachments } = this.state;
+
+		if (!sections || !auditStore) {
+			alert("Data not ready yet");
+			return;
+		}
+
+		const transcriptTexts = (audioAttachments || [])
+			.reduce((acc, att) => {
+				const text = att.audio_to_text_row;
+				if (typeof text === "string" && text.trim()) {
+					acc.push(text.trim());
+				}
+				return acc;
+			}, []);
+
+		if (!transcriptTexts.length) {
+			alert("No transcripts available! Please transcribe audio first.");
+			return;
+		}
+		const answerMap = new Map(
+			(answers || []).map(a => [a.question, a])
+		);
+
+		const question_answer_detail = sections.flatMap(section =>
+			(section.questions || []).map(q => {
+				const matchedAnswer = answerMap.get(q.id);
+				return {
+					id: q.id,
+					question_txt: q.question_txt,
+					question_type: q.question_type,
+					question_data: q.question_data,
+					filled_answer: matchedAnswer && matchedAnswer.answer_text ? matchedAnswer.answer_text : null
+				};
+			})
+		);
+
+		const payload = {
+			transcript_texts: transcriptTexts,
+			question_answer_detail
+		};
+		this.setState({ aiLoading: true });
+
+		aiAnalysis(payload)
+			.then(() => {
+				Alert.success("AI Analysis completed");
+
+				if (this.auditSectionsRef) {
+					this.auditSectionsRef.reloadAnswers();
+				}
+			})
+			.always(() => {
+				this.setState({ aiLoading: false });
+			});
+	};
+
 
 	parseTimeToSeconds = (timeString) => {
 		if (!timeString) return 0;
@@ -808,14 +945,50 @@ export default class AuditStoreDetails extends React.Component {
 
 				{refresh_report_button}
 				<MandatoryProofBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable} onReload={this.handleMandatoryProofReload} sectionproof_change={this.state.sectionproof_change}/>
-				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable} />
+				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable} onReload={this.loadAttachments} />
 				{this.state.proof_not_available.length > 0 && <ProofNotAvailable proof_not_available={this.state.proof_not_available} />}
 				{/* <ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} /> */}
 				{this.state.auditStore.audit.audit_cycle.audit_report_summary ?
 					<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} />
 					: null}
+
+				{this.state.audioAttachments && this.state.audioAttachments.length > 0 && (
+					<div className="col-md-12" style={{ marginTop: "15px" }}>
+						<div style={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+							// marginBottom: "10px"
+						}}>
+							{/* <h4><b>Check Report Using AI</b></h4> */}
+							<h3 className="page-header"><Tasks/> Check Report Using AI </h3>
+
+						</div>
+						<div style={{ display: "flex",flexDirection:"column",marginBottom: "30px"}}>
+							<h4><b> Audio Attachments :</b> (Check report using AI audio files.)</h4>
+							<div style={{ display: "flex", flexWrap: "wrap"}}>
+								{this.state.audioAttachments.map(att => (
+									<AudioUrlBox key={att.id} attachment={att} onReload={this.loadAttachments} isAnyTranscribing={this.state.isAnyTranscribing}
+										setGlobalTranscribing={(val) => this.setState({ isAnyTranscribing: val })} />
+								))}
+							</div>
+						</div>
+						<div style={{ marginBottom : "30px",display : "flex", gap : "2rem"}}>
+							<h4>Generate AI suggestion:</h4>
+							<button
+								className="btn btn-success"
+								onClick={this.handleAiAnalysis}
+								disabled={this.state.aiLoading}
+							>
+								{this.state.aiLoading ? "Processing..." : "Click here"}
+							</button>
+						</div>
+					</div>
+				)}
 				<AuditStoreSections
 					// key={this.state.reloadKey} // to force remount when mandatoryproofbox changes
+					onReload={this.loadAttachments}
+					ref={(ref) => this.auditSectionsRef = ref}
 					handleSectionProofChange={this.handleSectionProofChange}
 					auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore} />
 				{this.props.children}
@@ -851,6 +1024,10 @@ export default class AuditStoreDetails extends React.Component {
 						</div>
 					</div>
 				</div>
+				<GlobalLoader
+					show={this.state.aiLoading}
+					text="Let the magic begin!..."
+				/>
 			</div>
 		);
 	}

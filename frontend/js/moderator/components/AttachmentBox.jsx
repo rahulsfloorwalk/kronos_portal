@@ -26,7 +26,8 @@ export default class AttachmentBox extends React.Component {
 			status: PropTypes.string.isRequired,
 			audit: PropTypes.object
 		}),
-		editable: PropTypes.bool
+		editable: PropTypes.bool,
+		onReload: PropTypes.func
 	};
 
 	state = {
@@ -78,6 +79,9 @@ export default class AttachmentBox extends React.Component {
 					attachments: this.state.attachments.filter((a) => a.id !== this.state.selectedAttachment.id)
 				});
 			});
+			if (this.props.onReload) {
+				this.props.onReload();
+			}
 		}
 	};
 
@@ -177,6 +181,9 @@ export default class AttachmentBox extends React.Component {
 					uploadMessage: "upload successful",
 				});
 				this.reloadState();
+				if (this.props.onReload) {
+					this.props.onReload();
+				}
 			},
 			(errorMessage) => {
 				const maxLength = 30;

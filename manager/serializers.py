@@ -15,6 +15,7 @@ from attachment.models import Attachment
 from manager.models import ManagerProfileInfo
 from rest_framework import serializers
 from manager.models import AuditProoftagNotAvailable
+from auditor.service.auditor_api import get_report_completion_percentage
 from manager.models import City
 import json
 
@@ -110,7 +111,9 @@ class AuditCycleSerializer(ModelSerializer):
             'questionnaire_type',
             'audit_alignment_factors',
             'audit_auto_approve',
-            'audit_report_summary',
+            'audit_auto_fail',
+            'audit_ai_autofill',
+            'audit_report_summary'
         )
         read_only_fields = fields
 
@@ -250,6 +253,8 @@ class AgencySmallSerializer(ModelSerializer):
 class AuditApplicationSerializer(ModelSerializer):
     profileinfo = ProfileInfoSmallSerializer()
     audit_cycle_count_for_auditor = SerializerMethodField()
+    report_completion_percentage = SerializerMethodField()
+    audit_store_status = SerializerMethodField()
 
     class Meta:
         model = AuditApplication
@@ -269,6 +274,8 @@ class AuditApplicationSerializer(ModelSerializer):
             'profile_match_percentage',
             'auditor_audit_count',
             'is_super_auditor',
+            'report_completion_percentage',
+            'audit_store_status',
             'audit_cycle_count_for_auditor'
         )
         read_only_fields = fields
@@ -279,6 +286,25 @@ class AuditApplicationSerializer(ModelSerializer):
             audit__audit_cycle=obj.audit.audit_cycle
         ).exclude(status__in=['WAITLISTED', 'NOT_APPLIED','REJECTED','APPLIED']).count()
 
+    def get_report_completion_percentage(self, obj):
+        audit_store = AuditStore.objects.filter(audit=obj.audit,user=obj.profileinfo.user).only('id','report_completion_percentage').first()
+        if not audit_store:
+            return 0
+
+        if audit_store.report_completion_percentage not in [None]:
+            return audit_store.report_completion_percentage
+
+        percentage = get_report_completion_percentage(audit_store.id)
+        audit_store.report_completion_percentage = percentage
+        audit_store.save(update_fields=['report_completion_percentage'])
+        return percentage
+    
+    def get_audit_store_status(self, obj):
+        audit_store = (AuditStore.objects.filter(audit=obj.audit,user=obj.profileinfo.user).only('status').first())
+        if not audit_store:
+            return None
+
+        return audit_store.status
 
 class AuditSerializer(ModelSerializer):
     store = StoreSerializer()
@@ -353,8 +379,19 @@ class ManagerAllowedCountriesSerializer(serializers.Serializer):
                     "Each country code must be a string (max 5 chars)"
                 )
         return value
+    
+class PlainmoderatorUserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'is_active',
+        )
+        read_only_fields = fields
 
 class PlainUserSerializer(ModelSerializer):
+    user = SerializerMethodField()
     mobile_numbers = MobileNumberSerializer(many=True)
     # mobile = ManagerProfileInfoSerializer(many=True)
     mobile = SerializerMethodField()
@@ -369,6 +406,7 @@ class PlainUserSerializer(ModelSerializer):
             'mobile_numbers',
             'name',
             'mobile',
+            'user',
             'is_admin'
         )
         read_only_fields = fields
@@ -391,16 +429,8 @@ class PlainUserSerializer(ModelSerializer):
             return manager_profile_info.is_admin
         except ManagerProfileInfo.DoesNotExist:
             return None
-
-class PlainmoderatorUserSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'email',
-            'is_active',
-        )
-        read_only_fields = fields
+    def get_user(self, obj):
+        return PlainmoderatorUserSerializer(obj).data
 
 class AgencyUserInfoSerializer(ModelSerializer):
     agency = AgencySerializer()
@@ -493,6 +523,7 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
     user = UserSerializer()
     assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
     client_id = SerializerMethodField()
+    report_completion_percentage = SerializerMethodField()
     class Meta:
         model = AuditStore
         fields = (
@@ -507,7 +538,8 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
             'assigned_to_moderator',
             'attribute_data',
             'report_revert_count',
-            'client_id'
+            'client_id',
+            'report_completion_percentage',
         )
         read_only_fields = fields
 
@@ -516,6 +548,14 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
             return obj.audit.audit_cycle.client.id
         except AttributeError:
             return None
+        
+    def get_report_completion_percentage(self, obj):
+        if obj.report_completion_percentage not in [None]:
+            return obj.report_completion_percentage
+
+        percentage = get_report_completion_percentage(obj.id)
+        AuditStore.objects.filter(id=obj.id).update(report_completion_percentage=percentage)
+        return percentage
 
 class ProofTagSerializer(ModelSerializer):
     class Meta:

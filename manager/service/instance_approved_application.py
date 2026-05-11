@@ -23,7 +23,7 @@ def approved(application_id):
         audit__hidden = False,
         # audit_date__exact=today_ist() + timedelta(days=1),
         audit_date__in=[today, tomorrow],
-        report_exists=False,
+        # report_exists=False,
         audit__audit_cycle__status=AuditCycle.ACTIVE)
     if audit_application.audit.valid_report_count() < audit_application.audit.count:
         distance = audit_application.distance()
@@ -72,7 +72,7 @@ def audit_cycle_audit_auto_approve_check_by_applictaion_id(application_id):
             audit__hidden=False,
             # audit_date__exact=today_ist() + timedelta(days=1),
             audit_date__in=[today, tomorrow],
-            report_exists=False,
+            # report_exists=False,
             audit__audit_cycle__status=AuditCycle.ACTIVE
         )   
         # ).first()

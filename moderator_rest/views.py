@@ -112,7 +112,25 @@ class AuditStorePendingView(APIView):
         # return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
         return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True,context={"filter_status": request.data['filterStatus']}).data, "count": count})
 
+class TranscriptToCompareAnswersView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+    def post(self, request, format=None):
+        data, status_code = audit_store_service.transcript_to_compare_answers(request.data)
+        return Response(data, status=status_code)
 
+
+class AudioToTextView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+    def post(self, request, format=None):
+        data, status_code = audit_store_service.audio_to_text(request.data)
+        return Response(data, status=status_code)
+    
 class AuditStoreIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

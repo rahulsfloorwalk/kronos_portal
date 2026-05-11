@@ -9,6 +9,32 @@ export function fetchReportSections(auditStoreId){
 	return $.get( url.api_base_path + `moderator/audit_store/${auditStoreId}/report_section`);
 }
 
+export function audioToCompareAnswers(payload) {
+	return $.ajax({
+		type: "POST",
+		// url: "https://ai.floorwalk.in/audio_to_compare_answers/",
+		url: url.api_base_path + "moderator/audio_to_compare_answers",
+		data: JSON.stringify(payload),
+		contentType: "application/json",
+	});
+}
+
+export function audioToTextTranscription(payload) {
+	return $.ajax({
+		type: "POST",
+		url: url.api_base_path + "moderator/audio_to_text",
+		data: JSON.stringify(payload),
+		contentType: "application/json",
+	});
+}
+export function aiAnalysis(payload) {
+	return $.ajax({
+		type: "POST",
+		url: url.api_base_path + "moderator/transcript_to_compare_answers",
+		data: JSON.stringify(payload),
+		contentType: "application/json",
+	});
+}
 export function submitPMComment(auditStoreId, sectionId, pmComment){
 	return $.ajax({
 		type: "POST",

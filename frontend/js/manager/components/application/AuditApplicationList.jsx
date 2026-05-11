@@ -19,6 +19,7 @@ import StarRating from "../../../components/StarRating.jsx";
 import ApplicationRepeat from "../../../components/ApplicationRepeat.jsx";
 import Loading from "../../../components/Loading.jsx";
 import { auditApplicationPropType } from "../../prop_types.js";
+import { getAuditStoreStatus } from "../../../utils.js";
 
 const modalStyle = {
 	display: "block",
@@ -140,8 +141,12 @@ export class AuditApplicationRow extends Component{
 				<td>
 					<tr >
 						{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
-						{statusLabel}&nbsp;
+						{statusLabel}&nbsp; ({application.audit_store_status ? getAuditStoreStatus(application.audit_store_status):null}) {application.report_completion_percentage ? `(${application.report_completion_percentage}%)` : null}
 					</tr>
+					{/* <tr >
+						{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
+						{statusLabel}&nbsp;
+					</tr> */}
 					<tr>
 						<td colSpan="10">
 							<div style={{ marginTop: "4px" }}>

@@ -26,6 +26,13 @@ class Answer(Model):
     revert_message = CharField(db_column='revert_message', max_length=2048, blank=True)
     attachments = GenericRelation('attachment.Attachment', related_query_name='answers')
 
+    ai_answer_text = CharField(db_column='ai_answer_text', max_length=20048, blank=True, null=True)
+    ai_answer_result = CharField(db_column='ai_answer_result', max_length=20048, blank=True, null=True)
+    ai_match_percentage = IntegerField(db_column='ai_match_percentage', blank=True, null=True)
+    ai_answer_auditor_text = CharField(db_column='ai_answer_auditor_text', max_length=20048, blank=True, null=True)
+    ai_decision_auditor = CharField(db_column='ai_decision_auditor', max_length=20048, blank=True, null=True)
+    ai_final_confidence_percentage = IntegerField(db_column='ai_final_confidence_percentage', blank=True, null=True)
+
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
 

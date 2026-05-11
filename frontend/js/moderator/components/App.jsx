@@ -10,6 +10,9 @@ import DevelopmentMarker from "../../components/DevelopmentMarker.jsx";
 import { fetchConfig } from "../service/config.js";
 
 import favicon from "../../../img/favicon.png";
+import Alert from "react-s-alert";
+import "react-s-alert/dist/s-alert-default.css";
+import "react-s-alert/dist/s-alert-css-effects/slide.css";
 
 export default class App extends React.Component {
 	static propTypes = {
@@ -42,6 +45,7 @@ export default class App extends React.Component {
 					{this.props.children}
 				</div>
 				<Footer config={this.state.config}/>
+				<Alert stack={{limit: 5}} effect="slide"/>
 			</div>
 		);
 	}

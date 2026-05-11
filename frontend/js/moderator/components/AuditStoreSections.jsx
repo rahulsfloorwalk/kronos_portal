@@ -29,6 +29,7 @@ import TimePicker from "rc-time-picker";
 import moment from "moment";
 import "rc-time-picker/assets/index.css";
 import "../../../css/bs_overrides.scss";
+import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
 class AnswerComment extends Component {
 
@@ -181,6 +182,11 @@ export class QuestionRow extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
+		if (prevProps.answer !== this.props.answer) {
+			this.setState({
+				answer: this.props.answer
+			});
+		}
 		// Resize when answer_text changes
 		if (
 			prevState.answer.answer_text !== this.state.answer.answer_text &&
@@ -287,7 +293,61 @@ export class QuestionRow extends React.Component {
 		let notApplicableIcon = this.state.answer.not_applicable ? <Checked /> : <Unchecked />;
 
 		let notApplicableElement = (notApplicableIcon);
-		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
+		const answerData = this.props.answer || {};
+		let aiResultBox = null;
+
+		if (answerData.ai_answer_result) {
+			const isCorrect = answerData.ai_answer_result === "correct";
+
+			aiResultBox = (
+				<div style={{ marginTop: "20px", fontSize: "12px", textAlign: "left" }}>
+					<span style={{
+						padding: "3px 8px",
+						borderRadius: "12px",
+						backgroundColor: isCorrect ? "#d4edda" : "#f8d7da",
+						color: isCorrect ? "#155724" : "#721c24",
+						display: "inline-block",
+						marginBottom: "4px"
+					}}>
+						{answerData.ai_answer_result.toUpperCase()}
+					</span>
+					<div style={{ color: "#555" }}>
+						Match: {answerData.ai_match_percentage || 0}%
+					</div>
+				</div>
+			);
+		}
+
+		// let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
+		let markElement = (
+			<div style={{ textAlign: "right" }}>
+				<div>
+					<b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b>
+				</div>
+
+				{aiResultBox}
+			</div>
+		);
+		let aiAnswerBox = null;
+
+		if (answerData.ai_answer_text && answerData.ai_answer_text.trim() !== ""){
+			aiAnswerBox = (
+				<div style={{
+					marginTop: "10px",
+					padding: "10px",
+					border: "1px solid #ddd",
+					borderRadius: "6px",
+					backgroundColor: "#f9f9f9",
+					maxHeight: "120px",
+					overflowY: "auto",
+					fontSize: "13px"
+				}}>
+					<b style={{ display: "block", marginBottom: "5px" }}>AI Answer:</b>
+					{answerData.ai_answer_text}
+				</div>
+			);
+		}
+
 		let answerElement = (
 			<span>
 				<big>{this.state.answer.answer_text}</big>
@@ -295,6 +355,7 @@ export class QuestionRow extends React.Component {
 					? <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} optional_comment_required={this.props.answer ? this.props.answer.optional_comment_required : ""} />
 					: null
 				}
+				{aiAnswerBox}
 			</span>
 		);
 		if (this.props.marking) {
@@ -302,14 +363,17 @@ export class QuestionRow extends React.Component {
 			let hasMarksObtainedSuccess = this.state.marksObtainedSuccess ? "has-success" : "";
 			let answerMarksBg = this.props.q.max_marks && this.state.answer.marks_obtained == 0 ? { backgroundColor: "#ffc299" } : {};
 			markElement = (
-				<div className={`input-group ${hasError} ${hasMarksObtainedSuccess}`}>
-					<input
-						style={answerMarksBg}
-						className="form-control text-right"
-						onChange={this.marksChanged}
-						onBlur={this.saveMarks}
-						value={this.state.answer.marks_obtained} />
-					<span className="input-group-addon">/&nbsp;{this.props.q.max_marks}</span>
+				<div >
+					<div className={`input-group ${hasError} ${hasMarksObtainedSuccess}`}>
+						<input
+							style={answerMarksBg}
+							className="form-control text-right"
+							onChange={this.marksChanged}
+							onBlur={this.saveMarks}
+							value={this.state.answer.marks_obtained} />
+						<span className="input-group-addon">/&nbsp;{this.props.q.max_marks}</span>
+					</div>
+					{aiResultBox}
 				</div>
 			);
 
@@ -324,25 +388,29 @@ export class QuestionRow extends React.Component {
 							onChange={this.answerChanged}
 							onBlur={this.saveAnswer}
 							value={this.state.answer.answer_text}></textarea>
+						{aiAnswerBox}
 					</div>
 				);
 			} else if (this.props.q.question_type === "MUTEX") {
 				answerElement = (
-					<div className="row">
-						<div className="col-xs-5">
-							<div className={hasAnswerError + hasAnswerSuccess}>
-								<select className="form-control"
-									onChange={this.answerChanged}
-									onBlur={this.saveAnswer}
-									value={this.state.answer.answer_text}>
-									<option value=""></option>
-									{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
-								</select>
+					<div>
+						<div className="row">
+							<div className="col-xs-5">
+								<div className={hasAnswerError + hasAnswerSuccess}>
+									<select className="form-control"
+										onChange={this.answerChanged}
+										onBlur={this.saveAnswer}
+										value={this.state.answer.answer_text}>
+										<option value=""></option>
+										{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
+									</select>
+								</div>
+							</div>
+							<div className="col-xs-7">
+								<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} optional_comment_required={this.props.answer ? this.props.answer.optional_comment_required : ""} />
 							</div>
 						</div>
-						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} optional_comment_required={this.props.answer ? this.props.answer.optional_comment_required : ""} />
-						</div>
+						{aiAnswerBox}
 					</div>
 				);
 			} else if (this.props.q.question_type === "MULTISELECT") {
@@ -360,15 +428,18 @@ export class QuestionRow extends React.Component {
 					}
 				}
 				answerElement = (
-					<div className="row">
-						<div className="col-xs-5">
-							{checkbox_list}
-							<br />
-							{this.state.answer.answer_text}
+					<div>
+						<div className="row">
+							<div className="col-xs-5">
+								{checkbox_list}
+								<br />
+								{this.state.answer.answer_text}
+							</div>
+							<div className="col-xs-7">
+								<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} optional_comment_required={this.props.answer ? this.props.answer.optional_comment_required : ""} />
+							</div>
 						</div>
-						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} optional_comment_required={this.props.answer ? this.props.answer.optional_comment_required : ""} />
-						</div>
+						{aiAnswerBox}
 					</div>
 				);
 			}
@@ -409,6 +480,7 @@ export class QuestionRow extends React.Component {
 							}}
 							style={{ cursor: "pointer" }}
 						/>
+						{aiAnswerBox}
 					</div>
 				);
 			}
@@ -453,6 +525,7 @@ export class QuestionRow extends React.Component {
 								);
 							}}
 						/>
+						{aiAnswerBox}
 					</div>
 				);
 			}
@@ -471,7 +544,8 @@ export class QuestionRow extends React.Component {
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
-				<td>{this.props.q.question_txt}<br />{this.state.answer.revert_message ? <p className="text-danger"><b>Revert message: </b>{this.state.answer.revert_message}</p> : null}</td>
+				{/* <td>{this.props.q.question_txt}<br />{this.state.answer.revert_message ? <p className="text-danger"><b>Revert message: </b>{this.state.answer.revert_message}</p> : null}</td> */}
+				<td><MarkdownViewer markdown={this.props.q.question_txt || ""}/><br />{this.state.answer.revert_message ? <p className="text-danger"><b>Revert message: </b>{this.state.answer.revert_message}</p> : null}</td>
 				<td>{answerElement}</td>
 				<td className="text-right">{markElement}</td>
 				<td className="">{notApplicableElement}</td>
@@ -483,7 +557,8 @@ export class QuestionRow extends React.Component {
 								<tbody>
 									<tr>
 										<th>Question</th>
-										<td>{this.props.q.question_txt}</td>
+										{/* <td>{this.props.q.question_txt}</td> */}
+										<td><MarkdownViewer markdown={this.props.q.question_txt || ""}/></td>
 									</tr>
 									<tr>
 										<th>Answer</th>
@@ -525,6 +600,7 @@ class SectionAttachmentBox extends React.Component {
 		// sections:PropTypes.array,
 		proof_tags: PropTypes.array,
 		handleSectionProofChange: PropTypes.func,
+		onReload: PropTypes.func,
 	};
 
 	constructor(props) {
@@ -617,6 +693,9 @@ class SectionAttachmentBox extends React.Component {
 					uploadMessage: "upload successful",
 				});
 				this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+				if (this.props.onReload) {
+					this.props.onReload();
+				}
 			}, (errorMessage) => {
 				this.setProgressState(tempId, {
 					uploadMessage: errorMessage,
@@ -631,6 +710,9 @@ class SectionAttachmentBox extends React.Component {
 			this.props.handleSectionProofChange();
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
+		if (this.props.onReload) {
+			this.props.onReload();
+		}
 	};
 
 	selectedAttachmentRenamed = (newName) => {
@@ -833,6 +915,7 @@ class Section extends React.Component {
 		// sections:PropTypes.array,
 		proof_tags: PropTypes.array,
 		handleSectionProofChange: PropTypes.func,
+		onReload: PropTypes.func
 	};
 
 	state = {
@@ -1096,7 +1179,7 @@ class Section extends React.Component {
 					</Modal> : null}
 				</div>
 				{/* <SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={editable} proof_tags={this.props.proof_tags}/> */}
-				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={editable} proof_tags={this.props.proof_tags} handleSectionProofChange={this.props.handleSectionProofChange} />
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={editable} proof_tags={this.props.proof_tags} handleSectionProofChange={this.props.handleSectionProofChange} onReload={this.props.onReload}/>
 			</div>);
 		}
 		return (
@@ -1124,6 +1207,7 @@ export default class AuditStoreSections extends React.Component {
 		editable: PropTypes.bool,
 		sections: PropTypes.object,
 		handleSectionProofChange: PropTypes.func,
+		onReload: PropTypes.func
 	};
 
 	state = {
@@ -1135,6 +1219,17 @@ export default class AuditStoreSections extends React.Component {
 	};
 
 	setLoading = (loading) => this.setState(prevState => Object.assign({}, prevState, { loading }));
+	reloadAnswers = () => {
+		this.setLoading(true);
+
+		fetchAnswers(this.props.auditStoreId)
+			.then((answers) => {
+				this.setState({ answers });
+			})
+			.always(() => {
+				this.setLoading(false);
+			});
+	};
 
 	componentDidMount() {
 		this.setLoading(true);
@@ -1172,6 +1267,7 @@ export default class AuditStoreSections extends React.Component {
 				editable={this.props.editable}
 				proof_tags={this.state.proof_tags}
 				handleSectionProofChange={this.props.handleSectionProofChange}
+				onReload={this.props.onReload}
 			/>);
 		}
 		if (sectionRows.length === 0) {

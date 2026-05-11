@@ -38,6 +38,8 @@ class AuditCycleDeSerializer(ModelSerializer):
             'client',
             'questionnaire_type',
             'audit_auto_approve',
+            'audit_auto_fail',
+            'audit_ai_autofill',
             'audit_report_summary',
         )
         read_only_fields = ('id',)
@@ -58,6 +60,8 @@ class AuditCycleDeSerializer(ModelSerializer):
         audit_cycle.description = self.validated_data.get('description', audit_cycle.description)
         audit_cycle.eligibility = self.validated_data.get('eligibility', audit_cycle.eligibility)
         audit_cycle.audit_auto_approve = self.validated_data.get('audit_auto_approve', audit_cycle.audit_auto_approve)
+        audit_cycle.audit_auto_fail = self.validated_data.get('audit_auto_fail', audit_cycle.audit_auto_fail)
+        audit_cycle.audit_ai_autofill = self.validated_data.get('audit_ai_autofill', audit_cycle.audit_ai_autofill)
         audit_cycle.audit_report_summary = self.validated_data.get('audit_report_summary', audit_cycle.audit_report_summary)
         audit_cycle.client = self.validated_data.get('client', audit_cycle.client_id)
         audit_cycle.questionnaire_type = self.validated_data.get('questionnaire_type', audit_cycle.questionnaire_type)

@@ -63,6 +63,7 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 from django.views.decorators.csrf import csrf_exempt
 from audit_store.models import AuditStore
+from audit_store.service_manager import get_sentiment_data
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -830,14 +831,46 @@ class GetNPSScore(APIView):
         client_id = request.user.clientuser.client_id
         nps_score_data = twitter_client.get_over_all_nps_score(client_id, audit_cycle_id)
         return Response(nps_score_data)
+# class SentimentDataView(APIView):
+#     permission_classes = [HasGroupPermission]
+#     required_groups = {
+#         'GET': [GROUP_NAME_CLIENT],
+#     }
+#     def get(self,request,audit_store_id,format=None):
+#         sentiment_data = AuditStore.objects.filter(id=audit_store_id)
+#         return Response(SentimentDataSerializer(sentiment_data,many=True).data)
+    
 class SentimentDataView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self,request,audit_store_id,format=None):
-        sentiment_data = AuditStore.objects.filter(id=audit_store_id)
-        return Response(SentimentDataSerializer(sentiment_data,many=True).data)
+
+    def get(self, request, audit_store_id, format=None):
+        audit_store = AuditStore.objects.filter(id=audit_store_id).first()
+
+        if not audit_store:
+            return Response({"error": "Not found"}, status=404)
+
+        if not audit_store.sentiment_score or not audit_store.sentiment_text:
+            if audit_store.report_summary and audit_store.report_summary.strip():
+                try:
+                    sentiment_data = get_sentiment_data(audit_store.report_summary)
+
+                    audit_store.main_keywords = sentiment_data.get('keywords')
+                    audit_store.bullet_points = sentiment_data.get('key_sentences')
+                    audit_store.sentiment_emotions = sentiment_data.get('emotions')
+                    audit_store.sentiment_positive_words = sentiment_data.get('positive_words')
+                    audit_store.sentiment_negative_words = sentiment_data.get('negative_words')
+                    audit_store.sentiment_score = sentiment_data.get('sentiment_score')
+                    audit_store.sentiment_text = sentiment_data.get('sentiment_result')
+
+                    audit_store.save()
+
+                except Exception as e:
+                    print("Error in sentiment auto-fill:", e)
+
+        return Response(SentimentDataSerializer([audit_store], many=True).data)
 
 class SentimentData(APIView):
     permission_classes = [AllowAny]

@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import AuditCycleView, AuditCycleIdView, AuditStoreByAuditCycle, AuditStoreIdView
+from .views import AuditCycleView, AuditCycleIdView, AuditStoreByAuditCycle, AuditStoreIdView,AudioToTextView,TranscriptToCompareAnswersView
 from .views import AuditStoreIdAuditDateView, AuditStoreIdQAOKView, AuditStoreIdFailView, AuditStoreIdSubmitView, AuditStoreIdUnSubmitView, AuditStoreIdQARatingView
 from .views import AuditStoreAttachmentView, ReportSectionAttachmentView, AttachmentIdView, AttachmentIdRenameView, AttachmentIdCompleteView, MoveAttachmentToSection,AuditStoreMandatoryProofTagView
 from .views import AuditStorePendingView, AuditStoreCompletedView
@@ -73,6 +73,8 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store$', AuditStoreByAuditCycle.as_view(), name='audit_store_by_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)$', AuditCycleIdView.as_view(), name='audit_cycle_id_view'),
     url(r'audit_cycle$', AuditCycleView.as_view(), name='audit_cycle_view'),
+    url(r'transcript_to_compare_answers$', TranscriptToCompareAnswersView.as_view(), name='transcript_to_compare_answers_view'),
+    url(r'audio_to_text$', AudioToTextView.as_view(), name='audio_to_text_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list$', AttachmentProofTagList.as_view(), name='attachment_proof_tag_list'),
     url(r'client$', ClientView.as_view(), name='client_view'),

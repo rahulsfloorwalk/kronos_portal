@@ -426,6 +426,9 @@ class AnswerSerializer(serializers.ModelSerializer):
             'not_applicable',
             'get_answer_text_list',
             'optional_comment_required',
+            'ai_answer_text',
+            'ai_answer_result',
+            'ai_match_percentage'
         )
         read_only_fields = fields
 
@@ -479,7 +482,9 @@ class AttachmentSerializer(ModelSerializer):
             'faulty_report_id',
             'proof_tag',
             'faulty_attachment_url',
-            'audio_transcript_data'
+            'audio_transcript_data',
+            'audio_to_text_row',
+            'audio_to_text_clean'
         )
         read_only_fields = fields
 

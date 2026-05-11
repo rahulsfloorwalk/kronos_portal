@@ -73,6 +73,14 @@ exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
           >
             PM Review
           </span>
+             
+          <span
+            style={
+              Object {
+                "margin": "6px",
+              }
+            }
+          />
            
         </tr>
         <tr>
@@ -167,6 +175,14 @@ exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
           >
             QA Review
           </span>
+             
+          <span
+            style={
+              Object {
+                "margin": "6px",
+              }
+            }
+          />
            
         </tr>
         <tr>
