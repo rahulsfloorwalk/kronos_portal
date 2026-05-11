@@ -447,6 +447,7 @@ class AuditCycleSerializer(ModelSerializer):
             'end_date',
             'description',
             'eligibility',
+            'audit_ai_autofill',
             'post_approval_description',
             'audit_alignment_factors',
             'client',
@@ -672,6 +673,12 @@ class AnswerSerializer(serializers.ModelSerializer):
             'max_marks',
             'not_applicable',
             'question_data',
+            'ai_answer_text',
+            'ai_answer_result',
+            'ai_match_percentage',
+            'ai_answer_auditor_text',
+            'ai_decision_auditor',
+            'ai_final_confidence_percentage',
             # 'section_completion_status'
         )
         read_only_fields = fields
@@ -717,6 +724,8 @@ class AttachmentSerializer(ModelSerializer):
             'direct_url',
             'extra',
             'proof_tag',
+            'audio_to_text_row',
+            'audio_to_text_clean',
         )
         read_only_fields = fields
 

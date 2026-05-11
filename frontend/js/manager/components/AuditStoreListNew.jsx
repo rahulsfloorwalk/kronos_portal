@@ -80,8 +80,17 @@ class AuditStoreRow extends React.Component {
 				<td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
 				{/* <td className="text-right">{acceptButton}</td> */}
 				<td>
-					<tr>
+					{/* <tr>
 						<AuditStoreStatusLabel status={this.props.auditStore.status}/> {(this.props.auditStore.status && this.props.auditStore.failed_by && this.props.auditStore.status ==="FAILED")? <span> ({this.props.auditStore.failed_by.toLowerCase()})</span>:null }{this.props.auditStore.report_revert_count>0 ? <span><i>Reverted({this.props.auditStore.report_revert_count})</i></span>:null}
+					</tr> */}
+					<tr>
+						<AuditStoreStatusLabel status={this.props.auditStore.status}/>
+						<span style={{ margin: "6px" }}>
+							{this.props.auditStore.report_completion_percentage
+								? `(${this.props.auditStore.report_completion_percentage}%)`
+								: null}
+						</span>
+						{(this.props.auditStore.status && this.props.auditStore.failed_by && this.props.auditStore.status ==="FAILED")? <span> ({this.props.auditStore.failed_by.toLowerCase()})</span>:null }{this.props.auditStore.report_revert_count>0 ? <span><i>Reverted({this.props.auditStore.report_revert_count})</i></span>:null}
 					</tr>
 					<tr>
 						<td colSpan="10">

@@ -94,6 +94,8 @@ class AuditCycle(Model):
     system_cost = IntegerField(db_column='system_cost', blank=False, default=0)
     reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True, validators=[MinValueValidator(0)])
     audit_auto_approve = BooleanField(db_column='audit_auto_approve', default = False)
+    audit_auto_fail = IntegerField(db_column='audit_auto_fail', default = 2)
+    audit_ai_autofill = BooleanField(db_column='audit_ai_autofill', default=False)
     audit_report_summary = BooleanField(db_column='audit_report_summary', default = True)
     description = CharField(db_column='description', max_length=16384, blank=False)
     eligibility = CharField(db_column='eligibility', max_length=16384, blank=True)

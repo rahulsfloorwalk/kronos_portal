@@ -121,6 +121,9 @@ urlpatterns = ([
     url(r'profile_info/car_cost$', views.ProfileInfoCarCostView.as_view(), name="profile_info_car_cost_view"), 
     url(r'profile_info/resolution$', views.ProfileInfoResolutionView.as_view(), name="profile_info_resolution_view"), 
 
+    url(r'audio_to_compare_answers$', views.AudioToCompareAnswersView.as_view(), name='audio_to_compare_answers_view'),
+    url(r'audio_to_text$', views.AudioToTextView.as_view(), name='audio_to_text_view'),
+
     url(r'dashboard_api$', views_api.DashboardView.as_view(), name="dashboard_view"),
     url(r'auditor_profile_api$', views_api.AuditorProfileView.as_view(), name="auditor_profile_view"),
     url(r'auditor_opportunity_email$', views_api.AuditorOpportunityEmail.as_view(), name="auditor_opportunity_email"),

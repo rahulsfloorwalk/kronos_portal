@@ -183,70 +183,172 @@ def get_auditor_dashboard_data_for_app(user_id):
 #     return percentage
    
    
+# def get_report_completion_percentage(audit_store_id):
+#     audit_store = AuditStore.objects.select_related('audit__audit_cycle').only('id', 'status', 'audit__audit_cycle', 'report_summary').get(id=audit_store_id)
+#     audit_cycle = audit_store.audit.audit_cycle
+#     if audit_store.status == AuditStore.ASSIGNED:
+#         return 0
+    
+#     skip_statuses = [ AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.COMPLETED, AuditStore.ACCEPTED]
+#     if audit_store.status in skip_statuses:
+#         return 100
+#     valid_statuses = {
+#         AuditStore.ACKNOWLEDGED,AuditStore.FAILED
+#     }
+#     if audit_store.status not in valid_statuses:
+#         return None
+
+#     total_questions_count = 0 
+#     attended_questions_count = 0
+
+#     sections = list(Section.objects.filter(audit_cycle=audit_cycle, hide_comment=False))
+#     questions = list(Question.objects.filter(section__audit_cycle=audit_cycle))
+#     proof_tags = AuditCycleProofTagList.objects.filter(audit_cycle=audit_cycle)
+#     total_questions_count += len(sections) + len(questions)
+
+#     if getattr(audit_cycle, "audit_report_summary", False):
+#         total_questions_count += 1
+#         if audit_store.report_summary and audit_store.report_summary.strip():
+#             attended_questions_count += 1  
+
+#     if proof_tags.exists():
+#         audit_cycle_proof_tags = proof_tags
+#         if audit_cycle_proof_tags.exists():
+#             proof = SectionProofTag.objects.filter(audit_cycle_proof_tag__in=audit_cycle_proof_tags, is_required=True)
+#             if proof.exists():
+#                 total_questions_count += proof.count()
+                
+#                 section_ids = proof.values_list('section__id', flat=True)
+                
+#                 section_proof_tags = SectionProofTag.objects.filter(section__id__in=section_ids, audit_cycle_proof_tag__in=audit_cycle_proof_tags)
+                
+#                 section_attachments = Attachment.objects.filter(
+#                 proof_tag__section_proof_tag__in=section_proof_tags,
+#                 status=Attachment.ATTACHED,
+#                 audit_stores__id=audit_store_id
+#                 ).distinct('proof_tag')
+#                 if section_attachments.exists():
+#                     attended_questions_count += len(section_attachments)
+
+#     for section in sections:
+#         report_sections = ReportSection.objects.filter(section=section, audit_store=audit_store_id)
+#         for report_section in report_sections:
+#             if report_section.auditor_comment is not None and report_section.auditor_comment.strip():
+#                 attended_questions_count += 1
+
+#     for question in questions:
+#         queryset = Answer.objects.filter(question=question, audit_store=audit_store_id)
+#         if question.optional_comment_required and question.question_type == 'MUTEX':
+#             if queryset.exists() and queryset.first().answer_comment:
+#                 attended_questions_count += 1
+#         elif queryset.exists():
+#             attended_questions_count += 1
+#     report_completion_percentage = int((attended_questions_count / total_questions_count) * 100)
+
+#     return (report_completion_percentage)
+
+
 def get_report_completion_percentage(audit_store_id):
-    audit_store = AuditStore.objects.select_related('audit__audit_cycle').only('id', 'status', 'audit__audit_cycle', 'report_summary').get(id=audit_store_id)
+    audit_store = (AuditStore.objects.select_related('audit__audit_cycle').only('id','status','report_summary','audit__audit_cycle').filter(id=audit_store_id).first())
+
+    if not audit_store:
+        return 0
+
     audit_cycle = audit_store.audit.audit_cycle
     if audit_store.status == AuditStore.ASSIGNED:
         return 0
-    
-    skip_statuses = [ AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.FAILED, ]
-    if audit_store.status in skip_statuses:
+
+    completed_statuses = {AuditStore.SUBMITTED,AuditStore.PM_REVIEW,AuditStore.COMPLETED,AuditStore.ACCEPTED,}
+
+    if audit_store.status in completed_statuses:
         return 100
-    valid_statuses = {
-        AuditStore.ACKNOWLEDGED,
-    }
+
+    valid_statuses = {AuditStore.ACKNOWLEDGED,AuditStore.FAILED,}
     if audit_store.status not in valid_statuses:
-        return None
+        return 0
 
-    total_questions_count = 0 
-    attended_questions_count = 0
+    total_count = 0
+    completed_count = 0
 
-    sections = list(Section.objects.filter(audit_cycle=audit_cycle, hide_comment=False))
-    questions = list(Question.objects.filter(section__audit_cycle=audit_cycle))
-    proof_tags = AuditCycleProofTagList.objects.filter(audit_cycle=audit_cycle)
-    total_questions_count += len(sections) + len(questions)
+    section_ids = list(Section.objects.filter(audit_cycle=audit_cycle,hide_comment=False).values_list('id',flat=True))
+    total_count += len(section_ids)
 
-    if getattr(audit_cycle, "audit_report_summary", False):
-        total_questions_count += 1
-        if audit_store.report_summary and audit_store.report_summary.strip():
-            attended_questions_count += 1  
+    questions = list(Question.objects.filter(section__audit_cycle=audit_cycle,hide_question=False).only('id','question_type','optional_comment_required'))
 
-    if proof_tags.exists():
-        audit_cycle_proof_tags = proof_tags
-        if audit_cycle_proof_tags.exists():
-            proof = SectionProofTag.objects.filter(audit_cycle_proof_tag__in=audit_cycle_proof_tags, is_required=True)
-            if proof.exists():
-                total_questions_count += proof.count()
-                
-                section_ids = proof.values_list('section__id', flat=True)
-                
-                section_proof_tags = SectionProofTag.objects.filter(section__id__in=section_ids, audit_cycle_proof_tag__in=audit_cycle_proof_tags)
-                
-                section_attachments = Attachment.objects.filter(
-                proof_tag__section_proof_tag__in=section_proof_tags,
-                status=Attachment.ATTACHED,
-                audit_stores__id=audit_store_id
-                ).distinct('proof_tag')
-                if section_attachments.exists():
-                    attended_questions_count += len(section_attachments)
+    question_ids = [q.id for q in questions]
+    total_count += len(question_ids)
 
-    for section in sections:
-        report_sections = ReportSection.objects.filter(section=section, audit_store=audit_store_id)
-        for report_section in report_sections:
-            if report_section.auditor_comment is not None and report_section.auditor_comment.strip():
-                attended_questions_count += 1
+    if getattr(audit_cycle, 'audit_report_summary', False):
+        total_count += 1
 
+        if (audit_store.report_summary and audit_store.report_summary.strip()):
+            completed_count += 1
+
+    proof_tag_ids = list(AuditCycleProofTagList.objects.filter(audit_cycle=audit_cycle).values_list('id',flat=True))
+
+    if proof_tag_ids:
+        required_proof_ids = list(
+            SectionProofTag.objects.filter(audit_cycle_proof_tag_id__in=proof_tag_ids,is_required=True).values_list('id',flat=True))
+
+        total_count += len(required_proof_ids)
+
+        if required_proof_ids:
+            attached_proof_count = (
+                Attachment.objects.filter(
+                    proof_tag__section_proof_tag__in=required_proof_ids,
+                    status=Attachment.ATTACHED,
+                    audit_stores__id=audit_store_id
+                ).distinct('proof_tag__section_proof_tag').count())
+
+            completed_count += attached_proof_count
+
+    if section_ids:
+        completed_section_comments = (
+            ReportSection.objects.filter(section_id__in=section_ids,audit_store=audit_store_id)
+            .exclude(auditor_comment__isnull=True)
+            .exclude(auditor_comment='')
+            .count()
+        )
+        completed_count += completed_section_comments
+        
+    answers = list(Answer.objects.filter(question_id__in=question_ids,audit_store=audit_store_id).only('id','question_id','answer_comment','not_applicable'))
+    answer_map = {}
+
+    for answer in answers:
+        answer_map[answer.question_id] = answer
+
+    answered_questions = set()
     for question in questions:
-        queryset = Answer.objects.filter(question=question, audit_store=audit_store_id)
-        if question.optional_comment_required and question.question_type == 'MUTEX':
-            if queryset.exists() and queryset.first().answer_comment:
-                attended_questions_count += 1
-        elif queryset.exists():
-            attended_questions_count += 1
-    report_completion_percentage = int((attended_questions_count / total_questions_count) * 100)
+        answer = answer_map.get(question.id)
 
-    return (report_completion_percentage)
+        if not answer:
+            continue
 
+        if getattr(answer, 'no_applicable', False):
+            answered_questions.add(question.id)
+            continue
+
+        if (question.question_type == 'MUTEX' and question.optional_comment_required):
+            if (answer.answer_comment and answer.answer_comment.strip()):
+                answered_questions.add(question.id)
+        else:
+            answered_questions.add(question.id)
+
+    completed_count += len(answered_questions)
+    if total_count <= 0:
+        return 0
+
+    percentage = int((completed_count / total_count) * 100)
+
+    if percentage > 100:
+        percentage = 100
+
+    if percentage < 0:
+        percentage = 0
+
+    AuditStore.objects.filter(id=audit_store_id).update(report_completion_percentage=percentage)
+
+    return percentage
    
 # def get_section_completion_status(audit_store_id, question_id):
 #     question = Question.objects.get(id=question_id)
@@ -942,6 +1044,8 @@ def log_in_app(request):
             status= 200
         else:
             login(request,user,backend='registration.backend.CaseInsensitiveModelBackend1')
+            user.last_login = timezone.now()
+            user.save(update_fields=['last_login'])
             token, created = Token.objects.get_or_create(user=user)
             result = auditor_api.get_auditor_dashboard_data_for_app(user.id)
             response = {'detail': 'Login Successfully','token':token.key,'auditor_dashboard_data': result}

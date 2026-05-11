@@ -11,6 +11,7 @@ from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
 from audit.service import audit_service
 from audit_store import service as audit_store_service
+import audit_store.service_moderator as audit_store_moderator_service
 from audit_store import service_auditor as audit_store_auditor_service
 from auditor.serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer, PlainUserSerializer
 from auditor.serializers import AnswerSerializer
@@ -1423,3 +1424,21 @@ class AuditorSelfDeactivateView(APIView):
         user=request.user.id
         user = auditor_service.deactivate_auditor(user)
         return Response(AuditorSerializer(user).data)
+    
+class AudioToCompareAnswersView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+    def post(self, request, format=None):
+        data, status_code = audit_store_moderator_service.audio_to_fill_answers(request.data, request.user.id)
+        return Response(data, status=status_code)
+
+class AudioToTextView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+    def post(self, request, format=None):
+        data, status_code = audit_store_moderator_service.audio_to_text(request.data)
+        return Response(data, status=status_code)

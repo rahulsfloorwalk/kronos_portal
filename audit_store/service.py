@@ -19,8 +19,6 @@ from audit.service import report_attribute_service
 from registration.models import GROUP_NAME_AUDITOR
 from django.contrib.contenttypes.models import ContentType
 from guardian.models import UserObjectPermission
-
-
 def find_by_id(audit_store_id):
     try:
         return AuditStore.objects.get(pk=audit_store_id)
@@ -366,10 +364,12 @@ def find_audit_store_city_by_audit_cycle_id(audit_cycle_id, user_id):
     }
 
 def find_audit_by_audit_cycle_audit_store_id(audit_cycle_id,audit_store_id, last_audit_id=None, status=None, user_id=None,city=None, start_date=None, end_date=None, is_load_more=False, last_total_count=0):
+    from auditor.service.auditor_api import get_report_completion_percentage
     audit_reports = []
     total_audit_count = 0
 
-    audit_store_objs = AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle_id, audit__id=audit_store_id).order_by('id')
+    # audit_store_objs = AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle_id, audit__id=audit_store_id).order_by('id')
+    audit_store_objs = (AuditStore.objects.select_related('user','user__profileinfo','audit','audit__audit_cycle','audit__audit_cycle__client','user__agencyuser',).prefetch_related('user__mobile_numbers','user__groups').filter(audit__audit_cycle__id=audit_cycle_id,audit__id=audit_store_id).order_by('id'))
     if status:
         audit_store_objs = audit_store_objs.filter(status=status)
     if user_id:
@@ -392,6 +392,12 @@ def find_audit_by_audit_cycle_audit_store_id(audit_cycle_id,audit_store_id, last
         audit_report_dict['instant_assigned'] = audit_report.instant_assigned
         audit_report_dict['audit_date'] = audit_report.audit_date
         audit_report_dict['report_revert_count'] = audit_report.report_revert_count
+
+        if audit_report.report_completion_percentage not in [None]:
+            audit_report_dict['report_completion_percentage'] = (audit_report.report_completion_percentage)
+        else:
+            percentage = get_report_completion_percentage(audit_report.id)
+            audit_report_dict['report_completion_percentage'] = percentage
 
         # audit_report_obj = AuditStore.objects.get(pk=audit_report['id'])
         users_with_perms = get_users_with_perms(audit_report, attach_perms=True)
@@ -708,10 +714,27 @@ def find_10_days_in_progress_reports():
                                      audit__audit_cycle__audit_auto_approve=True)
 
 
+# def find_2_days_not_submitted_reports():
+#     return AuditStore.objects.filter(audit_date__lte=today_ist() - timedelta(days=3),  # now:-after 5 days  
+#                                      audit__audit_cycle__status=AuditCycle.ACTIVE,
+#                                      status__in = [AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED])
+
+
 def find_2_days_not_submitted_reports():
-    return AuditStore.objects.filter(audit_date__lte=today_ist() - timedelta(days=2),  # now:-after 5 days  
-                                     audit__audit_cycle__status=AuditCycle.ACTIVE,
-                                     status__in = [AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED])
+
+    reports = AuditStore.objects.filter(audit__audit_cycle__status=AuditCycle.ACTIVE,
+                                    status__in=[AuditStore.ASSIGNED,AuditStore.ACKNOWLEDGED])
+
+    report_ids = []
+    current_date = today_ist()
+
+    for report in reports:
+        auto_fail_days = report.audit.audit_cycle.audit_auto_fail or 2
+        fail_date = current_date - timedelta(days=auto_fail_days)
+        if report.audit_date <= fail_date:
+            report_ids.append(report.id)
+
+    return AuditStore.objects.filter(id__in=report_ids)
 
 def get_follow_up_by_audit_store(audit_store_id: int):
     follow_up = ReportFollowUpLog.objects.filter(audit_store_id = audit_store_id).first()

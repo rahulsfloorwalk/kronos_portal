@@ -16,6 +16,15 @@ from client.models import Store
 from datetime import date, timedelta
 from datetime import datetime
 
+import requests
+from django.utils import timezone
+from rest_framework.response import Response
+from answer.models import Answer
+from attachment.models import Attachment
+from answer.service import answer as answer_service
+
+
+
 # def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id, month, year):
 #     # TODO: move this in to the AuditStoreQuerySet
 #     count = 0
@@ -407,3 +416,211 @@ def get_moderator_email_by_audit_store_obj(audit_store):
         if 'moderator_manage' in perms:
             return user.email
     return None
+
+def _post(url, payload):
+    try:
+        payload["token"] = "FW_AI_9x2LmPq_82Ksa_26"
+        response = requests.post(url,json=payload,timeout=300,verify=False)
+        return response, None
+    except requests.exceptions.RequestException as e:
+        return None, ({"error": "AI service request failed","details": str(e)}, 500)
+
+def _json(response):
+    try:
+        return response.json(), None
+    except Exception:
+        return None, ({"error": "Invalid JSON from AI service","raw_response": response.text}, 500)
+
+def _valid(value):
+    return value and str(value).strip() not in ("", "null", "None")
+
+
+def audio_to_fill_answers(data,user_id):
+    transcript_texts = data.get("transcript_texts", [])
+    question_answer_detail = data.get("question_answer_detail", [])
+    audit_store_id = data.get("audit_store_id")
+
+    clean_texts = [t.strip() for t in transcript_texts if t and str(t).strip()]
+
+    if not clean_texts:
+        return {"error": "Missing valid transcript_texts"}, 400
+
+    if not question_answer_detail:
+        return {"error": "Missing question_answer_detail"}, 400
+
+    response, error = _post(
+        "https://ai.floorwalk.in/audio_to_answers/",
+        {
+            "transcript_texts": clean_texts,
+            "question_detail": question_answer_detail
+        }
+    )
+    if error:
+        return error
+
+    result, error = _json(response)
+    if error:
+        return error
+
+    # Save only 100% matched answers here
+    comparison = result.get("comparison", [])
+    updates = []
+
+    for row in comparison:
+        try:
+            question_id = int(row.get("question_id"))
+        except:
+            continue
+
+        ai_answer = row.get("ai_answer")
+        decision = row.get("decision")
+
+        if not ai_answer:
+            continue
+
+        ai_answer = str(ai_answer).strip()
+        if ai_answer.lower() in ["null", "none", ""]:
+            continue
+
+        if decision not in ["autofill", "review"]:
+            continue
+
+        updates.append((question_id, ai_answer, row))
+
+    for question_id, ai_answer, row in updates:
+        try:
+            answer = answer_service.submit_answer(
+            audit_store_id=audit_store_id,
+                question_id=question_id,
+                user_id=user_id,
+                answer_text=ai_answer,
+                status=True
+            )
+            # answer.ai_answer_text = ai_answer
+            answer.ai_answer_auditor_text = ai_answer
+            answer.ai_decision_auditor = row.get("decision")
+            answer.ai_final_confidence_percentage = int(row.get("final_confidence", 0))
+
+            answer.save()
+        except Exception as e:
+            continue
+
+    return {"status": "success", "data": result}, 200
+
+def transcript_to_compare_answers(data):
+    transcript_texts = data.get("transcript_texts", [])
+    question_answer_detail = data.get("question_answer_detail", [])
+    clean_texts = [t.strip() for t in transcript_texts if t and str(t).strip()]
+
+    if not clean_texts:
+        return {"error": "Missing valid transcript_texts"}, 400
+    if not question_answer_detail:
+        return {"error": "Missing question_answer_detail"}, 400
+
+    response, error = _post(
+        "https://ai.floorwalk.in/transcript_to_compare_answers/",
+        {
+            "transcript_texts": clean_texts,
+            "question_answer_detail": question_answer_detail
+        }
+    )
+    if error:
+        return error
+    if response.status_code != 200:
+        return {"error": "AI service failed","status_code": response.status_code,"raw_response": response.text}, 500
+
+    result, error = _json(response)
+    if error:
+        return error
+
+    try:
+        comparison = result.get("comparison", [])
+        updates = []
+        for item in comparison:
+            question_id = item.get("question_id")
+            ai_answer = item.get("ai_answer")
+
+            if not question_id or not ai_answer or not str(ai_answer).strip():
+                continue
+
+            updates.append((question_id,ai_answer,item.get("match_percentage"),item.get("result")))
+        for question_id, ai_answer, match_percentage, result_value in updates:
+            Answer.objects.filter(question_id=question_id).update(ai_answer_text=ai_answer,ai_match_percentage=match_percentage,ai_answer_result=result_value)
+    except Exception:
+        pass
+
+    return {"status": "success", "data": result}, 200
+
+def audio_to_text(data):
+    attachment_id = data.get("attachment_id")
+    audio_url = data.get("audio_url")
+    force = data.get("force", False)
+
+    if not attachment_id and not audio_url:
+        return {"error": "attachment_id or audio_url is required"}, 400
+
+    attachment = None
+
+    if attachment_id:
+        attachment = Attachment.objects.filter(id=attachment_id,proof_type=Attachment.AUDIO).only("id","file_slug","audio_to_text_row","audio_to_text_clean","modified_at").first()
+        if not attachment:
+            return {"error": "Audio attachment not found"}, 404
+        audio_url = attachment.direct_url()
+
+    else:
+        file_slug = audio_url.split(".com/")[-1] if ".com/" in audio_url else audio_url
+        attachment = Attachment.objects.filter(
+            file_slug=file_slug,
+            proof_type=Attachment.AUDIO
+        ).only(
+            "id",
+            "file_slug",
+            "audio_to_text_row",
+            "audio_to_text_clean",
+            "modified_at"
+        ).first()
+
+    if (not force and attachment and _valid(attachment.audio_to_text_row) and _valid(attachment.audio_to_text_clean)):
+        return {
+            "status": "success",
+            "source": "cache",
+            "attachment_id": attachment.id,
+            "audio_url": audio_url,
+            "raw_transcript": attachment.audio_to_text_row,
+            "transcript": attachment.audio_to_text_clean
+        }, 200
+
+    response, error = _post(
+        "https://ai.floorwalk.in/audio_to_text/",
+        {"audio_url": audio_url}
+    )
+    if error:
+        return error
+
+    result, error = _json(response)
+    if error:
+        return error
+    if response.status_code != 200:
+        return {"error": "AI service failed", "details": result}, 500
+
+    raw_transcript = result.get("raw_transcript") or ""
+    clean_transcript = result.get("transcript") or ""
+
+    if attachment:
+        attachment.audio_to_text_row = raw_transcript
+        attachment.audio_to_text_clean = clean_transcript
+        attachment.modified_at = timezone.now()
+        attachment.save(update_fields=[
+            "audio_to_text_row",
+            "audio_to_text_clean",
+            "modified_at"
+        ])
+
+    return {
+        "status": "success",
+        "source": "ai_service" if force or not attachment else "cache",
+        "attachment_id": attachment.id if attachment else None,
+        "audio_url": audio_url,
+        "raw_transcript": raw_transcript,
+        "transcript": clean_transcript
+    }, 200

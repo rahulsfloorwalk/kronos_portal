@@ -88,7 +88,7 @@ def pm_revert_report(audit_store_id, user_id):
 
 def get_sentiment_data(report_summary):
     # api_url = "http://api.floorwalk.in/text_analysis"
-    api_url = "https://ai.floorwalk.in/text_analysis"
+    api_url = "https://ai.floorwalk.in/text_analysis/"
     # api_url = "http://13.203.250.157/text_analysis"
     token = "12345"
     payload = {
@@ -97,7 +97,7 @@ def get_sentiment_data(report_summary):
     }
 
     try:
-        response = requests.post(api_url, data=payload,verify=False)
+        response = requests.post(api_url, data=payload,verify=False )
         if response.status_code == 200:
             data = response.json()
             keywords = data.get('keywords', {})

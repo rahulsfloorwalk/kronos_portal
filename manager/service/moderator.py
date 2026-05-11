@@ -4,6 +4,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 
+from client.models import ClientModerator
 from guardian.models import UserObjectPermission
 from guardian.shortcuts import assign_perm, get_users_with_perms, remove_perm
 
@@ -55,6 +56,7 @@ def update(user_id, email, password="", is_active=True):
         if password != "":
             user.set_password(password)
 
+        ClientModerator.objects.filter(user=user).update(is_active=is_active)
         user.save()
 
         return user

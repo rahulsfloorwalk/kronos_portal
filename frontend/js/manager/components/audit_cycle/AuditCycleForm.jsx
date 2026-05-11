@@ -40,6 +40,8 @@ export class AuditCycleForm extends Component{
 			description: PropTypes.string,
 			audit_auto_approve: PropTypes.bool,
 			audit_report_summary: PropTypes.bool,
+			audit_auto_fail: PropTypes.number,
+			audit_ai_autofill: PropTypes.bool,
 			client: PropTypes.shape({
 				id: PropTypes.number.isRequired,
 				name: PropTypes.string.isRequired,
@@ -64,6 +66,8 @@ export class AuditCycleForm extends Component{
 			audit_auto_approve: FieldErrors,
 			audit_report_summary: FieldErrors,
 			questionnaire_type: FieldErrors,
+			audit_auto_fail: FieldErrors,
+			audit_ai_autofill: FieldErrors,
 		}).isRequired,
 
 		dispatch: PropTypes.func.isRequired,
@@ -116,9 +120,10 @@ export class AuditCycleForm extends Component{
 	fieldChanged = (e) => {
 		const { name, value} = e.target;
 		affectInputEventToComponent(e, this);
-		if (["earnings_per_audit", "reimbursement"].includes(name)) {
+		if (["earnings_per_audit", "reimbursement", "audit_auto_fail"].includes(name)) {
 			this.setState({
-				[name]: value === "" ? 0 : Number(value)
+				// [name]: value === "" ? 0 : Number(value)
+				[name]: value === "" ? 0 : Math.max(0, Number(value))
 			});
 		}
 	};
@@ -237,6 +242,14 @@ export class AuditCycleForm extends Component{
 						</div>
 						<div className="col-md-3">
 							<FormInput label="Audit Report Summary" type="checkbox" checked={this.state.audit_report_summary} name="audit_report_summary" onChange={this.fieldChanged} errors={this.props.errors.audit_report_summary}/>
+						</div>
+					</div>
+					<div className="row">
+						<div className="col-md-6">
+							<FormInput label="Audit Fail Duration (In Days)" type="number" min={0} value={this.state.audit_auto_fail} name="audit_auto_fail" onChange={this.fieldChanged} errors={this.props.errors.audit_auto_fail}/>
+						</div>
+						<div className="col-md-6">
+							<FormInput label="Enable AI for auto filling" type="checkbox" checked={this.state.audit_ai_autofill} name="audit_ai_autofill" onChange={this.fieldChanged} errors={this.props.errors.audit_ai_autofill}/>
 						</div>
 					</div>
 					<FormTextarea label="Description (markdown)" name="description" value={this.state.description} onChange={this.fieldChanged} errors={this.props.errors.description}/>
