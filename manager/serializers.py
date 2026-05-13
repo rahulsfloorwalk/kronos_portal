@@ -212,7 +212,6 @@ class ProfileInfoSmallSerializer(ModelSerializer):
     def get_avg_auditor_rating(self, obj):
         return get_avg_auditor_rating_by_user(obj.user)
 
-
 class MobileNumberSerializer(ModelSerializer):
     class Meta:
         model = MobileNumber
