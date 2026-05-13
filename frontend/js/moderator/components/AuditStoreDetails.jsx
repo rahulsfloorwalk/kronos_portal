@@ -65,6 +65,7 @@ export default class AuditStoreDetails extends React.Component {
 			reloadKey: 0,
 			sectionproof_change: false,
 			isAnyTranscribing: false,
+			answersUpdated: false
 			// timerValue: 0,
 			// isTimerRunning: false,
 			// forwardLoading: false,
@@ -194,63 +195,83 @@ export default class AuditStoreDetails extends React.Component {
 		document.removeEventListener("visibilitychange", this.handleVisibilityChange);
 		window.removeEventListener("storage", this.handleStorageChange);
 	}
+
 	handleAiAnalysis = () => {
-		const { sections, auditStore, answers, audioAttachments } = this.state;
+		const runAnalysis = (answers) => {
+			const { sections, auditStore,  audioAttachments } = this.state;
 
-		if (!sections || !auditStore) {
-			alert("Data not ready yet");
-			return;
-		}
+			if (!sections || !auditStore) {
+				alert("Data not ready yet");
+				return;
+			}
 
-		const transcriptTexts = (audioAttachments || [])
-			.reduce((acc, att) => {
-				const text = att.audio_to_text_row;
-				if (typeof text === "string" && text.trim()) {
-					acc.push(text.trim());
-				}
-				return acc;
-			}, []);
+			const transcriptTexts = (audioAttachments || [])
+				.reduce((acc, att) => {
+					const text = att.audio_to_text_row;
+					if (typeof text === "string" && text.trim()) {
+						acc.push(text.trim());
+					}
+					return acc;
+				}, []);
 
-		if (!transcriptTexts.length) {
-			alert("No transcripts available! Please transcribe audio first.");
-			return;
-		}
-		const answerMap = new Map(
-			(answers || []).map(a => [a.question, a])
-		);
+			if (!transcriptTexts.length) {
+				alert("No transcripts available! Please transcribe audio first.");
+				return;
+			}
 
-		const question_answer_detail = sections.flatMap(section =>
-			(section.questions || []).map(q => {
-				const matchedAnswer = answerMap.get(q.id);
-				return {
-					id: q.id,
-					question_txt: q.question_txt,
-					question_type: q.question_type,
-					question_data: q.question_data,
-					filled_answer: matchedAnswer && matchedAnswer.answer_text ? matchedAnswer.answer_text : null
-				};
-			})
-		);
+			const answerMap = new Map(
+				answers.map(a => [a.question, a])
+			);
 
-		const payload = {
-			transcript_texts: transcriptTexts,
-			question_answer_detail
+			const question_answer_detail = sections.flatMap(section =>
+				(section.questions || []).map(q => {
+					const matchedAnswer = answerMap.get(q.id);
+
+					return {
+						id: q.id,
+						question_txt: q.question_txt,
+						question_type: q.question_type,
+						question_data: q.question_data,
+						filled_answer: matchedAnswer.answer_text || null
+					};
+				})
+			);
+
+			const payload = {
+				transcript_texts: transcriptTexts,
+				question_answer_detail
+			};
+
+			this.setState({ aiLoading: true });
+
+			aiAnalysis(payload)
+				.then(() => {
+					// alert("AI Analysis completed");
+					Alert.success("AI Analysis completed");
+
+					if (this.auditSectionsRef) {
+						this.auditSectionsRef.reloadAnswers();
+					}
+				})
+				.always(() => {
+					this.setState({ aiLoading: false });
+				});
 		};
-		this.setState({ aiLoading: true });
 
-		aiAnalysis(payload)
-			.then(() => {
-				Alert.success("AI Analysis completed");
+		if (this.state.answersUpdated) {
+			fetchAnswers(this.props.params.auditStoreId)
+				.then((answers) => {
 
-				if (this.auditSectionsRef) {
-					this.auditSectionsRef.reloadAnswers();
-				}
-			})
-			.always(() => {
-				this.setState({ aiLoading: false });
-			});
-	};
+					this.setState({
+						answers,
+						answersUpdated: false
+					});
 
+					runAnalysis(answers);
+				});
+		} else {
+			runAnalysis(this.state.answers);
+		}};
 
 	parseTimeToSeconds = (timeString) => {
 		if (!timeString) return 0;
@@ -487,6 +508,12 @@ export default class AuditStoreDetails extends React.Component {
 		const { guideline } = this.state;
 		window.open(guideline, "_blank");
 	};
+	handleAnswerUpdated = () => {
+		this.setState({
+			answersUpdated: true
+		});
+	};
+
 	render() {
 		if (!this.state.auditStore) {
 			return <Loading />;
@@ -952,7 +979,8 @@ export default class AuditStoreDetails extends React.Component {
 					<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} />
 					: null}
 
-				{this.state.audioAttachments && this.state.audioAttachments.length > 0 && (
+				{/* {this.state.audioAttachments && this.state.audioAttachments.length > 0 && ( */}
+				{this.state.auditStore.audit.audit_cycle.qa_ai_comparison && this.state.audioAttachments && this.state.audioAttachments.length > 0 && (
 					<div className="col-md-12" style={{ marginTop: "15px" }}>
 						<div style={{
 							display: "flex",
@@ -987,6 +1015,7 @@ export default class AuditStoreDetails extends React.Component {
 				)}
 				<AuditStoreSections
 					// key={this.state.reloadKey} // to force remount when mandatoryproofbox changes
+					onAnswerUpdated={this.handleAnswerUpdated}
 					onReload={this.loadAttachments}
 					ref={(ref) => this.auditSectionsRef = ref}
 					handleSectionProofChange={this.handleSectionProofChange}

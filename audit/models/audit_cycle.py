@@ -96,6 +96,7 @@ class AuditCycle(Model):
     audit_auto_approve = BooleanField(db_column='audit_auto_approve', default = False)
     audit_auto_fail = IntegerField(db_column='audit_auto_fail', default = 2)
     audit_ai_autofill = BooleanField(db_column='audit_ai_autofill', default=False)
+    qa_ai_comparison = BooleanField(db_column='qa_ai_comparison', default=False)
     audit_report_summary = BooleanField(db_column='audit_report_summary', default = True)
     description = CharField(db_column='description', max_length=16384, blank=False)
     eligibility = CharField(db_column='eligibility', max_length=16384, blank=True)

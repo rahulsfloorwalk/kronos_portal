@@ -139,14 +139,21 @@ export class AuditApplicationRow extends Component{
 				<td>{application.profileinfo.certification_score ? application.profileinfo.certification_score : "--" }</td>
 				<td>{application.audit_cycle_count_for_auditor ? application.audit_cycle_count_for_auditor : "--" }</td>
 				<td>
-					<tr >
-						{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
-						{statusLabel}&nbsp; ({application.audit_store_status ? getAuditStoreStatus(application.audit_store_status):null}) {application.report_completion_percentage ? `(${application.report_completion_percentage}%)` : null}
-					</tr>
 					{/* <tr >
 						{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
-						{statusLabel}&nbsp;
+						{statusLabel}&nbsp; ({application.audit_store_status ? getAuditStoreStatus(application.audit_store_status):null}) {application.report_completion_percentage ? `(${application.report_completion_percentage}%)` : null}
 					</tr> */}
+
+					<tr >
+						{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
+						{statusLabel}&nbsp; {application.audit_store_status ? `(${getAuditStoreStatus(application.audit_store_status)})`:null}
+						{/* {application.report_completion_percentage ? (${application.report_completion_percentage}%) : null} */}
+						{application.report_completion_percentage !== null &&
+							application.report_completion_percentage !== undefined
+							? ` (${application.report_completion_percentage}%)`
+							: null}
+					</tr>
+
 					<tr>
 						<td colSpan="10">
 							<div style={{ marginTop: "4px" }}>

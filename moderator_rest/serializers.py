@@ -58,6 +58,7 @@ class AuditCycleSerializer(ModelSerializer):
             'post_approval_description',
             'client',
             'audit_report_summary',
+            'qa_ai_comparison',
         )
         read_only_fields = fields
 
