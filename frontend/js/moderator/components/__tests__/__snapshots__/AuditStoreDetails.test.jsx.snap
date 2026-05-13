@@ -565,6 +565,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -1226,6 +1227,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -1887,6 +1889,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -2548,6 +2551,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -3209,6 +3213,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -3867,6 +3872,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -4535,6 +4541,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -5196,6 +5203,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -5839,6 +5847,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -6482,6 +6491,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -7125,6 +7135,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -7768,6 +7779,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -8478,6 +8490,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div
@@ -9121,6 +9134,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
     handleSectionProofChange={[Function]}
+    onAnswerUpdated={[Function]}
     onReload={[Function]}
   />
   <div

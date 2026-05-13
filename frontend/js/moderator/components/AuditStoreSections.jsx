@@ -30,6 +30,7 @@ import moment from "moment";
 import "rc-time-picker/assets/index.css";
 import "../../../css/bs_overrides.scss";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
+import Alert from "react-s-alert";
 
 class AnswerComment extends Component {
 
@@ -146,6 +147,7 @@ export class QuestionRow extends React.Component {
 		auditStore: PropTypes.shape({
 			status: PropTypes.string,
 		}),
+		onAnswerUpdated: PropTypes.func,
 	};
 
 	static defaultProps = {
@@ -224,7 +226,14 @@ export class QuestionRow extends React.Component {
 	};
 	saveAnswer = (e) => {
 		this.answerChanged(e);
-		setAnswerText(this.props.auditStoreId, this.props.q.id, this.state.answer.answer_text, true).then((answer) => this.setState({ answer, answerError: false, answerSuccess: true }), () => this.setState({ answerError: true, answerSuccess: false }));
+		setAnswerText(this.props.auditStoreId, this.props.q.id, this.state.answer.answer_text, true).then((answer) => {
+			this.setState({ answer, answerError: false, answerSuccess: true });
+			Alert.success("Data saved successfully");
+			if (this.props.onAnswerUpdated) {
+				this.props.onAnswerUpdated();
+			}
+		},
+		() => this.setState({ answerError: true, answerSuccess: false }));
 	};
 	submitMultiSelectAnswer = (e) => {
 		setAnswerText(this.props.auditStoreId, this.props.q.id, e.target.value, e.target.checked).then((answer) => this.setState({ answer, answerError: false, answerSuccess: true }));
@@ -915,7 +924,8 @@ class Section extends React.Component {
 		// sections:PropTypes.array,
 		proof_tags: PropTypes.array,
 		handleSectionProofChange: PropTypes.func,
-		onReload: PropTypes.func
+		onReload: PropTypes.func,
+		onAnswerUpdated: PropTypes.func,
 	};
 
 	state = {
@@ -1046,7 +1056,7 @@ class Section extends React.Component {
 		if (this.props.section.questions) {
 			for (let q of this.props.section.questions) {
 				let answer = this.props.answers.filter(a => a.question === q.id)[0];
-				questionRows.push(<QuestionRow q={q} key={q.id} answer={answer} marking={editable} auditStore={this.props.auditStore} auditStoreId={this.props.auditStoreId} />);
+				questionRows.push(<QuestionRow q={q} key={q.id} answer={answer} marking={editable} auditStore={this.props.auditStore} auditStoreId={this.props.auditStoreId} onAnswerUpdated={this.props.onAnswerUpdated}/>);
 			}
 		}
 		if (questionRows.length === 0) {
@@ -1207,7 +1217,8 @@ export default class AuditStoreSections extends React.Component {
 		editable: PropTypes.bool,
 		sections: PropTypes.object,
 		handleSectionProofChange: PropTypes.func,
-		onReload: PropTypes.func
+		onReload: PropTypes.func,
+		onAnswerUpdated: PropTypes.func,
 	};
 
 	state = {
@@ -1268,6 +1279,7 @@ export default class AuditStoreSections extends React.Component {
 				proof_tags={this.state.proof_tags}
 				handleSectionProofChange={this.props.handleSectionProofChange}
 				onReload={this.props.onReload}
+				onAnswerUpdated={this.props.onAnswerUpdated}
 			/>);
 		}
 		if (sectionRows.length === 0) {

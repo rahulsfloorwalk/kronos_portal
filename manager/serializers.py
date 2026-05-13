@@ -113,6 +113,7 @@ class AuditCycleSerializer(ModelSerializer):
             'audit_auto_approve',
             'audit_auto_fail',
             'audit_ai_autofill',
+            'qa_ai_comparison',
             'audit_report_summary'
         )
         read_only_fields = fields
@@ -210,7 +211,6 @@ class ProfileInfoSmallSerializer(ModelSerializer):
 
     def get_avg_auditor_rating(self, obj):
         return get_avg_auditor_rating_by_user(obj.user)
-
 
 class MobileNumberSerializer(ModelSerializer):
     class Meta:
