@@ -73,7 +73,7 @@ class ClientModeratorByClientView(APIView):
     def get(self, request, client_id):
         client_moderators = client_service.find_client_by_id(client_id).moderator
         client_moderators.filter(user__is_active=False,is_active=True).update(is_active=False)
-        client_moderators = client_moderators.filter(is_active=True).select_related('user')
+        # client_moderators = client_moderators.filter(is_active=True).select_related('user')
 
         return Response(ClientModeratorSerializer(client_moderators, many=True).data)
 
