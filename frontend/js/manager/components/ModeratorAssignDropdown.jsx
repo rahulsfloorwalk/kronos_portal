@@ -51,7 +51,8 @@ export default class ModeratorAssignDropdown extends Component{
 		const { selectedId } = this.state;
 		return (<select className="form-control" onChange={this.onChange} value={selectedId}>
 			<option value=""></option>
-			{ this.props.moderators.filter((m) => m.is_active).map((m)=> <option key={m.user.id} value={m.user.id}>{m.user.email}</option>) }
+			{ this.props.moderators.filter((m) => m.user.is_active).map((m)=> <option key={m.user.id} value={m.user.id}>{m.user.email}</option>) }
+			{/* { this.props.moderators.filter((m) => m.is_active).map((m)=> <option key={m.user.id} value={m.user.id}>{m.user.email}</option>) } */}
 			{/* { this.props.moderators.filter((m) => m.is_active).map((m)=> <option key={m.id} value={m.id}>{m.email}</option>) } */}
 		</select>);
 	}
