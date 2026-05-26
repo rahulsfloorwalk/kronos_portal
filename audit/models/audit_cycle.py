@@ -155,6 +155,14 @@ class AuditCycle(Model):
             return None
         return total_percentage
 
+    def get_total_audit_stores_count(self):
+        count = 0
+        for audit in self.audits.filter():
+            audit_stores = audit.audit_stores.presentable()
+            for audit_store_obj in audit_stores:
+                count += 1  
+        return count
+
     def __str__(self):
         return "AuditCycle({}): {}, client: {}".format(self.id, self.name, self.client)
     

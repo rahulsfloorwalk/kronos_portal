@@ -59255,5 +59255,1028 @@
         "lon": 79.89,
         "country": "LK"
       }
+    },
+      {
+    "model": "manager.city",
+    "pk": 5417,
+    "fields": {
+      "name": "Talawakelle",
+      "state": "LK-29",
+      "lat": 6.9333,
+      "lon": 80.65,
+      "country": "LK"
     }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5418,
+    "fields": {
+      "name": "Maskeliya",
+      "state": "LK-29",
+      "lat": 6.8167,
+      "lon": 80.7333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5419,
+    "fields": {
+      "name": "Valaichchenai",
+      "state": "LK-37",
+      "lat": 7.9333,
+      "lon": 81.55,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5420,
+    "fields": {
+      "name": "Chenkalady",
+      "state": "LK-37",
+      "lat": 7.8667,
+      "lon": 81.5667,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5421,
+    "fields": {
+      "name": "Akkaraipattu",
+      "state": "LK-37",
+      "lat": 7.2167,
+      "lon": 81.85,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5422,
+    "fields": {
+      "name": "Kattankudi",
+      "state": "LK-37",
+      "lat": 7.6667,
+      "lon": 81.6833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5423,
+    "fields": {
+      "name": "Pottuvil",
+      "state": "LK-37",
+      "lat": 6.8833,
+      "lon": 81.8333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5424,
+    "fields": {
+      "name": "Kodikamam",
+      "state": "LK-38",
+      "lat": 9.75,
+      "lon": 80.2167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5425,
+    "fields": {
+      "name": "Point Pedro",
+      "state": "LK-38",
+      "lat": 9.8167,
+      "lon": 80.2333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5426,
+    "fields": {
+      "name": "Kaluwanchikudy",
+      "state": "LK-37",
+      "lat": 7.7167,
+      "lon": 81.7167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5427,
+    "fields": {
+      "name": "Galewela",
+      "state": "LK-29",
+      "lat": 7.75,
+      "lon": 80.5833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5428,
+    "fields": {
+      "name": "Hikkaduwa",
+      "state": "LK-34",
+      "lat": 6.1333,
+      "lon": 80.1,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5429,
+    "fields": {
+      "name": "Hingurakgoda",
+      "state": "LK-30",
+      "lat": 8.0333,
+      "lon": 80.9833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5430,
+    "fields": {
+      "name": "Katunayake",
+      "state": "LK-36",
+      "lat": 7.1667,
+      "lon": 79.8833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5431,
+    "fields": {
+      "name": "Koggala",
+      "state": "LK-34",
+      "lat": 5.9833,
+      "lon": 80.3333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5432,
+    "fields": {
+      "name": "Kandana",
+      "state": "LK-36",
+      "lat": 7.05,
+      "lon": 79.9167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5433,
+    "fields": {
+      "name": "Minuwangoda",
+      "state": "LK-36",
+      "lat": 7.1667,
+      "lon": 80.0,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5434,
+    "fields": {
+      "name": "Akuressa",
+      "state": "LK-34",
+      "lat": 6.1167,
+      "lon": 80.5,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5435,
+    "fields": {
+      "name": "Ratmalana",
+      "state": "LK-36",
+      "lat": 6.8167,
+      "lon": 79.8833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5436,
+    "fields": {
+      "name": "Nattandiya",
+      "state": "LK-32",
+      "lat": 7.4667,
+      "lon": 79.85,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5437,
+    "fields": {
+      "name": "Ambalantota",
+      "state": "LK-34",
+      "lat": 6.1167,
+      "lon": 81.05,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5438,
+    "fields": {
+      "name": "Seeduwa",
+      "state": "LK-36",
+      "lat": 7.1333,
+      "lon": 79.8833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5439,
+    "fields": {
+      "name": "Nittambuwa",
+      "state": "LK-36",
+      "lat": 7.1333,
+      "lon": 80.0833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5440,
+    "fields": {
+      "name": "Mirigama",
+      "state": "LK-36",
+      "lat": 7.2333,
+      "lon": 80.1167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5441,
+    "fields": {
+      "name": "Kadawatha",
+      "state": "LK-36",
+      "lat": 7.0,
+      "lon": 80.0,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5442,
+    "fields": {
+      "name": "Kiribathgoda",
+      "state": "LK-36",
+      "lat": 7.0,
+      "lon": 80.0167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5443,
+    "fields": {
+      "name": "Jaela",
+      "state": "LK-36",
+      "lat": 7.0833,
+      "lon": 79.8833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5444,
+    "fields": {
+      "name": "Mawanella",
+      "state": "LK-33",
+      "lat": 7.25,
+      "lon": 80.45,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5445,
+    "fields": {
+      "name": "Balangoda",
+      "state": "LK-33",
+      "lat": 6.65,
+      "lon": 80.6833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5446,
+    "fields": {
+      "name": "Bandaragama",
+      "state": "LK-36",
+      "lat": 6.7167,
+      "lon": 80.0,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5447,
+    "fields": {
+      "name": "Yakkala",
+      "state": "LK-36",
+      "lat": 7.1167,
+      "lon": 80.1,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5448,
+    "fields": {
+      "name": "Nawalapitiya",
+      "state": "LK-29",
+      "lat": 7.05,
+      "lon": 80.5333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5449,
+    "fields": {
+      "name": "Dehiwela-Mount Lavinia",
+      "state": "LK-36",
+      "lat": 6.8333,
+      "lon": 79.8667,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5450,
+    "fields": {
+      "name": "Baddegama",
+      "state": "LK-34",
+      "lat": 6.1833,
+      "lon": 80.2167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5451,
+    "fields": {
+      "name": "Elpitiya",
+      "state": "LK-34",
+      "lat": 6.2833,
+      "lon": 80.1667,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5452,
+    "fields": {
+      "name": "Kamburupitiya",
+      "state": "LK-34",
+      "lat": 5.9833,
+      "lon": 80.5167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5453,
+    "fields": {
+      "name": "Pilimatalawa",
+      "state": "LK-29",
+      "lat": 7.2667,
+      "lon": 80.5667,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5454,
+    "fields": {
+      "name": "Kekirawa",
+      "state": "LK-29",
+      "lat": 8.0333,
+      "lon": 80.5167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5455,
+    "fields": {
+      "name": "Deniyaya",
+      "state": "LK-34",
+      "lat": 6.3333,
+      "lon": 80.5667,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5456,
+    "fields": {
+      "name": "Weligama",
+      "state": "LK-34",
+      "lat": 5.9667,
+      "lon": 80.4333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5457,
+    "fields": {
+      "name": "Hatton",
+      "state": "LK-29",
+      "lat": 6.8833,
+      "lon": 80.5833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5458,
+    "fields": {
+      "name": "Udugama",
+      "state": "LK-34",
+      "lat": 6.25,
+      "lon": 80.3,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5459,
+    "fields": {
+      "name": "Raddolugama",
+      "state": "LK-36",
+      "lat": 7.1,
+      "lon": 79.9333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5460,
+    "fields": {
+      "name": "Kahawatte",
+      "state": "LK-39",
+      "lat": 6.6167,
+      "lon": 80.7167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5461,
+    "fields": {
+      "name": "Welimada",
+      "state": "LK-29",
+      "lat": 6.9,
+      "lon": 80.9167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5462,
+    "fields": {
+      "name": "Kalawana",
+      "state": "LK-33",
+      "lat": 6.5333,
+      "lon": 80.4167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5463,
+    "fields": {
+      "name": "Kirindiwela",
+      "state": "LK-33",
+      "lat": 7.0,
+      "lon": 80.1167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5464,
+    "fields": {
+      "name": "Digana",
+      "state": "LK-29",
+      "lat": 7.2833,
+      "lon": 80.75,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5465,
+    "fields": {
+      "name": "Polgahawela",
+      "state": "LK-32",
+      "lat": 7.3333,
+      "lon": 80.2667,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5466,
+    "fields": {
+      "name": "Boralesgamuwa",
+      "state": "LK-36",
+      "lat": 6.8333,
+      "lon": 79.9167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5467,
+    "fields": {
+      "name": "Hanwella",
+      "state": "LK-33",
+      "lat": 6.9,
+      "lon": 80.0833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5468,
+    "fields": {
+      "name": "Wadduwa",
+      "state": "LK-36",
+      "lat": 6.6833,
+      "lon": 79.9167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5469,
+    "fields": {
+      "name": "Biyagama",
+      "state": "LK-36",
+      "lat": 6.95,
+      "lon": 80.0167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5470,
+    "fields": {
+      "name": "Wellawaya",
+      "state": "LK-39",
+      "lat": 6.7333,
+      "lon": 81.1,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5471,
+    "fields": {
+      "name": "Thambuttegama",
+      "state": "LK-30",
+      "lat": 8.1,
+      "lon": 80.4167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5472,
+    "fields": {
+      "name": "Ruwanwella",
+      "state": "LK-33",
+      "lat": 7.0333,
+      "lon": 80.25,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5473,
+    "fields": {
+      "name": "Dankotuwa",
+      "state": "LK-32",
+      "lat": 7.3667,
+      "lon": 79.9333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5474,
+    "fields": {
+      "name": "Peliyagoda",
+      "state": "LK-36",
+      "lat": 6.9667,
+      "lon": 79.9,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5475,
+    "fields": {
+      "name": "Kataragama",
+      "state": "LK-34",
+      "lat": 6.4167,
+      "lon": 81.3333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5476,
+    "fields": {
+      "name": "Middeniya",
+      "state": "LK-34",
+      "lat": 6.0333,
+      "lon": 80.8667,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5477,
+    "fields": {
+      "name": "Ganemulla",
+      "state": "LK-36",
+      "lat": 7.0667,
+      "lon": 80.0167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5478,
+    "fields": {
+      "name": "Divulapitiya",
+      "state": "LK-36",
+      "lat": 7.2167,
+      "lon": 80.0667,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5479,
+    "fields": {
+      "name": "Beliatta",
+      "state": "LK-34",
+      "lat": 6.0333,
+      "lon": 80.7333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5480,
+    "fields": {
+      "name": "Marawila",
+      "state": "LK-32",
+      "lat": 7.5,
+      "lon": 79.8833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5481,
+    "fields": {
+      "name": "Passara",
+      "state": "LK-39",
+      "lat": 6.9667,
+      "lon": 81.2333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5482,
+    "fields": {
+      "name": "Padukka",
+      "state": "LK-33",
+      "lat": 6.8333,
+      "lon": 80.1167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5483,
+    "fields": {
+      "name": "Godakawela",
+      "state": "LK-33",
+      "lat": 6.4333,
+      "lon": 80.6667,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5484,
+    "fields": {
+      "name": "Makola",
+      "state": "LK-36",
+      "lat": 7.05,
+      "lon": 80.0167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5485,
+    "fields": {
+      "name": "Medawachchiya",
+      "state": "LK-30",
+      "lat": 8.5167,
+      "lon": 80.5,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5486,
+    "fields": {
+      "name": "Akurana",
+      "state": "LK-29",
+      "lat": 7.3833,
+      "lon": 80.6167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5487,
+    "fields": {
+      "name": "Beruwala",
+      "state": "LK-36",
+      "lat": 6.4667,
+      "lon": 79.9833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5488,
+    "fields": {
+      "name": "Weliveriya",
+      "state": "LK-36",
+      "lat": 7.1167,
+      "lon": 80.0667,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5489,
+    "fields": {
+      "name": "Urubokka",
+      "state": "LK-34",
+      "lat": 6.1833,
+      "lon": 80.6,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5490,
+    "fields": {
+      "name": "Batapola",
+      "state": "LK-34",
+      "lat": 6.1667,
+      "lon": 80.1833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5491,
+    "fields": {
+      "name": "Nochchiyagama",
+      "state": "LK-32",
+      "lat": 8.2167,
+      "lon": 80.3833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5492,
+    "fields": {
+      "name": "Wattegama",
+      "state": "LK-29",
+      "lat": 7.35,
+      "lon": 80.7333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5493,
+    "fields": {
+      "name": "Katuneriya",
+      "state": "LK-32",
+      "lat": 7.5667,
+      "lon": 79.9333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5494,
+    "fields": {
+      "name": "Veyangoda",
+      "state": "LK-36",
+      "lat": 7.1833,
+      "lon": 80.1,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5495,
+    "fields": {
+      "name": "Kundasale",
+      "state": "LK-29",
+      "lat": 7.2833,
+      "lon": 80.7,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5496,
+    "fields": {
+      "name": "Gelioya",
+      "state": "LK-29",
+      "lat": 7.25,
+      "lon": 80.55,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5497,
+    "fields": {
+      "name": "Delgoda",
+      "state": "LK-36",
+      "lat": 7.0,
+      "lon": 80.0333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5498,
+    "fields": {
+      "name": "Deiyandara",
+      "state": "LK-34",
+      "lat": 5.9,
+      "lon": 80.4833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5499,
+    "fields": {
+      "name": "Morawaka",
+      "state": "LK-34",
+      "lat": 6.2833,
+      "lon": 80.5,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5500,
+    "fields": {
+      "name": "Rambukkana",
+      "state": "LK-33",
+      "lat": 7.3333,
+      "lon": 80.3833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5501,
+    "fields": {
+      "name": "Katana",
+      "state": "LK-36",
+      "lat": 7.0833,
+      "lon": 79.9,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5502,
+    "fields": {
+      "name": "Yatiyantota",
+      "state": "LK-33",
+      "lat": 6.9333,
+      "lon": 80.15,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5503,
+    "fields": {
+      "name": "Pitigala",
+      "state": "LK-34",
+      "lat": 6.35,
+      "lon": 80.2167,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5504,
+    "fields": {
+      "name": "Ibbagamuwa",
+      "state": "LK-32",
+      "lat": 7.6,
+      "lon": 80.3333,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5505,
+    "fields": {
+      "name": "Teldeniya",
+      "state": "LK-29",
+      "lat": 7.35,
+      "lon": 80.7833,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5506,
+    "fields": {
+      "name": "Kirillawala",
+      "state": "LK-36",
+      "lat": 7.0833,
+      "lon": 80.0667,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5507,
+    "fields": {
+      "name": "Madampe",
+      "state": "LK-32",
+      "lat": 7.5667,
+      "lon": 79.9,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5508,
+    "fields": {
+      "name": "Anamaduwa",
+      "state": "LK-32",
+      "lat": 7.9167,
+      "lon": 80.05,
+      "country": "LK"
+    }
+  },
+  {
+    "model": "manager.city",
+    "pk": 5509,
+    "fields": {
+      "name": "Kantale",
+      "state": "LK-37",
+      "lat": 8.3833,
+      "lon": 81.0,
+      "country": "LK"
+    }
+  }
  ]

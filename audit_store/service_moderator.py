@@ -439,6 +439,7 @@ def audio_to_fill_answers(data,user_id):
     transcript_texts = data.get("transcript_texts", [])
     question_answer_detail = data.get("question_answer_detail", [])
     audit_store_id = data.get("audit_store_id")
+    API_TOKEN = "FW_AI_9x2LmPq_82ata_26"
 
     clean_texts = [t.strip() for t in transcript_texts if t and str(t).strip()]
 
@@ -452,7 +453,8 @@ def audio_to_fill_answers(data,user_id):
         "https://ai.floorwalk.in/audio_to_answers/",
         {
             "transcript_texts": clean_texts,
-            "question_detail": question_answer_detail
+            "question_detail": question_answer_detail,
+            "token": API_TOKEN
         }
     )
     if error:
@@ -511,6 +513,7 @@ def transcript_to_compare_answers(data):
     transcript_texts = data.get("transcript_texts", [])
     question_answer_detail = data.get("question_answer_detail", [])
     clean_texts = [t.strip() for t in transcript_texts if t and str(t).strip()]
+    API_TOKEN = "FW_AI_2c3IxVa_36ttca_26"
 
     if not clean_texts:
         return {"error": "Missing valid transcript_texts"}, 400
@@ -521,7 +524,8 @@ def transcript_to_compare_answers(data):
         "https://ai.floorwalk.in/transcript_to_compare_answers/",
         {
             "transcript_texts": clean_texts,
-            "question_answer_detail": question_answer_detail
+            "question_answer_detail": question_answer_detail,
+            "token": API_TOKEN
         }
     )
     if error:
@@ -555,6 +559,7 @@ def audio_to_text(data):
     attachment_id = data.get("attachment_id")
     audio_url = data.get("audio_url")
     force = data.get("force", False)
+    API_TOKEN = "FW_AI_5f7JlOs_97att_26"
 
     if not attachment_id and not audio_url:
         return {"error": "attachment_id or audio_url is required"}, 400
@@ -592,7 +597,9 @@ def audio_to_text(data):
 
     response, error = _post(
         "https://ai.floorwalk.in/audio_to_text/",
-        {"audio_url": audio_url}
+        {"audio_url": audio_url,
+         "token": API_TOKEN
+        }
     )
     if error:
         return error

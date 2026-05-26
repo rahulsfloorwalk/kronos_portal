@@ -359,6 +359,7 @@ class AuditCycleScoreSerializer(ModelSerializer):
         fields = (
             'id',
             'name',
-            'get_total_percentage'
+            'get_total_percentage',
+            'get_total_audit_stores_count',
         )
         read_only_fields = fields

@@ -209,7 +209,7 @@ def import_questionnaire(file_obj, audit_cycle_id):
     wb = openpyxl.load_workbook(file_obj)
     ws = wb.active
 
-    allowed_question_types = ["PLAIN", "MUTEX", "MULTISELECT"]
+    allowed_question_types = ["PLAIN", "MUTEX", "MULTISELECT", "DATE", "TIME"]
     required_option_keys = {"sequence", "value", "marks"}
 
     sections_data = []
@@ -346,18 +346,42 @@ def import_questionnaire(file_obj, audit_cycle_id):
             created_sections[sec_key] = section_obj
         else:
             section_obj = created_sections[sec_key]
+        if ques_data["question_type"] == "DATE":
+            final_question_data = {
+                "version": 1,
+                "format": "DD-MM-YYYY",
+            }
 
+        elif ques_data["question_type"] == "TIME":
+            final_question_data = {
+                "version": 1,
+                "format": "HH:mm",
+            }
+
+        elif ques_data["question_type"] == "PLAIN":
+            final_question_data = {
+                "version": 1,
+                "impact_factors": ques_data["impact_factors"],
+            }
+
+        else:
+            final_question_data = {
+                "version": 1,
+                "impact_factors": ques_data["impact_factors"],
+                "options": ques_data["options"],
+            }
         question_obj = Question.objects.create(
             section=section_obj,
             sequence=ques_data["sequence"],
             question_txt=ques_data["text"],
             max_marks=ques_data["max_marks"],
             question_type=ques_data["question_type"],
-            question_data={
-                "version": 1,
-                "impact_factors": ques_data["impact_factors"],
-                "options": ques_data["options"],
-            },
+            # question_data={
+            #     "version": 1,
+            #     "impact_factors": ques_data["impact_factors"],
+            #     "options": ques_data["options"],
+            # },
+            question_data=final_question_data,
             hide_question=ques_data["hide_question"],
             optional_comment_required=ques_data["optional_comment_required"],
         )

@@ -35,12 +35,14 @@ def get_xlsx_report_for_clientuser(audit_store_id, user):
 def create_text_structure(sections, answers, report_sections, audit_store):
     details_section = get_details_section(audit_store, report_sections, sections)
     summary_section = get_summary_section(audit_store, sections, report_sections)
+    # report_section = get_report_summary(audit_store)
     answers_section = get_answers_section(sections, answers, report_sections)
 
     audit_date = audit_store.audit_date
     store_name = audit_store.audit.store.name
     name = (store_name + " " + str(audit_date) + ".xlsx")
     data = [details_section, summary_section, answers_section]
+    # data = [details_section, summary_section,report_section, answers_section]
     return data, name
 
 def get_details_section(audit_store, report_sections, sections):
@@ -98,6 +100,22 @@ def get_summary_section(audit_store, sections, report_sections):
         rows.append(row)
         section_key += 1
     return rows
+
+def get_report_summary(audit_store):
+    rows = []
+    report_summary = (audit_store.report_summary or '').strip()
+
+    if report_summary:
+        rows.append({
+            'type': 'report_summary_title',
+            'content': ['Audit Report Summary']
+        })
+        rows.append({
+            'type': 'report_summary',
+            'content': [report_summary]
+        })
+    return rows
+
 def get_answers_section(sections, answers, report_sections):
     answer_key = 0
     section_key = 0
@@ -252,6 +270,14 @@ def write_data(sections):
         'right': 1,
         'valign': 'vcenter',
     })
+    # report_summary_format = workbook.add_format({
+    #     'text_wrap': True,
+    #     'top': 1,
+    #     'bottom': 1,
+    #     'left': 1,
+    #     'right': 1,
+    #     'valign': 'top',
+    # })
     start_row = 0
     start_col = 0
     worksheet.set_column(start_col, start_col, 15)
@@ -275,6 +301,28 @@ def write_data(sections):
                 for point in line.get('content'):
                     worksheet.write(row, col, point, header_format)
                     col += 1
+            # elif line.get('type') == 'blank_row':
+            #     row += 1
+            # elif line.get('type') == 'report_summary_title':
+            #     worksheet.merge_range(
+            #         row,
+            #         0,
+            #         row,
+            #         4,
+            #         line['content'][0],
+            #         title_format
+            #     )
+            # elif line.get('type') == 'report_summary':
+            #     summary_text = line['content'][0] or ''
+            #     worksheet.merge_range(
+            #         row,
+            #         0,
+            #         row,
+            #         4,
+            #         summary_text,
+            #         report_summary_format
+            #     )
+            #     worksheet.set_row(row, 25)
             elif line.get('type') == 'comment':
                 row += 1
                 for point in line.get('content'):
@@ -302,6 +350,19 @@ def write_data(sections):
             start_col -= 2
             if(row < 10):
                 row = 10
+
+        # sec_num += 1
+        # if(sec_num == 1):
+        #     start_col += 2
+        #     row = start_row
+        # elif(sec_num == 2):
+        #     start_col = 0
+        #     details_rows = len(sections[0])
+        #     summary_rows = len(sections[1])
+
+        #     row = max(details_rows, summary_rows) + 2
+        # elif(sec_num == 3):
+        #     start_col = 0
     workbook.close()
     output.seek(0)
     return output

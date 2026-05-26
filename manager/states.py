@@ -534,7 +534,7 @@ states["BD-86"] = "Sylhet Division"
 states["BD-87"] = "Rangpur Division"
 states["BD-H"] = "Dhaka Division"
 
-#Shrilanka
+#Sri Lanka
 states["LK-29"] = "Central Province"
 states["LK-30"] = "North Central Province"
 states["LK-32"] = "North Western Province"
@@ -544,6 +544,7 @@ states["LK-35"] = "Province of Uva"
 states["LK-36"] = "Western Province"
 states["LK-37"] = "Eastern Province"
 states["LK-38"] = "Northern Province"
+states["LK-39"] = "Uva Province"
 
 #Nepal
 states["NP-1"] = "Mechi"

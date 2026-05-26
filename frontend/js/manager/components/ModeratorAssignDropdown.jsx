@@ -51,7 +51,28 @@ export default class ModeratorAssignDropdown extends Component{
 		const { selectedId } = this.state;
 		return (<select className="form-control" onChange={this.onChange} value={selectedId}>
 			<option value=""></option>
-			{ this.props.moderators.filter((m) => m.user.is_active).map((m)=> <option key={m.user.id} value={m.user.id}>{m.user.email}</option>) }
+			{[...this.props.moderators]
+				.sort((a, b) => {
+					const aInactive =
+						!a.is_active || !a.user.is_active;
+					const bInactive =
+						!b.is_active || !b.user.is_active;
+					return aInactive - bInactive;
+				})
+				.map((m) => {
+					const isInactive =
+						!m.is_active || !m.user.is_active;
+					const isCurrentlySelected =
+						String(selectedId) === String(m.user.id);
+
+					return (
+						<option key={m.user.id} value={m.user.id} disabled={isInactive && !isCurrentlySelected}style={{color: isInactive ? "#999" : "#000",}}>
+							{m.user.email}
+							{isInactive ? " (Inactive)" : ""}
+						</option>
+					);
+				})}
+			{/* { this.props.moderators.filter((m) => m.user.is_active).map((m)=> <option key={m.user.id} value={m.user.id}>{m.user.email}</option>) } */}
 			{/* { this.props.moderators.filter((m) => m.is_active).map((m)=> <option key={m.user.id} value={m.user.id}>{m.user.email}</option>) } */}
 			{/* { this.props.moderators.filter((m) => m.is_active).map((m)=> <option key={m.id} value={m.id}>{m.email}</option>) } */}
 		</select>);

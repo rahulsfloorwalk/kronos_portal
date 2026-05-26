@@ -174,6 +174,7 @@ class AuditStoreList extends Component{
 		loadMoreLoader: false,
 		start_date: "",
 		end_date: "",
+		qa_userId: "",
 		visibleReports: [],
 		auditReportRows: [],
 	};
@@ -189,7 +190,8 @@ class AuditStoreList extends Component{
 		let city= "";
 		let start_date = "";
 		let end_date = "";
-		return findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId, status, userId,city, start_date, end_date}).then((response) => {
+		let qa_userId = "";
+		return findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId, status, userId,city, start_date, end_date,qa_userId}).then((response) => {
 			this.setState({
 				auditStores: response.audit_store_list,
 				totalAuditStoreCount: response.total_audit_count
@@ -240,12 +242,13 @@ class AuditStoreList extends Component{
 		let city = this.state.cityList.city;
 		let start_date = this.state.start_date;
 		let end_date = this.state.end_date;
+		let qa_userId = this.state.qa_userId;
 		this.setState({
 			filterStatus: status,
 			auditStores: []
 		});
 		this.setLoading(true);
-		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId,city, start_date, end_date}).then((response) => {
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId,city, start_date, end_date,qa_userId}).then((response) => {
 			this.setState({
 				auditStores: response.audit_store_list,
 				totalAuditStoreCount: response.total_audit_count
@@ -260,12 +263,13 @@ class AuditStoreList extends Component{
 		let status = this.state.filterStatus;
 		let start_date = this.state.start_date;
 		let end_date = this.state.end_date;
+		let qa_userId = this.state.qa_userId;
 		this.setState({
 			userId: userId,
 			auditStores: []
 		});
 		this.setLoading(true);
-		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId,city, start_date, end_date}).then((response) => {
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId,city, start_date, end_date,qa_userId}).then((response) => {
 			this.setState({
 				auditStores: response.audit_store_list,
 				totalAuditStoreCount: response.total_audit_count
@@ -280,12 +284,47 @@ class AuditStoreList extends Component{
 		let status = this.state.filterStatus;
 		let start_date = this.state.start_date;
 		let end_date = this.state.end_date;
+		let qa_userId = this.state.qa_userId;
 		this.setState({
 			city: city,
 			auditStores: []
 		});
 		this.setLoading(true);
-		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId,city, start_date, end_date}).then((response) => {
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId,city, start_date, end_date,qa_userId}).then((response) => {
+			this.setState({
+				auditStores: response.audit_store_list,
+				totalAuditStoreCount: response.total_audit_count
+			});
+			this.setLoading(false);
+		});
+	};
+	moderatorChanged = (e) => {
+		let qa_userId = e.target.value;
+		let city = this.state.city;
+		let lastAuditId = "";
+		let status = this.state.filterStatus;
+		let userId = this.state.userId;
+		let start_date = this.state.start_date;
+		let end_date = this.state.end_date;
+
+		this.setState({
+			qa_userId,
+			auditStores: []
+		});
+		this.setLoading(true);
+
+		findAuditStoresByAuditCycleNew(
+			this.props.params.auditCycleId,
+			{
+				lastAuditId,
+				status,
+				userId,
+				qa_userId,
+				city,
+				start_date,
+				end_date
+			}
+		).then((response) => {
 			this.setState({
 				auditStores: response.audit_store_list,
 				totalAuditStoreCount: response.total_audit_count
@@ -344,7 +383,8 @@ class AuditStoreList extends Component{
 		let city = this.state.cityList.city;
 		let start_date = this.state.start_date;
 		let end_date = this.state.end_date;
-		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId,city, start_date, end_date}).then((response) => {
+		let qa_userId = this.state.qa_userId;
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId,city, start_date, end_date,qa_userId}).then((response) => {
 			let newAuditStores = this.state.auditStores;
 			for(let reports of response.audit_store_list){
 				newAuditStores.push(reports);
@@ -383,11 +423,12 @@ class AuditStoreList extends Component{
 			let start_date = this.state.start_date;
 			let end_date = this.state.end_date;
 			let lastAuditId = "";
+			let qa_userId = this.state.qa_userId;
 			this.setState({
 				auditStores: []
 			});
 			this.setLoading(true);
-			findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId,city, start_date, end_date}).then((response) => {
+			findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId,city, start_date, end_date,qa_userId}).then((response) => {
 				this.setState({
 					auditStores: response.audit_store_list,
 					totalAuditStoreCount: response.total_audit_count
@@ -404,6 +445,7 @@ class AuditStoreList extends Component{
 			filterStatus:"",
 			userId:"",
 			city:"",
+			qa_userId:"",
 		});
 		this.reloadReports(this.props.params.auditCycleId);
 	};
@@ -432,9 +474,10 @@ class AuditStoreList extends Component{
 		let status = this.state.filterStatus;
 		let start_date = this.state.start_date;
 		let end_date = this.state.end_date;
+		let qa_userId = this.state.qa_userId;
 
 		if (!this.state.visibleReports.includes(reportId)) {
-			findAuditStoresByAuditCycleReportList(this.props.params.auditCycleId, reportId,  {lastAuditId, status, userId,city, start_date, end_date})
+			findAuditStoresByAuditCycleReportList(this.props.params.auditCycleId, reportId,  {lastAuditId, status, userId,city, start_date, end_date, qa_userId})
 				.then((result) => {
 					const updatedAuditReportRows = { ...this.state.auditReportRows };
 					updatedAuditReportRows[reportId] = result.audit_reports;
@@ -508,6 +551,18 @@ class AuditStoreList extends Component{
 				city_option_list.push(<option key={city} value={city}>{city}</option>);
 			}
 		}
+		let moderator_option_list = [];
+
+		if (this.state.moderators.length > 0) {
+			moderator_option_list = this.state.moderators
+				.map((m) => {
+					return (
+						<option key={m.user.id} value={m.user.id}>
+							{m.user.email}
+						</option>
+					);
+				});
+		}
 		return(
 			<div>
 				<br/>
@@ -531,6 +586,11 @@ class AuditStoreList extends Component{
 					<select className="form-control" style={{display:"inline-block",width:"200px"}}  value={this.state.userId} onChange={this.userChanged}>
 						<option value="">All User</option>
 						{user_option_list}
+					</select>
+					&nbsp;
+					<select className="form-control" style={{ display: "inline-block", width: "220px" }} value={this.state.qa_userId} onChange={this.moderatorChanged} >
+						<option value="">All QA</option>
+						{moderator_option_list}
 					</select>
 					&nbsp;
 					<select className="form-control" style={{display:"inline-block",width:"200px"}}  value={this.state.city} onChange={this.cityChanged}>
