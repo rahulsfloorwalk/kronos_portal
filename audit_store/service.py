@@ -19,6 +19,9 @@ from audit.service import report_attribute_service
 from registration.models import GROUP_NAME_AUDITOR
 from django.contrib.contenttypes.models import ContentType
 from guardian.models import UserObjectPermission
+from guardian.shortcuts import get_objects_for_user
+from django.contrib.auth import get_user_model
+
 def find_by_id(audit_store_id):
     try:
         return AuditStore.objects.get(pk=audit_store_id)
@@ -165,7 +168,8 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, star
     return {'audit_store_list': audit_store_list_obj_slice, 'total_audit_count': total_audit_count}
 
 
-def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, user_id,city, start_date, end_date,is_load_more,last_total_count):
+def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, user_id,qa_user_id,city, start_date, end_date,is_load_more,last_total_count):
+
     total_audit_count = 0
     audit_store_list_obj_slice = []
     if status != "" and last_audit_id != "" and start_date and end_date and city:
@@ -232,18 +236,18 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
                 .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id') \
                 .distinct('id')
             total_audit_count = audit_list_obj.count()
-    elif city != "" and city != None:
+    elif city != "" and city is not None:
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, store__city__name=city).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
             .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id') \
             .distinct('id')
         total_audit_count = audit_list_obj.count()
-    elif last_audit_id != "":
-        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id).order_by('id', 'store__city__name', 'store__name') \
-            .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name','count')
     elif last_audit_id != ""and city:
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id,store__city__name=city).order_by('id', 'store__city__name', 'store__name') \
+            .select_related('store__name', 'store__address', 'store__city__name') \
+            .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id')
+    elif last_audit_id != "":
+        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
             .values('id', 'store__name', 'store__address', 'store__city__name','count','audit_cycle__client__id')
     elif last_audit_id != "" and start_date and end_date:
@@ -281,15 +285,28 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
     if user_id != "":
         audit_list_obj = audit_list_obj.filter(audit_stores__user__id=user_id).distinct('id')
         total_audit_count = audit_list_obj.count()
+
+    User = get_user_model()
+    if qa_user_id not in ["", None]:
+        moderator = User.objects.get(id=int(qa_user_id))
+        assigned_audit_store_ids = get_objects_for_user( moderator, 'audit_store.moderator_manage', klass=AuditStore).values_list('audit_id', flat=True)
+        audit_list_obj = audit_list_obj.filter(id__in=assigned_audit_store_ids ).distinct()
+
+    total_audit_count = audit_list_obj.count()
     audit_list = audit_list_obj[0:100]
-    if audit_list_obj.filter(count__gte=50):
+    if audit_list_obj.filter(count__gte=50).exists():
         audit_list = audit_list_obj[0:2]
-    if audit_list_obj.filter(count__gte=20):
+
+    elif audit_list_obj.filter(count__gte=20).exists():
         audit_list = audit_list_obj[0:5]
-    if audit_list_obj.filter(count__gte=10):
+
+    elif audit_list_obj.filter(count__gte=10).exists():
         audit_list = audit_list_obj[0:10]
-    if audit_list_obj.filter(count__gte=2):
+
+    elif audit_list_obj.filter(count__gte=2).exists():
         audit_list = audit_list_obj[0:50]
+    else:
+        audit_list = audit_list_obj[0:100]
     audit_id_list = [audit['id'] for audit in audit_list]
 
     if start_date !="" and end_date !="":
@@ -300,18 +317,25 @@ def find_audit_store_by_audit_cycle_id(audit_cycle_id, last_audit_id, status, us
             .values('id', 'status','auto_assigned','instant_assigned', 'audit_date','report_revert_count','audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number','user__profileinfo__certification_score', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
     if user_id != "":
         audit_store_obj = audit_store_obj.filter(user = user_id)
+
+    if qa_user_id not in ["", None]:
+        moderator = User.objects.get(id=int(qa_user_id))
+        assigned_store_ids = get_objects_for_user(moderator,'audit_store.moderator_manage',klass=AuditStore).values_list('id', flat=True)
+        audit_store_obj = audit_store_obj.filter(id__in=assigned_store_ids)
+
     if status != "":
         audit_store_obj = audit_store_obj.filter(status = status)
     audit_store_list = []
     for audit in audit_list:
         audit_store_dict = {}
-        audit_report_list = []
+        # audit_report_list = []
         audit_store_dict['id'] = audit['id']
         audit_store_dict['store_name'] = audit['store__name']
         audit_store_dict['store_address'] = audit['store__address']
         audit_store_dict['store_city'] = audit['store__city__name']
         audit_store_dict['store_audit_count'] = audit['count']
-        audit_store_dict['client_id'] = audit['audit_cycle__client__id']
+        # audit_store_dict['client_id'] = audit['audit_cycle__client__id']
+        audit_store_dict['client_id'] = audit.get('audit_cycle__client__id')
        
         # audit_store_dict['reports'] = audit_report_list
         audit_store_list.append(audit_store_dict)
@@ -363,7 +387,7 @@ def find_audit_store_city_by_audit_cycle_id(audit_cycle_id, user_id):
         'city_list': list(city_list)
     }
 
-def find_audit_by_audit_cycle_audit_store_id(audit_cycle_id,audit_store_id, last_audit_id=None, status=None, user_id=None,city=None, start_date=None, end_date=None, is_load_more=False, last_total_count=0):
+def find_audit_by_audit_cycle_audit_store_id(audit_cycle_id,audit_store_id, last_audit_id=None, status=None, user_id=None,qa_user_id=None,city=None, start_date=None, end_date=None, is_load_more=False, last_total_count=0):
     from auditor.service.auditor_api import get_report_completion_percentage
     audit_reports = []
     total_audit_count = 0
@@ -384,6 +408,11 @@ def find_audit_by_audit_cycle_audit_store_id(audit_cycle_id,audit_store_id, last
     total_audit_count = audit_store_objs.count()
 
     for audit_report in audit_store_objs:
+        users_with_perms = get_users_with_perms(audit_report, attach_perms=True)
+        moderator = [user.id for user, perms in users_with_perms.items() if "moderator_manage" in perms]
+        if qa_user_id not in ["", None]:
+            if int(qa_user_id) not in moderator:
+                continue
         audit_report_dict = {}
         audit_report_dict['id'] = audit_report.id
         audit_report_dict['status'] = audit_report.status
@@ -400,8 +429,8 @@ def find_audit_by_audit_cycle_audit_store_id(audit_cycle_id,audit_store_id, last
             audit_report_dict['report_completion_percentage'] = percentage
 
         # audit_report_obj = AuditStore.objects.get(pk=audit_report['id'])
-        users_with_perms = get_users_with_perms(audit_report, attach_perms=True)
-        moderator = [user.id for user, perms in users_with_perms.items() if "moderator_manage" in perms]
+        # users_with_perms = get_users_with_perms(audit_report, attach_perms=True)
+        # moderator = [user.id for user, perms in users_with_perms.items() if "moderator_manage" in perms]
         audit_report_dict['assigned_to_moderator'] = moderator
         if audit_report.user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
         # if audit_report['user__groups__name'] == GROUP_NAME_AUDITOR:
