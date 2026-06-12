@@ -973,6 +973,11 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                   >
                     Service
                   </option>
+                  <option
+                    value="AT_HOME"
+                  >
+                    At Home
+                  </option>
                 </select>
                 <ul />
               </div>
@@ -1199,6 +1204,20 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                 <ul />
               </div>
             </div>
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Auditor Notes (0/50) (Max 50 characters)
+            </label>
+            <textarea
+              className="form-control"
+              name="auditor_notes"
+              onChange={[Function]}
+              value=""
+            />
+            <ul />
           </div>
           <div
             className="form-group"
@@ -2193,6 +2212,11 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                   >
                     Service
                   </option>
+                  <option
+                    value="AT_HOME"
+                  >
+                    At Home
+                  </option>
                 </select>
                 <ul />
               </div>
@@ -2419,6 +2443,20 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                 <ul />
               </div>
             </div>
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Auditor Notes (0/50) (Max 50 characters)
+            </label>
+            <textarea
+              className="form-control"
+              name="auditor_notes"
+              onChange={[Function]}
+              value=""
+            />
+            <ul />
           </div>
           <div
             className="form-group"

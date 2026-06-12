@@ -38,6 +38,7 @@ export class AuditCycleForm extends Component{
 			earnings_per_audit: PropTypes.number,
 			reimbursement: PropTypes.number,
 			description: PropTypes.string,
+			auditor_notes: PropTypes.string,
 			audit_auto_approve: PropTypes.bool,
 			audit_report_summary: PropTypes.bool,
 			audit_auto_fail: PropTypes.number,
@@ -64,6 +65,7 @@ export class AuditCycleForm extends Component{
 			reimbursement: FieldErrors,
 			earnings_per_audit: FieldErrors,
 			description: FieldErrors,
+			auditor_notes: FieldErrors,
 			audit_auto_approve: FieldErrors,
 			audit_report_summary: FieldErrors,
 			questionnaire_type: FieldErrors,
@@ -121,6 +123,17 @@ export class AuditCycleForm extends Component{
 
 	fieldChanged = (e) => {
 		const { name, value} = e.target;
+		if (name === "auditor_notes") {
+			const trimmedValue = value.trimStart();
+			if (trimmedValue.length > 50) {
+				return;
+			}
+
+			this.setState({
+				auditor_notes: trimmedValue,
+			});
+			return;
+		}
 		affectInputEventToComponent(e, this);
 		if (["earnings_per_audit", "reimbursement", "audit_auto_fail"].includes(name)) {
 			this.setState({
@@ -198,6 +211,7 @@ export class AuditCycleForm extends Component{
 								<option value="PHONE">{getAuditType("PHONE")}</option>
 								<option value="WEB">{getAuditType("WEB")}</option>
 								<option value="SERVICE">{getAuditType("SERVICE")}</option>
+								<option value="AT_HOME">{getAuditType("AT_HOME")}</option>
 								{/* <option value="VISIBILITY">{getAuditType("VISIBILITY")}</option>
 								<option value="COMPETITION">{getAuditType("COMPETITION")}</option>
 								<option value="SALES">{getAuditType("SALES")}</option>
@@ -257,6 +271,7 @@ export class AuditCycleForm extends Component{
 							<FormInput label="Enable QA-AI Comparison" type="checkbox" checked={this.state.qa_ai_comparison} name="qa_ai_comparison" onChange={this.fieldChanged} errors={this.props.errors.qa_ai_comparison}/>
 						</div>
 					</div>
+					<FormTextarea label={`Auditor Notes (${(this.state.auditor_notes || "").length}/50) (Max 50 characters)`} name="auditor_notes" value={this.state.auditor_notes} onChange={this.fieldChanged} errors={this.props.errors.auditor_notes}/>
 					<FormTextarea label="Description (markdown)" name="description" value={this.state.description} onChange={this.fieldChanged} errors={this.props.errors.description}/>
 					<div>
 						<label>Preview:</label>

@@ -17,6 +17,7 @@ class AuditCycle(Model):
     VISIBILITY = 'VISIBILITY'
     COMPETITION = 'COMPETITION'
     SERVICE = 'SERVICE'
+    AT_HOME = 'AT_HOME'
     SALES = 'SALES'
     FINE_DINE = 'FINE_DINE'
     SKY_KARTING = 'SKY_KARTING'
@@ -40,6 +41,7 @@ class AuditCycle(Model):
         (VISIBILITY, 'Visibility'),
         (COMPETITION, 'Competition'),
         (SERVICE, 'Service'),
+        (AT_HOME, 'At Home'),
         (SALES, 'Sales'),
         (FINE_DINE, 'Fine Dine'),
         (SKY_KARTING, 'Sky Karting'),
@@ -98,6 +100,7 @@ class AuditCycle(Model):
     audit_ai_autofill = BooleanField(db_column='audit_ai_autofill', default=False)
     qa_ai_comparison = BooleanField(db_column='qa_ai_comparison', default=False)
     audit_report_summary = BooleanField(db_column='audit_report_summary', default = True)
+    auditor_notes = CharField(db_column='auditor_notes', max_length=50, blank=True,null=True)
     description = CharField(db_column='description', max_length=16384, blank=False)
     eligibility = CharField(db_column='eligibility', max_length=16384, blank=True)
     client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=PROTECT)

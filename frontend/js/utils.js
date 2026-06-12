@@ -10,6 +10,8 @@ export function getAuditType(value){
 		return "Web";
 	case "VISIBILITY":
 		return "Visibility";
+	case "AT_HOME":
+		return "At Home";
 	case "COMPETITION":
 		return "Competition";
 	case "SERVICE":
