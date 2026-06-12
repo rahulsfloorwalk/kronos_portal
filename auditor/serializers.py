@@ -429,6 +429,7 @@ class ClientSerializer(ModelSerializer):
     class Meta:
         model = Client
         fields = (
+            'id',
             'auditor_logo_url',
             'auditor_display_name',
         )
@@ -452,6 +453,7 @@ class AuditCycleSerializer(ModelSerializer):
             'audit_alignment_factors',
             'client',
             'support_page_link',
+            'auditor_notes',
             'audit_report_summary'
 
         )

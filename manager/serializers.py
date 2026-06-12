@@ -114,6 +114,7 @@ class AuditCycleSerializer(ModelSerializer):
             'audit_auto_fail',
             'audit_ai_autofill',
             'qa_ai_comparison',
+            'auditor_notes',
             'audit_report_summary'
         )
         read_only_fields = fields

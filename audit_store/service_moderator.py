@@ -419,7 +419,6 @@ def get_moderator_email_by_audit_store_obj(audit_store):
 
 def _post(url, payload):
     try:
-        payload["token"] = "FW_AI_9x2LmPq_82Ksa_26"
         response = requests.post(url,json=payload,timeout=300,verify=False)
         return response, None
     except requests.exceptions.RequestException as e:
