@@ -137,10 +137,21 @@ def get_auditor_list_by_filter(filters: dict) -> list:
     filtered_auditor_ratings = [x[0] for x in auditor_ratings if x[0] in filtered_auditor_ratings]
     for val in filtered_auditor_ratings:
         filtered_ids = []
+    #     if val:
+    #         val_range = list(float_range(val + 0.0, val + 0.9, '0.1'))
+    #         for x in user_list:
+    #             if x[1] and round(x[1], 1) in val_range:
+    #                 filtered_ids.append(x[0])
+
         if val:
-            val_range = list(float_range(val + 0.0, val + 0.9, '0.1'))
+            if val == 1:
+                # 0.0 to 1.9
+                val_range = list(float_range(0.0, 2.0, '0.1'))
+            else:
+                # Existing behavior for 2,3,4,5
+                val_range = list(float_range(val + 0.0, val + 0.9, '0.1'))
             for x in user_list:
-                if x[1] and round(x[1], 1) in val_range:
+                if x[1] is not None and round(x[1], 1) in val_range:
                     filtered_ids.append(x[0])
         else:
             for x in user_list:
