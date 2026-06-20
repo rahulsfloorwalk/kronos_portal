@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer, CharField, ModelSerializer, IntegerField
 from rest_framework.exceptions import ValidationError
-from registration.models import GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_MODERATOR
 from registration.mixins import HasGroupPermission
 
 from audit.service import audit_cycle as audit_cycle_service
@@ -314,16 +314,26 @@ class ImportQuestionnaire(APIView):
             return Response({"detail": str(e)}, status=400)
 
         return Response({"detail": "Questionnaire imported successfully", "imported": imported_data})
-
-# class AuditCycleDetailsFromClientView(APIView):
-#     permission_classes=[HasGroupPermission]
-#     required_groups={
-#         'GET':[GROUP_NAME_MANAGER],
-#     }
-#     def get(self,request,audit_cycle_id,format=None):
-#         result = audit_cycle_service.find_order_description_and_files_by_audit_cycle_id(audit_cycle_id)
-#         return Response(result)
     
+class WorkloadDashboard(APIView):
+    permission_classes = [AllowAny]
+    # required_groups = {
+    #     'GET': [GROUP_NAME_MANAGER,GROUP_NAME_MODERATOR],
+    # }
+
+    def get(self, request):
+        role = request.GET.get("role", "manager").lower()
+        if role == "manager":
+            return Response(audit_cycle_service.get_manager_dashboard())
+
+        elif role == "moderator":
+            return Response(audit_cycle_service.get_moderator_dashboard())
+
+        elif role == "trainer":
+            pass
+            # return Response(audit_cycle_service.get_trainer_dashboard())
+        raise AppLogicError("role must be manager, moderator or trainer")
+
 class AuditCycleDashboard(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

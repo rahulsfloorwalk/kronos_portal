@@ -8,6 +8,10 @@ from registration.models import GROUP_NAME_MANAGER,GROUP_NAME_MODERATOR
 def find_all():
     return Group.objects.get(name=GROUP_NAME_MANAGER).user_set
 
+def find_all_moderators():
+    group = Group.objects.get(name=GROUP_NAME_MODERATOR)
+    return group.user_set.all()
+
 def find_by_id(user_id):
     try:
         return Group.objects.get(name=GROUP_NAME_MANAGER).user_set.get(pk=user_id)
