@@ -196,12 +196,21 @@ def get_manager_dashboard():
     for client in assignments:
         for manager in client.managers.filter(is_active=True,receive_email_notification=True):
             manager_clients[manager.user_id].append(client.id)
-
     managers_response = []
-    manager_profiles = (ManagerProfileInfo.objects.filter(user__is_active=True).select_related("user"))
+
+    manager_profiles = (ManagerProfileInfo.objects.filter(user__is_active=True,allowed_countries__contains=["IN"]).select_related("user"))
+
+    total_pending_work = 0
+
+    manager_stats = []
 
     for manager in manager_profiles:
-        client_ids = manager_clients.get(manager.user_id,[] )
+
+        client_ids = manager_clients.get(
+            manager.user_id,
+            []
+        )
+
         workload = 0
         manager_total = 0
         manager_completed = 0
@@ -212,7 +221,8 @@ def get_manager_dashboard():
             if not stats:
                 continue
 
-            remaining_count = max(stats["total_count"] -stats["completed_count"],0)
+            remaining_count = max(stats["total_count"]- stats["completed_count"],0)
+
             workload += remaining_count
             manager_total += stats["total_count"]
             manager_completed += stats["completed_count"]
@@ -220,21 +230,26 @@ def get_manager_dashboard():
             assigned_clients.append({
                 "client_id": stats["client_id"],
                 "client_name": stats["client_name"],
-                "remaining_count": remaining_count,
-                "completed_count": stats["completed_count"],
                 "total_count": stats["total_count"],
-                "percentage": round((stats["completed_count"] * 100.0) / stats["total_count"],2) if stats["total_count"] else 0
+                "completed_count": stats["completed_count"],
+                "remaining_count": remaining_count,
+                "percentage": round((stats["completed_count"]* 100.0) / stats["total_count"],2) if stats["total_count"] else 0
             })
 
-        managers_response.append({
+        total_pending_work += workload
+        manager_stats.append({
             "manager_id": manager.id,
-            "manager_name": ( manager.user.get_full_name() or manager.user.username),
+            "manager_name": ( manager.user.get_full_name()or manager.user.username),
             "total_workload": workload,
             "total_count": manager_total,
             "completed_count": manager_completed,
-            "percentage": round(( manager_completed * 100.0) / manager_total,2) if manager_total else 0,
+            "completion_percentage": round((manager_completed* 100.0) / manager_total,2) if manager_total else 0,
             "clients": assigned_clients
         })
+
+    for manager in manager_stats:
+        manager["percentage"] = round((manager["total_workload"]* 100.0 ) / total_pending_work, 2) if total_pending_work else 0
+        managers_response.append(manager)
 
     managers_response.sort(key=lambda x: x["total_workload"],reverse=True)
     return {
@@ -257,21 +272,25 @@ def get_moderator_dashboard():
 
     for cycle in active_cycles:
         planned = cycle.planned_audit or 0
-        client_totals[cycle.client_id] = (client_totals.get(cycle.client_id, 0) + planned)
+        client_totals[cycle.client_id] = { "client_id": cycle.client_id,"client_name": cycle.client.name,"total_count": (client_totals.get(cycle.client_id,{}).get("total_count", 0)+ planned),}
         total_count += planned
 
     moderators_response = []
-    moderators = find_all_moderators().all()
+    moderators = find_all_moderators()
+    total_pending_work = 0
 
     for moderator in moderators:
         assigned_store_ids = [
             int(store_id)
-            for store_id in UserObjectPermission.objects.filter(user=moderator,permission__codename='moderator_manage').values_list('object_pk',flat=True)
+            for store_id in (UserObjectPermission.objects.filter(user=moderator,permission__codename="moderator_manage").values_list("object_pk",flat=True))
             if store_id and str(store_id).isdigit()
         ]
 
-        assigned_stores = (AuditStore.objects.filter(id__in=assigned_store_ids).select_related('audit__audit_cycle__client'))
+        assigned_stores = (AuditStore.objects.filter(id__in=assigned_store_ids).select_related("audit__audit_cycle__client"))
         moderator_clients = {}
+        moderator_total = 0
+        moderator_completed = 0
+        moderator_remaining = 0
 
         for store in assigned_stores:
             client = store.audit.audit_cycle.client
@@ -279,85 +298,79 @@ def get_moderator_dashboard():
                 moderator_clients[client.id] = {
                     "client_id": client.id,
                     "client_name": client.name,
-                    "total_count": client_totals.get(client.id,0),
-                    "completed_count": 0
+                    "total_count": 0,
+                    "completed_count": 0,
+                    "remaining_count": 0,
                 }
 
-            if store.status in (AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.PM_REVIEW):
+            moderator_clients[client.id]["total_count"] += 1
+            moderator_total += 1
+
+            if store.status in (AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.PM_REVIEW,):
                 moderator_clients[client.id]["completed_count"] += 1
+                moderator_completed += 1
+
+            elif store.status == AuditStore.SUBMITTED:
+                moderator_clients[client.id]["remaining_count"] += 1
+                moderator_remaining += 1
+
+        total_pending_work += moderator_remaining
 
         assigned_clients = []
-        moderator_total = 0
-        moderator_completed = 0
-        moderator_remaining = 0
 
         for stats in moderator_clients.values():
-            remaining_count = max(stats["total_count"] -stats["completed_count"],0)
-            percentage = round((stats["completed_count"] * 100.0) / stats["total_count"],2) if stats["total_count"] else 0
-
-            moderator_total += stats["total_count"]
-            moderator_completed += stats["completed_count"]
-            moderator_remaining += remaining_count
 
             assigned_clients.append({
                 "client_id": stats["client_id"],
                 "client_name": stats["client_name"],
                 "total_count": stats["total_count"],
                 "completed_count": stats["completed_count"],
-                "remaining_count": remaining_count,
-                "percentage": percentage
+                "remaining_count":  stats["remaining_count"]
             })
 
-        moderators_response.append({
-            "moderator_id": moderator.id,
-            "moderator_name": (moderator.get_full_name()or moderator.username),
-            "total_count": moderator_total,
-            "completed_count": moderator_completed,
-            "remaining_count": moderator_remaining,
-            "percentage": round((moderator_completed * 100.0) / moderator_total,2) if moderator_total else 0,
-            "clients": assigned_clients
-        })
-
-        for stats in moderator_clients.values():
             client_stats = client_data.setdefault(
                 stats["client_id"],
                 {
                     "client_id": stats["client_id"],
                     "client_name": stats["client_name"],
-                    "total_count": stats["total_count"],
-                    "completed_count": 0
+                    "completed_count": 0,
                 }
             )
 
             client_stats["completed_count"] += (stats["completed_count"])
 
-    moderators_response.sort(key=lambda x: x["remaining_count"],reverse=True)
-    for client_id, total_planned in client_totals.items():
-        if client_id not in client_data:
-            client = Client.objects.only("id","name").get(id=client_id)
+        assigned_clients.sort(key=lambda x: x["remaining_count"],reverse=True)
 
-            client_data[client_id] = {
-                "client_id": client.id,
-                "client_name": client.name,
-                "total_count": total_planned,
-                "completed_count": 0
-            }
+        moderators_response.append({
+            "moderator_id": moderator.id,
+            "moderator_name": ( moderator.get_full_name() or moderator.username ),
+            "total_count": moderator_total,
+            "completed_count": moderator_completed,
+            "remaining_count": moderator_remaining,
+            "clients": assigned_clients,
+        })
+
+    for moderator in moderators_response:
+        moderator["percentage"] = round(
+            (moderator["remaining_count"]* 100.0) / total_pending_work,2) if total_pending_work else 0
+
+    moderators_response.sort(key=lambda x: x["remaining_count"],reverse=True)
 
     clients_response = []
     total_completed = 0
 
-    for data in client_data.values():
-        remaining_count = max(data["total_count"] -data["completed_count"],0)
-        percentage = round((data["completed_count"] * 100.0) / data["total_count"],2) if data["total_count"] else 0
-        total_completed += data["completed_count"]
+    for client_id, client_info in client_totals.items():
+        completed_count = (client_data.get(client_id, {}).get("completed_count", 0))
+
+        remaining_count = max(client_info["total_count"] - completed_count,0)
+        total_completed += completed_count
 
         clients_response.append({
-            "client_id": data["client_id"],
-            "client_name": data["client_name"],
-            "total_count": data["total_count"],
-            "completed_count": data["completed_count"],
+            "client_id": client_info["client_id"],
+            "client_name": client_info["client_name"],
+            "total_count": client_info["total_count"],
+            "completed_count": completed_count,
             "remaining_count": remaining_count,
-            "percentage": percentage
         })
 
     clients_response.sort(key=lambda x: x["remaining_count"],reverse=True)
@@ -366,7 +379,7 @@ def get_moderator_dashboard():
             "total_count": total_count,
             "completed_count": total_completed,
             "remaining_count": max(total_count - total_completed,0),
-            "percentage": round((total_completed * 100.0) / total_count,2) if total_count else 0
+            "percentage": round((( total_count  - total_completed ) * 100.0) / total_count, 2 ) if total_count else 0,
         },
         "clients": clients_response,
         "moderators": moderators_response
