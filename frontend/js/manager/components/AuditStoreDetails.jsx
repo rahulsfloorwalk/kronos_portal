@@ -46,7 +46,7 @@ import AuditStoreReportAttributesTable from "./audit_store/AuditStoreReportAttri
 import ProofNotAvailable from "./ProofNotAvailable.jsx";
 import { fetchConfig } from "../service/config.js";
 import StatusLogsModal from "./StatusLogsModal.jsx";
-import NpsOverallExperienceRating from "./NpsOverallExperienceRating.jsx";
+import NpsOverallExperienceRating from "./NpsOverAllExperienceRating.jsx";
 import ReferenceAttachmentBox from "./ReferenceAttachmentBox.jsx";
 
 export class AuditStoreDetails extends React.Component{
