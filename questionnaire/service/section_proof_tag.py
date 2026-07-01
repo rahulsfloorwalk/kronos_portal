@@ -37,6 +37,23 @@ def get_section_proof_tag(section_id):
     section_proof_tag_list = sorted(section_proof_tag_list, key=lambda j: j['name'])
     return sorted(section_proof_tag_list, key=lambda j: j['is_present_in_section'], reverse=True)
 
+def get_section_proof_tag_for_preview(section_id):
+    section_proof_tags = (
+        SectionProofTag.objects
+        .filter(section_id=section_id)
+        .select_related('audit_cycle_proof_tag')
+        .order_by('audit_cycle_proof_tag__proof_tag__name')
+    )
+
+    return [
+        {
+            "id": spt.audit_cycle_proof_tag.proof_tag.id,
+            "name": spt.audit_cycle_proof_tag.proof_tag.name,
+            "is_required": spt.is_required,
+            "max_attachment_count": spt.max_attachment_count,
+        }
+        for spt in section_proof_tags
+    ]
 
 @atomic
 def save_section_proof_tag(section_id, audit_cycle_id, proof_tag_list):

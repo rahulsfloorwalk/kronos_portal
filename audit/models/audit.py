@@ -20,6 +20,7 @@ class Audit(Model):
     audit_cycle = ForeignKey('audit.AuditCycle', related_name='audits', db_column='audit_cycle_id', on_delete=PROTECT)
     post_approval_description = CharField(db_column='post_approval_description', max_length=4096, blank=True)
     hidden = BooleanField(db_column='hidden', default=False)
+    client_trainer = ForeignKey('client.ClientTrainer',db_column='client_trainer_id',related_name='audits',blank=True,null=True,on_delete=PROTECT)
 
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)

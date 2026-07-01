@@ -22,6 +22,7 @@ export default class extends React.Component {
 		client: null,
 		errors: {},
 		form: {},
+		saving: false,
 	};
 
 	componentDidMount() {
@@ -51,6 +52,10 @@ export default class extends React.Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
+		if (this.state.saving) {
+			return;
+		}
+		this.setState({ saving: true });
 		let submitPromise;
 		if(this.props.params.clientId){
 			submitPromise = updateClient({
@@ -81,6 +86,13 @@ export default class extends React.Component {
 			this.setState({
 				errors: err.responseJSON || {},
 			});
+			if (!err.responseJSON && err.status >= 500) {
+				Alert.error("Server error");
+			} else if (!err.responseJSON) {
+				Alert.error("Error saving client, Please try again after sometime");
+			}
+		}).always(() => {
+			this.setState({ saving: false });
 		});
 	};
 
@@ -96,7 +108,8 @@ export default class extends React.Component {
 					<FormInput label="Logo URL" maxLength="512" type="text" value={this.state.form.logo_url} name="logo_url" onChange={this.inputChanged} errors={this.state.errors.logo_url}/>
 					<FormInput label="Brand Logo URL" maxLength="512" type="text" value={this.state.form.brand_logo_url} name="brand_logo_url" onChange={this.inputChanged} errors={this.state.errors.brand_logo_url}/>
 					<FormInput label="Receive Email Notification" type="checkbox" checked={this.state.form.receive_email_notification} name="receive_email_notification" onChange={this.inputChanged} errors={this.state.errors.receive_email_notification}/>
-					<SaveButton/>
+					{/* <SaveButton/> */}
+					<SaveButton disabled={this.state.saving} text={this.state.saving ? "Saving..." : "Save"} />
 				</form>
 			</Modal>
 		);

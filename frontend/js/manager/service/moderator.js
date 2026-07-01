@@ -37,11 +37,14 @@ export function revoke(auditCycleId, userId){
 	});
 }
 
-export function insert( email, password, is_active){
+export function insert( name, firm_name, mobile,email, password, is_active){
 	return $.ajax({
 		url: url.api_base_path + "manager/moderator",
 		method: "POST",
 		data: JSON.stringify({
+			name,
+			firm_name,
+			mobile,
 			email,
 			password,
 			is_active
@@ -50,11 +53,14 @@ export function insert( email, password, is_active){
 	});
 }
 
-export function update(moderatorId, email, password, is_active){
+export function update(moderatorId,name, firm_name, mobile, email, password, is_active){
 	return $.ajax({
 		url: url.api_base_path + `manager/moderator/${moderatorId}`,
 		method: "POST",
 		data: JSON.stringify({
+			name,
+			firm_name,
+			mobile,
 			email,
 			password,
 			is_active

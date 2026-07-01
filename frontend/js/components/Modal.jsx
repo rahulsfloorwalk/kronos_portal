@@ -23,6 +23,7 @@ export default class Modal extends React.Component {
 		size: PropTypes.oneOf(["modal-sm", "modal-lg", ""]),
 		modalTitle: PropTypes.string,
 		children: PropTypes.node,
+		dialogStyle: PropTypes.object,
 	};
 
 	static defaultProps = {
@@ -33,7 +34,8 @@ export default class Modal extends React.Component {
 		return (
 			<div className="modal" tabIndex="-1" style={modalStyle}>
 				<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.props.onClose}/>
-				<div className={`modal-dialog ${this.props.size}`} style={modalDialogStyle}>
+				{/* <div className={`modal-dialog ${this.props.size}`} style={modalDialogStyle}> */}
+				<div className={`modal-dialog ${this.props.size}`} style={Object.assign({}, modalDialogStyle, this.props.dialogStyle)}>
 					<div className="modal-content">
 						<div className="modal-header">
 							<button type="button" className="close" onClick={this.props.onClose}>&times;</button>

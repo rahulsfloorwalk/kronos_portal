@@ -42,6 +42,7 @@ export class AuditCycleForm extends Component{
 			audit_auto_approve: PropTypes.bool,
 			audit_report_summary: PropTypes.bool,
 			audit_auto_fail: PropTypes.number,
+			pm_review_bypass: PropTypes.bool,
 			audit_ai_autofill: PropTypes.bool,
 			qa_ai_comparison: PropTypes.bool,
 			client: PropTypes.shape({
@@ -70,6 +71,7 @@ export class AuditCycleForm extends Component{
 			audit_report_summary: FieldErrors,
 			questionnaire_type: FieldErrors,
 			audit_auto_fail: FieldErrors,
+			pm_review_bypass: FieldErrors,
 			audit_ai_autofill: FieldErrors,
 			qa_ai_comparison: FieldErrors,
 		}).isRequired,
@@ -258,17 +260,23 @@ export class AuditCycleForm extends Component{
 						</div>
 					</div>
 					<div className="row">
-						<div className="col-md-3">
+						<div className="col-md-1">
+							{/* <FormInput label="Audit auto approve" type="checkbox" checked={this.state.audit_auto_approve} name="audit_auto_approve" onChange={this.fieldChanged} errors={this.props.errors.audit_auto_approve}/> */}
+						</div>
+						<div className="col-md-2">
 							<FormInput label="Audit auto approve" type="checkbox" checked={this.state.audit_auto_approve} name="audit_auto_approve" onChange={this.fieldChanged} errors={this.props.errors.audit_auto_approve}/>
 						</div>
-						<div className="col-md-3">
+						<div className="col-md-2">
 							<FormInput label="Audit Report Summary" type="checkbox" checked={this.state.audit_report_summary} name="audit_report_summary" onChange={this.fieldChanged} errors={this.props.errors.audit_report_summary}/>
 						</div>
-						<div className="col-md-3">
+						<div className="col-md-2">
 							<FormInput label="Enable AI for auto filling" type="checkbox" checked={this.state.audit_ai_autofill} name="audit_ai_autofill" onChange={this.fieldChanged} errors={this.props.errors.audit_ai_autofill}/>
 						</div>
-						<div className="col-md-3">
+						<div className="col-md-2">
 							<FormInput label="Enable QA-AI Comparison" type="checkbox" checked={this.state.qa_ai_comparison} name="qa_ai_comparison" onChange={this.fieldChanged} errors={this.props.errors.qa_ai_comparison}/>
+						</div>
+						<div className="col-md-2">
+							<FormInput label="PM Review Bypass" type="checkbox" checked={this.state.pm_review_bypass} name="pm_review_bypass" onChange={this.fieldChanged} errors={this.props.errors.pm_review_bypass}/>
 						</div>
 					</div>
 					<FormTextarea label={`Auditor Notes (${(this.state.auditor_notes || "").length}/50) (Max 50 characters)`} name="auditor_notes" value={this.state.auditor_notes} onChange={this.fieldChanged} errors={this.props.errors.auditor_notes}/>

@@ -17,6 +17,10 @@ class ModeratorDeSerializer(Serializer):
     password = CharField(min_length=8, max_length=128, allow_blank=True)
     is_active = BooleanField()
 
+    name = CharField(required=False, allow_blank=True) 
+    mobile = CharField(required=False, allow_blank=True) 
+    firm_name = CharField(required=False, allow_blank=True)
+
 class ModeratorView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -33,7 +37,11 @@ class ModeratorView(APIView):
         saved_client_user = moderator_service.insert(
             moderator_ds.validated_data["email"],
             moderator_ds.validated_data["password"],
-            moderator_ds.validated_data["is_active"]
+            moderator_ds.validated_data["is_active"],
+
+            name=moderator_ds.validated_data.get("name"), 
+            mobile=moderator_ds.validated_data.get("mobile"), 
+            firm_name=moderator_ds.validated_data.get("firm_name"),
         )
         return Response(PlainUserSerializer(saved_client_user).data)
 
@@ -55,7 +63,11 @@ class ModeratorIdView(APIView):
             user_id,
             moderator_ds.validated_data["email"],
             moderator_ds.validated_data["password"],
-            moderator_ds.validated_data["is_active"]
+            moderator_ds.validated_data["is_active"],
+            name=moderator_ds.validated_data.get("name"),
+            mobile=moderator_ds.validated_data.get("mobile"),
+            firm_name=moderator_ds.validated_data.get("firm_name"),
+
         )
         return Response(PlainUserSerializer(saved_user).data)
 

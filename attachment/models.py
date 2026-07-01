@@ -26,6 +26,15 @@ class Attachment(Model):
         (ID_PROOF, "ID Proof")
     )
 
+    GUIDELINE = "GUIDELINE"
+    REFERENCE_ATTACHMENT = "REFERENCE_ATTACHMENT"
+    AUDIT_STORE = "AUDIT_STORE"
+    ATTACHMENT_CATEGORY = (
+        (GUIDELINE, "Guideline"),
+        (REFERENCE_ATTACHMENT, "Reference Attachment"),
+        (AUDIT_STORE, "Audit Store"),
+    )
+
     UPLOADING = 'UPLOADING'
     ATTACHED = 'ATTACHED'
     DELETED = 'DELETED'
@@ -43,7 +52,9 @@ class Attachment(Model):
     old_file_name = CharField(db_column='old_file_name', max_length=256,null=True, blank=True, default="")
     file_size = IntegerField(db_column='file_size')
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
-
+    attachment_category = CharField(db_column='attachment_category', max_length=20, choices=ATTACHMENT_CATEGORY, null=True, blank=True)
+    link_url = CharField(db_column="link_url",max_length=3000,null=True,blank=True)
+    
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
     completed_at = DateTimeField(db_column="completed_at", null=True)

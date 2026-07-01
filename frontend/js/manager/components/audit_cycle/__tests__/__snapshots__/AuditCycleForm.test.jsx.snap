@@ -1124,7 +1124,10 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
             className="row"
           >
             <div
-              className="col-md-3"
+              className="col-md-1"
+            />
+            <div
+              className="col-md-2"
             >
               <div
                 className="form-group"
@@ -1144,7 +1147,7 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
               </div>
             </div>
             <div
-              className="col-md-3"
+              className="col-md-2"
             >
               <div
                 className="form-group"
@@ -1165,7 +1168,7 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
               </div>
             </div>
             <div
-              className="col-md-3"
+              className="col-md-2"
             >
               <div
                 className="form-group"
@@ -1185,7 +1188,7 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
               </div>
             </div>
             <div
-              className="col-md-3"
+              className="col-md-2"
             >
               <div
                 className="form-group"
@@ -1197,6 +1200,26 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                   className="form-control"
                   label="Enable QA-AI Comparison"
                   name="qa_ai_comparison"
+                  onChange={[Function]}
+                  type="checkbox"
+                  value=""
+                />
+                <ul />
+              </div>
+            </div>
+            <div
+              className="col-md-2"
+            >
+              <div
+                className="form-group"
+              >
+                <label>
+                  PM Review Bypass
+                </label>
+                <input
+                  className="form-control"
+                  label="PM Review Bypass"
+                  name="pm_review_bypass"
                   onChange={[Function]}
                   type="checkbox"
                   value=""
@@ -2363,7 +2386,10 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
             className="row"
           >
             <div
-              className="col-md-3"
+              className="col-md-1"
+            />
+            <div
+              className="col-md-2"
             >
               <div
                 className="form-group"
@@ -2383,7 +2409,7 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
               </div>
             </div>
             <div
-              className="col-md-3"
+              className="col-md-2"
             >
               <div
                 className="form-group"
@@ -2404,7 +2430,7 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
               </div>
             </div>
             <div
-              className="col-md-3"
+              className="col-md-2"
             >
               <div
                 className="form-group"
@@ -2424,7 +2450,7 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
               </div>
             </div>
             <div
-              className="col-md-3"
+              className="col-md-2"
             >
               <div
                 className="form-group"
@@ -2436,6 +2462,26 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                   className="form-control"
                   label="Enable QA-AI Comparison"
                   name="qa_ai_comparison"
+                  onChange={[Function]}
+                  type="checkbox"
+                  value=""
+                />
+                <ul />
+              </div>
+            </div>
+            <div
+              className="col-md-2"
+            >
+              <div
+                className="form-group"
+              >
+                <label>
+                  PM Review Bypass
+                </label>
+                <input
+                  className="form-control"
+                  label="PM Review Bypass"
+                  name="pm_review_bypass"
                   onChange={[Function]}
                   type="checkbox"
                   value=""

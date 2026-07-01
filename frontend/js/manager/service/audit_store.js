@@ -4,7 +4,9 @@ import { url } from "../../../config.js";
 export function findProofNotAvailable(auditStoreId){
 	return $.get(url.api_base_path + `manager/audit_store/${auditStoreId}/proof_not_available`);
 }
-
+export function fetchStatusLogs(auditStoreId){
+	return $.get(url.api_base_path + `manager/audit_store/${auditStoreId}/status_logs`);
+}
 export function failReport(audit_store_id, message) {
 	return $.ajax({
 		url: url.api_base_path + `manager/audit_store/${audit_store_id}/fail`,
@@ -226,4 +228,15 @@ export function arrangeAttachment(auditStoreId){
 
 export function find_recent_audit_store_by_user_id(user_id){
 	return $.get(url.api_base_path + `manager/auditor/${user_id}/completed_accepted_reports`);
+}
+
+export function setNpsOverallExperienceRating(audit_store_id, nps_section){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${audit_store_id}/nps_section`,
+		method: "POST",
+		data: JSON.stringify({
+			nps_section
+		}),
+		contentType: "application/json"
+	});
 }

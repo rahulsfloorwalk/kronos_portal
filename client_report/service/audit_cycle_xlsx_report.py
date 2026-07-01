@@ -146,7 +146,7 @@ def create_text_structure(title, sections, questions, audit_stores):
             'value': section.name,
             'colspan': len(section.questions.all())
         })
-    cells = [{'value': "SECTIONS", 'colspan': 3}] + section_cells
+    cells = [{'value': "SECTIONS", 'colspan': 4}] + section_cells
     row = {'type': 'sections', 'content': cells}
     rows.append(row)
 

@@ -14,11 +14,10 @@ from manager.service import geo
 from registration.service import auditor as auditor_service
 from auditor.models import AuditApplication
 from audit.service import audit_cycle as audit_cycle_service
-from datetime import datetime
 from auditor.models import ProfileInfo,AdditionalInfo
-from datetime import datetime
 from datetime import datetime, date
 from django.utils.timezone import now
+from client.models import ClientTrainer
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -95,6 +94,14 @@ def create_audit_by_multiple_store(data):
     if not store_exists:
         raise AppLogicError("Stores are not found in This Client")
 
+    client_trainer = None
+    client_trainer_id = data.get("client_trainer")
+
+    if client_trainer_id:
+        client_trainer = ClientTrainer.objects.filter(id=client_trainer_id,client=audit_cycle.client,is_active=True).select_related('user').first()
+        if not client_trainer:
+            raise AppLogicError("Selected trainer is not assigned to this client.")
+        
     audit_store_list = Audit.objects.filter(audit_cycle = audit_cycle_id,store_id__in=data['addStore']).values_list('store', flat=True)
     client_store_list = Store.objects.filter(client = audit_cycle.client,id__in=data['addStore']).exclude(id__in = audit_store_list)
     if not client_store_list:
@@ -108,10 +115,10 @@ def create_audit_by_multiple_store(data):
             reimbursement=data.get('reimbursement') or audit_cycle.reimbursement,
             store=store,
             audit_cycle=audit_cycle,
+            client_trainer=client_trainer,
             post_approval_description=data.get('post_approval_description') or ''
         )
         audit_list.append(audit)
-
     return Audit.objects.bulk_create(audit_list)
 
 def find_audit_by_id(audit_id):

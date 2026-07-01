@@ -191,12 +191,16 @@ export default class AuditStoreDashboard extends Component {
 
 	componentWillReceiveProps(nextProps){
 		if(this.props.location.query.type !== nextProps.location.query.type){
+			this.setState({
+				filterStatus: "",
+				client: "",
+			});
 			this.setLoading(true);
 			let lastAuditStoreDate = "";
 			if( nextProps.location.query.type === "qa_done"){
-				findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client, this.state.month, this.state.year).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+				findCompleted(lastAuditStoreDate,"", "", this.state.filterStatus, this.state.client, this.state.month, this.state.year).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 			} else {
-				findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+				findPending(lastAuditStoreDate,"", "", this.state.filterStatus, this.state.client).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 			}
 		}
 	}

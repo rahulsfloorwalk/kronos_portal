@@ -22,7 +22,7 @@ from rest_framework.response import Response
 from answer.models import Answer
 from attachment.models import Attachment
 from answer.service import answer as answer_service
-
+from .models import ReportStatusLog
 
 
 # def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id, month, year):
@@ -72,6 +72,12 @@ from answer.service import answer as answer_service
 
 from datetime import datetime
 
+def find_audit_store_status_logs(audit_store_id):
+    logs = ReportStatusLog.objects.filter(audit_store_id=audit_store_id).select_related('user_actor').order_by('-created_at')
+    if not logs.exists():
+        raise ObjectNotFound
+    return logs
+
 def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id, month, year):
     user = find_moderator_by_user_id(user_id)
     if filterStatus != "" and lastAuditStoreDate != "":
@@ -83,10 +89,14 @@ def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, fi
     elif lastAuditStoreDate != "":
         query_set = AuditStore.objects.filter(
             status__in=(AuditStore.FAILED,AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.REJECTED,AuditStore.PM_REVIEW),
-            audit_date__gte=lastAuditStoreDate)
+            audit_date__gte=lastAuditStoreDate).exclude(
+            failed_by=AuditStore.SYSTEM
+        )
     else:
         query_set = AuditStore.objects.filter(
-            status__in=(AuditStore.FAILED,AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.REJECTED,AuditStore.PM_REVIEW))
+            status__in=(AuditStore.FAILED,AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.REJECTED,AuditStore.PM_REVIEW)).exclude(
+            failed_by=AuditStore.SYSTEM
+        )
 
     now = datetime.now()
 
@@ -104,11 +114,11 @@ def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, fi
         except (ValueError, TypeError):
             year = now.year
 
-    query_set = query_set.filter(
-        moderator_submission_date__year=year,
-        moderator_submission_date__month=month,
-        moderator_submission_date__isnull=False
-    )
+    # query_set = query_set.filter(
+    #     moderator_submission_date__year=year,
+    #     moderator_submission_date__month=month,
+    #     moderator_submission_date__isnull=False
+    # )
 
     if client_id not in [None, ""]:
         query_set = query_set.filter(audit__audit_cycle__client=client_id)
@@ -122,9 +132,41 @@ def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, fi
     ).order_by('moderator_submission_date')
 
     data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
-    count = data.count()
+    # count = data.count()
 
-    return data, count
+    # return data, count
+    auditStores = []
+
+    for audit_store in data:
+
+        if audit_store.status == AuditStore.FAILED:
+            if audit_store.failed_by != AuditStore.MANUAL:
+                continue
+
+            if audit_store.moderator_submission_date:
+                if (
+                    audit_store.moderator_submission_date.year == year
+                    and audit_store.moderator_submission_date.month == month
+                ):
+                    auditStores.append(audit_store)
+
+            elif (
+                audit_store.modified_at
+                and audit_store.modified_at.year == year
+                and audit_store.modified_at.month == month
+            ):
+                auditStores.append(audit_store)
+
+        else:
+            if (
+                audit_store.moderator_submission_date
+                and audit_store.moderator_submission_date.year == year
+                and audit_store.moderator_submission_date.month == month
+            ):
+                auditStores.append(audit_store)
+
+    return auditStores, len(auditStores)
+
 
 def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id):
     # TODO: move this in to the AuditStoreQuerySet
@@ -419,6 +461,7 @@ def get_moderator_email_by_audit_store_obj(audit_store):
 
 def _post(url, payload):
     try:
+        # payload["token"] = "FW_AI_9x2LmPq_82Ksa_26"
         response = requests.post(url,json=payload,timeout=300,verify=False)
         return response, None
     except requests.exceptions.RequestException as e:
@@ -630,3 +673,16 @@ def audio_to_text(data):
         "raw_transcript": raw_transcript,
         "transcript": clean_transcript
     }, 200
+
+def find_by_id_for_nps(audit_store_id):
+    try:
+        return AuditStore.objects.get(pk=audit_store_id)
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+    
+@atomic
+def set_nps_section(audit_store_id, user_id, nps_section):
+    audit_store = find_by_id_for_nps(audit_store_id)
+
+    audit_store.set_nps_section(nps_section)
+    return audit_store

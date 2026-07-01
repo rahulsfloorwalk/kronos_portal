@@ -24,7 +24,7 @@ from audit_store.service_auditor import set_not_applicable_for_hide_questions,co
 from attachment.service import set_attachment_by_proof_tag
 
 from .serializers import AuditCycleSerializer, ClientSerializer,AuditProoftagSerializer
-from .serializers import AuditStoreSerializer, AuditStoreSerializerForList
+from .serializers import AuditStoreSerializer, AuditStoreSerializerForList,AuditStoreStatusSerializer
 from .serializers import AttachmentSerializer, AttachmentMandatoryProoftagSerializer
 from .serializers import SectionSerializer
 from .serializers import ReportSectionSerializer
@@ -165,6 +165,32 @@ class AuditStoreIdModeratorStatusView(APIView):
         return Response(AuditStoreSerializer(audit_store).data)
 
 
+class AuditStoreStatusLogs(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MODERATOR],
+    }
+
+    def get(self, request, audit_store_id, format=None):
+        logs = audit_store_service.find_audit_store_status_logs(audit_store_id)
+        return Response(AuditStoreStatusSerializer(logs, many=True).data)
+
+class AuditStoreIdNpsSectionView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR]
+    }
+
+    class NpsSectionDeSerializer(Serializer):
+        nps_section = ChoiceField(choices=AuditStore.NPS_RATING, required=False, allow_null=True, allow_blank=True )
+
+    def post(self, request, audit_store_id):
+        ds = self.NpsSectionDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        nps_section = ds.validated_data['nps_section']
+        audit_store = audit_store_service.set_nps_section(audit_store_id, request.user.id, nps_section)
+        return Response(AuditStoreSerializer(audit_store).data)
+    
 class AuditStoreIdModeratorCommentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -383,7 +409,10 @@ class AuditStoreIdQAOKView(APIView):
         audit_store.qa_ok(by=request.user)
         audit_store_detail = AuditStoreSerializer(audit_store).data
         client_id = audit_store.audit.audit_cycle.client.id
-        if client_id in [344, 345, 346, 378,379,381,383 ]:
+        # if client_id in [344, 345, 346, 378,379,381,383 ]:
+        #     audit_store = complete_report(audit_store_id, request.user.id)
+
+        if (client_id in [344, 345, 346, 378, 379, 381, 383] or audit_store.audit.audit_cycle.pm_review_bypass):
             audit_store = complete_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
     
@@ -578,9 +607,10 @@ class AuditGuidelinesByAuditStore(APIView):
     }
     def get(self,request,audit_store_id,format=None):
         attachment = attachment_service.find_attachment_by_audit_store_id(audit_store_id)
-        if not attachment:
-            return Response({'detail': 'No guildlines found for this audit store.'}, status=400)
-        return Response(attachment)
+        # if not attachment:
+        #     return Response({'detail': 'No guildlines found for this audit store.'}, status=400)
+        # return Response(attachment)
+        return Response(AttachmentSerializer(attachment,many=True).data)  
 
 class ReportSubmissionTimeView(APIView):
     permission_classes = [HasGroupPermission]

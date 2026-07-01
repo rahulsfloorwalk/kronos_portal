@@ -114,9 +114,15 @@ def find_by_id(id):
         raise ObjectNotFound from e
 
 
-def find_proof_tags_by_store(store_id, questionnaire_type_id):
+def find_proof_tags_by_store(store_id, questionnaire_type_id=None):
     if questionnaire_type_id is None:
-        questionnaire_type = questionnaire_type_client_service.find_questionnaire_types_for_proof_comparison(store_id)[0]
+        # questionnaire_type = questionnaire_type_client_service.find_questionnaire_types_for_proof_comparison(store_id)[0]
+        questionnaire_types = questionnaire_type_client_service.find_questionnaire_types_for_proof_comparison(store_id)
+
+        if not questionnaire_types:
+            return []
+
+        questionnaire_type = questionnaire_types[0]
         questionnaire_type_id = questionnaire_type['id']
 
     proof_tag = AuditCycleProofTagList.objects \
@@ -135,8 +141,8 @@ def get_audit_cycle_list_by_store(store_id, questionnaire_type_id):
         .distinct('audit_cycle__id') \
         .order_by('-audit_cycle__id') \
         .values_list('audit_cycle__id', flat=True)
-    if len(audit_cycle_list) >= 3:
-        return audit_cycle_list[0:3]
+    if len(audit_cycle_list) >= 6:
+        return audit_cycle_list[0:6]
     else:
         return audit_cycle_list
 

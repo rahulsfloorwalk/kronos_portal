@@ -149,6 +149,8 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/reject', audit_store_views.AuditStoreIdRejectView.as_view(), name='audit_store_id_reject_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/arrange_attachment$', audit_store_views.AuditStoreIdArrangeAttachment.as_view(), name='audit_store_id_arrange_attachment'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/proof_not_available$', audit_store_views.AuditStoreProofTagNotAvailableView.as_view(), name="audit_store_upload_proof_tag_not_available_view"),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/status_logs$', audit_store_views.AuditStoreStatusLogs.as_view(), name="audit_store_status_logs_view"),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/nps_section$', audit_store_views.AuditStoreIdNpsSectionView.as_view(), name="audit_store_id_nps_section_view"),
 
     url(r'payment/(?P<payment_id>[0-9]+)/pay$', payment_views.PaymentIdPayView.as_view(), name='payment_id_pay_view'),
     url(r'payment/(?P<payment_id>[0-9]+)/fail', payment_views.PaymentIdFailView.as_view(), name='payment_id_fail_view'),
@@ -235,6 +237,7 @@ urlpatterns = ([
     url(r'application/(?P<application_id>[0-9]+)$', application_views.AuditApplicationIdView.as_view(), name='audit_application_id_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', audit_views.AuditByAuditCycle.as_view(), name='audit_by_audit_cycle_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/client_details$', audit_views.ClientDetailByAuditCycle.as_view(), name='client_detail_by_audit_cycle_view'),
     url(r'audit_cycle/(?P<to_audit_cycle_id>[0-9]+)/audit/copy$', audit_views.AuditCopyByAuditCycle.as_view(), name='audit_copy_by_audit_cycle'),
 
     url(r'audit_cycle/(?P<to_audit_cycle_id>[0-9]+)/copy_audit_details$', audit_cycle_views.AuditDetailsCopyByAuditCycle.as_view(), name='audit_details_copy_by_audit_cycle'),
@@ -279,6 +282,7 @@ urlpatterns = ([
     url(r'agency_user/(?P<user_id>[0-9]+)$', agency_user_views.AgencyUserIdView.as_view(), name='agency_user_id_view'),
     url(r'agency_user$', agency_user_views.AgencyUserSearchView.as_view(), name='agency_user_search_view'),
 
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/questionnaire/preview$', section_views.QuestionnairePreviewView.as_view(), name='questionnaire_previewView_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/section$', section_views.SectionViewByAuditCycle.as_view(), name='section_by_audit_cycle'),
     url(r'audit_cycle/(?P<to_audit_cycle_id>[0-9]+)/section/copy$', section_views.SectionCopyByAuditCycle.as_view(), name='section_copy_by_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)$', audit_cycle_views.AuditCycleIdView.as_view(), name='audit_cycle_id_view'),
@@ -332,6 +336,7 @@ urlpatterns = ([
 
     url(r'moderator/(?P<user_id>[0-9]+)$', moderator_views.ModeratorIdView.as_view(), name='moderator_id_view'),
     url(r'moderator/summary$', moderator_views.ModeratorSummaryView.as_view(), name='moderator_summary_view'),
+    # url(r'trainer/summary$', trainer_views.TrainerSummaryView.as_view(), name='trainer_summary_view'),
     url(r'moderator/(?P<user_id>[0-9]+)/reportlist$', moderator_views.ModeratorReportList.as_view(), name='moderator_report_list'),
     url(r'moderator$', moderator_views.ModeratorView.as_view(), name='moderator_view'),
     url(r'manager/(?P<user_id>[0-9]+)$', manager_views.ManagerIdView.as_view(), name='manager_id_view'),

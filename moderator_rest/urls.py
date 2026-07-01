@@ -6,7 +6,7 @@ from .views import AuditStorePendingView, AuditStoreCompletedView
 from .views import SectionView, ReportSectionView, AnswerView
 from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtainedView, NotApplicableView, AnswerNotApplicableView, AnswerCommentView, AnswerRevertMessageView, SectionRevertMessageView
 from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditView, AuditStoreIdReportSummaryView
-from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorCommentView, AuditStoreIdCheckPoints
+from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorCommentView, AuditStoreIdCheckPoints,AuditStoreStatusLogs,AuditStoreIdNpsSectionView
 from .views import AttachmentProofTagList, AttachmentIdProofTagView,AuditGuidelinesByAuditStore
 from .views import AttachmentIdRotateView,StoreViewByClientView,AuditIdView
 from .views import AuditStoreIdArrangeAttachment,AuditStoreProofTagNotAvailableView,ReportSubmissionTimeView,AuditStoreIdRewriteReportSummaryView,AuditStoreIdBackToOriginalReportSummaryView
@@ -52,6 +52,10 @@ urlpatterns = ([
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/audit_date$', AuditStoreIdAuditDateView.as_view(), name='audit_store_id_audit_date_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/moderator_status$', AuditStoreIdModeratorStatusView.as_view(), name='audit_store_id_moderator_status_view'),
+
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/status_logs$', AuditStoreStatusLogs.as_view(), name='audit_store_status_logs_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/nps_section$', AuditStoreIdNpsSectionView.as_view(), name="audit_store_id_nps_section_view"),
+
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/moderator_comment$', AuditStoreIdModeratorCommentView.as_view(), name='audit_store_id_moderator_comment_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/earnings_per_audit$', AuditStoreIdEarningsPerAuditView.as_view(), name='audit_store_id_earnings_per_audit_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/reimbursement$', AuditStoreIdReimbursementView.as_view(), name='audit_store_id_reimbursement_view'),

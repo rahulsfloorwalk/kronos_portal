@@ -8,7 +8,7 @@ from guardian.shortcuts import assign_perm, remove_perm, get_users_with_perms
 
 from kronos.utils import today_ist
 
-from .models import AuditStore, ReportFollowUpLog
+from .models import AuditStore, ReportFollowUpLog, ReportStatusLog
 from auditor.models import ProfileInfo
 from audit.models import AuditCycle, Audit
 from kronos.exceptions import ObjectNotFound, AppLogicError
@@ -27,6 +27,12 @@ def find_by_id(audit_store_id):
         return AuditStore.objects.get(pk=audit_store_id)
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
+
+def find_audit_store_status_logs(audit_store_id):
+    logs = ReportStatusLog.objects.filter(audit_store_id=audit_store_id).select_related('user_actor').order_by('-created_at')
+    if not logs.exists():
+        raise ObjectNotFound
+    return logs
 
 def find_audit_stores_for_auditor(profileinfo_id):
     try:
@@ -481,6 +487,12 @@ def find_by_id_for_auditor(audit_store_id, user_id):
     except (AuditStore.DoesNotExist) as e:
         raise ObjectNotFound from e
 
+def find_by_id_for_nps(audit_store_id):
+    try:
+        return AuditStore.objects.get(pk=audit_store_id)
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+    
 def find_by_id_for_auditor_for_moderator(audit_store_id):
     try:
         return AuditStore.objects.get(

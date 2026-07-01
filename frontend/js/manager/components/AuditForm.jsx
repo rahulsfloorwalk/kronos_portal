@@ -16,6 +16,8 @@ import Modal from "../../components/Modal.jsx";
 import StoreSelector from "../../components/StoreSelector.jsx";
 import FormErrorList from "../../components/FormErrorList.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
+import { fetchClientTrainers,fetchClientDetails } from "../service/client_trainer.js";
+import FormSelect from "../../components/FormSelect.jsx";
 
 import { auditPropType, auditCyclePropType, errorList } from "../prop_types";
 
@@ -28,6 +30,7 @@ class AuditForm extends React.Component {
 		}),
 		audit: auditPropType,
 		auditCycle: auditCyclePropType,
+		remainingStores: PropTypes.object,
 		errors: PropTypes.shape({
 			non_field_errors: errorList,
 			addStore: errorList,
@@ -38,6 +41,7 @@ class AuditForm extends React.Component {
 		}),
 	};
 	state = {
+		trainers : [],
 	};
 
 	componentDidMount() {
@@ -50,6 +54,13 @@ class AuditForm extends React.Component {
 		this.setState({
 			audit_cycle: this.props.params.auditCycleId
 		});
+		fetchClientDetails((this.props.params.auditCycleId))
+			.then((client) => {
+				const clientId = client.id;
+				fetchClientTrainers(clientId).then((trainers) => {
+					this.setState({ trainers });
+				});
+			});
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -106,6 +117,23 @@ class AuditForm extends React.Component {
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					{selector}
 					<div className="row">
+						<div className="col-sm-12">
+							<FormSelect
+								label="Select Trainer"
+								name="client_trainer"
+								value={this.state.client_trainer}
+								onChange={this.inputChanged}
+							>
+								<option value=""></option>
+								{this.state.trainers && this.state.trainers.length>0  && this.state.trainers.map((client_trainer) => (
+									<option key={client_trainer.id} value={client_trainer.id}>
+										{client_trainer.user.trainer.email}
+									</option>
+								))}
+							</FormSelect>
+						</div>
+					</div>
+					<div className="row">
 						<div className="col-sm-6">
 							<FormInput label="Audit Fees (₹)" type="number" value={this.state.earnings_per_audit} name="earnings_per_audit" onChange={this.inputChanged} errors={this.props.errors.earnings_per_audit}/>
 						</div>
@@ -130,6 +158,7 @@ var mapStoreToProps = function(remainingStore,ownProps){
 	return {
 		auditCycle: remainingStore.auditCycles[ownProps.params.auditCycleId],
 		audit: remainingStore.audits[ownProps.params.auditId],
+		remainingStores: remainingStore.remainingStore,
 		errors: remainingStore.forms.audit.errors,
 	};
 };

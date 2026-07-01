@@ -8,9 +8,9 @@ from notifications.models import Notification
 from registration.models import GROUP_NAME_AUDITOR
 from django.utils import timezone
 
-from manager.models import City, ProofTag
+from manager.models import City, ProofTag,TrainerProfileInfo
 from audit.models import Audit, AuditCycle, AuditCycleProofTagList
-from client.models import Client, Store
+from client.models import Client, Store,ClientTrainer
 from audit_store.models import AuditStore,ReportFeedbackByAuditor
 from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
 from questionnaire.models import Section, Question
@@ -453,7 +453,6 @@ class AuditCycleSerializer(ModelSerializer):
             'audit_alignment_factors',
             'client',
             'support_page_link',
-            'auditor_notes',
             'audit_report_summary'
 
         )
@@ -469,13 +468,57 @@ class StoreSerializer(ModelSerializer):
             'address',
             'city',
             'phone',
+            'map_location_link',
         )
         read_only_fields = fields
 
+class TrainerProfileSerializer(ModelSerializer):
+    user = SerializerMethodField()
+    class Meta:
+        model = TrainerProfileInfo
+        fields = (
+            'id',
+            'name',
+            'mobile',
+            'firm_name',
+            'user',
+        )
+        read_only_fields = fields
+    def get_user(self, obj):
+        return {
+            "id": obj.user.id,
+            "email": obj.user.email,
+            "is_active": obj.user.is_active,
+        }
+    
+class ClientTrainerSerializer(ModelSerializer):
+    trainer = SerializerMethodField()
+    class Meta:
+        model = ClientTrainer
+        fields = (
+            'id',
+            'client',
+            'trainer',
+            'receive_email_notification',
+            'is_active',
+        )
+        read_only_fields = fields
 
+    def get_trainer(self, obj):
+        profile = TrainerProfileInfo.objects.filter(user=obj.user).first()
+        if not profile:
+            return {
+                "id": obj.user.id,
+                "email": obj.user.email,
+                "is_active": obj.user.is_active,
+            }
+
+        return TrainerProfileSerializer(profile).data
+    
 class AuditSerializer(ModelSerializer):
     store = StoreSerializer()
     audit_cycle = AuditCycleSerializer()
+    client_trainer = ClientTrainerSerializer(read_only=True)
     class Meta:
         model = Audit
         fields = (
@@ -484,6 +527,7 @@ class AuditSerializer(ModelSerializer):
             'earnings_per_audit',
             'reimbursement',
             'audit_cycle',
+            'client_trainer',
             'post_approval_description',
         )
         read_only_fields = fields
@@ -623,6 +667,8 @@ class QuestionSerializer(ModelSerializer):
             'question_data',
             'section',
             'hide_question',
+            'is_required',
+            'question_note',
             'optional_comment_required',
             'max_marks'
         )

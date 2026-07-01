@@ -23,7 +23,7 @@ from attachment.service import set_attachment_by_proof_tag
 
 from client_report.service import xlsx_report as xlsx_report_service
 
-from ..serializers import AuditStoreFollowUpSerializer, AuditStoreSerializer, AuditStoreSerializerWithoutAudit, AuditStoreSerializerWithUser,AuditProoftagSerializer
+from ..serializers import AuditStoreFollowUpSerializer, AuditStoreSerializer, AuditStoreSerializerWithoutAudit, AuditStoreSerializerWithUser,AuditProoftagSerializer,AuditStoreStatusSerializer
 
 class AuditStoreByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -425,6 +425,32 @@ class AuditStoreProofTagNotAvailableView(APIView):
     #         return Response(AuditProoftagSerializer(prooftag_not_available).data)
     #     except KeyError as e:
     #         return Response( {"message": str(e)},status=400 )
+
+class AuditStoreStatusLogs(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, audit_store_id, format=None):
+        logs = audit_store_service.find_audit_store_status_logs(audit_store_id)
+        return Response(AuditStoreStatusSerializer(logs, many=True).data)
+
+class AuditStoreIdNpsSectionView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER]
+    }
+
+    class NpsSectionDeSerializer(Serializer):
+        nps_section = serializers.ChoiceField(choices=AuditStore.NPS_RATING, required=False, allow_null=True, allow_blank=True )
+
+    def post(self, request, audit_store_id):
+        ds = self.NpsSectionDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        nps_section = ds.validated_data['nps_section']
+        audit_store = audit_store_service.set_nps_section(audit_store_id, request.user.id, nps_section)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdArrangeAttachment(APIView):
     permission_classes = [HasGroupPermission]

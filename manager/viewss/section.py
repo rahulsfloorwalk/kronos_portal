@@ -2,7 +2,8 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import ModelSerializer, Serializer, IntegerField
+from rest_framework.serializers import ModelSerializer, Serializer, IntegerField,SerializerMethodField
+from rest_framework.permissions import AllowAny
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -12,6 +13,7 @@ from questionnaire.service import section as section_service
 from manager.viewss.question import QuestionSerializer
 
 from questionnaire.models import Section
+from questionnaire.service.section_proof_tag import get_section_proof_tag_for_preview
 
 class SectionSerializer(ModelSerializer):
     questions = QuestionSerializer(many=True)
@@ -29,6 +31,28 @@ class SectionSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+
+class QuestionnaireSectionPreviewSerializer(ModelSerializer):
+    questions = QuestionSerializer(many=True)
+    proof_tags = SerializerMethodField()
+
+    class Meta:
+        model = Section
+        fields = (
+            'id',
+            'name',
+            'audit_cycle',
+            'sequence',
+            'questions',
+            'minimum_attachment_count',
+            'max_marks',
+            'hide_comment',
+            'proof_tags',
+        )
+        read_only_fields = fields
+
+    def get_proof_tags(self, obj):
+        return get_section_proof_tag_for_preview(obj.id)
 
 class SectionDeSerializer(ModelSerializer):
     class Meta:
@@ -64,6 +88,18 @@ class SectionViewByAuditCycle(APIView):
     def get(self, request, audit_cycle_id, format=None):
         sections = section_service.find_by_audit_cycle(audit_cycle_id)
         return Response(SectionSerializer(sections, many=True).data)
+
+
+class QuestionnairePreviewView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, audit_cycle_id, format=None):
+        sections = section_service.find_by_audit_cycle(audit_cycle_id)
+        return Response(QuestionnaireSectionPreviewSerializer(sections, many=True).data)
+    
 
 class SectionCopyByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]

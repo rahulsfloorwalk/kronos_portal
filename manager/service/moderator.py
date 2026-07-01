@@ -13,6 +13,7 @@ from audit.service import audit_cycle as audit_cycle_service
 from registration.models import GROUP_NAME_MODERATOR
 from audit_store import service as audit_store_service
 from audit_store.models import AuditStore
+from manager.models import ModeratorProfileInfo 
 
 def find_all():
     # return Group.objects.get(name=GROUP_NAME_MODERATOR).user_set
@@ -25,7 +26,7 @@ def find_by_id(user_id):
         raise ObjectNotFound from e
 
 @atomic
-def insert(email, password, is_active=True):
+def insert(email, password, is_active=True, name=None,mobile=None,firm_name=None):
     try:
         if password == "":
             raise AppLogicError("password cannot be blank")
@@ -39,13 +40,20 @@ def insert(email, password, is_active=True):
         user.groups.add(Group.objects.get(name=GROUP_NAME_MODERATOR))
         user.save()
 
+        ModeratorProfileInfo.objects.create(
+            user=user,
+            name=name,
+            mobile=mobile,
+            firm_name=firm_name
+        )
+
         return user
     except IntegrityError as e:
         raise AppLogicError("a user with this email already exists in the system") from e
 
 
 @atomic
-def update(user_id, email, password="", is_active=True):
+def update(user_id, email, password="", is_active=True, name=None,mobile=None,firm_name=None):
     try:
         user = Group.objects.get(name=GROUP_NAME_MODERATOR).user_set.get(pk=user_id)
 
@@ -57,6 +65,14 @@ def update(user_id, email, password="", is_active=True):
             user.set_password(password)
 
         ClientModerator.objects.filter(user=user).update(is_active=is_active)
+        ModeratorProfileInfo.objects.update_or_create(
+            user=user,
+            defaults={
+                "name": name,
+                "mobile": mobile,
+                "firm_name": firm_name,
+            }
+        )
         user.save()
 
         return user

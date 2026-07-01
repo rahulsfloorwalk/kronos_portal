@@ -6,13 +6,13 @@ from agency.models import AgencyUser, Agency
 from audit.models import Audit, AuditCycle, AuditCycleProofTagList
 from audit_store.models import AuditStore, ReportFollowUpLog, ReportStatusLog
 from auditor.models import ProfileInfo, AuditApplication
-from client.models import Client, Store,ClientForEcomm,StateCityMapping
+from client.models import Client, Store,ClientForEcomm,StateCityMapping,ClientTrainer
 from payment.models import Payment
 from registration.models import MobileNumber
 from .models import City, ProofTag,MPCategory,MPTax,MPSolution
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 from attachment.models import Attachment
-from manager.models import ManagerProfileInfo
+from manager.models import ManagerProfileInfo,ModeratorProfileInfo,TrainerProfileInfo
 from rest_framework import serializers
 from manager.models import AuditProoftagNotAvailable
 from auditor.service.auditor_api import get_report_completion_percentage
@@ -115,7 +115,8 @@ class AuditCycleSerializer(ModelSerializer):
             'audit_ai_autofill',
             'qa_ai_comparison',
             'auditor_notes',
-            'audit_report_summary'
+            'audit_report_summary',
+            'pm_review_bypass',
         )
         read_only_fields = fields
 
@@ -288,7 +289,8 @@ class AuditApplicationSerializer(ModelSerializer):
         ).exclude(status__in=['WAITLISTED', 'NOT_APPLIED','REJECTED','APPLIED']).count()
 
     def get_report_completion_percentage(self, obj):
-        audit_store = AuditStore.objects.filter(audit=obj.audit,user=obj.profileinfo.user).only('id','report_completion_percentage').first()
+        # audit_store = AuditStore.objects.filter(audit=obj.audit,user=obj.profileinfo.user).only('id','report_completion_percentage').first()
+        audit_store = (AuditStore.objects.filter(audit=obj.audit,user=obj.profileinfo.user).only('id', 'report_completion_percentage').order_by('-id').first())
         if not audit_store:
             return 0
 
@@ -307,9 +309,53 @@ class AuditApplicationSerializer(ModelSerializer):
 
         return audit_store.status
 
+class TrainerProfileSerializer(ModelSerializer):
+    user = SerializerMethodField()
+    class Meta:
+        model = TrainerProfileInfo
+        fields = (
+            'id',
+            'name',
+            'mobile',
+            'firm_name',
+            'user',
+        )
+        read_only_fields = fields
+    def get_user(self, obj):
+        return {
+            "id": obj.user.id,
+            "email": obj.user.email,
+            "is_active": obj.user.is_active,
+        }
+    
+class ClientTrainerSerializer(ModelSerializer):
+    trainer = SerializerMethodField()
+    class Meta:
+        model = ClientTrainer
+        fields = (
+            'id',
+            'client',
+            'trainer',
+            'receive_email_notification',
+            'is_active',
+        )
+        read_only_fields = fields
+
+    def get_trainer(self, obj):
+        profile = TrainerProfileInfo.objects.filter(user=obj.user).first()
+        if not profile:
+            return {
+                "id": obj.user.id,
+                "email": obj.user.email,
+                "is_active": obj.user.is_active,
+            }
+
+        return TrainerProfileSerializer(profile).data
+
 class AuditSerializer(ModelSerializer):
     store = StoreSerializer()
     audit_cycle = AuditCycleSerializer()
+    client_trainer = ClientTrainerSerializer(read_only=True)
     class Meta:
         model = Audit
         fields = (
@@ -321,6 +367,7 @@ class AuditSerializer(ModelSerializer):
             'reimbursement',
             'store',
             'audit_cycle',
+            'client_trainer',
             'post_approval_description',
             'application_count',
             'report_count',
@@ -398,6 +445,9 @@ class PlainUserSerializer(ModelSerializer):
     mobile = SerializerMethodField()
     name = SerializerMethodField()
     is_admin = SerializerMethodField()
+    moderator = SerializerMethodField()
+    trainer = SerializerMethodField()
+
     class Meta:
         model = User
         fields = (
@@ -408,7 +458,9 @@ class PlainUserSerializer(ModelSerializer):
             'name',
             'mobile',
             'user',
-            'is_admin'
+            'is_admin',
+            'moderator',
+            'trainer',
         )
         read_only_fields = fields
     def get_mobile(self, obj):
@@ -430,6 +482,31 @@ class PlainUserSerializer(ModelSerializer):
             return manager_profile_info.is_admin
         except ManagerProfileInfo.DoesNotExist:
             return None
+        
+    def get_moderator(self, obj):
+        moderator = ModeratorProfileInfo.objects.filter(user=obj).first()
+        if not moderator:
+            return None
+        return {
+            "name": moderator.name,
+            "email": obj.email,
+            "is_active": obj.is_active,
+            "mobile": moderator.mobile,
+            "firm_name": moderator.firm_name,
+        }
+        
+    def get_trainer(self, obj):
+        trainer = TrainerProfileInfo.objects.filter(user=obj).first()
+        if not trainer:
+            return None
+        return {
+            "name": trainer.name,
+            "email": obj.email,
+            "is_active": obj.is_active,
+            "mobile": trainer.mobile,
+            "firm_name": trainer.firm_name,
+        }
+    
     def get_user(self, obj):
         return PlainmoderatorUserSerializer(obj).data
 
@@ -481,6 +558,7 @@ class ReportStatusLogSerializer(serializers.ModelSerializer):
 class AuditStoreSerializer(ModelSerializer):
     audit = AuditSerializer()
     user = UserSerializer()
+    assigned_by = SerializerMethodField()
     assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
     failed_status_log = serializers.SerializerMethodField()
     class Meta:
@@ -490,6 +568,8 @@ class AuditStoreSerializer(ModelSerializer):
             'status',
             'failed_by',
             'audit_date',
+            'submit_at',
+            'nps_section',
             'audit',
             'user',
             'auto_assigned',
@@ -509,9 +589,33 @@ class AuditStoreSerializer(ModelSerializer):
             'report_submission_time',
             'moderator_submission_time',
             'moderator_submission_date',
+            'auto_assigned',
+            'assigned_by',
             'failed_status_log'
         )
         read_only_fields = fields
+
+    def get_assigned_by(self, obj):
+        if not obj.assigned_by:
+            return None
+        try:
+            user = User.objects.get(pk=int(obj.assigned_by))
+        except (User.DoesNotExist, ValueError, TypeError):
+            return None
+        profile = (
+            TrainerProfileInfo.objects.filter(user=user).first() or
+            ModeratorProfileInfo.objects.filter(user=user).first() or
+            ManagerProfileInfo.objects.filter(user=user).first()
+        )
+        return {
+            "id": user.id,
+            "email": user.email,
+            "is_active": user.is_active,
+            "name": getattr(profile, "name", None),
+            "mobile": getattr(profile, "mobile", None),
+            "firm_name": getattr(profile, "firm_name", None),
+            "is_admin": getattr(profile, "is_admin", None),
+        }
 
     def get_failed_status_log(self, obj):
         # Get the first log with status == 'FAILED', ordered by created_at
@@ -520,6 +624,51 @@ class AuditStoreSerializer(ModelSerializer):
             return ReportStatusLogSerializer(failed_log).data
         return None
 
+class ReportStatusUserSerializer(ModelSerializer):
+    name = SerializerMethodField()
+    mobile = SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'is_active',
+            'name',
+            'mobile',
+        )
+
+    def _get_profile(self, obj):
+        return (
+            TrainerProfileInfo.objects.filter(user=obj).first() or
+            ModeratorProfileInfo.objects.filter(user=obj).first() or
+            ManagerProfileInfo.objects.filter(user=obj).first()
+        )
+
+    def get_name(self, obj):
+        profile = self._get_profile(obj)
+        return getattr(profile, "name", None)
+
+    def get_mobile(self, obj):
+        profile = self._get_profile(obj)
+        return getattr(profile, "mobile", None)
+        
+class AuditStoreStatusSerializer(ModelSerializer):
+    user_actor = ReportStatusUserSerializer(read_only=True)
+
+    class Meta:
+        model = ReportStatusLog
+        fields = (
+            'id',
+            'user_actor',
+            'audit_store',
+            'status',
+            'message',
+            'report_data',
+            'created_at',
+        )
+        read_only_fields = fields
+    
 class AuditStoreSerializerWithoutAudit(ModelSerializer):
     user = UserSerializer()
     assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
@@ -791,6 +940,8 @@ class AttachmentSerializer(ModelSerializer):
             'direct_url',
             'extra',
             'proof_tag',
+            'attachment_category',
+            'link_url',
         )
         read_only_fields = fields
     

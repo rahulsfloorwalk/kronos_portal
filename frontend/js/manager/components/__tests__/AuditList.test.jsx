@@ -222,11 +222,18 @@ describe("<AuditList/>", () => {
 		expect(r.find("select").at(1).children("option").length).toEqual(3);
 	});
 
+	it("renders the correct number of trainer filter options", () => {
+		const dispatch = jest.fn();
+		dispatch.mockReturnValue($.Deferred().resolve([]).promise());
+		const r = shallow(<AuditList params={sampleParams} audits={sampleAudits} dispatch={dispatch}/>);
+		expect(r.find("select").at(2).children("option").length).toEqual(1); // just "Trainer" default, since trainers fetch is async
+	});
+
 	it("renders the correct number of city filter options", () => {
 		const dispatch = jest.fn();
 		dispatch.mockReturnValue($.Deferred().resolve([]).promise());
 		const r = shallow(<AuditList params={sampleParams} audits={sampleAudits} dispatch={dispatch}/>);
-		expect(r.find("select").at(2).children("option").length).toEqual(7);
+		expect(r.find("select").at(3).children("option").length).toEqual(7);
 	});
 });
 

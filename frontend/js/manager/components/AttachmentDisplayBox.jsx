@@ -267,6 +267,7 @@ export class AttachmentDisplayBox extends Component{
 			onChange={(e)=>this.saveAttachmentTag(this.state.selectedAttachment.id, e)}
 			rotateImage={this.rotateImage}
 			section_id={0}
+			onClose={() => this.setState({ selectedAttachment: undefined })}
 			disableRotateButton={this.state.disableRotateButton}/>;
 
 		let uploadButton;

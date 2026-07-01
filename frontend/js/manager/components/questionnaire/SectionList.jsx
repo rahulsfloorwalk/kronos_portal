@@ -77,6 +77,7 @@ class SectionList extends React.Component {
 			<div>
 				<h3 className="page-header">
 					<span className="pull-right">
+						<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/preview`} className="btn btn-default pull-left" style={{marginRight:"10px"}}>Preview</Link>
 						<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/import`} className="btn btn-default pull-left" style={{marginRight:"10px"}}><DownloadAlt/> Import Questionnaire</Link>
 						<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/add`} className="btn btn-default">
 							<Plus/> Add Section

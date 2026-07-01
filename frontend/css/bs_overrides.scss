@@ -1031,3 +1031,143 @@ p.new{
 .timepicker-wrapper {
     position: relative;
 }
+
+.pm-planning-table {
+    border-collapse: separate !important;
+    border-spacing: 0;
+}
+
+.pm-planning-table th,
+.pm-planning-table td {
+    border: 1px solid #ddd !important;
+}
+
+.ga-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.ga-sections-wrapper {
+  padding: 1rem 1.5rem;
+}
+
+.ga-section {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.ga-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.ga-section-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.ga-attachment-list {
+  min-height: 80px;
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+
+.ga-empty-state {
+  padding: 1rem 0;
+  font-size: 1.2rem;
+}
+
+.ga-divider {
+  border-top: 1px solid #e5e5e5;
+  margin: 0.5rem 0;
+}
+
+.ga-youtube-row {
+  margin-bottom: 0.75rem;
+  padding: 2rem 0rem;
+}
+
+.ga-youtube-label {
+  display: block;
+  font-weight: 500;
+  font-size: 1.5rem;
+  margin-bottom: 0.4rem;
+  color: #555;
+}
+
+.ga-youtube-input-row {
+  display: flex;
+  align-items: center;
+}
+
+.ga-youtube-input {
+  flex: 1;
+}
+
+.ga-saved-link-row {
+  display: flex;
+  align-items: center;
+}
+
+.ga-saved-link {
+  word-break: break-all;
+  font-size: 1.5rem;
+}
+
+.ga-upload-error {
+  font-size: 1.5rem;
+  color: #c0392b;
+  background: #fdf2f2;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 0.4rem 0.75rem;
+  text-align: center;
+}
+
+.reference-attachment-body {
+  padding: 1rem 1.5rem;
+}
+
+.reference-upload-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.reference-count-badge {
+  font-size: 1.1rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.reference-attachment-list {
+  min-height: 80px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+
+.reference-empty-state {
+  padding: 1rem 0;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.reference-limit-error {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  color: #c0392b;
+  background: #fdf2f2;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 0.4rem 0.75rem;
+  text-align: center;
+}

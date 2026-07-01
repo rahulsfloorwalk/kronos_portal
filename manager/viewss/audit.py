@@ -7,13 +7,16 @@ from rest_framework.serializers import ModelSerializer, Serializer, PrimaryKeyRe
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
-from audit.models import Audit
+from audit.models import Audit,AuditCycle
 
 from ..service import audit as manager_audit_service
 from ..serializers import AuditSerializer, AuditStoreSerializer
 from audit.service import audit_service
 from auditor.service import application_service
 from manager.serializers import StoreSerializer
+from client.models import ClientTrainer,Client
+from kronos.exceptions import AppLogicError
+from rest_framework.permissions import AllowAny
 
 class AuditDeSerializer(ModelSerializer):
     class Meta:
@@ -64,6 +67,34 @@ class AuditByAuditCycle(APIView):
         serial_audits = AuditSerializer(audits, many=True).data
         return Response(serial_audits)
 
+class ClientSerializer(ModelSerializer):
+    class Meta:
+        model = Client
+        fields = (
+            'id',
+            'name',
+            'brand_name',
+            'email',
+            'phone',
+            'receive_email_notification',
+            'address',
+            'city',
+            'state',
+            'pincode',
+            'gst_in'
+        )
+        read_only_fields = ('id',)
+
+class ClientDetailByAuditCycle(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
+        client = Client.objects.get(id=audit_cycle.client_id)
+        return Response(ClientSerializer(client).data)
+
 class AuditIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -74,28 +105,27 @@ class AuditIdView(APIView):
     def get(self, request, audit_id, format=None):
         audit = audit_service.find_audit_by_id(audit_id)
         return Response(AuditSerializer(audit).data)
-
-    # def post(self, request, audit_id):
-    #     audit = Audit.objects.get(id=audit_id)
-    #     audit.earnings_per_audit =request.data.get('earnings_per_audit')
-    #     audit.reimbursement =request.data.get('reimbursement')
-    #     audit.post_approval_description = request.data.get('post_approval_description')
-    #     audit.count = request.data.get('count')
-    #     audit.modified_at = timezone.now()
-    #     audit.save()
-    #     return Response(AuditSerializer(audit).data)
     
     def post(self, request, audit_id):
-        audit = Audit.objects.get(id=audit_id)
+        audit = Audit.objects.select_related('audit_cycle').get(id=audit_id)
         earnings = request.data.get('earnings_per_audit')
         reimbursement = request.data.get('reimbursement')
         count = request.data.get('count')
+        client_trainer_id = request.data.get('client_trainer')
 
         audit.earnings_per_audit = int(earnings) if earnings not in [None, ''] else None
         audit.reimbursement = int(reimbursement) if reimbursement not in [None, ''] else None
         audit.count = int(count) if count not in [None, ''] else audit.count
 
         audit.post_approval_description = request.data.get('post_approval_description', '')
+        if client_trainer_id not in [None, '']:
+            client_trainer = ClientTrainer.objects.filter(id=client_trainer_id,client=audit.audit_cycle.client,is_active=True).first()
+            if not client_trainer:
+                raise AppLogicError("Selected trainer is not assigned to this client.")
+            audit.client_trainer = client_trainer
+        else:
+            audit.client_trainer = None
+
         audit.modified_at = timezone.now()
         audit.save()
         return Response(AuditSerializer(audit).data)

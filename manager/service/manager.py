@@ -10,7 +10,10 @@ def find_all():
 
 def find_all_moderators():
     group = Group.objects.get(name=GROUP_NAME_MODERATOR)
-    return group.user_set.all()
+    return group.user_set.filter(
+        is_active=True,
+        moderatorprofileinfo__firm_name="floorwalk"
+    ).select_related("moderatorprofileinfo")
 
 def find_by_id(user_id):
     try:

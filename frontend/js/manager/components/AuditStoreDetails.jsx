@@ -45,6 +45,9 @@ import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 import AuditStoreReportAttributesTable from "./audit_store/AuditStoreReportAttributesTable.jsx";
 import ProofNotAvailable from "./ProofNotAvailable.jsx";
 import { fetchConfig } from "../service/config.js";
+import StatusLogsModal from "./StatusLogsModal.jsx";
+import NpsOverallExperienceRating from "./NpsOverAllExperienceRating.jsx";
+import ReferenceAttachmentBox from "./ReferenceAttachmentBox.jsx";
 
 export class AuditStoreDetails extends React.Component{
 	static propTypes = {
@@ -69,6 +72,7 @@ export class AuditStoreDetails extends React.Component{
 			proof_not_available: [],
 			isFailModalOpen:false,
 			config: {},
+			isStatusLogModalOpen: false,
 		};
 	}
 
@@ -104,6 +108,14 @@ export class AuditStoreDetails extends React.Component{
 			this.unSubmitButtonClicked();
 			this.setState({ display:"none" });
 		}
+	};
+
+	showStatusLogModal = () => {
+		this.setState({ isStatusLogModalOpen: true });
+	};
+
+	hideStatusLogModal = () => {
+		this.setState({ isStatusLogModalOpen: false });
 	};
 
 	reasonChanged = (e) => {
@@ -442,6 +454,10 @@ export class AuditStoreDetails extends React.Component{
 					{(this.props.auditStore.status && this.props.auditStore.status==="FAILED") ? (<span style={{marginLeft:"3rem",fontSize:"2rem"}}><span style={{color: "red"}}>Failed by:</span> {this.props.auditStore.failed_by && this.props.auditStore.failed_by.toLowerCase()} {this.props.auditStore.failed_by && this.props.auditStore.failed_by.toLowerCase()==="manual" ? (<span onClick={this.showFailModal} style={{textDecoration:"underline",textUnderlineOffset:"2px",color:"#007dc1",cursor:"pointer"}}>View</span>): null}</span>) : null}
 					<div className="pull-right">
 						{faultyReportMessage}
+						<button type="button" className="btn btn-default" style={{marginRight:10, marginLeft:10}}
+							onClick={this.showStatusLogModal}>
+							Status Logs
+						</button>
 						<a className="btn btn-default" href={url.api_base_path + "manager/client/" + this.props.auditStore.audit.store.client.id + "/audit_store/" + this.props.auditStore.id + "/xlsx_report"}>
 							<Download/> Excel Report
 						</a>
@@ -491,12 +507,22 @@ export class AuditStoreDetails extends React.Component{
 										<td><AuditorNameDisplay user={this.props.auditStore.user}/></td>
 									</tr>
 									<tr>
+										<td className="text-right">Trainer:</td>
+										<td>
+											<div style={{display:"flex",justifyContent:"flex-start",alignItems:"center",gap:".3rem"}}><b>{this.props.auditStore.audit.client_trainer ? this.props.auditStore.audit.client_trainer.trainer.name : "---"}</b> | <a href={`tel:${this.props.auditStore.audit.client_trainer && this.props.auditStore.audit.client_trainer.trainer.mobile}`}>({this.props.auditStore.audit.client_trainer ? this.props.auditStore.audit.client_trainer.trainer.mobile : "---"})</a></div>
+										</td>
+									</tr>
+									<tr>
 										<td className="text-right">Certification Score:</td>
 										<td><b>{this.props.auditStore.user.profileinfo.certification_score ? this.props.auditStore.user.profileinfo.certification_score : "NA" }</b></td>
 									</tr>
 									<tr>
 										<td className="text-right">Audit Date:</td>
 										<th>{auditDateElement}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Auditor Submission Date:</td>
+										<th>{moment(this.props.auditStore.submit_at).format("DD MMM YYYY, hh:mm A")}</th>
 									</tr>
 									{this.props.auditStore.audit_store_percentage ?
 										<tr>
@@ -563,6 +589,7 @@ export class AuditStoreDetails extends React.Component{
 					</div>
 				</div>
 				{refresh_report_button}
+				<ReferenceAttachmentBox auditStoreId={this.props.params.auditStoreId}/>
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
 				{this.state.proof_not_available.length>0 && <ProofNotAvailable proof_not_available={this.state.proof_not_available}/>}
 				{/* <ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/> */}
@@ -571,7 +598,11 @@ export class AuditStoreDetails extends React.Component{
 					: null
 				}
 				{this.props.children}
-
+				<NpsOverallExperienceRating
+					editable={this.isSummaryEditable()}
+					rating={this.props.auditStore.nps_section || 0}
+					auditStoreId={parseInt(this.props.params.auditStoreId)}
+				/>
 				<div className="sidebar">
 					<button className="btn btn-primary savebtn" onClick={this.saveCheckPoints}>Save</button>
 					<a href="javascript:void(0)" className="closebtn" onClick={this.closeCheckPoint}>×</a>
@@ -624,7 +655,15 @@ export class AuditStoreDetails extends React.Component{
 							</div>
 						</div>
 					</div>:null}
-
+				{
+					this.state.isStatusLogModalOpen && (
+						<StatusLogsModal
+							isOpen={this.state.isStatusLogModalOpen}
+							auditStoreId={this.props.params.auditStoreId}
+							onClose={this.hideStatusLogModal}
+						/>
+					)
+				}
 			</div>
 		);
 	}
