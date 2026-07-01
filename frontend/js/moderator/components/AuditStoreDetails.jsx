@@ -799,8 +799,8 @@ export default class AuditStoreDetails extends React.Component {
 												<th>{auditDateElement}</th>
 											</tr>
 											<tr>
-												<td className="text-right">Submission Date:</td>
-												<th>{moment(this.state.auditStore.submit_at).format("DD MMM YYYY, hh:mm A")}</th>
+												<td className="text-right">Audit Submission Date:</td>
+												<th>{moment(this.state.auditStore.submit_at).format(momentDateFormat)}</th>
 											</tr>
 											<tr>
 												<td className="text-right">Status:</td>
@@ -941,7 +941,7 @@ export default class AuditStoreDetails extends React.Component {
 											</tr>
 											<tr>
 												<td className="text-right">Auditor Submission Date:</td>
-												<th>moment(this.state.auditStore.submit_at).format(momentDateFormat)</th>
+												<th>{moment(this.state.auditStore.submit_at).format(momentDateFormat)}</th>
 												{/* <th>{moment(this.state.auditStore.submit_at).format("DD MMM YYYY, hh:mm A")}</th> */}
 											</tr>
 											<tr>
