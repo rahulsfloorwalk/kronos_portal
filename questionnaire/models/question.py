@@ -114,8 +114,10 @@ class Question(Model):
     section = ForeignKey(Section, related_name='questions', db_column='section_id', blank=False, on_delete=PROTECT)
     sequence = PositiveIntegerField(db_column='sequence', blank=False)
     question_type = CharField(db_column='question_type', max_length=20, choices=QUESTION_TYPE, default=PLAIN, blank=False)
+    question_note = CharField(db_column='question_note', max_length=520,  blank=True, null=True)
     question_data = JSONField(db_column='question_data', default=dict, blank=False)
     hide_question = BooleanField(db_column='hide_question', default=False, blank=False, null=False)
+    is_required = BooleanField(db_column='is_required', default=False, blank=False, null=False)
     optional_comment_required = BooleanField(db_column='optional_comment_required', default=False, blank=False, null=False)
 
     def __has_unique_key(self, a_list_of_dicts, unique_key):

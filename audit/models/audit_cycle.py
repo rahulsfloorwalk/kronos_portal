@@ -96,6 +96,7 @@ class AuditCycle(Model):
     system_cost = IntegerField(db_column='system_cost', blank=False, default=0)
     reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True, validators=[MinValueValidator(0)])
     audit_auto_approve = BooleanField(db_column='audit_auto_approve', default = False)
+    pm_review_bypass = BooleanField(db_column='pm_review_bypass',default=False)
     audit_auto_fail = IntegerField(db_column='audit_auto_fail', default = 2)
     audit_ai_autofill = BooleanField(db_column='audit_ai_autofill', default=False)
     qa_ai_comparison = BooleanField(db_column='qa_ai_comparison', default=False)

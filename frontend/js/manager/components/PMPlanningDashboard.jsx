@@ -29,15 +29,22 @@ export default class PMPlanningDashboard extends Component {
 			<div
 				className="table-responsive"
 				style={{
-					marginTop: "20px",
-					maxHeight: "400px",
+					marginTop: "7rem",
+					maxHeight: "600px",
 					overflow: "auto"
 				}}
 			>
-				<h4>PM Planning</h4>
 
 				<table className="table table-bordered table-condensed pm-planning-table">
 					<thead style={{ position: "sticky", top: -1, zIndex: 100, backgroundColor: "#fff", boxShadow: "0 1px 0 #ddd" }}>
+						<tr><th  colSpan={clients.length + 4}
+							className="text-left"
+							style={{
+								backgroundColor: "#fff",
+								fontWeight: "bold",
+								fontSize: "18px",
+								padding:"2rem 1rem",
+							}}>PM Planning</th></tr>
 						<tr>
 							<th rowSpan="2" style={{ width: "60px", backgroundColor: "#efebeb" }}></th>
 							<th rowSpan="2" style={{ minWidth: "220px", backgroundColor: "#efebeb" }} />

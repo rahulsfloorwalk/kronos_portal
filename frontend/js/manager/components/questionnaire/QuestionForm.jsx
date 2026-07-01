@@ -135,8 +135,20 @@ class QuestionForm extends React.Component {
 		}
 
 		let hide_question_div = (
-			<div className="col-md-12">
-				<FormInput label="Hide Question" type="checkbox" checked={this.state.form.hide_question} name="hide_question" onChange={this.inputChanged} errors={this.state.errors.hide_question}/>
+			<div>
+				<div className="col-md-6">
+					<FormInput label="Hide Question" type="checkbox" checked={this.state.form.hide_question} name="hide_question" onChange={this.inputChanged} errors={this.state.errors.hide_question}/>
+				</div>
+				<div className="col-md-6">
+					<FormInput
+						label="Question Required"
+						type="checkbox"
+						checked={this.state.form.is_required}
+						name="is_required"
+						onChange={this.inputChanged}
+						errors={this.state.errors.is_required}
+					/>
+				</div>
 			</div>
 		);
 
@@ -162,6 +174,17 @@ class QuestionForm extends React.Component {
 					</div>
 					<div className="col-md-12">
 						<FormInput label="Question" maxLength="1024" type="text" value={this.state.form.question_txt} name="question_txt" onChange={this.inputChanged} errors={this.state.errors.question_txt}/>
+					</div>
+					<div className="col-md-12">
+						<FormInput
+							label="Question Note"
+							maxLength="1024"
+							type="text"
+							value={this.state.form.question_note}
+							name="question_note"
+							onChange={this.inputChanged}
+							errors={this.state.errors.question_note}
+						/>
 					</div>
 					<div className="col-md-12">
 						{optionBuilder}

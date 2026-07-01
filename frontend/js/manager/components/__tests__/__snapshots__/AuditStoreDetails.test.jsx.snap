@@ -54,6 +54,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     <div
       className="pull-right"
     >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+            "marginRight": 10,
+          }
+        }
+        type="button"
+      >
+        Status Logs
+      </button>
       <a
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
@@ -219,6 +232,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
               <td
                 className="text-right"
               >
+                Trainer:
+              </td>
+              <td>
+                <div
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "gap": ".3rem",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <b>
+                    ---
+                  </b>
+                   | 
+                  <a
+                    href="tel:undefined"
+                  >
+                    (
+                    ---
+                    )
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Certification Score:
               </td>
               <td>
@@ -266,6 +310,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                     value="2018-09-02"
                   />
                 </div>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Submission Date:
+              </td>
+              <th>
+                26th May 2018
               </th>
             </tr>
             <tr>
@@ -483,8 +537,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
       </div>
     </div>
   </div>
+  <Connect(ReferenceAttachmentBox)
+    auditStoreId="5"
+  />
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="sidebar"
@@ -653,6 +715,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     <div
       className="pull-right"
     >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+            "marginRight": 10,
+          }
+        }
+        type="button"
+      >
+        Status Logs
+      </button>
       <a
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
@@ -818,6 +893,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
               <td
                 className="text-right"
               >
+                Trainer:
+              </td>
+              <td>
+                <div
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "gap": ".3rem",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <b>
+                    ---
+                  </b>
+                   | 
+                  <a
+                    href="tel:undefined"
+                  >
+                    (
+                    ---
+                    )
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Certification Score:
               </td>
               <td>
@@ -865,6 +971,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                     value="2018-09-02"
                   />
                 </div>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Submission Date:
+              </td>
+              <th>
+                26th May 2018
               </th>
             </tr>
             <tr>
@@ -1082,8 +1198,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
       </div>
     </div>
   </div>
+  <Connect(ReferenceAttachmentBox)
+    auditStoreId="5"
+  />
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="sidebar"
@@ -1252,6 +1376,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
     <div
       className="pull-right"
     >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+            "marginRight": 10,
+          }
+        }
+        type="button"
+      >
+        Status Logs
+      </button>
       <a
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
@@ -1387,6 +1524,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
               <td
                 className="text-right"
               >
+                Trainer:
+              </td>
+              <td>
+                <div
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "gap": ".3rem",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <b>
+                    ---
+                  </b>
+                   | 
+                  <a
+                    href="tel:undefined"
+                  >
+                    (
+                    ---
+                    )
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Certification Score:
               </td>
               <td>
@@ -1403,6 +1571,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
               </td>
               <th>
                 2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Submission Date:
+              </td>
+              <th>
+                26th May 2018
               </th>
             </tr>
             <tr>
@@ -1620,8 +1798,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
       </div>
     </div>
   </div>
+  <Connect(ReferenceAttachmentBox)
+    auditStoreId="5"
+  />
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="sidebar"
@@ -1790,6 +1976,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
     <div
       className="pull-right"
     >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+            "marginRight": 10,
+          }
+        }
+        type="button"
+      >
+        Status Logs
+      </button>
       <a
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
@@ -1955,6 +2154,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
               <td
                 className="text-right"
               >
+                Trainer:
+              </td>
+              <td>
+                <div
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "gap": ".3rem",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <b>
+                    ---
+                  </b>
+                   | 
+                  <a
+                    href="tel:undefined"
+                  >
+                    (
+                    ---
+                    )
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Certification Score:
               </td>
               <td>
@@ -2002,6 +2232,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                     value="2018-09-02"
                   />
                 </div>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Submission Date:
+              </td>
+              <th>
+                26th May 2018
               </th>
             </tr>
             <tr>
@@ -2227,8 +2467,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
       </div>
     </div>
   </div>
+  <Connect(ReferenceAttachmentBox)
+    auditStoreId="5"
+  />
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="sidebar"
@@ -2397,6 +2645,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
     <div
       className="pull-right"
     >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+            "marginRight": 10,
+          }
+        }
+        type="button"
+      >
+        Status Logs
+      </button>
       <a
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
@@ -2562,6 +2823,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
               <td
                 className="text-right"
               >
+                Trainer:
+              </td>
+              <td>
+                <div
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "gap": ".3rem",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <b>
+                    ---
+                  </b>
+                   | 
+                  <a
+                    href="tel:undefined"
+                  >
+                    (
+                    ---
+                    )
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Certification Score:
               </td>
               <td>
@@ -2609,6 +2901,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                     value="2018-09-02"
                   />
                 </div>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Submission Date:
+              </td>
+              <th>
+                26th May 2018
               </th>
             </tr>
             <tr>
@@ -2826,8 +3128,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
       </div>
     </div>
   </div>
+  <Connect(ReferenceAttachmentBox)
+    auditStoreId="5"
+  />
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="sidebar"
@@ -2996,6 +3306,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
     <div
       className="pull-right"
     >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+            "marginRight": 10,
+          }
+        }
+        type="button"
+      >
+        Status Logs
+      </button>
       <a
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
@@ -3131,6 +3454,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
               <td
                 className="text-right"
               >
+                Trainer:
+              </td>
+              <td>
+                <div
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "gap": ".3rem",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <b>
+                    ---
+                  </b>
+                   | 
+                  <a
+                    href="tel:undefined"
+                  >
+                    (
+                    ---
+                    )
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Certification Score:
               </td>
               <td>
@@ -3147,6 +3501,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
               </td>
               <th>
                 2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Submission Date:
+              </td>
+              <th>
+                26th May 2018
               </th>
             </tr>
             <tr>
@@ -3385,8 +3749,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
       </div>
     </div>
   </div>
+  <Connect(ReferenceAttachmentBox)
+    auditStoreId="5"
+  />
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="sidebar"
@@ -3575,6 +3947,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
     <div
       className="pull-right"
     >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+            "marginRight": 10,
+          }
+        }
+        type="button"
+      >
+        Status Logs
+      </button>
       <a
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
@@ -3730,6 +4115,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
               <td
                 className="text-right"
               >
+                Trainer:
+              </td>
+              <td>
+                <div
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "gap": ".3rem",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <b>
+                    ---
+                  </b>
+                   | 
+                  <a
+                    href="tel:undefined"
+                  >
+                    (
+                    ---
+                    )
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Certification Score:
               </td>
               <td>
@@ -3746,6 +4162,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
               </td>
               <th>
                 2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Submission Date:
+              </td>
+              <th>
+                26th May 2018
               </th>
             </tr>
             <tr>
@@ -3963,8 +4389,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
       </div>
     </div>
   </div>
+  <Connect(ReferenceAttachmentBox)
+    auditStoreId="5"
+  />
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="sidebar"
@@ -4133,6 +4567,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
     <div
       className="pull-right"
     >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+            "marginRight": 10,
+          }
+        }
+        type="button"
+      >
+        Status Logs
+      </button>
       <a
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
@@ -4298,6 +4745,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
               <td
                 className="text-right"
               >
+                Trainer:
+              </td>
+              <td>
+                <div
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "gap": ".3rem",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <b>
+                    ---
+                  </b>
+                   | 
+                  <a
+                    href="tel:undefined"
+                  >
+                    (
+                    ---
+                    )
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Certification Score:
               </td>
               <td>
@@ -4345,6 +4823,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                     value="2018-09-02"
                   />
                 </div>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Submission Date:
+              </td>
+              <th>
+                26th May 2018
               </th>
             </tr>
             <tr>
@@ -4580,8 +5068,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
   >
     Refresh Report
   </button>
+  <Connect(ReferenceAttachmentBox)
+    auditStoreId="5"
+  />
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={true}
+    rating={0}
   />
   <div
     className="sidebar"
@@ -4750,6 +5246,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
     <div
       className="pull-right"
     >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+            "marginRight": 10,
+          }
+        }
+        type="button"
+      >
+        Status Logs
+      </button>
       <a
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
@@ -4885,6 +5394,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
               <td
                 className="text-right"
               >
+                Trainer:
+              </td>
+              <td>
+                <div
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "gap": ".3rem",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <b>
+                    ---
+                  </b>
+                   | 
+                  <a
+                    href="tel:undefined"
+                  >
+                    (
+                    ---
+                    )
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Certification Score:
               </td>
               <td>
@@ -4901,6 +5441,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
               </td>
               <th>
                 2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Submission Date:
+              </td>
+              <th>
+                26th May 2018
               </th>
             </tr>
             <tr>
@@ -5118,8 +5668,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
       </div>
     </div>
   </div>
+  <Connect(ReferenceAttachmentBox)
+    auditStoreId="5"
+  />
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="sidebar"
@@ -5288,6 +5846,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
     <div
       className="pull-right"
     >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+            "marginRight": 10,
+          }
+        }
+        type="button"
+      >
+        Status Logs
+      </button>
       <a
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
@@ -5453,6 +6024,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
               <td
                 className="text-right"
               >
+                Trainer:
+              </td>
+              <td>
+                <div
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "gap": ".3rem",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <b>
+                    ---
+                  </b>
+                   | 
+                  <a
+                    href="tel:undefined"
+                  >
+                    (
+                    ---
+                    )
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Certification Score:
               </td>
               <td>
@@ -5500,6 +6102,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                     value="2018-09-02"
                   />
                 </div>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Submission Date:
+              </td>
+              <th>
+                26th May 2018
               </th>
             </tr>
             <tr>
@@ -5735,8 +6347,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
   >
     Refresh Report
   </button>
+  <Connect(ReferenceAttachmentBox)
+    auditStoreId="5"
+  />
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={true}
+    rating={0}
   />
   <div
     className="sidebar"
@@ -5905,6 +6525,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
     <div
       className="pull-right"
     >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": 10,
+            "marginRight": 10,
+          }
+        }
+        type="button"
+      >
+        Status Logs
+      </button>
       <a
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
@@ -6060,6 +6693,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
               <td
                 className="text-right"
               >
+                Trainer:
+              </td>
+              <td>
+                <div
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "gap": ".3rem",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <b>
+                    ---
+                  </b>
+                   | 
+                  <a
+                    href="tel:undefined"
+                  >
+                    (
+                    ---
+                    )
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
                 Certification Score:
               </td>
               <td>
@@ -6076,6 +6740,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
               </td>
               <th>
                 2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Submission Date:
+              </td>
+              <th>
+                26th May 2018
               </th>
             </tr>
             <tr>
@@ -6293,8 +6967,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
       </div>
     </div>
   </div>
+  <Connect(ReferenceAttachmentBox)
+    auditStoreId="5"
+  />
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="sidebar"

@@ -20,6 +20,8 @@ class QuestionSerializer(ModelSerializer):
             'max_marks',
             'section',
             'question_type',
+            'question_note',
+            'is_required',
             'question_data',
             'hide_question',
             'optional_comment_required',
@@ -37,6 +39,8 @@ class QuestionDeSerializer(ModelSerializer):
             'max_marks',
             'section',
             'question_type',
+            'question_note',
+            'is_required',
             'question_data',
             'hide_question',
             'optional_comment_required',
@@ -53,6 +57,8 @@ class QuestionDeSerializer(ModelSerializer):
         question.max_marks = self.validated_data.get('max_marks', question.max_marks)
         question.section = self.validated_data.get('section', question.section_id)
         question.question_type = self.validated_data.get('question_type', question.question_type)
+        question.question_note = self.validated_data.get('question_note', question.question_note)
+        question.is_required = self.validated_data.get('is_required', question.is_required)
         question.question_data = self.validated_data.get('question_data', question.question_data)
         question.hide_question = self.validated_data.get('hide_question', question.hide_question)
         question.optional_comment_required = self.validated_data.get('optional_comment_required', question.optional_comment_required)

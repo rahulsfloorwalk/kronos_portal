@@ -861,7 +861,8 @@ class AuditGuidelineByAuditStore(APIView):
     }
     def get(self,request,audit_store_id,format=None):
         attachment = attachment_auditor_service.find_attachment_by_audit_store_id(audit_store_id)
-        return Response(attachment)
+        # return Response(attachment)
+        return Response(AttachmentSerializer(attachment,many=True).data)  
     
 def find_proof_tag_by_id(proof_tag_id):
     """Retrieve the proof tag by its ID or return None if not found or ID is None."""

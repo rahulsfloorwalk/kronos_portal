@@ -25,6 +25,19 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
         Fail
       </button>
     </Link>
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -164,6 +177,37 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -180,6 +224,16 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -302,7 +356,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -485,6 +539,45 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 0,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -567,6 +660,11 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -687,6 +785,19 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
         Fail
       </button>
     </Link>
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -826,6 +937,37 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -842,6 +984,16 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -964,7 +1116,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -1147,6 +1299,45 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -1229,6 +1420,11 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -1349,6 +1545,19 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
         Fail
       </button>
     </Link>
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -1488,6 +1697,37 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -1504,6 +1744,16 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -1626,7 +1876,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -1809,6 +2059,45 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 2,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -1891,6 +2180,11 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -2011,6 +2305,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
         Fail
       </button>
     </Link>
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -2150,6 +2457,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -2166,6 +2504,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -2288,7 +2636,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -2471,6 +2819,45 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -2553,6 +2940,11 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -2673,6 +3065,19 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
         Fail
       </button>
     </Link>
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -2812,6 +3217,37 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -2828,6 +3264,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -2950,7 +3396,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -3133,6 +3579,45 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": null,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -3215,6 +3700,11 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -3332,6 +3822,19 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -3471,6 +3974,37 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -3487,6 +4021,16 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -3609,7 +4153,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -3792,6 +4336,45 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "ACCEPTED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -3874,6 +4457,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -3994,6 +4582,19 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         Fail
       </button>
     </Link>
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -4133,6 +4734,37 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -4149,6 +4781,16 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -4271,7 +4913,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -4461,6 +5103,45 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "ACKNOWLEDGED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -4543,6 +5224,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -4663,6 +5349,19 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         Fail
       </button>
     </Link>
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -4802,6 +5501,37 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -4818,6 +5548,16 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -4940,7 +5680,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -5123,6 +5863,45 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "ASSIGNED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -5205,6 +5984,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -5307,6 +6091,19 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -5446,6 +6243,37 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -5462,6 +6290,16 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -5584,7 +6422,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -5767,6 +6605,45 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "COMPLETED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -5849,6 +6726,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -5951,6 +6833,19 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -6090,6 +6985,37 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -6106,6 +7032,16 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -6228,7 +7164,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -6411,6 +7347,45 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "FAILED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -6493,6 +7468,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -6595,6 +7575,19 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -6734,6 +7727,37 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -6750,6 +7774,16 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -6872,7 +7906,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -7055,6 +8089,45 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "PM_REVIEW",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -7137,6 +8210,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -7239,6 +8317,19 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -7378,6 +8469,37 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -7394,6 +8516,16 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -7516,7 +8648,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -7699,6 +8831,45 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "REJECTED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -7781,6 +8952,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"
@@ -7901,6 +9077,19 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         Fail
       </button>
     </Link>
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -8040,6 +9229,37 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -8087,6 +9307,16 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                       value="2018-09-02"
                     />
                   </div>
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -8209,7 +9439,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -8410,6 +9640,45 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "SUBMITTED",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -8492,6 +9761,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={true}
+    rating={0}
   />
   <div
     className="modal"
@@ -8594,6 +9868,19 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default  pull-right"
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 10,
+          "marginRight": 10,
+        }
+      }
+      type="button"
+    >
+      Status Logs
+    </button>
     <File />
      Audit Report - 
     5
@@ -8733,6 +10020,37 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
+                  Trainer:
+                </td>
+                <td>
+                  <div
+                    style={
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "gap": ".3rem",
+                        "justifyContent": "flex-start",
+                      }
+                    }
+                  >
+                    <b>
+                      ---
+                    </b>
+                     | 
+                    <a
+                      href="tel:undefined"
+                    >
+                      (
+                      ---
+                      )
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
                   Certification Score:
                 </td>
                 <td>
@@ -8749,6 +10067,16 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 </td>
                 <th>
                   2nd Sep 2018
+                </th>
+              </tr>
+              <tr>
+                <td
+                  className="text-right"
+                >
+                  Auditor Submission Date:
+                </td>
+                <th>
+                  26th May 2018
                 </th>
               </tr>
               <tr>
@@ -8871,7 +10199,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 <td
                   className="text-right"
                 >
-                  PDF Guideline:
+                  View Guideline:
                 </td>
                 <th>
                   <button
@@ -9054,6 +10382,45 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     onReload={[Function]}
     sectionproof_change={false}
   />
+  <ReferenceAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "post_approval_description": "Conduct an Audit - Post Approval - Audit Cycle Description",
+          },
+          "post_approval_description": "Conduct an Audit - Post Approval - Audit Description",
+          "store": Object {
+            "city": Object {
+              "id": 1,
+              "name": "Nagpur",
+            },
+            "client": Object {
+              "id": 6,
+              "name": "Client Name",
+            },
+            "name": "Store Name",
+          },
+        },
+        "audit_date": "2018-09-02",
+        "id": 5,
+        "qa_rating": 1,
+        "report_summary": "Foobar",
+        "status": "WITHDRAWN",
+        "user": Object {
+          "profileinfo": Object {
+            "first_name": "John",
+            "last_name": "Doe",
+          },
+        },
+      }
+    }
+    auditStoreId="5"
+  />
   <AttachmentBox
     auditStore={
       Object {
@@ -9136,6 +10503,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     handleSectionProofChange={[Function]}
     onAnswerUpdated={[Function]}
     onReload={[Function]}
+  />
+  <NpsOverallExperienceRating
+    auditStoreId={5}
+    editable={false}
+    rating={0}
   />
   <div
     className="modal"

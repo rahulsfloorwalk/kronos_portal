@@ -57,7 +57,7 @@ def find_by_audit_store_for_auditor_prooftag_not_available_for_moderator(audit_s
 
 def find_attachment_by_audit_store_id(audit_store_id:int):
     audit_store = AuditStore.objects.get(id=audit_store_id)
-    return attachment_service.find_by_audit_cycle_id(audit_store.audit.audit_cycle.id)
+    return attachment_service.find_by_audit_cycle(audit_store.audit.audit_cycle.id)
     
 
 def find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, user_id):

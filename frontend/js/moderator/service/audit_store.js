@@ -254,3 +254,18 @@ export function arrangeAttachment(auditStoreId){
 export function FetchGuidlineByAuditStoreModerator(auditStoreId){
 	return $.get(url.api_base_path + `moderator/audit_store/${auditStoreId}/guildlines`);
 }
+
+export function fetchStatusLogs(auditStoreId){
+	return $.get(url.api_base_path + `moderator/audit_store/${auditStoreId}/status_logs`);
+}
+
+export function setNpsOverallExperienceRating(audit_store_id, nps_section){
+	return $.ajax({
+		url: url.api_base_path + `moderator/audit_store/${audit_store_id}/nps_section`,
+		method: "POST",
+		data: JSON.stringify({
+			nps_section
+		}),
+		contentType: "application/json"
+	});
+}

@@ -224,7 +224,8 @@ class AttachmentRenderer extends React.Component {
 			let audio_player_node;
 			let audio_transcipt_table_data;
 			let audio_transcipt_rows = [];
-			const audio_transcript_data = (this.props.attachment.audio_transcript_data).hasOwnProperty("transcript_list") ? this.props.attachment.audio_transcript_data["transcript_list"] : [];
+			// const audio_transcript_data = (this.props.attachment.audio_transcript_data).hasOwnProperty("transcript_list") ? this.props.attachment.audio_transcript_data["transcript_list"] : [];
+			const audio_transcript_data = (this.props.attachment.audio_transcript_data && this.props.attachment.audio_transcript_data.transcript_list) || [];
 			let count_key = 1;
 			for (let tl of audio_transcript_data) {
 				audio_transcipt_rows.push(
@@ -684,7 +685,8 @@ export default class AttachmentPreview extends React.Component {
 		proof_tags: PropTypes.array,
 		onChange: PropTypes.func,
 		rotateImage: PropTypes.func,
-		disableRotateButton: PropTypes.bool
+		disableRotateButton: PropTypes.bool,
+		onClose: PropTypes.func
 	};
 
 	state = {
@@ -786,6 +788,15 @@ export default class AttachmentPreview extends React.Component {
 			</a>
 		);
 
+		let closeButton;
+		if (this.props.onClose) {
+			closeButton = (
+				<button type="button" className="btn btn-default btn-sm pull-right" onClick={this.props.onClose} style={{ marginLeft: "5px" }}>
+					<Cross /> Close
+				</button>
+			);
+		}
+
 		const modalStyle = {
 			display: this.state.display,
 			overflow: "scroll"
@@ -801,6 +812,7 @@ export default class AttachmentPreview extends React.Component {
 		return (
 			<div>
 				<h4 className="page-header">
+					{closeButton}
 					{deleteButton}
 					{proof_tag_select_box}
 					{headingText}

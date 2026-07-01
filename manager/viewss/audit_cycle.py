@@ -42,6 +42,7 @@ class AuditCycleDeSerializer(ModelSerializer):
             'audit_ai_autofill',
             'qa_ai_comparison',
             'audit_report_summary',
+            'pm_review_bypass',
             'auditor_notes',
         )
         read_only_fields = ('id',)
@@ -66,6 +67,7 @@ class AuditCycleDeSerializer(ModelSerializer):
         audit_cycle.audit_ai_autofill = self.validated_data.get('audit_ai_autofill', audit_cycle.audit_ai_autofill)
         audit_cycle.qa_ai_comparison = self.validated_data.get('qa_ai_comparison', audit_cycle.qa_ai_comparison)
         audit_cycle.audit_report_summary = self.validated_data.get('audit_report_summary', audit_cycle.audit_report_summary)
+        audit_cycle.pm_review_bypass = self.validated_data.get('pm_review_bypass',audit_cycle.pm_review_bypass)
         audit_cycle.auditor_notes = self.validated_data.get('auditor_notes', audit_cycle.auditor_notes)
         audit_cycle.client = self.validated_data.get('client', audit_cycle.client_id)
         audit_cycle.questionnaire_type = self.validated_data.get('questionnaire_type', audit_cycle.questionnaire_type)
@@ -316,10 +318,10 @@ class ImportQuestionnaire(APIView):
         return Response({"detail": "Questionnaire imported successfully", "imported": imported_data})
     
 class WorkloadDashboard(APIView):
-    permission_classes = [AllowAny]
-    # required_groups = {
-    #     'GET': [GROUP_NAME_MANAGER,GROUP_NAME_MODERATOR],
-    # }
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
 
     def get(self, request):
         role = request.GET.get("role", "manager").lower()
@@ -453,9 +455,12 @@ class AuditCycleAttachmentView(APIView):
         try:
             post_data,attachment = audit_cycle_attachment_service.audit_cycle_image_upload_by_audit_cycle_id(
                 audit_cycle_id,
-                request.data["file_name"],
-                request.data["file_size"],
-                request.data["file_type"]) 
+                request.data.get("file_name"),
+                request.data.get("file_size"),
+                request.data.get("file_type"),
+                request.data.get("attachment_category"),
+                request.data.get("link_url"),
+            )
             post_data["attachment"] = AttachmentSerializer(attachment).data
             return Response(post_data)
         except KeyError as e:

@@ -51,6 +51,7 @@ import AuditCycleDetails from "./audit_cycle/AuditCycleDetails.jsx";
 import AuditAlignmentFactors from "./audit_cycle/AuditAlignmentFactors.jsx";
 import DetailsFromClient from "./audit_cycle/DetailsFromClient.jsx";
 import GuidelineAttachment from "./audit_cycle/GuidelineAttachment.jsx";
+import ReferenceAttachment from "./audit_cycle/ReferenceAttachment.jsx";
 import AuditCyclePaymentList from "./AuditCyclePaymentList.jsx";
 import AuditCycleModeratorSummary from "./audit_cycle/AuditCycleModeratorSummary.jsx";
 import PostApprovalDescriptionForm from "./PostApprovalDescriptionForm.jsx";
@@ -151,6 +152,7 @@ import QuestionnaireImportForm from "./questionnaire/QuestionnaireImportForm.jsx
 import ManagerAddCountry from "./manager/ManagerAddCountry.jsx";
 import ClientQaList from "./client_qa_listing/ClientQaList.jsx";
 import ClientQaForm from "./client_qa_listing/ClientQaForm.jsx";
+import SectionPreview from "./questionnaire/SectionPreview.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -243,8 +245,10 @@ const Routes = () => (
 				<Route path="system_cost" component={SystemCostForm} />
 				<Route path="audit_alignment_factors" component={AuditAlignmentFactors} />
 				<Route path="attachment_guideline" component={GuidelineAttachment} />
+				<Route path="reference_attachment" component={ReferenceAttachment} />
 				<Route path="details_from_client" component={DetailsFromClient} />
 				<Route path="questionnaire" component={SectionList}>
+					<Route path="section/preview" component={SectionPreview} />
 					<Route path="section/import" component={QuestionnaireImportForm} />
 					<Route path="section/copy" component={SectionCopyForm} />
 					<Route path="section/add" component={SectionAddForm} />

@@ -37,6 +37,7 @@ import AgencyListForAudit from "./audit/AgencyListForAudit.jsx";
 import { auditPropType } from "../prop_types";
 import AuditorListForEligibility from "./audit/AuditorListForEligibility.jsx";
 import AuditorListForDistance from "./audit/AuditorListForDistance.jsx";
+import { fetchClientTrainers, fetchClientDetails } from "../service/client_trainer.js";
 
 class AuditStoreTableForAudit extends Component{
 	static propTypes = {
@@ -230,6 +231,7 @@ export class __AuditRow extends Component{
 					</td>
 					{ this.props.showPriority ? <td className="text-right">{this.props.audit.store.priority}</td> : null }
 					{ this.props.showAuditDate ? <td className="text-right">{moment(this.props.audit.audit_date).isValid() ? moment(this.props.audit.audit_date).format(momentDateFormat) : null}</td> : null }
+					<td className="text-right" style={{ minWidth: "150px" }}>{this.props.audit.client_trainer ? this.props.audit.client_trainer.trainer.user.email : "-"}</td>
 					<td>{this.props.audit.store.city.name}</td>
 					{ this.props.showAuditFees ? <td className="text-right">{this.props.audit.earnings_per_audit}</td> : null }
 					{ this.props.showReimbursement ? <td className="text-right">{this.props.audit.reimbursement ? this.props.audit.reimbursement : null}</td> : null }
@@ -374,6 +376,8 @@ export class AuditList extends Component{
 			selectedHiddenState: "",
 			selectedAuditDate: "",
 			selectedPriority: "",
+			selectedTrainerId: "",
+			trainers:[],
 		};
 	}
 
@@ -384,6 +388,13 @@ export class AuditList extends Component{
 	componentDidMount(){
 		this.setLoading(true);
 		this.props.dispatch(fetchAudits(this.props.params.auditCycleId)).always(()=>this.setLoading(false));
+		fetchClientDetails((this.props.params.auditCycleId))
+			.then((client) => {
+				const clientId = client.id;
+				fetchClientTrainers(clientId).then((trainers) => {
+					this.setState({ trainers });
+				});
+			});
 	}
 
 	onDelete = (audit) => {
@@ -396,6 +407,12 @@ export class AuditList extends Component{
 
 	onCityChanged = (e) => {
 		this.setState({selectedCityId: e.target.value});
+	};
+
+	onTrainerChanged = (e) => {
+		this.setState({
+			selectedTrainerId: e.target.value,
+		});
 	};
 
 	onHiddenFilterChanged = (e) => {
@@ -537,6 +554,7 @@ export class AuditList extends Component{
 			.filter((a) => this.state.selectedCityId ? a.store.city.id === parseInt(this.state.selectedCityId) : true)
 			.filter((a) => this.state.selectedPriority ? a.store.priority === this.state.selectedPriority : true)
 			.filter((a) => this.state.selectedHiddenState !== "" ? "true" === this.state.selectedHiddenState === a.hidden : true)
+			.filter((a) => !this.state.selectedTrainerId ? true : a.client_trainer && a.client_trainer.id === parseInt(this.state.selectedTrainerId))
 			.filter((a) => {
 				switch (this.state.selectedStatuaState) {
 				case "":
@@ -616,6 +634,20 @@ export class AuditList extends Component{
 								</select>
 							</th> : null }
 							<th>
+								<select
+									value={this.state.selectedTrainerId}
+									onChange={this.onTrainerChanged}
+									className="form-control"
+								>
+									<option value="">All Trainers</option>
+									{this.state.trainers.map((client_trainer) => (
+										<option key={client_trainer.id} value={client_trainer.id}>
+											{client_trainer.user.trainer.email}
+										</option>
+									))}
+								</select>
+							</th>
+							<th>
 								<select value={this.state.selectedCity} onChange={this.onCityChanged} className="form-control">
 									<option value="">City</option>
 									{cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -643,7 +675,15 @@ export class AuditList extends Component{
 							<th>&nbsp;</th>
 						</tr>
 					</thead>
-					{rows}
+					{rows.length > 0 ? rows : (
+						<tbody>
+							<tr>
+								<td colSpan="11" className="text-center text-muted">
+									No audits found
+								</td>
+							</tr>
+						</tbody>
+					)}
 				</table>
 			</div>
 			{this.props.children}

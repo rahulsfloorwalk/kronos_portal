@@ -213,6 +213,7 @@ class AuditStore(Model):
     audit_store_percentage = IntegerField(db_column='percentage', null=True, blank=True)
     auto_assigned = BooleanField(db_column='auto_assigned', default=False)
     instant_assigned = BooleanField(db_column='instant_assigned', default=False)
+    assigned_by = CharField(db_column='assigned_by',max_length=120,null=True,blank=True)
     report_revert_count = IntegerField(db_column='report_revert_count',default=0 , blank=True,null=True)
     report_completion_percentage = IntegerField(db_column='report_completion_percentage', blank=True,null=True)
     # sentiment_text = CharField(db_column="sentiment_text", max_length=100, blank=True, null=True)

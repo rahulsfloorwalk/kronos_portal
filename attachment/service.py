@@ -44,6 +44,7 @@ from manager.models import AuditProoftagNotAvailable
 from django.contrib.auth.models import User, Group
 from rest_framework.exceptions import ValidationError
 from questionnaire.models import SectionProofTag
+import uuid
 
 _logger = logging.getLogger(__name__)
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -57,12 +58,21 @@ def check_file_size(file_size: int) -> None:
         raise AppLogicError("file is too large")
 
 def get_proof_type(mime_type: str) -> str:
+    if mime_type.startswith("reference_"):
+        mime_type = mime_type.replace("reference_", "", 1)
+        return Attachment.REFERENCE_PICTURE
+
+    elif mime_type.startswith("guideline_"):
+        mime_type = mime_type.replace("guideline_", "", 1)
+        return Attachment.GUIDELINE
+
     parts = mime_type.split("/")
     return {
         "image": Attachment.PHOTO,
         "audio": Attachment.AUDIO,
         "video": Attachment.VIDEO,
-    }.get(parts[0]) or Attachment.OTHER
+    # }.get(parts[0]) or Attachment.OTHER
+    }.get(parts[0], Attachment.OTHER) 
 
 def parse_file_name(file_name: str) -> Tuple[str, str]:
     return os.path.splitext(os.path.basename(file_name))
@@ -71,7 +81,7 @@ def valid_file_type(mime_type: str, file_extension: str) -> str:
     if mime_type is None or file_extension == '':
         raise AppLogicError("unknown file type")
 
-def upload_for_object(proof_type: str, mime_type: str, file_name: str, file_size: int, file_slug: str, content_object) -> Attachment:
+def upload_for_object(proof_type: str, mime_type: str, file_name: str, file_size: int, file_slug: str, content_object,attachment_category=None) -> Attachment:
     return Attachment.objects.create(
         status = Attachment.UPLOADING,
         proof_type = proof_type,
@@ -80,7 +90,29 @@ def upload_for_object(proof_type: str, mime_type: str, file_name: str, file_size
         file_size = file_size,
         file_slug = file_slug,
         content_object = content_object,
+        attachment_category = attachment_category,
         old_file_name = file_name,
+    )
+
+def upload_link_for_object(link_url,content_object,attachment_category=None):
+    file_name = link_url.rstrip("/").split("/")[-1] or "External Link"
+    return Attachment.objects.create(
+        status=Attachment.ATTACHED,
+        proof_type=Attachment.OTHER,
+        mime_type="text/link",
+        file_name=file_name,
+        old_file_name=file_name,
+        file_size=0,
+        file_slug = "ATTACHMENTS/{}/{}/{}/{}.link".format(
+            timezone.now().year,
+            timezone.now().month,
+            timezone.now().day,
+            uuid.uuid4().hex
+        ),
+        link_url=link_url,
+        content_object=content_object,
+        attachment_category=attachment_category,
+        completed_at=timezone.now(),
     )
 
 def upload_prooftag_not_available_for_object(audit_store_id, proof_tag, description, user_id):
@@ -271,14 +303,17 @@ def upload_for_clientrequiremnt(client_requirements_id,file_name,file_size,mime_
     attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], clientrequirement)
     return (post_data, attachment)
 
-def upload_for_audit_cycle(audit_cycle_id,file_name,file_size,mime_type):
+def upload_for_audit_cycle(audit_cycle_id,file_name,file_size,mime_type,attachment_category=None,link_url=None):
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    if link_url:
+        attachment = upload_link_for_object(link_url=link_url,content_object=audit_cycle,attachment_category=attachment_category)
+        return {}, attachment
     check_file_size(file_size)
     basename, file_extension = parse_file_name(file_name)
     valid_file_type(mime_type, file_extension)
     proof_type = get_proof_type(mime_type)
     post_data = get_signed_post(file_extension)
-    attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], audit_cycle)
+    attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], audit_cycle,attachment_category)
     return (post_data, attachment)
 
 def upload_for_order(order_id,file_name,file_size,mime_type):

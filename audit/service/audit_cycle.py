@@ -5,8 +5,6 @@ from guardian.shortcuts import get_objects_for_user
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from kronos.utils import validate_date_range_from_string
 
-from manager.service.manager import find_all_moderators
-from registration.models import GROUP_NAME_TRAINER
 from registration.service.moderator import find_moderator_by_user_id
 from client.service.client_user import find_clientuser_by_user_id
 from attachment.models import Attachment
@@ -15,7 +13,7 @@ from client.models import MPOrder
 from auditor.models import AuditApplication
 from audit_store.models import AuditStore
 from . import audit_cycle_proof_tag
-from manager.models import ManagerProfileInfo
+from manager.models import ManagerProfileInfo,ModeratorProfileInfo
 from client.models import Client
 from client.models import Store
 from manager.models import City
@@ -27,6 +25,7 @@ import logging
 from auditor.service.profile_info_service import get_avg_auditor_rating_by_user
 from guardian.models import UserObjectPermission
 from collections import defaultdict
+from manager.service.manager import find_all_moderators
 
 logger = logging.getLogger(__name__)
 
@@ -144,6 +143,7 @@ def get_audit_cycle_stats(audit_cycle):
 
 #     return response
 
+
 def get_manager_dashboard():
     client_data = defaultdict(
         lambda: {"client_id": None,"client_name": "","total_count": 0,"completed_count": 0})
@@ -197,15 +197,11 @@ def get_manager_dashboard():
         for manager in client.managers.filter(is_active=True,receive_email_notification=True):
             manager_clients[manager.user_id].append(client.id)
     managers_response = []
-
-    manager_profiles = (ManagerProfileInfo.objects.filter(user__is_active=True,allowed_countries__contains=["IN"]).select_related("user"))
+    manager_profiles = (ManagerProfileInfo.objects.filter(user__is_active=True,allowed_countries__contains=["IN"],is_admin=False).select_related("user"))
 
     total_pending_work = 0
-
     manager_stats = []
-
     for manager in manager_profiles:
-
         client_ids = manager_clients.get(
             manager.user_id,
             []
@@ -239,7 +235,7 @@ def get_manager_dashboard():
         total_pending_work += workload
         manager_stats.append({
             "manager_id": manager.id,
-            "manager_name": ( manager.user.get_full_name()or manager.user.username),
+            "manager_name": manager.name.strip() if manager.name and manager.name.strip() else manager.user.username,
             "total_workload": workload,
             "total_count": manager_total,
             "completed_count": manager_completed,
@@ -269,7 +265,6 @@ def get_moderator_dashboard():
     total_count = 0
 
     active_cycles = (AuditCycle.objects.filter(status=AuditCycle.ACTIVE).select_related("client").only( "client_id", "planned_audit", "client__name"))
-
     for cycle in active_cycles:
         planned = cycle.planned_audit or 0
         client_totals[cycle.client_id] = { "client_id": cycle.client_id,"client_name": cycle.client.name,"total_count": (client_totals.get(cycle.client_id,{}).get("total_count", 0)+ planned),}
@@ -280,13 +275,14 @@ def get_moderator_dashboard():
     total_pending_work = 0
 
     for moderator in moderators:
+        profile = ModeratorProfileInfo.objects.filter(user=moderator).first()
         assigned_store_ids = [
             int(store_id)
             for store_id in (UserObjectPermission.objects.filter(user=moderator,permission__codename="moderator_manage").values_list("object_pk",flat=True))
             if store_id and str(store_id).isdigit()
         ]
 
-        assigned_stores = (AuditStore.objects.filter(id__in=assigned_store_ids).select_related("audit__audit_cycle__client"))
+        assigned_stores = (AuditStore.objects.filter(id__in=assigned_store_ids,audit__audit_cycle__status=AuditCycle.ACTIVE).select_related("audit__audit_cycle__client"))
         moderator_clients = {}
         moderator_total = 0
         moderator_completed = 0
@@ -315,11 +311,8 @@ def get_moderator_dashboard():
                 moderator_remaining += 1
 
         total_pending_work += moderator_remaining
-
         assigned_clients = []
-
         for stats in moderator_clients.values():
-
             assigned_clients.append({
                 "client_id": stats["client_id"],
                 "client_name": stats["client_name"],
@@ -336,14 +329,11 @@ def get_moderator_dashboard():
                     "completed_count": 0,
                 }
             )
-
             client_stats["completed_count"] += (stats["completed_count"])
-
         assigned_clients.sort(key=lambda x: x["remaining_count"],reverse=True)
-
         moderators_response.append({
             "moderator_id": moderator.id,
-            "moderator_name": ( moderator.get_full_name() or moderator.username ),
+            "moderator_name": (profile.name if profile and profile.name else moderator.username),
             "total_count": moderator_total,
             "completed_count": moderator_completed,
             "remaining_count": moderator_remaining,

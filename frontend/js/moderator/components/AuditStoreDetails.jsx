@@ -35,6 +35,10 @@ import { fetchAnswers } from "../service/answer.js";
 import AudioUrlBox from "./AudioUrlBox.jsx";
 import Alert from "react-s-alert";
 import GlobalLoader from "../../components/GlobalLoader.jsx";
+import StatusLogsModal from "./StatusLogsModal.jsx";
+import NpsOverallExperienceRating from "./NpsOverallExperienceRating.jsx";
+import ReferenceAttachmentBox from "./ReferenceAttachmentBox.jsx";
+import ViewGuideLineModal from "./ViewGuideLineModal.jsx";
 
 export default class AuditStoreDetails extends React.Component {
 	static propTypes = {
@@ -65,7 +69,9 @@ export default class AuditStoreDetails extends React.Component {
 			reloadKey: 0,
 			sectionproof_change: false,
 			isAnyTranscribing: false,
-			answersUpdated: false
+			answersUpdated: false,
+			isGuidelineModalOpen: false,
+			isStatusLogModalOpen: false,
 			// timerValue: 0,
 			// isTimerRunning: false,
 			// forwardLoading: false,
@@ -433,6 +439,22 @@ export default class AuditStoreDetails extends React.Component {
 		}
 	};
 
+	showStatusLogModal = () => {
+		this.setState({ isStatusLogModalOpen: true });
+	};
+
+	hideStatusLogModal = () => {
+		this.setState({ isStatusLogModalOpen: false });
+	};
+
+	showGuidelineModal = () => {
+		this.setState({ isGuidelineModalOpen: true });
+	};
+
+	hideGuidelineModal = () => {
+		this.setState({ isGuidelineModalOpen: false });
+	};
+
 	reasonChanged = (e) => {
 		this.setState({
 			reason: e.target.value,
@@ -704,6 +726,10 @@ export default class AuditStoreDetails extends React.Component {
 							{this.formatTime(this.timerValue)}
 						</button>
 					)}
+					<button type="button" className="btn btn-default  pull-right" style={{marginRight:10, marginLeft:10}}
+						onClick={this.showStatusLogModal}>
+							Status Logs
+					</button>
 					<File /> Audit Report - {this.state.auditStore.id}
 					{faultyReportMessage}
 				</h2>
@@ -759,12 +785,22 @@ export default class AuditStoreDetails extends React.Component {
 												</td>
 											</tr>
 											<tr>
+												<td className="text-right">Trainer:</td>
+												<td>
+													<div style={{display:"flex",justifyContent:"flex-start",alignItems:"center",gap:".3rem"}}><b>{this.state.auditStore.audit.client_trainer ? this.state.auditStore.audit.client_trainer.trainer.name : "---"}</b> | <a href={`tel:${this.state.auditStore.audit.client_trainer && this.state.auditStore.audit.client_trainer.trainer.mobile}`}>({this.state.auditStore.audit.client_trainer ? this.state.auditStore.audit.client_trainer.trainer.mobile : "---"})</a></div>
+												</td>
+											</tr>
+											<tr>
 												<td className="text-right">Certification Score:</td>
 												<td><b>{this.state.auditStore.user.profileinfo.certification_score ? this.state.auditStore.user.profileinfo.certification_score : "NA"}</b></td>
 											</tr>
 											<tr>
 												<td className="text-right">Audit Date:</td>
 												<th>{auditDateElement}</th>
+											</tr>
+											<tr>
+												<td className="text-right">Audit Submission Date:</td>
+												<th>{moment(this.state.auditStore.submit_at).format(momentDateFormat)}</th>
 											</tr>
 											<tr>
 												<td className="text-right">Status:</td>
@@ -890,12 +926,23 @@ export default class AuditStoreDetails extends React.Component {
 												</td>
 											</tr>
 											<tr>
+												<td className="text-right">Trainer:</td>
+												<td>
+													<div style={{display:"flex",justifyContent:"flex-start",alignItems:"center",gap:".3rem"}}><b>{this.state.auditStore.audit.client_trainer ? this.state.auditStore.audit.client_trainer.trainer.name : "---"}</b> | <a href={`tel:${this.state.auditStore.audit.client_trainer && this.state.auditStore.audit.client_trainer.trainer.mobile}`}>({this.state.auditStore.audit.client_trainer ? this.state.auditStore.audit.client_trainer.trainer.mobile : "---"})</a></div>
+												</td>
+											</tr>
+											<tr>
 												<td className="text-right">Certification Score:</td>
 												<td><b>{this.state.auditStore.user.profileinfo.certification_score ? this.state.auditStore.user.profileinfo.certification_score : "NA"}</b></td>
 											</tr>
 											<tr>
 												<td className="text-right">Audit Date:</td>
 												<th>{auditDateElement}</th>
+											</tr>
+											<tr>
+												<td className="text-right">Auditor Submission Date:</td>
+												<th>{moment(this.state.auditStore.submit_at).format(momentDateFormat)}</th>
+												{/* <th>{moment(this.state.auditStore.submit_at).format("DD MMM YYYY, hh:mm A")}</th> */}
 											</tr>
 											<tr>
 												<td className="text-right">Status:</td>
@@ -934,8 +981,9 @@ export default class AuditStoreDetails extends React.Component {
 											{auditorRatingElement}
 											{this.state.guideline && this.state.guideline ?
 												<tr>
-													<td className="text-right">PDF Guideline:</td>
-													<th><button className="btn btn-primary sm" onClick={this.openPDFInNewTab}>Open Guideline</button></th>
+													<td className="text-right">View Guideline:</td>
+													{/* <th><button className="btn btn-primary sm" onClick={this.openPDFInNewTab}>Open Guideline</button></th> */}
+													<th><button className="btn btn-primary sm" onClick={this.showGuidelineModal}>Open Guideline</button></th>
 												</tr>
 												: null}
 										</tbody>
@@ -972,6 +1020,7 @@ export default class AuditStoreDetails extends React.Component {
 
 				{refresh_report_button}
 				<MandatoryProofBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable} onReload={this.handleMandatoryProofReload} sectionproof_change={this.state.sectionproof_change}/>
+				<ReferenceAttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore}/>
 				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable} onReload={this.loadAttachments} />
 				{this.state.proof_not_available.length > 0 && <ProofNotAvailable proof_not_available={this.state.proof_not_available} />}
 				{/* <ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary} /> */}
@@ -1022,6 +1071,12 @@ export default class AuditStoreDetails extends React.Component {
 					auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore} />
 				{this.props.children}
 
+				<NpsOverallExperienceRating
+					editable={editable}
+					rating={this.state.auditStore.nps_section || 0}
+					auditStoreId={parseInt(this.props.params.auditStoreId)}
+				/>
+
 				{sidebarElement}
 
 				<div className="modal" tabIndex="-1" style={modalStyle}>
@@ -1057,6 +1112,23 @@ export default class AuditStoreDetails extends React.Component {
 					show={this.state.aiLoading}
 					text="Let the magic begin!..."
 				/>
+				{
+					this.state.isGuidelineModalOpen && (
+						<ViewGuideLineModal
+							guideline={this.state.guideline}
+							onClose={this.hideGuidelineModal}
+						/>
+					)
+				}
+				{
+					this.state.isStatusLogModalOpen && (
+						<StatusLogsModal
+							isOpen={this.state.isStatusLogModalOpen}
+							auditStoreId={this.props.params.auditStoreId}
+							onClose={this.hideStatusLogModal}
+						/>
+					)
+				}
 			</div>
 		);
 	}

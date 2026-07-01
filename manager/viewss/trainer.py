@@ -13,7 +13,9 @@ class TrainerDeSerializer(Serializer):
     email = EmailField()
     password = CharField(min_length=8, max_length=128, allow_blank=True)
     is_active = BooleanField()
-
+    name = CharField(required=False, allow_blank=True) 
+    mobile = CharField(required=False, allow_blank=True) 
+    firm_name = CharField(required=False, allow_blank=True)
 
 class TrainerView(APIView):
     permission_classes = [HasGroupPermission]
@@ -31,7 +33,11 @@ class TrainerView(APIView):
         saved_trainer_user = trainer_service.insert(
             trainer_ds.validated_data["email"],
             trainer_ds.validated_data["password"],
-            trainer_ds.validated_data["is_active"]
+            trainer_ds.validated_data["is_active"],
+
+            name=trainer_ds.validated_data.get("name"), 
+            mobile=trainer_ds.validated_data.get("mobile"), 
+            firm_name=trainer_ds.validated_data.get("firm_name"),
         )
         return Response(PlainUserSerializer(saved_trainer_user).data)
 
@@ -53,7 +59,11 @@ class TrainerIdView(APIView):
             user_id,
             trainer_ds.validated_data["email"],
             trainer_ds.validated_data["password"],
-            trainer_ds.validated_data["is_active"]
+            trainer_ds.validated_data["is_active"],
+            
+            name=trainer_ds.validated_data.get("name"),
+            mobile=trainer_ds.validated_data.get("mobile"),
+            firm_name=trainer_ds.validated_data.get("firm_name"),
         )
         return Response(PlainUserSerializer(saved_user).data)
 

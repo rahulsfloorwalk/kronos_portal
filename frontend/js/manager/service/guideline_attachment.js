@@ -17,12 +17,14 @@ export function completeAuditCycleAttachment(attachmentId,auditCycleId){
 	});
 }
 
-export function doAuditCycleAttachmentUpload(url, file,auditCycleId){
+export function doAuditCycleAttachmentUpload(url, file,auditCycleId,attachment_category,link_url){
 	let mainPromise = $.Deferred();
 	let payload = {
 		"file_name": file.name,
 		"file_size": file.size,
-		"file_type": file.type
+		"file_type": file.type,
+		"attachment_category":attachment_category,
+		"link_url":link_url
 	};
 
 	mainPromise.notify("INIT");
@@ -89,10 +91,24 @@ export function doAuditCycleAttachmentUpload(url, file,auditCycleId){
 	return mainPromise;
 }
 
-export function uploadFileForAuditCycle(auditCycleId,file){
+export function uploadFileForAuditCycle(auditCycleId,file,attachment_category,link_url){
 	var req_url = url.api_base_path + `manager/audit_cycle/${auditCycleId}/attachment`;
-	return doAuditCycleAttachmentUpload(req_url, file,auditCycleId);
+	return doAuditCycleAttachmentUpload(req_url, file,auditCycleId,attachment_category,link_url);
 
+}
+export function saveYoutubeLinkForAuditCycle(auditCycleId, link_url, attachment_category) {
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/attachment`,
+		type: "POST",
+		data: JSON.stringify({
+			file_name: "youtube_link",
+			file_size: 0,
+			file_type: "video/youtube",
+			attachment_category: attachment_category,
+			link_url: link_url,
+		}),
+		contentType: "application/json"
+	});
 }
 export function deleteAuditCycleAttachment(attachmentId,auditCycleId){
 	return $.ajax({

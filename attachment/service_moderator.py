@@ -128,4 +128,5 @@ def find_attachment_by_audit_store_id(audit_store_id: int):
     audit_store = AuditStore.objects.filter(id=audit_store_id).first()
     if audit_store is None:
         return None
-    return attachment_service.find_by_audit_cycle_id(audit_store.audit.audit_cycle.id)
+    return attachment_service.find_by_audit_cycle(audit_store.audit.audit_cycle.id)
+    # return attachment_service.find_by_audit_cycle_id(audit_store.audit.audit_cycle.id)

@@ -82,6 +82,8 @@ export default class Section extends React.Component {
 							<tr>
 								<th>#</th>
 								<th>Question</th>
+								<th>Question Note</th>
+								<th>Question Required</th>
 								<th>Comment Required</th>
 								<th>Question Type</th>
 								<th>Max. Marks</th>

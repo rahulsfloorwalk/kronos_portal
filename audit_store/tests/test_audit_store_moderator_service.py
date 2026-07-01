@@ -64,7 +64,9 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         reports = service_moderator.find_qa_completed_audit_stores_for_moderator(self.moderator_user.id,
                                                                                  self.lastAuditStoreId,
                                                                                  self.filterStatus, client_id='',month='', year='')
-        self.assertEqual(reports[0].count(), 2)
+        # self.assertEqual(reports[0].count(), 2)
+        self.assertEqual(len(reports[0]), 2)
+        self.assertEqual(reports[1], 2)
 
     def test_find_by_id_for_moderator_returns_audit_store(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
