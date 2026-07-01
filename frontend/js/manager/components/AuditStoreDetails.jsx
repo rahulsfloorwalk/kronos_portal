@@ -46,7 +46,7 @@ import AuditStoreReportAttributesTable from "./audit_store/AuditStoreReportAttri
 import ProofNotAvailable from "./ProofNotAvailable.jsx";
 import { fetchConfig } from "../service/config.js";
 import StatusLogsModal from "./StatusLogsModal.jsx";
-import NpsOverallExperienceRating from "./NpsOverAllExperienceRating.jsx";
+import NpsOverallExperienceRating from "./NpsOverallExperienceRating.jsx";
 import ReferenceAttachmentBox from "./ReferenceAttachmentBox.jsx";
 
 export class AuditStoreDetails extends React.Component{
@@ -522,7 +522,8 @@ export class AuditStoreDetails extends React.Component{
 									</tr>
 									<tr>
 										<td className="text-right">Auditor Submission Date:</td>
-										<th>{moment(this.props.auditStore.submit_at).format("DD MMM YYYY, hh:mm A")}</th>
+										<th>moment(this.props.auditStore.submit_at).format(momentDateFormat)</th>
+										{/* <th>{moment(this.props.auditStore.submit_at).format("DD MMM YYYY, hh:mm A")}</th> */}
 									</tr>
 									{this.props.auditStore.audit_store_percentage ?
 										<tr>

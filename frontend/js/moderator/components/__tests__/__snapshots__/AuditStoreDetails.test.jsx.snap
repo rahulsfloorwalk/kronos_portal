@@ -233,7 +233,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -993,7 +993,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -1753,7 +1753,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -2513,7 +2513,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -3273,7 +3273,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -4030,7 +4030,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -4790,7 +4790,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -5557,7 +5557,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -6299,7 +6299,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -7041,7 +7041,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -7783,7 +7783,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -8525,7 +8525,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -9316,7 +9316,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>
@@ -10076,7 +10076,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   Auditor Submission Date:
                 </td>
                 <th>
-                  26 May 2018, 05:30 AM
+                  moment(this.state.auditStore.submit_at).format(momentDateFormat)
                 </th>
               </tr>
               <tr>

@@ -319,7 +319,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 Auditor Submission Date:
               </td>
               <th>
-                26 May 2018, 05:30 AM
+                moment(this.props.auditStore.submit_at).format(momentDateFormat)
               </th>
             </tr>
             <tr>
@@ -980,7 +980,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 Auditor Submission Date:
               </td>
               <th>
-                26 May 2018, 05:30 AM
+                moment(this.props.auditStore.submit_at).format(momentDateFormat)
               </th>
             </tr>
             <tr>
@@ -1580,7 +1580,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
                 Auditor Submission Date:
               </td>
               <th>
-                26 May 2018, 05:30 AM
+                moment(this.props.auditStore.submit_at).format(momentDateFormat)
               </th>
             </tr>
             <tr>
@@ -2241,7 +2241,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                 Auditor Submission Date:
               </td>
               <th>
-                26 May 2018, 05:30 AM
+                moment(this.props.auditStore.submit_at).format(momentDateFormat)
               </th>
             </tr>
             <tr>
@@ -2910,7 +2910,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                 Auditor Submission Date:
               </td>
               <th>
-                26 May 2018, 05:30 AM
+                moment(this.props.auditStore.submit_at).format(momentDateFormat)
               </th>
             </tr>
             <tr>
@@ -3510,7 +3510,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
                 Auditor Submission Date:
               </td>
               <th>
-                26 May 2018, 05:30 AM
+                moment(this.props.auditStore.submit_at).format(momentDateFormat)
               </th>
             </tr>
             <tr>
@@ -4171,7 +4171,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
                 Auditor Submission Date:
               </td>
               <th>
-                26 May 2018, 05:30 AM
+                moment(this.props.auditStore.submit_at).format(momentDateFormat)
               </th>
             </tr>
             <tr>
@@ -4832,7 +4832,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                 Auditor Submission Date:
               </td>
               <th>
-                26 May 2018, 05:30 AM
+                moment(this.props.auditStore.submit_at).format(momentDateFormat)
               </th>
             </tr>
             <tr>
@@ -5450,7 +5450,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
                 Auditor Submission Date:
               </td>
               <th>
-                26 May 2018, 05:30 AM
+                moment(this.props.auditStore.submit_at).format(momentDateFormat)
               </th>
             </tr>
             <tr>
@@ -6111,7 +6111,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                 Auditor Submission Date:
               </td>
               <th>
-                26 May 2018, 05:30 AM
+                moment(this.props.auditStore.submit_at).format(momentDateFormat)
               </th>
             </tr>
             <tr>
@@ -6749,7 +6749,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
                 Auditor Submission Date:
               </td>
               <th>
-                26 May 2018, 05:30 AM
+                moment(this.props.auditStore.submit_at).format(momentDateFormat)
               </th>
             </tr>
             <tr>
