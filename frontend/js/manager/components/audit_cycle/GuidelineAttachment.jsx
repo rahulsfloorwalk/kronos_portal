@@ -279,7 +279,8 @@ class GuidelineAttachment extends React.Component {
 
 	reloadState = () => {
 		findAttachmentsByAuditCycleId(this.props.params.auditCycleId).then((allAttachments) => {
-			const attachments = allAttachments.filter((a) => a.attachment_category === "GUIDELINE");
+			const attachments = allAttachments.filter((a) => a.attachment_category === "GUIDELINE" ||
+				(a.attachment_category == null && isPdf(a)));
 			const youtubeAttachment = attachments.find((a) => a.mime_type === "text/link");
 			this.setState({
 				attachments,

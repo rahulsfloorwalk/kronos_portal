@@ -38,11 +38,11 @@ export default class PMPlanningDashboard extends Component {
 				<table className="table table-bordered table-condensed pm-planning-table">
 					<thead style={{ position: "sticky", top: -1, zIndex: 100, backgroundColor: "#fff", boxShadow: "0 1px 0 #ddd" }}>
 						<tr><th  colSpan={clients.length + 4}
-							className="text-left"
+							className="text-center"
 							style={{
 								backgroundColor: "#fff",
 								fontWeight: "bold",
-								fontSize: "18px",
+								fontSize: "22px",
 								padding:"2rem 1rem",
 							}}>PM Planning</th></tr>
 						<tr>

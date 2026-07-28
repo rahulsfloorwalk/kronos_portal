@@ -11,7 +11,7 @@ from questionnaire.service import section as section_service
 
 from manager.viewss.question import QuestionSerializer
 
-from questionnaire.models import Section
+from questionnaire.models import Section,Question
 
 class SectionSerializer(ModelSerializer):
     questions = QuestionSerializer(many=True)
@@ -28,6 +28,11 @@ class SectionSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+    def get_questions(self, obj):
+        questions = obj.questions.filter(
+            visibility__in=[Question.VISIBLE_TO_ALL, Question.HIDE_FROM_CLIENT]
+        )
+        return QuestionSerializer(questions, many=True).data
 
 class SectionDeSerializer(ModelSerializer):
     class Meta:

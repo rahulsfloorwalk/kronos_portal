@@ -440,6 +440,9 @@ class QuestionSerializer(ModelSerializer):
             'section',
             'question_type',
             'question_data',
+            'question_note',
+            'is_required',
+            'visibility',
             'hide_question',
             'optional_comment_required',
         )
@@ -484,6 +487,11 @@ class SectionSerializer(ModelSerializer):
             'hide_comment',
         )
         read_only_fields = fields
+    # def get_questions(self, obj):
+    #     questions = obj.questions.filter(
+    #         visibility__in=[Question.VISIBLE_TO_ALL, Question.HIDE_FROM_CLIENT]
+    #     )
+    #     return QuestionSerializer(questions, many=True).data
 
 
 class SectionDeSerializer(ModelSerializer):

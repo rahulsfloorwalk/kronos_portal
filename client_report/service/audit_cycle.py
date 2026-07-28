@@ -8,7 +8,7 @@ from audit_store import service_client as client_service
 from answer.models import ReportSection, Answer
 # from registration.service import client as client_registration_service
 from client.service import client_user as client_user_service
-from questionnaire.models import Section
+from questionnaire.models import Section,Question
 
 def get_audit_cycle_section_averages_for_client(user, questionnaire_type_id):
     qs = AuditCycle.objects.filter(client__id=user.clientuser.client_id) \
@@ -16,11 +16,20 @@ def get_audit_cycle_section_averages_for_client(user, questionnaire_type_id):
         .filter(status__in=AuditCycle.TRENDABLE_STATUSES) \
         .order_by('end_date')
     # prefetch related sections, report_sections, questions and answers
+    # qs = qs.prefetch_related(
+    #     'sections',
+    #     Prefetch('sections__report_sections', queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],not_applicable=False )),
+    #     'sections__questions',
+    #     Prefetch('sections__questions__answers', queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
+    # )
     qs = qs.prefetch_related(
         'sections',
-        Prefetch('sections__report_sections', queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],not_applicable=False )),
-        'sections__questions',
-        Prefetch('sections__questions__answers', queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
+        Prefetch('sections__report_sections', queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],not_applicable=False)),
+        Prefetch('sections__questions', queryset=Question.objects.filter(visibility=Question.VISIBLE_TO_ALL,hide_question=False
+            ).prefetch_related(
+                Prefetch('answers', queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED,AuditStore.ACCEPTED]))
+            )
+        ),
     )
     return get_audit_cycle_section_averages(qs, user.id)
 
@@ -29,11 +38,22 @@ def get_audit_cycle_section_averages_for_client_by_audit_cycle_id(audit_cycle_id
     qs = AuditCycle.objects.filter(id=audit_cycle_id) \
         .filter(questionnaire_type_id=questionnaire_type_id)
     # prefetch related sections, report_sections, questions and answers
+    # qs = qs.prefetch_related(
+    #     'sections',
+    #     Prefetch('sections__report_sections', queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],not_applicable=False)),
+    #     # 'sections__questions',
+    #     # Prefetch('sections__questions__answers', queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
+    # )
     qs = qs.prefetch_related(
         'sections',
-        Prefetch('sections__report_sections', queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],not_applicable=False)),
-        # 'sections__questions',
-        # Prefetch('sections__questions__answers', queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
+        Prefetch('sections__report_sections',
+            queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],not_applicable=False)
+        ),
+        Prefetch(
+            'sections__questions',
+            queryset=Question.objects.filter(visibility=Question.VISIBLE_TO_ALL,hide_question=False
+            ).prefetch_related(Prefetch('answers',queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED,AuditStore.ACCEPTED])))
+        ),
     )
     return get_audit_cycle_section_averages(qs, user_id)
 
@@ -51,6 +71,8 @@ def get_audit_cycle_section_averages(qs, user_id):
     for audit_cycle in audit_cycles:
         valid_sections = Section.objects.filter(
             audit_cycle=audit_cycle.id,
+            questions__visibility=Question.VISIBLE_TO_ALL,
+            questions__hide_question=False,
             report_sections__not_applicable=False,
             report_sections__report_section_percentage__isnull=False
         ).distinct()
@@ -71,6 +93,8 @@ def get_audit_cycle_section_averages(qs, user_id):
         yval = audit_cycle_master.index(audit_cycle.name)
         valid_sections = Section.objects.filter(
             audit_cycle=audit_cycle.id,
+            questions__visibility=Question.VISIBLE_TO_ALL,
+            questions__hide_question=False,
             report_sections__not_applicable=False,
             report_sections__report_section_percentage__isnull=False
         ).distinct()

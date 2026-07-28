@@ -14,7 +14,6 @@ exports[`<QuestionRow/> renders the question row correctly when answer has 0 mar
         }
       }
     />
-    <br />
   </td>
   <td>
     <div
@@ -58,11 +57,18 @@ exports[`<QuestionRow/> renders the question row correctly when answer has 0 mar
     </div>
   </td>
   <td
+    className="text-right text-nowrap"
+  >
+    
+  </td>
+  <td
     className=""
   >
     <button
       className="btn btn-default"
       onClick={[Function]}
+      style={Object {}}
+      title=""
     >
       <span
         className="glyphicon glyphicon-unchecked"
@@ -97,7 +103,6 @@ exports[`<QuestionRow/> renders the question row correctly when answer has non 0
         }
       }
     />
-    <br />
   </td>
   <td>
     <div
@@ -141,11 +146,18 @@ exports[`<QuestionRow/> renders the question row correctly when answer has non 0
     </div>
   </td>
   <td
+    className="text-right text-nowrap"
+  >
+    
+  </td>
+  <td
     className=""
   >
     <button
       className="btn btn-default"
       onClick={[Function]}
+      style={Object {}}
+      title=""
     >
       <span
         className="glyphicon glyphicon-unchecked"

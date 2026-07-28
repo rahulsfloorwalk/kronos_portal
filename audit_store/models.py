@@ -413,7 +413,7 @@ class AuditStore(Model):
             if report_section.not_applicable:
                 continue
 
-            questions = Question.objects.filter(section_id=report_section.section_id).order_by("sequence")
+            questions = Question.objects.filter(section_id=report_section.section_id,visibility__in=[ Question.VISIBLE_TO_ALL,Question.HIDE_FROM_CLIENT]).order_by("sequence")
             answers = Answer.objects.filter(audit_store_id=self.id,question__section_id=report_section.section_id)
 
             answered_question_ids = set(answers.values_list("question_id", flat=True))
@@ -424,8 +424,12 @@ class AuditStore(Model):
                     raise AppLogicError("Section : %s, Question : %s : Answer not given." % (section_seq, q_seq))
 
                 answer = next((a for a in answers if a.question_id == question.id), None)
-                if not answer or answer.not_applicable:
+                if not question.is_required:
                     continue
+                if not answer:
+                    raise AppLogicError("Section : %s, Question : %s : Answer not given." % (section_seq, q_seq))
+                if answer.not_applicable:
+                    raise AppLogicError( "Section : %s, Question : %s : Required question cannot be marked as Not Applicable." % (section_seq, q_seq) )
 
                 if not answer.answer_text or answer.answer_text.strip() == "":
                     raise AppLogicError("Section : %s, Question : %s : Answer not given." % (section_seq, q_seq))
@@ -496,33 +500,58 @@ class AuditStore(Model):
 
         if len(sections) != len(report_sections):
             _logger.debug("report not completable, section length does not match report section length")
-            return False
+            # return False
+            raise AppLogicError( "Section count mismatch. Questionnaire Sections=%s, Report Sections=%s" % (len(sections), len(report_sections)))
 
         for report_section in report_sections:
-            if not report_section.not_applicable:
+            if report_section.not_applicable:
+                continue
+            if not report_section.section.hide_comment:
+                if report_section.auditor_comment in (None, ''):
+                    _logger.debug("report not completable, some auditor comment is incomplete")
+                    # return False
+                    raise AppLogicError( "Section '%s' : Section comment is missing." % report_section.section.sequence)
+                if report_section.pm_comment in (None, ''):
+                    _logger.debug("report not completable, some PM comment is incomplete")
+                    # return False
+                    raise AppLogicError( "Section '%s' : PM comment is missing." % report_section.section.sequence)
+
+            questions = Question.objects.filter(section_id=report_section.section_id,hide_question=False
+                    ).exclude(question_type=Question.MULTISELECT)
+            answers = Answer.objects.filter(
+                audit_store__id=self.id,
+                question__section_id=report_section.section_id,question__hide_question=False
+            ).exclude(question__question_type=Question.MULTISELECT)
+
+            for question in questions.order_by("sequence"):
+                if not Answer.objects.filter(audit_store_id=self.id,question=question).exists():
+                    raise AppLogicError("Section %s : Question %s : Answer is missing." % (report_section.section.sequence, question.sequence,))
+
+            for answer in answers:
+                if answer.not_applicable:
+                    if answer.question.is_required:
+                        _logger.debug("report not completable, required question marked as not applicable")
+                        # return False
+                        raise AppLogicError("Section '%s' Question '%s' : Required question is marked Not Applicable." % (report_section.section.sequence, answer.question.sequence))
+                    continue
+
+                if answer.answer_text in (None, ''):
+                    _logger.debug("report not completable, some answer is incomplete")
+                    raise AppLogicError("Section '%s' Question '%s' answer is empty." % (report_section.section.sequence, answer.question.sequence))
+                    # return False
+
+                if answer.question.max_marks is None:
+                    _logger.debug("question max marks are missing")
+                    raise AppLogicError("Section %s : Question %s : Max marks are missing." % (report_section.section.sequence,answer.question.sequence,))
+
+                if answer.marks_obtained is None:
+                    _logger.debug("marks obtained are missing")
+                    raise AppLogicError("Section %s : Question %s : Marks obtained are missing." % (report_section.section.sequence,answer.question.sequence,))
+
                 if not report_section.section.hide_comment:
-                    if report_section.auditor_comment in (None, ''):
-                        _logger.debug("report not completable, some auditor comment is incomplete")
-                        return False
-                    if report_section.pm_comment in (None, ''):
-                        _logger.debug("report not completable, some PM comment is incomplete")
-                        return False
-
-                questions = Question.objects.filter(section_id=report_section.section_id)\
-                    .exclude(question_type=Question.MULTISELECT).all()
-                answers = Answer.objects.filter(
-                    audit_store__id=self.id,
-                    question__section_id=report_section.section_id
-                ).exclude(question__question_type=Question.MULTISELECT).all()
-
-                if len(questions) != len(answers):
-                    _logger.debug("report not completable, question length does not match answer length")
-                    return False
-
-                for answer in answers:
-                    if not answer.not_applicable and (answer.answer_text in (None, '') or answer.marks_obtained is None):
-                            _logger.debug("report not completable, some answer is incomplete")
-                            return False
+                    if not report_section.auditor_comment or not report_section.auditor_comment.strip():
+                        _logger.debug("report not completable, section comment is missing")
+                        raise AppLogicError( "Section %s : Section  comment is missing." % report_section.section.sequence)
 
         return True
 
@@ -637,8 +666,9 @@ class AuditStore(Model):
 
     @atomic
     def qa_ok(self, *args, by):
-        if not self.is_completable():
-            raise AppLogicError("Report is not complete.")
+        self.is_completable()
+        # if not self.is_completable():
+        #     raise AppLogicError("Report is not complete.")
 
         if not self.is_qa_rated():
             raise AppLogicError("Please rate report before forwarding for PM Review.")

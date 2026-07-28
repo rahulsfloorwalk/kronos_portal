@@ -166,11 +166,17 @@ describe("<AuditStoreDetails/>", () => {
 				qaOkButton.simulate("click");
 
 				// Verify qaOk is called with auditStoreId and formatted time
-				expect(qaOk).toBeCalledWith(sampleParams.auditStoreId, mockModeratorSubmissionTime);
+				// expect(qaOk).toBeCalledWith(sampleParams.auditStoreId, mockModeratorSubmissionTime);
 
 				// Cleanup mocks
-				Storage.prototype.getItem.mockRestore();
-				done();
+				// Storage.prototype.getItem.mockRestore();
+				// done();
+
+				setTimeout(() => {
+					expect(qaOk).toBeCalledWith(sampleParams.auditStoreId, mockModeratorSubmissionTime);
+					Storage.prototype.getItem.mockRestore();
+					done();
+				});
 			});
 		});
 	});

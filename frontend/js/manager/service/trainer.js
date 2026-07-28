@@ -5,6 +5,10 @@ export function findTrainers(){
 	return $.get( url.api_base_path + "manager/trainer");
 }
 
+export function findTrainerSummary(){
+	return $.get( url.api_base_path + "manager/trainer/summary");
+}
+
 export function findById(trainerId){
 	return $.get( url.api_base_path + `manager/trainer/${trainerId}`);
 }

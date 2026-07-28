@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { getQuestionType } from "../../../utils.js";
+import { getQuestionType, getQuestionVisibility } from "../../../utils.js";
 import ImpactFactorTags from "../../../components/ImpactFactorTags.jsx";
 import MarkdownViewer from "../../../../js/components/MarkdownViewer.jsx";
 import { hashHistory } from "react-router";
@@ -82,6 +82,7 @@ export default class SectionPreview extends React.Component {
 					<MarkdownViewer markdown={q.question_txt || ""} />
 				</td>
 				<td>{q.question_note ? q.question_note : "---"}</td>
+				<td>{q.visibility ? getQuestionVisibility(q.visibility) : "---"}</td>
 				<td>{q.is_required ? "Yes" : "No"}</td>
 				<td>{this.renderOptions(q)}</td>
 				<td>{q.optional_comment_required ? "Yes" : "No"}</td>
@@ -123,6 +124,7 @@ export default class SectionPreview extends React.Component {
 								<th>#</th>
 								<th>Question</th>
 								<th>Question Note</th>
+								<th>Visibility</th>
 								<th>Question Required</th>
 								<th>Options</th>
 								<th>Comment Required</th>

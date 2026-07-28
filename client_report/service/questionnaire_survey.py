@@ -3,8 +3,9 @@ import io
 
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
-from answer.service.answer import find_answers_by_question_id
+from answer.service.answer import find_answers_by_question_id,find_answers_by_question_id_for_client
 from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
+from questionnaire.models import Question
 
 
 def get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user):
@@ -16,17 +17,19 @@ def get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_i
         non_admin_user_store_list = non_admin_user_store.get_store_list()
     questionnaire_survey_list = []
     for section in sections:
-        if section.questions.filter(question_type__in=['MUTEX', 'MULTISELECT']).exists():
+        if section.questions.filter(question_type__in=['MUTEX', 'MULTISELECT'],visibility=Question.VISIBLE_TO_ALL,hide_question=False).exists():
             row = {
                 'type': 'section',
                 'section_id': section.id,
                 'section_name': section.name
             }
             questionnaire_survey_list.append(row)
-            for question in section.questions.filter(question_type__in=['MUTEX', 'MULTISELECT']).order_by('sequence'):
+            # for question in section.questions.filter(question_type__in=['MUTEX', 'MULTISELECT']).order_by('sequence'):
+            for question in section.questions.filter(question_type__in=['MUTEX', 'MULTISELECT'],visibility=Question.VISIBLE_TO_ALL,hide_question=False).order_by('sequence'):
                 if question.section == section:
                     if question.max_marks >= 0:
-                        answer_obj = find_answers_by_question_id(question.id)
+                        # answer_obj = find_answers_by_question_id(question.id)
+                        answer_obj = find_answers_by_question_id_for_client(question.id)
                         if client_admin:
                             answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
                                                            not_applicable=False)

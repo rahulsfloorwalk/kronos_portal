@@ -14,6 +14,7 @@ from manager.country import get_country_code
 from questionnaire.models import Question
 from answer.models import Answer
 from client.models import Store
+from django.db.models import Prefetch
 
 
 # Get report for audit cycle client with filters
@@ -48,8 +49,23 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
     user = find_clientuser_by_user_id(user_id)
     clientuser = user.clientuser
 
+    # sections = []
+    # sections_qs = audit_cycle.sections.all()
+    # for section in sections_qs:
+    #     if section.max_marks() > 0:
+    #         sections.append(section)
+
     sections = []
-    sections_qs = audit_cycle.sections.all()
+    sections_qs = audit_cycle.sections.filter(
+        questions__visibility=Question.VISIBLE_TO_ALL,questions__hide_question=False
+    ).distinct().prefetch_related(
+        Prefetch(
+            'questions',
+            queryset=Question.objects.filter(
+                visibility=Question.VISIBLE_TO_ALL,hide_question=False
+            ).order_by('section__sequence', 'sequence')
+        )
+    )
     for section in sections_qs:
         if section.max_marks() > 0:
             sections.append(section)
@@ -72,8 +88,13 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
                 'audit__store__city',
                 'report_sections',
                 'report_sections__section',
-                # 'report_sections__section__questions',
-                # 'report_sections__section__questions__answers',
+                Prefetch(
+                    'report_sections__section__questions',
+                    queryset=Question.objects.filter(visibility=Question.VISIBLE_TO_ALL,hide_question=False
+                    ).prefetch_related(
+                        Prefetch('answers',queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED,AuditStore.ACCEPTED],question__visibility=Question.VISIBLE_TO_ALL,question__hide_question=False))
+                    )
+                ),
             ).order_by(sort, "audit__store__name")
     else:
         non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(clientuser.id)
@@ -88,12 +109,18 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
                 'audit__store__city',
                 'report_sections',
                 'report_sections__section',
-                # 'report_sections__section__questions',
-                # 'report_sections__section__questions__answers',
+                Prefetch(
+                    'report_sections__section__questions',
+                    queryset=Question.objects.filter(visibility=Question.VISIBLE_TO_ALL,hide_question=False
+                    ).prefetch_related(
+                        Prefetch('answers',queryset=Answer.objects.filter(audit_store__status__in=[ AuditStore.COMPLETED,AuditStore.ACCEPTED],question__visibility=Question.VISIBLE_TO_ALL,question__hide_question=False))
+                    )
+                ),
             ).order_by(sort, "audit__store__name")
 
     filtered_audit_stores = audit_stores
-    ignored_filters = ['', 'undefined', None]
+    # ignored_filters = ['', 'undefined', None]
+    ignored_filters = ['', 'undefined', None, [], ['']]
     if filters.get('city') not in ignored_filters:
         city_name = City.objects.get(pk=int(filters.get('city'))).name
         filtered_audit_stores = [x for x in filtered_audit_stores if
@@ -176,6 +203,7 @@ def create_text_structure(title, sections, audit_stores):
 
         report_section_cells = []
         for section in sections:
+            report_section = None
             # look for the answer in the prefetched answers
             report_sections = audit_store.report_sections.all()
             for rs in report_sections:
@@ -291,12 +319,33 @@ def write_data(data):
     return output
 
 def get_aggregate_questions_data_with_filters(question_ids):
-    questions = Question.objects.filter(id__in=question_ids)
+    questions = Question.objects.filter(id__in=question_ids,visibility=Question.VISIBLE_TO_ALL,hide_question=False)
     if not questions.exists():
         return [], [], []
 
-    answers = Answer.objects.filter(question__in=questions,audit_store__status__in=['ACCEPTED', 'COMPLETED']).select_related('audit_store__audit__store')
+    # answers = Answer.objects.filter(question__in=questions,audit_store__status__in=['ACCEPTED', 'COMPLETED']).select_related('audit_store__audit__store')
+    answers = Answer.objects.filter(question__in=questions,question__visibility=Question.VISIBLE_TO_ALL,question__hide_question=False,audit_store__status__in=['ACCEPTED', 'COMPLETED']).select_related('audit_store__audit__store')
     store_ids_qs = answers.values_list('audit_store__audit__store__id',flat=True).distinct()
+    return questions, answers, store_ids_qs
+
+def get_aggregate_questions_data_with_filters_for_client(question_ids, store_ids=None):
+    questions = Question.objects.filter(
+        id__in=question_ids,visibility=Question.VISIBLE_TO_ALL,hide_question=False
+    )
+
+    if not questions.exists():
+        return [], [], []
+
+    answers = Answer.objects.filter(
+        question__in=questions,question__visibility=Question.VISIBLE_TO_ALL,question__hide_question=False,
+        audit_store__status__in=[AuditStore.ACCEPTED, AuditStore.COMPLETED]
+    ).select_related('audit_store__audit__store')
+
+    if store_ids:
+        answers = answers.filter(audit_store__audit__store__id__in=store_ids)
+
+    store_ids_qs = answers.values_list('audit_store__audit__store__id',flat=True).distinct()
+
     return questions, answers, store_ids_qs
 
 def write_questions_data(questions, answers,store_ids):

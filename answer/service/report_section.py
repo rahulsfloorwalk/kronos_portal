@@ -1,6 +1,6 @@
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
-from questionnaire.models import Section
+from questionnaire.models import Section, Question
 
 import questionnaire.service.section as section_service
 
@@ -8,6 +8,8 @@ from audit_store.models import AuditStore
 from ..models import ReportSection
 from audit_store import service as audit_store_service
 from audit_store import service_client as audit_store_client_service
+from django.db.models import Prefetch
+from answer.models import Answer
 
 def find_by_audit_store_for_user(audit_store_id, user_id):
     try:
@@ -90,6 +92,27 @@ def submit_auditor_comment(audit_store_id, section_id, user_id, auditor_comment)
 def find_by_audit_store_for_clientuser(audit_store_id, user):
     audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
     return ReportSection.objects.filter(audit_store_id=audit_store.id).prefetch_related('section','section__questions','section__questions__answers')
+
+def find_by_audit_store_for_client_clientuser(audit_store_id, user):
+    audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
+    return ReportSection.objects.filter(
+        audit_store_id=audit_store.id
+    ).prefetch_related(
+        'section',
+        Prefetch(
+            'section__questions',
+            queryset=Question.objects.filter(
+                visibility=Question.VISIBLE_TO_ALL,hide_question=False
+            ).prefetch_related(
+                Prefetch(
+                    'answers',
+                    queryset=Answer.objects.filter(
+                        question__visibility=Question.VISIBLE_TO_ALL,question__hide_question=False
+                    )
+                )
+            )
+        ),
+    )
 
 def find_by_audit_store_and_section_for_client(audit_store_id, section_id, client_id):
     report_section = find_by_audit_store_and_section(audit_store_id, section_id)

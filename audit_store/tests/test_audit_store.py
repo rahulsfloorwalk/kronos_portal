@@ -366,7 +366,8 @@ class AuditStoreTestCase(TestCase):
             audit__audit_cycle=self.audit_cycle
         )
         mommy.make(Section, audit_cycle=self.audit_cycle)
-        with self.assertRaisesRegex(AppLogicError, "Report is not complete"):
+        # with self.assertRaisesRegex(AppLogicError, "Report is not complete"):
+        with self.assertRaisesRegex(AppLogicError, r"Section count mismatch"):
             audit_store.complete(by=self.manager_user)
 
     def test_complete_raises_when_report_is_not_rated(self):

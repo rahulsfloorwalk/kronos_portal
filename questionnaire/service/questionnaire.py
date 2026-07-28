@@ -46,7 +46,7 @@ def create_text_structure(sections, questions):
         for question in questions:
             if question.section == section:
                 question_option = ""
-                if question.question_type in ['MUTEX', 'MULTISELECT']:
+                if question.question_type in [Question.MUTEX, Question.MULTISELECT]:
                     for qo in question.question_data['options']:
                         question_option = question_option + "sequnce: " + str(qo['sequence']) + ", option: " + str(qo['value']) + ", marks: " + str(qo['marks']) + "\n"
                 row = {
@@ -200,6 +200,29 @@ def write_data(data, audit_cycle_name=""):
     output.seek(0)
     return output
 
+def build_question_data(question):
+    if question["question_type"] == Question.DATE:
+        return {
+            "version": 1,
+            "format": "DD-MM-YYYY"
+        }
+
+    if question["question_type"] == Question.TIME:
+        return {
+            "version": 1,
+            "format": "HH:mm"
+        }
+
+    data = {
+        "version": 1,
+        "impact_factors": question["impact_factors"]
+    }
+
+    if question["question_type"] != Question.PLAIN:
+        data["options"] = question["options"]
+
+    return data
+
 def import_questionnaire(file_obj, audit_cycle_id):
     audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
 
@@ -209,7 +232,8 @@ def import_questionnaire(file_obj, audit_cycle_id):
     wb = openpyxl.load_workbook(file_obj)
     ws = wb.active
 
-    allowed_question_types = ["PLAIN", "MUTEX", "MULTISELECT", "DATE", "TIME"]
+    allowed_question_types = [Question.PLAIN,Question.MUTEX,Question.MULTISELECT,Question.DATE,Question.TIME]
+    allowed_visibility = [Question.VISIBLE_TO_ALL,Question.HIDE_FROM_CLIENT,Question.HIDE_FROM_SHOPPER_AND_CLIENT]
     required_option_keys = {"sequence", "value", "marks"}
 
     sections_data = []
@@ -218,8 +242,15 @@ def import_questionnaire(file_obj, audit_cycle_id):
     section_sequences = set()
     section_question_sequences = {}
 
+    # def parse_bool(val):
+    #     return str(val).strip().lower() == "true"
+
     def parse_bool(val):
-        return str(val).strip().lower() == "true"
+        if val is None:
+            return False
+        if isinstance(val, bool):
+            return val
+        return str(val).strip().lower() in ("true", "yes", "y", "1")
     
     for row in ws.iter_rows(min_row=2, values_only=True):
         if not any(row):
@@ -227,18 +258,23 @@ def import_questionnaire(file_obj, audit_cycle_id):
         sequence = row[0]
         text = row[1]
         max_marks = row[2]
-        q_type = row[3] if len(row) > 3 else None
+        # q_type = row[3] if len(row) > 3 else None
+        q_type = row[3].strip().upper() if len(row) > 3 and row[3] else None
         q_options = row[4] if len(row) > 4 else None
         impact_factors = row[5] if len(row) > 5 else ""
         hide_question = parse_bool(row[6]) if len(row) > 6 else False
         optional_comment_required = parse_bool(row[7]) if len(row) > 7 else False
+        question_note = row[8].strip() if len(row) > 8 and row[8] else ""
+        is_required = parse_bool(row[9]) if len(row) > 9 else False
+        visibility = (row[10].strip().upper().replace(" ", "_") if len(row) > 10 and row[10] else Question.VISIBLE_TO_ALL)
 
         if sequence is None:
             raise Exception("Missing sequence number in row with text '%s'." % text)
 
         try:
-            sequence = int(sequence)
-        except ValueError:
+            # sequence = int(sequence)
+            sequence = int(float(sequence))
+        except (TypeError, ValueError):
             raise Exception("Invalid sequence '%s' in row with text '%s'." % (sequence, text))
 
         if not q_type:
@@ -268,26 +304,42 @@ def import_questionnaire(file_obj, audit_cycle_id):
         if q_type == "PLAIN" and optional_comment_required:
             raise Exception("Section %s : Question %s : 'Optional comment required' cannot be TRUE for PLAIN type questions."% (current_section["sequence"], sequence))
 
+        if visibility not in allowed_visibility:
+            raise Exception("Section %s : Question %s : Invalid visibility '%s'" % (current_section["sequence"], sequence, visibility))
+        try:
+            max_marks = int(float(max_marks or 0))
+        except (TypeError, ValueError):
+            raise Exception( "Section %s : Question %s : Invalid Max Marks '%s'" % (current_section["sequence"], sequence, max_marks))
+        
         question_data = {
             "sequence": sequence,
             "text": text.strip(),
-            "max_marks": int(max_marks or 0),
+            "max_marks": max_marks,
             "question_type": q_type,
-            "impact_factors": [impact_factors] if impact_factors else [],
+            # "impact_factors": [impact_factors] if impact_factors else [],
+            "impact_factors": [
+                x.strip()
+                for x in str(impact_factors).split(",")
+                if x.strip()
+            ] if impact_factors else [],
             "hide_question": hide_question,
             "optional_comment_required": optional_comment_required,
+            "question_note": question_note,
+            "is_required": is_required,
+            "visibility": visibility,
             "options": [],
         }
 
-        if q_type in ["MUTEX", "MULTISELECT"]:
+        if q_type in [Question.MUTEX, Question.MULTISELECT]:
             total_option_marks = 0
             option_marks_list = []
 
             if q_options:
                 q_options = str(q_options).strip().strip('"')
-                for line in str(q_options).split("\n"):
+                for line in str(q_options).splitlines():
                     option_dict = {}
-                    for part in line.split(","):
+                    # for part in line.split(","):
+                    for part in filter(None, map(str.strip, line.split(","))):
                         if ":" not in part:
                             continue
                         key, value = part.split(":", 1)
@@ -301,9 +353,17 @@ def import_questionnaire(file_obj, audit_cycle_id):
 
                         if key in ["marks", "sequence"]:
                             try:
-                                value = int(value)
-                            except ValueError:
-                                value = 0
+                                value = int(float(value))
+                            except (TypeError, ValueError):
+                                raise Exception(
+                                    "Section %s : Question %s : Invalid '%s' value '%s'."
+                                    % (
+                                        current_section["sequence"],
+                                        sequence,
+                                        key,
+                                        value,
+                                    )
+                                )
                         option_dict[key] = value
 
                     if set(option_dict.keys()) != required_option_keys:
@@ -311,15 +371,19 @@ def import_questionnaire(file_obj, audit_cycle_id):
 
                     question_data["options"].append(option_dict)
                     option_marks_list.append(option_dict["marks"])
-                    total_option_marks += int(option_dict["marks"])
-
+                total_option_marks = sum(option_marks_list)
             if q_type == "MULTISELECT" and total_option_marks != question_data["max_marks"]:
-                raise Exception( "Section %s : Question %s : Marks mismatch." % (current_section["sequence"], sequence) )
-            
+                raise Exception( "Section %s : Question %s : Marks mismatch." % (current_section["sequence"], sequence))
+
+            # elif q_type == "MUTEX" and option_marks_list:
+            #     highest = max(option_marks_list)
+            #     if highest != question_data["max_marks"]:
+            #         raise Exception( "Section %s : Question %s : Marks mismatch." % (current_section["sequence"], sequence) )
+
             elif q_type == "MUTEX" and option_marks_list:
                 highest = max(option_marks_list)
                 if highest != question_data["max_marks"]:
-                    raise Exception( "Section %s : Question %s : Marks mismatch." % (current_section["sequence"], sequence) )
+                    raise Exception("Section %s : Question %s : Marks mismatch. " "Highest option marks (%s) must equal Max Marks (%s)." % ( current_section["sequence"], sequence, highest, question_data["max_marks"],) )
 
         questions_data.append((current_section, question_data))
 
@@ -346,44 +410,21 @@ def import_questionnaire(file_obj, audit_cycle_id):
             created_sections[sec_key] = section_obj
         else:
             section_obj = created_sections[sec_key]
-        if ques_data["question_type"] == "DATE":
-            final_question_data = {
-                "version": 1,
-                "format": "DD-MM-YYYY",
-            }
 
-        elif ques_data["question_type"] == "TIME":
-            final_question_data = {
-                "version": 1,
-                "format": "HH:mm",
-            }
+        final_question_data = build_question_data(ques_data)
 
-        elif ques_data["question_type"] == "PLAIN":
-            final_question_data = {
-                "version": 1,
-                "impact_factors": ques_data["impact_factors"],
-            }
-
-        else:
-            final_question_data = {
-                "version": 1,
-                "impact_factors": ques_data["impact_factors"],
-                "options": ques_data["options"],
-            }
         question_obj = Question.objects.create(
             section=section_obj,
             sequence=ques_data["sequence"],
             question_txt=ques_data["text"],
             max_marks=ques_data["max_marks"],
             question_type=ques_data["question_type"],
-            # question_data={
-            #     "version": 1,
-            #     "impact_factors": ques_data["impact_factors"],
-            #     "options": ques_data["options"],
-            # },
             question_data=final_question_data,
             hide_question=ques_data["hide_question"],
             optional_comment_required=ques_data["optional_comment_required"],
+            question_note=ques_data["question_note"],
+            is_required=ques_data["is_required"],
+            visibility=ques_data["visibility"],
         )
         created_questions.append(question_obj)
 
@@ -501,31 +542,31 @@ def find_sample_xlsx_for_questionnaire_insert():
 
     # Sample data
     sample_data = [
-        ["Sequence", "Question/Section", "Max Marks", "Question Type", "Question Options", "Impact Factors", "Hide Question", "Optional comment required?"],
-        [1, "section 1", "", "", "", "", "", ""],
-        [1, "question 11", 0, "PLAIN", "", "impact factor text", "", ""],
+        ["Sequence", "Question/Section", "Max Marks", "Question Type", "Question Options", "Impact Factors", "Hide Question", "Optional comment required?", "Question Note","Is Required","Visibility"],
+        [1, "section 1", "", "", "", "", "", "", "", "", ""],
+        [1, "question 11", 0, "PLAIN", "", "impact factor text", "", "", "", "FALSE", "VISIBLE_TO_ALL"],
         [2, "multiple", 1, "MULTISELECT",
          "sequence: 1, value: Yes, marks: 1\nsequence: 2, value: No, marks: 0",
-         "", "", "TRUE"],
-        [3, "question 2", 0, "PLAIN", "", "", "", ""],
-        [4, "question 3", 0, "PLAIN", "", "", "", ""],
+         "", "", "TRUE", "", "FALSE", "VISIBLE_TO_ALL"],
+        [3, "question 2", 0, "PLAIN", "", "", "", "", "", "FALSE", "VISIBLE_TO_ALL"],
+        [4, "question 3", 0, "PLAIN", "", "", "", "", "", "FALSE", "VISIBLE_TO_ALL"],
         [5, "question 4", 1, "MUTEX",
          "sequence: 1, value: Yes, marks: 1\nsequence: 2, value: No, marks: 0",
-         "", "", ""],
+         "", "", "", "", "FALSE", "VISIBLE_TO_ALL"],
         [6, "question 5", 2, "MUTEX",
          "sequence: 1, value: Yes, marks: 1\nsequence: 2, value: No, marks: 0\nsequence: 3, value: other, marks: 1",
-         "", "", ""],
+         "", "", "", "", "FALSE", "VISIBLE_TO_ALL"],
         [7, "question 6", 8, "MULTISELECT",
          "sequence: 1, value: Yes, marks: 6\nsequence: 2, value: No, marks: 0\nsequence: 3, value: other, marks: 2",
-         "impact factor text", "", "TRUE"],
-        [2, "section 2", "", "", "", "", "", ""],
-        [1, "question 1", 0, "PLAIN", "", "", "", ""],
-        [3, "section 3", "", "", "", "", "", ""],
-        [1, "question 1", 0, "PLAIN", "", "", "", "TRUE"],
-        [4, "section 4", "", "", "", "", "", ""],
+         "impact factor text", "", "TRUE", "", "FALSE", "VISIBLE_TO_ALL"],
+        [2, "section 2", "", "", "", "", "", "", "", "", ""],
+        [1, "question 1", 0, "PLAIN", "", "", "", "", "", "FALSE", "VISIBLE_TO_ALL"],
+        [3, "section 3", "", "", "", "", "", "", "", "", ""],
+        [1, "question 1", 0, "PLAIN", "", "", "", "TRUE", "", "FALSE", "VISIBLE_TO_ALL"],
+        [4, "section 4", "", "", "", "", "", "", "", "", ""],
         [1, "question 1", 5, "MUTEX",
          "sequence: 1, value: Yes, marks: 5\nsequence: 2, value: No, marks: 0",
-         "", "", ""],
+         "", "", "", "", "FALSE", "VISIBLE_TO_ALL"],
     ]
 
     # Set column widths
@@ -535,7 +576,7 @@ def find_sample_xlsx_for_questionnaire_insert():
     worksheet.set_column(3, 3, 15)
     worksheet.set_column(4, 4, 40)
     worksheet.set_column(5, 5, 25)
-    worksheet.set_column(6, 7, 25)
+    worksheet.set_column(6, 10, 25)
 
     # Write data
     for row_num, row_data in enumerate(sample_data):

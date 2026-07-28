@@ -23,7 +23,8 @@ from answer.models import Answer
 from attachment.models import Attachment
 from answer.service import answer as answer_service
 from .models import ReportStatusLog
-
+import logging
+_logger = logging.getLogger(__name__)
 
 # def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id, month, year):
 #     # TODO: move this in to the AuditStoreQuerySet
@@ -78,7 +79,7 @@ def find_audit_store_status_logs(audit_store_id):
         raise ObjectNotFound
     return logs
 
-def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id, month, year):
+def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id, month, year,audit_date):
     user = find_moderator_by_user_id(user_id)
     if filterStatus != "" and lastAuditStoreDate != "":
         query_set = AuditStore.objects.filter(status=filterStatus,audit_date__gte=lastAuditStoreDate)
@@ -123,6 +124,11 @@ def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, fi
     if client_id not in [None, ""]:
         query_set = query_set.filter(audit__audit_cycle__client=client_id)
 
+    if audit_date not in [None, ""]:
+        audit_date = str(audit_date)
+        audit_date = datetime.strptime(audit_date,"%Y-%m-%d").date()
+
+        query_set = query_set.filter(audit_date=audit_date)
     query_set = query_set.select_related(
         'audit',
         'audit__audit_cycle',
@@ -168,7 +174,7 @@ def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, fi
     return auditStores, len(auditStores)
 
 
-def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id):
+def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id,audit_date):
     # TODO: move this in to the AuditStoreQuerySet
     count = 0
     user = find_moderator_by_user_id(user_id)
@@ -186,6 +192,8 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
 
         if client_id:
             query_set = query_set.filter(audit__audit_cycle__client=client_id)
+        if audit_date:
+            query_set = query_set.filter(audit_date=audit_date)
 
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
         count = data.count()
@@ -202,6 +210,8 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
 
         if client_id:
             query_set = query_set.filter(audit__audit_cycle__client=client_id)
+        if audit_date:
+            query_set = query_set.filter(audit_date=audit_date)
 
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
         count = data.count()
@@ -213,6 +223,9 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
                            'audit__store__city').order_by('audit_date')
         if client_id:
             query_set = query_set.filter(audit__audit_cycle__client = client_id)
+        if audit_date:
+            query_set = query_set.filter(audit_date=audit_date)
+
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
     elif filterStatus != "":
         query_set = AuditStore.objects.filter(
@@ -222,6 +235,9 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
                            'audit__store__city').order_by('audit_date')
         if client_id:
             query_set = query_set.filter(audit__audit_cycle__client = client_id)
+        if audit_date:
+            query_set = query_set.filter(audit_date=audit_date)
+
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
         count = data.count()
     elif lastAuditStoreDate != "":
@@ -233,6 +249,9 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
                            'audit__store__city').order_by('audit_date')
         if client_id:
             query_set = query_set.filter(audit__audit_cycle__client = client_id)
+        if audit_date:
+            query_set = query_set.filter(audit_date=audit_date)
+            
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
     else:
         query_set = AuditStore.objects.filter(
@@ -242,6 +261,9 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
                            'audit__store__city').order_by('audit_date')
         if client_id:
             query_set = query_set.filter(audit__audit_cycle__client = client_id)
+        if audit_date:
+            query_set = query_set.filter(audit_date=audit_date)
+
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
         count = data.count()
 
@@ -492,7 +514,7 @@ def audio_to_fill_answers(data,user_id):
         return {"error": "Missing question_answer_detail"}, 400
 
     response, error = _post(
-        "https://ai.floorwalk.in/audio_to_answers/",
+        "https://ai1.floorwalk.in/audio_to_answers/",
         {
             "transcript_texts": clean_texts,
             "question_detail": question_answer_detail,
@@ -563,7 +585,7 @@ def transcript_to_compare_answers(data):
         return {"error": "Missing question_answer_detail"}, 400
 
     response, error = _post(
-        "https://ai.floorwalk.in/transcript_to_compare_answers/",
+        "https://ai1.floorwalk.in/transcript_to_compare_answers/",
         {
             "transcript_texts": clean_texts,
             "question_answer_detail": question_answer_detail,
@@ -638,16 +660,27 @@ def audio_to_text(data):
         }, 200
 
     response, error = _post(
-        "https://ai.floorwalk.in/audio_to_text/",
+        "https://ai1.floorwalk.in/audio_to_text/",
         {"audio_url": audio_url,
          "token": API_TOKEN
         }
     )
     if error:
+        _logger.error("POST ERROR: %s", error)
         return error
+    _logger.info("STATUS: %s", response.status_code)
+    _logger.info("BODY: %s", response.text)
+
+    if response.status_code != 200:
+        _logger.error("AI status=%s", response.status_code)
+        _logger.error("AI body=%s", response.text)
+
+        return {
+            "error": "AI service failed","status_code": response.status_code,"body": response.text}, 500
 
     result, error = _json(response)
     if error:
+        _logger.error("JSON ERROR: %s", error)
         return error
     if response.status_code != 200:
         return {"error": "AI service failed", "details": result}, 500

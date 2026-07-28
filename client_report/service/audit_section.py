@@ -7,9 +7,10 @@ from client.service.client_user import find_clientuser_by_user_id, find_non_clie
 
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
-from questionnaire.models import Section
+from questionnaire.models import Section,Question
 
 from audit.service import audit_cycle as audit_cycle_service
+from django.db.models import Prefetch
 
 def get_store_section_aggregation_for_manager(audit_cycle_id, store_id):
     try:
@@ -30,7 +31,8 @@ def get_store_section_aggregation_for_client(audit_cycle_id, store_id, client_id
         raise ObjectNotFound from e
 
     audit_stores = audit.audit_stores.all()
-    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    # sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id,questions__visibility=Question.VISIBLE_TO_ALL,questions__hide_question=False).distinct().order_by('sequence')
     mean = __get_mean_for_sections(sections, audit_stores)
     return mean
 
@@ -56,7 +58,8 @@ def get_city_section_aggregation_for_client(audit_cycle_id, city_id, client_id):
     audit_stores = []
     for audit in audits:
         audit_stores.extend(audit.audit_stores.presentable())
-    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    # sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id,questions__visibility=Question.VISIBLE_TO_ALL,questions__hide_question=False).distinct().order_by('sequence')
     mean = __get_mean_for_sections(sections, audit_stores)
     return mean
 
@@ -80,7 +83,8 @@ def get_store_aggregation_list_for_client(audit_cycle_id, city_id, client_id):
         raise ObjectNotFound from e
 
     audit_stores = []
-    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    # sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id,questions__visibility=Question.VISIBLE_TO_ALL,questions__hide_question=False).distinct().order_by('sequence')
     for audit in audits:
         audit_stores.extend(audit.audit_stores.presentable())
 
@@ -114,7 +118,8 @@ def get_city_aggregation_for_client(audit_cycle_id, client_id):
     except Audit.DoesNotExist as e:
         raise ObjectNotFound from e
 
-    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    # sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id,questions__visibility=Question.VISIBLE_TO_ALL,questions__hide_question=False).distinct().order_by('sequence')
     audit_stores = []
     for audit in audits:
         audit_stores.extend(audit.audit_stores.presentable())
@@ -145,7 +150,8 @@ def get_audit_store_section_list_for_client(audit_cycle_id, store_id, client_id)
     except Audit.DoesNotExist as e:
         raise ObjectNotFound from e
 
-    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    # sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id,questions__visibility=Question.VISIBLE_TO_ALL,questions__hide_question=False).distinct().order_by('sequence')
     audit_stores = []
     audit_stores.extend(audit.audit_stores.presentable())
     mean_values = []
@@ -166,11 +172,21 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
     client_user = user.clientuser
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
 
-    sections = Section.objects.filter(audit_cycle=audit_cycle).order_by('sequence')
+    # sections = Section.objects.filter(audit_cycle=audit_cycle).order_by('sequence')
+    sections = Section.objects.filter(audit_cycle=audit_cycle,questions__visibility=Question.VISIBLE_TO_ALL,questions__hide_question=False).distinct().order_by('sequence')
     section_id_list = (s.id for s in sections if s.max_marks() >= 0)
 
     # prefetch questions once and then later again with audit_stores so that query count does not blow up
-    sections = sections.filter(id__in = section_id_list).prefetch_related('questions')
+    # sections = sections.filter(id__in = section_id_list).prefetch_related('questions')
+    sections = sections.filter(id__in=section_id_list).prefetch_related(
+        Prefetch(
+            'questions',
+            queryset=Question.objects.filter(
+                visibility=Question.VISIBLE_TO_ALL,
+                hide_question=False
+            )
+        )
+    )
     audit_stores = []
     """
         Normal client user can't access dashboard and report browser that's why need to
@@ -216,12 +232,23 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
                 'audit__store__city',
             ) \
             .prefetch_related(
-                # prefetch report_sections, questions and answers for the given sections
                 'report_sections',
                 'report_sections__section',
-                # 'report_sections__section__questions',
-                # 'report_sections__section__questions__answers',
+                Prefetch(
+                    'report_sections__section__questions',
+                    queryset=Question.objects.filter(
+                        visibility=Question.VISIBLE_TO_ALL,
+                        hide_question=False
+                    ).prefetch_related('answers')
+                ),
             )
+            # .prefetch_related(
+            #     # prefetch report_sections, questions and answers for the given sections
+            #     'report_sections',
+            #     'report_sections__section',
+            #     # 'report_sections__section__questions',
+            #     # 'report_sections__section__questions__answers',
+            # )
     else:
         non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
@@ -242,12 +269,23 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
                 'audit__store__city',
             ) \
             .prefetch_related(
-                # prefetch report_sections, questions and answers for the given sections
                 'report_sections',
                 'report_sections__section',
-                # 'report_sections__section__questions',
-                # 'report_sections__section__questions__answers',
+                Prefetch(
+                    'report_sections__section__questions',
+                    queryset=Question.objects.filter(
+                        visibility=Question.VISIBLE_TO_ALL,
+                        hide_question=False
+                    ).prefetch_related('answers')
+                ),
             )
+            # .prefetch_related(
+            #     # prefetch report_sections, questions and answers for the given sections
+            #     'report_sections',
+            #     'report_sections__section',
+            #     # 'report_sections__section__questions',
+            #     # 'report_sections__section__questions__answers',
+            # )
 
     for audit_store in qs:
         # total_pct = audit_store.percentage()

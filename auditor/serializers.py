@@ -445,6 +445,7 @@ class AuditCycleSerializer(ModelSerializer):
             'type',
             'status',
             'start_date',
+            'auditor_notes',
             'end_date',
             'description',
             'eligibility',
@@ -670,12 +671,13 @@ class QuestionSerializer(ModelSerializer):
             'is_required',
             'question_note',
             'optional_comment_required',
+            'visibility',
             'max_marks'
         )
         read_only_fields = fields
 
 class SectionSerializer(ModelSerializer):
-    questions = QuestionSerializer(many=True)
+    questions = SerializerMethodField()
     class Meta:
         model = Section
         fields = (
@@ -688,6 +690,15 @@ class SectionSerializer(ModelSerializer):
             'hide_comment'
         )
         read_only_fields = fields
+
+    def get_questions(self, obj):
+        questions = obj.questions.filter(
+            visibility__in=[
+                Question.VISIBLE_TO_ALL,
+                Question.HIDE_FROM_CLIENT
+            ]
+        )
+        return QuestionSerializer(questions, many=True).data
 
 class AnswerDeSerializer(ModelSerializer):
     class Meta:
@@ -770,6 +781,7 @@ class AttachmentSerializer(ModelSerializer):
             'content_type',
             'object_id',
             'direct_url',
+            'link_url',
             'extra',
             'proof_tag',
             'audio_to_text_row',

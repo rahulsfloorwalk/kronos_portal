@@ -75,7 +75,7 @@ class AuditStoreCompletedView(APIView):
         audit_stores, count = audit_store_service\
             .find_qa_completed_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'],
                                                           request.data['filterStatus'], request.data.get('client_id'),
-                                                          request.data.get('month'), request.data.get('year'))
+                                                          request.data.get('month'), request.data.get('year'),request.data.get('audit_date'))
         return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
 
 class StoreViewByClientView(APIView):
@@ -108,7 +108,7 @@ class AuditStorePendingView(APIView):
     def post(self, request):
         audit_stores, count = audit_store_service\
             .find_qa_pending_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'],
-                                                        request.data['filterStatus'], request.data.get('client_id'))
+                                                        request.data['filterStatus'], request.data.get('client_id'),request.data.get('audit_date'))
         # return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
         return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True,context={"filter_status": request.data['filterStatus']}).data, "count": count})
 
@@ -247,7 +247,7 @@ class AuditStoreIdBackToOriginalReportSummaryView(APIView):
         'POST': [GROUP_NAME_MODERATOR]
     }
     def post(self, request, audit_store_id, format=None):
-        summary = request.data.get('report_summary', '').strip()
+        summary = (request.data.get("report_summary") or "").strip()
         audit_store = audit_store_service.set_back_to_original_report_summary(audit_store_id, summary, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
@@ -264,7 +264,7 @@ class AuditStoreIdRewriteReportSummaryView(APIView):
         try:
                 # "http://api.floorwalk.in/rewrite/",
             api_response = requests.post(
-                "https://ai.floorwalk.in/rewrite/",
+                "https://ai1.floorwalk.in/rewrite/",
                 data={"sentence": summary},
                 verify=False
             )

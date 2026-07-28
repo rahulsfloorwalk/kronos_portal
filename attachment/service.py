@@ -447,6 +447,12 @@ def find_by_clientrequirement(client_requirements_id):
 def find_by_audit_cycle(audit_cycle_id):
     return Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED).order_by('id')
 
+def find_by_audit_cycle_for_guideline(audit_cycle_id):
+    attachment = Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED,attachment_category=Attachment.GUIDELINE)
+    if attachment:
+        return attachment
+    return Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED,attachment_category__isnull=True)
+
 # def find_by_audit_cycle_id(audit_cycle_id):
 #     return Attachment.objects.get(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED).generate_presigned_url()
 

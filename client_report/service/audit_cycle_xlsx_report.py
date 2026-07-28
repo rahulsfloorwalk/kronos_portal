@@ -13,6 +13,7 @@ from audit_store.models import AuditStore
 from questionnaire.models import Question
 from manager.states import get_state_code
 from manager.country import get_country_code
+from answer.models import Answer
 
 # Get report for audit cycle client with filters
 def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
@@ -46,8 +47,16 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
     user = find_clientuser_by_user_id(user_id)
     clientuser = user.clientuser
 
-    sections = audit_cycle.sections.order_by('sequence').prefetch_related(
-        Prefetch('questions', queryset=Question.objects.order_by('section__sequence','sequence')),
+    sections = audit_cycle.sections.filter(
+        questions__visibility=Question.VISIBLE_TO_ALL,
+        questions__hide_question=False
+    ).distinct().order_by('sequence').prefetch_related(
+        Prefetch(
+            'questions',
+            queryset=Question.objects.filter(
+                visibility=Question.VISIBLE_TO_ALL,hide_question=False
+            ).order_by('section__sequence', 'sequence')
+        ),
     )
 
     city_name = ''
@@ -69,7 +78,13 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
                 'audit',
                 'audit__store',
                 'audit__store__city',
-                'answers',
+                Prefetch(
+                    'answers',
+                    queryset=Answer.objects.filter(
+                        question__visibility=Question.VISIBLE_TO_ALL,
+                        question__hide_question=False
+                    )
+                ),
                 'report_sections',
             ).order_by(sort)
     else:
@@ -83,7 +98,13 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
                 'audit',
                 'audit__store',
                 'audit__store__city',
-                'answers',
+                Prefetch(
+                    'answers',
+                    queryset=Answer.objects.filter(
+                        question__visibility=Question.VISIBLE_TO_ALL,
+                        question__hide_question=False
+                    )
+                ),
                 'report_sections',
             ).order_by(sort)
 
@@ -146,7 +167,7 @@ def create_text_structure(title, sections, questions, audit_stores):
             'value': section.name,
             'colspan': len(section.questions.all())
         })
-    cells = [{'value': "SECTIONS", 'colspan': 4}] + section_cells
+    cells = [{'value': "SECTIONS", 'colspan': 5}] + section_cells
     row = {'type': 'sections', 'content': cells}
     rows.append(row)
 
@@ -154,7 +175,7 @@ def create_text_structure(title, sections, questions, audit_stores):
     question_cells = []
     for question in questions:
         question_cells.append(question.question_txt)
-    content = ["Store Code", "Store", "Store City", "Audit Date"] + question_cells
+    content = ["Store Code", "Store", "Store City", "Audit Date","Report Summary"] + question_cells
     row = {'type': 'question', 'content': content}
     rows.append(row)
 
@@ -174,6 +195,10 @@ def create_text_structure(title, sections, questions, audit_stores):
         }
         audit_date_cell = {
             'value': audit_store.audit_date.strftime('%d-%m-%Y'),
+            'color_code': get_color_code(0, 0)
+        }
+        report_summary_cell = {
+            'value': audit_store.report_summary if audit_store.report_summary else "",
             'color_code': get_color_code(0, 0)
         }
 
@@ -222,7 +247,7 @@ def create_text_structure(title, sections, questions, audit_stores):
                     'color_code': get_color_code(answer.marks_obtained, question.max_marks)
                 })
 
-        content = [store_code_cell, store_name_cell, store_city_cell, audit_date_cell] + answer_cells
+        content = [store_code_cell, store_name_cell, store_city_cell, audit_date_cell,report_summary_cell] + answer_cells
         row = {
             'type': 'answer',
             'content': content

@@ -27,7 +27,8 @@ def find_questions_by_section_id(section_id):
     return Question.objects.filter(section_id=section_id).all()
 
 def find_by_audit_cycle(audit_cycle_id):
-    questions = Question.objects.filter(section__audit_cycle_id=audit_cycle_id)
+    # questions = Question.objects.filter(section__audit_cycle_id=audit_cycle_id)
+    questions = Question.objects.filter(section__audit_cycle_id=audit_cycle_id,visibility=Question.VISIBLE_TO_ALL,hide_question=False)
     return questions
 
 def find_impact_factors_by_audit_cycle(audit_cycle_id):
@@ -37,8 +38,18 @@ def find_impact_factors_by_audit_cycle(audit_cycle_id):
         impact_factors.extend(question.question_data.get('impact_factors', []))
     return list(set(impact_factors))
 
+def find_impact_factors_by_audit_cycle_for_client(audit_cycle_id):
+    questions = Question.objects.filter(
+        section__audit_cycle_id=audit_cycle_id,visibility=Question.VISIBLE_TO_ALL,hide_question=False
+    )
+    impact_factors = []
+    for question in questions:
+        impact_factors.extend(question.question_data.get('impact_factors', []))
+    return list(set(impact_factors))
+
 def find_by_audit_cycle_id_and_impact_factor(audit_cycle_id, impact_factor):
-    questions = Question.objects.filter(section__audit_cycle_id=audit_cycle_id).filter(question_data__impact_factors__contains=impact_factor).all()
+    # questions = Question.objects.filter(section__audit_cycle_id=audit_cycle_id).filter(question_data__impact_factors__contains=impact_factor).all()
+    questions = Question.objects.filter(section__audit_cycle_id=audit_cycle_id,visibility=Question.VISIBLE_TO_ALL,hide_question=False,question_data__impact_factors__contains=impact_factor).all()
     return questions
 
 def find_by_audit_cycle_and_id(audit_cycle_id, question_id):

@@ -171,16 +171,25 @@ class ReportSection(Model):
 
             # check if prefetched cache exists,
             if hasattr(self, '_section_cache'):
-                # run the summing code in python because we have already prefetched questions, answers for the report_sections
-                for question in self.section.questions.all():
+                total_max_marks = 0
+                not_applicable_total = 0
+
+                for question in self.section.questions.filter(hide_question=False,visibility=Question.VISIBLE_TO_ALL):
+                    total_max_marks += question.max_marks
                     for answer in question.answers.all():
                         if answer.audit_store_id == self.audit_store_id and answer.not_applicable:
-                            not_applicable_total += answer.question.max_marks
+                            not_applicable_total += question.max_marks
             else:
-                # else ask the database to perform the summing for us
+                total_max_marks = Question.objects.filter( section=self.section, hide_question=False, visibility=Question.VISIBLE_TO_ALL
+                ).aggregate(
+                    total_max_marks=Coalesce( Sum('max_marks'), Value(0))
+                )["total_max_marks"]
+
                 not_applicable_total = Answer.objects.filter(
                     question__section=self.section,
                     audit_store_id=self.audit_store_id,
+                    question__hide_question=False,
+                    question__visibility=Question.VISIBLE_TO_ALL,
                     not_applicable=True
                 ).aggregate(
                     not_applicable_total=Coalesce(
@@ -189,7 +198,7 @@ class ReportSection(Model):
                     )
                 )["not_applicable_total"]
 
-            return self.section.max_marks() - not_applicable_total
+            return total_max_marks - not_applicable_total
 
     def marks_obtained(self):
         if self.not_applicable:
@@ -199,7 +208,10 @@ class ReportSection(Model):
             if hasattr(self, '_section_cache'):
                 marks_obtained = 0
                 # run the summing code in python because we have already prefetched questions, answers for the report_sections
-                for question in self.section.questions.all():
+                for question in self.section.questions.filter(
+                    hide_question=False,
+                    visibility=Question.VISIBLE_TO_ALL
+                ):
                     for answer in question.answers.all():
                         if answer.audit_store_id == self.audit_store_id and not answer.not_applicable and answer.marks_obtained:
                             marks_obtained += answer.marks_obtained
@@ -209,6 +221,8 @@ class ReportSection(Model):
                 return Answer.objects.filter(
                     audit_store_id=self.audit_store_id,
                     question__section_id=self.section_id,
+                    question__hide_question=False,
+                    question__visibility=Question.VISIBLE_TO_ALL,
                     not_applicable=False
                 ).aggregate(
                     marks_obtained=Coalesce(
@@ -235,7 +249,8 @@ class ReportSection(Model):
         self.save()
 
     def set_all_question_not_applicable(self, not_applicable):
-        questions = self.section.questions.all()
+        # questions = self.section.questions.all()
+        questions = self.section.questions.filter(visibility__in=[ Question.VISIBLE_TO_ALL])
         for question in questions:
             for answer in question.answers.filter(audit_store = self.audit_store):
                 answer.set_not_applicable(not_applicable)

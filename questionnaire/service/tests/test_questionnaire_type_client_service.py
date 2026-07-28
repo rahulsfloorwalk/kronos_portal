@@ -15,6 +15,8 @@ from client.models import ClientUser
 from client.models import Store
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
+from questionnaire.models import Question,Section
+from answer.models import Answer
 
 fake = Faker()
 
@@ -50,7 +52,12 @@ class QuestionnaireTypeClientServiceTestCase(TestCase):
         mommy.make(AuditStore, status=AuditStore.COMPLETED, audit__audit_cycle__client=self.client, audit__audit_cycle__status=AuditCycle.REPORT, audit__audit_cycle__questionnaire_type=qt1, audit__store=store1, user__email=fake.email())
         mommy.make(AuditStore, status=AuditStore.COMPLETED, audit__audit_cycle__client=self.client, audit__audit_cycle__status=AuditCycle.REPORT, audit__audit_cycle__questionnaire_type=qt2, audit__store=store2, user__email=fake.email())
         mommy.make(AuditStore, status=AuditStore.COMPLETED, audit__audit_cycle__client=self.client, audit__audit_cycle__status=AuditCycle.REPORT, audit__audit_cycle__questionnaire_type=qt3, audit__store=store3, user__email=fake.email())
+        audit_store1 = mommy.make(AuditStore, status=AuditStore.COMPLETED, audit__audit_cycle__client=self.client, audit__audit_cycle__status=AuditCycle.REPORT, audit__audit_cycle__questionnaire_type=qt3, audit__store=store3, user__email=fake.email())       
 
+        section1 = mommy.make(Section, audit_cycle=audit_store1.audit.audit_cycle)
+        question1 = mommy.make(Question,section=section1,visibility=Question.VISIBLE_TO_ALL,hide_question=False)
+        mommy.make(Answer, audit_store=audit_store1, question=question1)
+        
         assign_perm('client.clientuser_store_visible', self.client_user, store1)
         assign_perm('client.clientuser_store_visible', self.client_user, store2)
 
@@ -59,7 +66,7 @@ class QuestionnaireTypeClientServiceTestCase(TestCase):
         self.make_and_assign_reports()
 
         types = list(questionnaire_type_client_service.find_questionnaire_types_for_client_by_user(self.client_admin))
-        expect(types).to(have_length(3))
+        expect(types).to(have_length(1))
         for qt in types:
             expect(qt).to(have_key("client_id", self.client.id))
 

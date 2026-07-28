@@ -31,6 +31,7 @@ import "rc-time-picker/assets/index.css";
 import "../../../css/bs_overrides.scss";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 import Alert from "react-s-alert";
+import { getQuestionVisibility } from "../../utils.js";
 
 class AnswerComment extends Component {
 
@@ -126,6 +127,9 @@ export class QuestionRow extends React.Component {
 			max_marks: PropTypes.number,
 			question_type: PropTypes.string,
 			question_txt: PropTypes.string,
+			question_note: PropTypes.string,
+			visibility: PropTypes.string,
+			is_required: PropTypes.bool,
 			sequence: PropTypes.number,
 			hide_question: PropTypes.bool,
 			question_data: PropTypes.shape({
@@ -539,7 +543,12 @@ export class QuestionRow extends React.Component {
 				);
 			}
 			notApplicableElement = (
-				<button className="btn btn-default" onClick={this.notApplicableClicked}>
+				<button
+					className="btn btn-default"
+					onClick={this.notApplicableClicked}
+					disabled={this.props.q.is_required}
+					style={this.props.q.is_required ? { opacity: 0.3 } : {}}
+					title={this.props.q.is_required ? "N/A is not allowed, This question is required" : ""}>
 					{notApplicableIcon}
 				</button>
 			);
@@ -549,14 +558,38 @@ export class QuestionRow extends React.Component {
 			markElement = (<span className="text-muted">&nbsp;</span>);
 			answerElement = (<span className="text-muted">not applicable</span>);
 		}
+		let questionNote = "";
+		if (this.props.q.question_note !== null && this.props.q.question_note !== "") {
+			questionNote = this.props.q.question_note;
+		}
 
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
 				{/* <td>{this.props.q.question_txt}<br />{this.state.answer.revert_message ? <p className="text-danger"><b>Revert message: </b>{this.state.answer.revert_message}</p> : null}</td> */}
-				<td><MarkdownViewer markdown={this.props.q.question_txt || ""}/><br />{this.state.answer.revert_message ? <p className="text-danger"><b>Revert message: </b>{this.state.answer.revert_message}</p> : null}</td>
+				{/* <td><MarkdownViewer markdown={this.props.q.question_txt || ""}/><br />{this.state.answer.revert_message ? <p className="text-danger"><b>Revert message: </b>{this.state.answer.revert_message}</p> : null}</td> */}
+				<td>
+					<MarkdownViewer markdown={this.props.q.question_txt || ""}/>
+					{this.state.answer.revert_message ? <p className="text-danger"><b>Revert message: </b>{this.state.answer.revert_message}</p> : null}
+					{questionNote && (
+						<div
+							style={{
+								padding: "6px 10px",
+								background: "#f5f7fa",
+								borderLeft: "2px solid #1890ff",
+								borderRadius: 4,
+								fontSize: 11.5,
+								color: "#555",
+								lineHeight: 1.5,
+							}}
+						>
+							<strong>Note:</strong> {questionNote}
+						</div>
+					)}
+				</td>
 				<td>{answerElement}</td>
 				<td className="text-right">{markElement}</td>
+				<td className="text-right text-nowrap">{getQuestionVisibility(this.props.q.visibility)}</td>
 				<td className="">{notApplicableElement}</td>
 				<td>
 					{this.props.marking ? <button className={`btn btn-${this.state.answer.revert_message ? "primary" : "warning"}`} onClick={this.toggleRevertForm} title="Revert message"><Pencil /></button> : null}
@@ -966,7 +999,7 @@ class Section extends React.Component {
 		}
 	}
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.reportSection) {
+		if (nextProps.reportSection && nextProps.reportSection !== this.props.reportSection) {
 			this.setState({
 				revert_message: nextProps.reportSection.revert_message,
 				auditor_comment: nextProps.reportSection.auditor_comment,
@@ -978,17 +1011,49 @@ class Section extends React.Component {
 	inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
 	};
+	// saveAuditorComment = (e) => {
+	// 	e.preventDefault();
+	// 	if (this.props.reportSection && this.props.reportSection.auditor_comment === this.state.auditor_comment) {
+	// 		return;
+	// 	}
+	// 	this.setState({
+	// 		savingAuditorComment: true,
+	// 		auditorCommentError: false,
+	// 		auditorCommentSuccess: false,
+	// 	});
+	// 	submitAuditorComment(this.props.auditStoreId, this.props.section.id, this.state.auditor_comment).then(() => {
+	// 		this.setState({
+	// 			auditorCommentError: false,
+	// 			auditorCommentSuccess: true,
+	// 		});
+	// 	}, () => {
+	// 		this.setState({
+	// 			auditorCommentError: true,
+	// 			auditorCommentSuccess: false,
+	// 		});
+	// 	}).always(() => {
+	// 		this.setState({ savingAuditorComment: false });
+	// 	});
+	// };
 	saveAuditorComment = (e) => {
 		e.preventDefault();
+		this.persistAuditorComment();
+	};
+
+	flushAuditorComment = () => {
 		if (this.props.reportSection && this.props.reportSection.auditor_comment === this.state.auditor_comment) {
-			return;
+			return Promise.resolve();
 		}
+		return this.persistAuditorComment();
+	};
+
+	persistAuditorComment = () => {
 		this.setState({
 			savingAuditorComment: true,
 			auditorCommentError: false,
 			auditorCommentSuccess: false,
 		});
-		submitAuditorComment(this.props.auditStoreId, this.props.section.id, this.state.auditor_comment).then(() => {
+		return submitAuditorComment(this.props.auditStoreId, this.props.section.id, this.state.auditor_comment).then(() => {
 			this.setState({
 				auditorCommentError: false,
 				auditorCommentSuccess: true,
@@ -1129,8 +1194,9 @@ class Section extends React.Component {
 			col1: { width: "2.5%" },
 			col2: { width: "40%" },
 			col3: { width: "40%" },
-			col4: { width: "15%" },
-			col5: { width: "2.5%" },
+			col4: { width: "10%" },
+			col5: { width: "5%" },
+			col6: { width: "2.5%" },
 		};
 
 		let panelBody;
@@ -1145,6 +1211,7 @@ class Section extends React.Component {
 							<th style={styles.col2}>Question</th>
 							<th style={styles.col3}>Answer</th>
 							<th style={styles.col4}>Marks</th>
+							<th style={styles.col5}>Visibility</th>
 							<th style={styles.col5}>N/A</th>
 						</tr>
 					</thead>
@@ -1228,6 +1295,7 @@ export default class AuditStoreSections extends React.Component {
 		proof_tags: [],
 		loading: false
 	};
+	sectionRefs = {};
 
 	setLoading = (loading) => this.setState(prevState => Object.assign({}, prevState, { loading }));
 	reloadAnswers = () => {
@@ -1240,6 +1308,13 @@ export default class AuditStoreSections extends React.Component {
 			.always(() => {
 				this.setLoading(false);
 			});
+	};
+
+	flushAllPendingComments = () => {
+		const promises = Object.values(this.sectionRefs)
+			.filter(ref => ref && ref.flushAuditorComment)
+			.map(ref => ref.flushAuditorComment());
+		return Promise.all(promises);
 	};
 
 	componentDidMount() {
@@ -1269,6 +1344,7 @@ export default class AuditStoreSections extends React.Component {
 		for (var section of this.state.sections) {
 			let reportSection = this.state.reportSections.filter(rs => rs.section === section.id)[0];
 			sectionRows.push(<Section key={section.id}
+				ref={(ref) => { this.sectionRefs[section.id] = ref; }}
 				auditStoreId={this.props.auditStoreId}
 				auditStore={this.props.auditStore}
 				section={section}

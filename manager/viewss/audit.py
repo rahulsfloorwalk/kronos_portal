@@ -111,7 +111,12 @@ class AuditIdView(APIView):
         earnings = request.data.get('earnings_per_audit')
         reimbursement = request.data.get('reimbursement')
         count = request.data.get('count')
-        client_trainer_id = request.data.get('client_trainer')
+        client_trainer_data  = request.data.get('client_trainer')
+
+        if isinstance(client_trainer_data, dict):
+            client_trainer_id = client_trainer_data.get('id')
+        else:
+            client_trainer_id = client_trainer_data
 
         audit.earnings_per_audit = int(earnings) if earnings not in [None, ''] else None
         audit.reimbursement = int(reimbursement) if reimbursement not in [None, ''] else None

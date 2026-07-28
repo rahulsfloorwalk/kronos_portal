@@ -42,13 +42,6 @@ export default class TrainerForm extends React.Component {
 	componentDidMount() {
 		if(this.props.params.userId){
 			this.setLoading(true);
-			// findById(this.props.params.userId).then((trainer) => {
-			// 	this.setState({
-			// 		trainer: Object.assign({}, trainer, {
-			// 			password: ""
-			// 		})
-			// 	});
-			// }).always(() => this.setLoading(false));
 			findById(this.props.params.userId).then((response) => {
 				this.setState({
 					trainer: Object.assign({}, response.trainer, {
@@ -89,7 +82,7 @@ export default class TrainerForm extends React.Component {
 				this.state.trainer.is_active);
 		}
 		promise.then(function(){
-			hashHistory.push("/trainer");
+			hashHistory.push("/trainer/list");
 		}, (errors) => {
 			if (errors.responseJSON){
 				this.setState({

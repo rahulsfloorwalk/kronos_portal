@@ -107,6 +107,16 @@ class Question(Model):
         }
     }
 
+    VISIBLE_TO_ALL = "VISIBLE_TO_ALL"
+    HIDE_FROM_SHOPPER_AND_CLIENT = "HIDE_FROM_SHOPPER_AND_CLIENT"
+    HIDE_FROM_CLIENT = "HIDE_FROM_CLIENT"
+
+
+    QUESTION_VISIBILITY = (
+        (VISIBLE_TO_ALL, "Visible to all"),
+        (HIDE_FROM_SHOPPER_AND_CLIENT, "Hide from shoppers & clients"),
+        (HIDE_FROM_CLIENT, "Hide from clients"),
+    )
 
     id = AutoField(db_column = 'id', primary_key=True)
     question_txt = CharField(db_column="question_txt", max_length=1024, blank=False)
@@ -119,6 +129,7 @@ class Question(Model):
     hide_question = BooleanField(db_column='hide_question', default=False, blank=False, null=False)
     is_required = BooleanField(db_column='is_required', default=False, blank=False, null=False)
     optional_comment_required = BooleanField(db_column='optional_comment_required', default=False, blank=False, null=False)
+    visibility = CharField(db_column="visibility",max_length=50,choices=QUESTION_VISIBILITY,default=VISIBLE_TO_ALL,blank=False)
 
     def __has_unique_key(self, a_list_of_dicts, unique_key):
         values = [d[unique_key] for d in a_list_of_dicts]
