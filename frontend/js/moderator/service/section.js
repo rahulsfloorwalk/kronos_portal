@@ -12,7 +12,7 @@ export function fetchReportSections(auditStoreId){
 export function audioToCompareAnswers(payload) {
 	return $.ajax({
 		type: "POST",
-		// url: "https://ai.floorwalk.in/audio_to_compare_answers/",
+		// url: "https://ai1.floorwalk.in/audio_to_compare_answers/",
 		url: url.api_base_path + "moderator/audio_to_compare_answers",
 		data: JSON.stringify(payload),
 		contentType: "application/json",

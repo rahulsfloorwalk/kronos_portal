@@ -1042,6 +1042,10 @@ p.new{
     border: 1px solid #ddd !important;
 }
 
+.pm-planning-table tbody tr:nth-child(even) td {
+    background-color: #f9f9f9;
+}
+
 .ga-modal-header {
   display: flex;
   justify-content: space-between;

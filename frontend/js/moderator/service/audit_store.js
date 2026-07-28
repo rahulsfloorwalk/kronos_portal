@@ -1,7 +1,7 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 
-export function findPending(lastAuditStoreDate, filterStatus, client){
+export function findPending(lastAuditStoreDate, filterStatus, client,audit_date){
 	// return $.get(url.api_base_path + "moderator/audit_store/pending");
 	return $.ajax({
 		url: url.api_base_path + "moderator/audit_store/pending",
@@ -9,13 +9,14 @@ export function findPending(lastAuditStoreDate, filterStatus, client){
 		data: JSON.stringify({
 			lastAuditStoreDate: lastAuditStoreDate,
 			filterStatus: filterStatus,
-			client_id: client
+			client_id: client,
+			audit_date: audit_date
 		}),
 		contentType: "application/json"
 	});
 }
 
-export function findCompleted(lastAuditStoreDate, filterStatus, client, month, year){
+export function findCompleted(lastAuditStoreDate, filterStatus, client, month, year,audit_date){
 	// return $.get(url.api_base_path + "moderator/audit_store/completed");
 	return $.ajax({
 		url: url.api_base_path + "moderator/audit_store/completed",
@@ -25,7 +26,8 @@ export function findCompleted(lastAuditStoreDate, filterStatus, client, month, y
 			filterStatus: filterStatus,
 			client_id: client,
 			month: month,
-			year: year
+			year: year,
+			audit_date: audit_date
 		}),
 		contentType: "application/json"
 	});

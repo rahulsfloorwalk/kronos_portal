@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer, EmailField, CharField, BooleanField
+from rest_framework.permissions import AllowAny
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -20,7 +21,7 @@ class TrainerDeSerializer(Serializer):
 class TrainerView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
+        'GET': [GROUP_NAME_MANAGER], 
         'POST': [GROUP_NAME_MANAGER]
     }
     def get(self, request, format=None):
@@ -40,6 +41,14 @@ class TrainerView(APIView):
             firm_name=trainer_ds.validated_data.get("firm_name"),
         )
         return Response(PlainUserSerializer(saved_trainer_user).data)
+    
+class TrainerSummaryView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request):
+        return Response(trainer_service.trainer_summary_global())
 
 class TrainerIdView(APIView):
     permission_classes = [HasGroupPermission]

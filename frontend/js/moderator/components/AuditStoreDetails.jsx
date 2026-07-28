@@ -72,6 +72,7 @@ export default class AuditStoreDetails extends React.Component {
 			answersUpdated: false,
 			isGuidelineModalOpen: false,
 			isStatusLogModalOpen: false,
+			forwardingToPM: false,
 			// timerValue: 0,
 			// isTimerRunning: false,
 			// forwardLoading: false,
@@ -392,24 +393,39 @@ export default class AuditStoreDetails extends React.Component {
 	};
 
 	qaOkButtonClicked = () => {
-		const totalTime = localStorage.getItem(`timer_${this.props.params.auditStoreId}`);
-		let moderatorSubmissionTime;
-		if (totalTime) {
-			const seconds = parseInt(totalTime, 10);
-			moderatorSubmissionTime = this.formatTime(seconds);
-		}
-		qaOk(this.props.params.auditStoreId, moderatorSubmissionTime)
-			.then((auditStore) => {
-				localStorage.removeItem(`timer_${this.props.params.auditStoreId}`);
-				this.setAuditStore(auditStore);
-			})
-			.catch((err) => {
-				if (err.responseJSON && err.responseJSON.non_field_errors) {
-					this.setState({
-						errorMessage: err.responseJSON.non_field_errors[0],
-					});
-				}
-			});
+		this.setState({ forwardingToPM: true });
+
+		const flushPromise = this.auditSectionsRef && this.auditSectionsRef.flushAllPendingComments
+			? this.auditSectionsRef.flushAllPendingComments()
+			: Promise.resolve();
+
+		flushPromise.then(() => {
+			const totalTime = localStorage.getItem(`timer_${this.props.params.auditStoreId}`);
+			let moderatorSubmissionTime;
+			if (totalTime) {
+				const seconds = parseInt(totalTime, 10);
+				moderatorSubmissionTime = this.formatTime(seconds);
+			}
+			qaOk(this.props.params.auditStoreId, moderatorSubmissionTime)
+				.then((auditStore) => {
+					localStorage.removeItem(`timer_${this.props.params.auditStoreId}`);
+					this.setAuditStore(auditStore);
+					this.setState({ forwardingToPM: false });
+				})
+				.catch((err) => {
+					if (err.responseJSON && err.responseJSON.non_field_errors) {
+						const errorMessage = err.responseJSON.non_field_errors[0];
+						this.setState({
+							errorMessage: errorMessage,
+						});
+						Alert.error(errorMessage);
+					}
+					this.setState({ forwardingToPM: false });
+				});
+			// .always(() => {
+			// 	this.setState({ forwardingToPM: false });
+			// });
+		});
 	};
 	failButtonClicked = () => {
 		fail(this.props.params.auditStoreId).then(this.setAuditStore);

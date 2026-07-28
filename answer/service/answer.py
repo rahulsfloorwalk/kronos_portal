@@ -15,8 +15,16 @@ def save(answer):
 def find_answers_by_question_id(question_id):
     return Answer.objects.filter(question_id=question_id)
 
+def find_answers_by_question_id_for_client(question_id):
+    return Answer.objects.filter(
+        question_id=question_id,
+        question__visibility=Question.VISIBLE_TO_ALL,
+        question__hide_question=False
+    )
+
 def find_by_audit_store_id_and_questions(audit_store_id, questions):
-    return Answer.objects.filter(audit_store_id=audit_store_id, question__in=questions)
+    # return Answer.objects.filter(audit_store_id=audit_store_id, question__in=questions)
+    return Answer.objects.filter(audit_store_id=audit_store_id, question__in=questions,question__visibility=Question.VISIBLE_TO_ALL,question__hide_question=False)
 
 def find_by_audit_store_and_question(audit_store_id, question_id):
     try:
@@ -34,6 +42,12 @@ def find_by_audit_store_and_question(audit_store_id, question_id):
 def find_by_audit_store(audit_store_id):
     return Answer.objects.filter(audit_store_id=audit_store_id)
 
+def find_by_audit_store_for_client(audit_store_id):
+    return Answer.objects.filter(
+        audit_store_id=audit_store_id,
+        question__visibility=Question.VISIBLE_TO_ALL,
+        question__hide_question=False
+    )
 
 def submit_answer(audit_store_id, question_id, user_id, answer_text, status):
     audit_store = audit_store_service.find_by_id(audit_store_id)
@@ -137,11 +151,17 @@ def find_by_audit_store_for_auditor(audit_store_id, user_id):
 
     if user_id != audit_store.user_id:
         raise ObjectNotFound()
-
-    return find_by_audit_store(audit_store.id)
+    # return find_by_audit_store(audit_store.id)
+    return find_by_audit_store(audit_store.id).filter(
+        question__visibility__in=[Question.VISIBLE_TO_ALL,Question.HIDE_FROM_CLIENT,]
+    )
 
 
 def find_by_audit_store_for_clientuser(audit_store_id, user):
     audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
     return find_by_audit_store(audit_store.id)
+
+def find_by_audit_store_for_client_clientuser(audit_store_id, user):
+    audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
+    return find_by_audit_store_for_client(audit_store.id)
 

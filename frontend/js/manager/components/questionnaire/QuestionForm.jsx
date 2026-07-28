@@ -123,7 +123,12 @@ class QuestionForm extends React.Component {
 		let optional_comment_required_div;
 		if(this.state.form.question_type === "MUTEX" || this.state.form.question_type === "MULTISELECT"){
 			optionBuilder = <OptionBuilder
-				options={typeof(this.state.form.question_data) === "object" && Object.keys(this.state.form.question_data).length > 0 ? this.state.form.question_data.options : []}
+				// options={typeof(this.state.form.question_data) === "object" && Object.keys(this.state.form.question_data).length > 0 ? this.state.form.question_data.options : []}
+				options={
+					this.state.form.question_data && Array.isArray(this.state.form.question_data.options)
+						? this.state.form.question_data.options
+						: []
+				}
 				onChange={this.optionsChanged}
 			/>;
 
@@ -185,6 +190,13 @@ class QuestionForm extends React.Component {
 							onChange={this.inputChanged}
 							errors={this.state.errors.question_note}
 						/>
+					</div>
+					<div className="col-md-12">
+						<FormSelect label="Visibility" value={this.state.form.visibility} name="visibility" onChange={this.inputChanged} errors={this.state.errors.visibility}>
+							<option value="VISIBLE_TO_ALL">Visible to all</option>
+							<option value="HIDE_FROM_SHOPPER_AND_CLIENT">Hide from shoppers & clients</option>
+							<option value="HIDE_FROM_CLIENT">Hide from clients</option>
+						</FormSelect>
 					</div>
 					<div className="col-md-12">
 						{optionBuilder}

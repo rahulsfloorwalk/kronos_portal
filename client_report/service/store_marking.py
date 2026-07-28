@@ -83,7 +83,7 @@ def get_scores_for_store_by_questionnaire_type(store_id, client_id, questionnair
 
     audit_cycle_master = [audit_cycle.name for audit_cycle in audit_cycles]
 
-    master_questions = Question.objects.filter(section__audit_cycle__id=audit_cycles[len(audit_cycles) - 1].id) \
+    master_questions = Question.objects.filter(section__audit_cycle__id=audit_cycles[len(audit_cycles) - 1].id,visibility=Question.VISIBLE_TO_ALL,hide_question=False) \
         .order_by('section__sequence') \
         .order_by('sequence') \
         .select_related('section')
@@ -154,12 +154,13 @@ def get_keyword_analysis_for_store_by_questionnaire_type(audit_cycle_id, client_
     return result
 
 def get_question_wise_marks_for_audit_cycle(audit_cycle_id, store_id):
-    questions = Question.objects.filter(section__audit_cycle__id=audit_cycle_id) \
+    questions = Question.objects.filter(section__audit_cycle__id=audit_cycle_id,visibility=Question.VISIBLE_TO_ALL,hide_question=False) \
         .select_related('section') \
         .prefetch_related(
             Prefetch('answers', queryset=Answer.objects.filter(
                 audit_store__status__in=(AuditStore.COMPLETED, AuditStore.ACCEPTED),
                 audit_store__audit__store_id=store_id,
+                question__visibility=Question.VISIBLE_TO_ALL,question__hide_question=False,
             )),
     )
 

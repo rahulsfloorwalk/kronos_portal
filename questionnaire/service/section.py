@@ -78,6 +78,14 @@ def find_by_audit_store_for_clientuser(audit_store_id, user):
     audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
     return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
 
+def find_by_audit_store_for_client_clientuser(audit_store_id, user):
+    audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
+    return Section.objects.filter(
+        audit_cycle_id=audit_store.audit.audit_cycle.id,
+        questions__visibility=Question.VISIBLE_TO_ALL,
+        questions__hide_question=False
+    ).distinct()
+
 def get_sections_by_audit_cycle(audit_cycle_id, user):
     try:
         user = User.objects.get(id=user)
@@ -93,6 +101,17 @@ def get_questions_by_section(section_id, user):
     except (User.DoesNotExist, Section.DoesNotExist):
         return []
     return  Question.objects.filter(section=section).values("id", "question_txt")
+
+def get_questions_by_section_for_client(section_id, user):
+    try:
+        user = User.objects.get(id=user)
+        section = Section.objects.get(id=section_id)
+    except (User.DoesNotExist, Section.DoesNotExist):
+        return []
+
+    return Question.objects.filter(
+        section=section,visibility=Question.VISIBLE_TO_ALL,hide_question=False
+    ).values("id", "question_txt")
 
 def get_question_by_id(question_ids, user, store_ids=None): 
     try:
@@ -110,6 +129,28 @@ def get_question_by_id(question_ids, user, store_ids=None):
     )
     if store_ids:
         answers = answers.filter(audit_store__audit__store__id__in=store_ids)
+    return answers
+
+def get_question_by_id_for_client(question_ids, user, store_ids=None):
+    try:
+        user = User.objects.get(id=user)
+    except User.DoesNotExist:
+        raise ValueError("Unauthorized user")
+
+    questions = Question.objects.filter(id__in=question_ids,visibility=Question.VISIBLE_TO_ALL,hide_question=False)
+
+    if not questions.exists():
+        return []
+    answers = Answer.objects.filter(
+        question__in=questions,
+        question__visibility=Question.VISIBLE_TO_ALL,
+        question__hide_question=False,
+        audit_store__status__in=[AuditStore.ACCEPTED, AuditStore.COMPLETED]
+    )
+    if store_ids:
+        answers = answers.filter(
+            audit_store__audit__store__id__in=store_ids
+        )
     return answers
 
 # def get_sections_by_audit_cycle(audit_cycle_id, user):
@@ -157,12 +198,14 @@ def get_store_performance_data(percentage, questionnaire_id):
     audit_cycles_list = AuditStore.objects \
         .presentable() \
         .filter(
-            audit__audit_cycle__questionnaire_type_id=questionnaire_id
+            audit__audit_cycle__questionnaire_type_id=questionnaire_id,
+            answers__question__visibility=Question.VISIBLE_TO_ALL,
+            answers__question__hide_question=False
         ) \
         .distinct('audit__audit_cycle_id') \
         .values_list('audit__audit_cycle_id')
     sections = ReportSection.objects \
-        .filter(report_section_percentage__gt=0, section__audit_cycle_id__in=audit_cycles_list) \
+        .filter(report_section_percentage__gt=0, section__audit_cycle_id__in=audit_cycles_list,section__questions__visibility=Question.VISIBLE_TO_ALL,section__questions__hide_question=False) \
         .order_by('id') \
         .values('section__id', 'section__name')
     check_section_list = []
@@ -177,7 +220,9 @@ def get_store_performance_data(percentage, questionnaire_id):
     audit_cycle_obj = AuditStore.objects \
         .presentable() \
         .filter(
-            audit__audit_cycle__questionnaire_type_id=questionnaire_id
+            audit__audit_cycle__questionnaire_type_id=questionnaire_id,
+            answers__question__visibility=Question.VISIBLE_TO_ALL,
+            answers__question__hide_question=False
         ) \
         .distinct('audit__audit_cycle_id') \
         .order_by('-audit__audit_cycle_id') \
@@ -192,14 +237,16 @@ def get_store_performance_data(percentage, questionnaire_id):
             if section['name'] == "Total Score":
                 if AuditStore.objects.filter(status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
                                              audit__audit_cycle__id=audit_cycle['audit__audit_cycle__id'],
-                                             audit_store_percentage__lt=int(percentage)).exists():
+                                             audit_store_percentage__lt=int(percentage),answers__question__visibility=Question.VISIBLE_TO_ALL,answers__question__hide_question=False).exists():
                     check_audit_list = []
                     count = 0
                     audit_store_obj = AuditStore.objects.filter(
                         status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
                         audit__audit_cycle__id=audit_cycle['audit__audit_cycle__id'],
-                        audit_store_percentage__lt=int(percentage)) \
-                        .prefetch_related(
+                        audit_store_percentage__lt=int(percentage),
+                        answers__question__visibility=Question.VISIBLE_TO_ALL,
+                        answers__question__hide_question=False,
+                    ).prefetch_related(
                         'audit'
                     )
                     for audit_store in audit_store_obj:
@@ -218,7 +265,7 @@ def get_store_performance_data(percentage, questionnaire_id):
                 if ReportSection.objects.filter(section__name=section['name'], not_applicable=False,
                                                 audit_store__audit__audit_cycle__id=audit_cycle['audit__audit_cycle__id'],
                                                 audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                                report_section_percentage__lt=int(percentage)).exists():
+                                                report_section_percentage__lt=int(percentage),section__questions__visibility=Question.VISIBLE_TO_ALL,section__questions__hide_question=False).exists():
                     check_audit_list = []
                     count = 0
                     report_obj = ReportSection.objects \
@@ -226,7 +273,9 @@ def get_store_performance_data(percentage, questionnaire_id):
                             section__name=section['name'], not_applicable=False,
                             audit_store__audit__audit_cycle__id=audit_cycle['audit__audit_cycle__id'],
                             audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                            report_section_percentage__lt=int(percentage)
+                            report_section_percentage__lt=int(percentage),
+                            section__questions__visibility=Question.VISIBLE_TO_ALL,
+                            section__questions__hide_question=False
                         ) \
                         .prefetch_related(
                             'audit_store__audit'
@@ -252,12 +301,13 @@ def get_store_performance_data(percentage, questionnaire_id):
 
 
 def get_store_performance_store_list(audit_cycle_id, section_id, percentage):
-    if int(section_id) == 0:
+    section_id = int(section_id)
+    if section_id == 0:
         section_name = "Total Score"
         audit_store_obj = AuditStore.objects.filter(
             status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
             audit__audit_cycle__id=audit_cycle_id,
-            audit_store_percentage__lt=int(percentage)) \
+            audit_store_percentage__lt=int(percentage),answers__question__visibility=Question.VISIBLE_TO_ALL,answers__question__hide_question=False) \
             .prefetch_related(
             'audit',
             'audit__store'
@@ -274,16 +324,30 @@ def get_store_performance_store_list(audit_cycle_id, section_id, percentage):
                 check_audit_list.append(audit_id)
     else:
         section_name = Section.objects.get(id=section_id).name
-        report_obj = ReportSection.objects \
-            .filter(
-                section__name=section_name, not_applicable=False,
-                audit_store__audit__audit_cycle__id=audit_cycle_id,
-                audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                report_section_percentage__lt=int(percentage)) \
-            .prefetch_related(
-                'audit_store__audit',
-                'audit_store__audit__store'
-            )
+        # report_obj = ReportSection.objects \
+        #     .filter(
+        #         section__name=section_name, not_applicable=False,
+        #         audit_store__audit__audit_cycle__id=audit_cycle_id,
+        #         audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+        #         report_section_percentage__lt=int(percentage)) \
+        #     .prefetch_related(
+        #         'audit_store__audit',
+        #         'audit_store__audit__store'
+        #     )
+
+        
+        report_obj = ReportSection.objects.filter(
+            section_id=section_id,
+            not_applicable=False,
+            audit_store__audit__audit_cycle__id=audit_cycle_id,
+            audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+            report_section_percentage__lt=int(percentage),
+            section__questions__visibility=Question.VISIBLE_TO_ALL,
+            section__questions__hide_question=False
+        ).prefetch_related(
+            'audit_store__audit',
+            'audit_store__audit__store'
+        )
         store_list = []
         check_audit_list = []
         for report in report_obj:

@@ -31,6 +31,7 @@ import TimePicker from "rc-time-picker";
 import moment from "moment";
 import "rc-time-picker/assets/index.css";
 import "../../../css/bs_overrides.scss";
+import { getQuestionVisibility } from "../../utils.js";
 
 class AnswerComment extends Component {
 	static propTypes = {
@@ -134,6 +135,9 @@ class __QuestionRow extends React.Component {
 			sequence: PropTypes.number.isRequired,
 			max_marks: PropTypes.number.isRequired,
 			question_type: PropTypes.string.isRequired,
+			question_note: PropTypes.string,
+			visibility: PropTypes.string,
+			is_required: PropTypes.bool,
 			question_txt: PropTypes.string.isRequired,
 			hide_question: PropTypes.bool,
 			optional_comment_required: PropTypes.bool,
@@ -455,7 +459,12 @@ class __QuestionRow extends React.Component {
 				);
 			}
 			notApplicableElement = (
-				<button className="btn btn-default" onClick={this.notApplicableClicked}>
+				<button
+					className="btn btn-default"
+					onClick={this.notApplicableClicked}
+					disabled={this.props.q.is_required}
+					style={this.props.q.is_required ? { opacity: 0.3 } : {}}
+					title={this.props.q.is_required ? "N/A is not allowed, This question is required" : ""}>
 					{notApplicableIcon}
 				</button>
 			);
@@ -465,13 +474,36 @@ class __QuestionRow extends React.Component {
 			markElement = (<span className="text-muted">&nbsp;</span>);
 			answerElement = (<span className="text-muted">not applicable</span>);
 		}
+		let questionNote = "";
+		if (this.props.q.question_note !== null && this.props.q.question_note !== "") {
+			questionNote = this.props.q.question_note;
+		}
 
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
-				<td><MarkdownViewer markdown={this.props.q.question_txt || ""} /></td>
+				{/* <td><MarkdownViewer markdown={this.props.q.question_txt || ""} /></td> */}
+				<td>
+					<MarkdownViewer markdown={this.props.q.question_txt || ""} />
+					{questionNote && (
+						<div
+							style={{
+								padding: "6px 10px",
+								background: "#f5f7fa",
+								borderLeft: "2px solid #1890ff",
+								borderRadius: 4,
+								fontSize: 11.5,
+								color: "#555",
+								lineHeight: 1.5,
+							}}
+						>
+							<strong>Note:</strong> {questionNote}
+						</div>
+					)}
+				</td>
 				<td>{answerElement}</td>
 				<td className="text-right">{markElement}</td>
+				<td className="text-right text-nowrap">{getQuestionVisibility(this.props.q.visibility)}</td>
 				<td className="">{notApplicableElement}</td>
 			</tr>
 		);
@@ -980,8 +1012,9 @@ class __Section extends React.Component {
 			col1: { width: "2.5%" },
 			col2: { width: "40%" },
 			col3: { width: "40%" },
-			col4: { width: "15%" },
-			col5: { width: "2.5%" },
+			col4: { width: "10%" },
+			col5: { width: "5%" },
+			col6: { width: "2.5%" },
 		};
 		let panelBody;
 
@@ -996,6 +1029,7 @@ class __Section extends React.Component {
 							<th style={styles.col2}>Question</th>
 							<th style={styles.col3}>Answer</th>
 							<th style={styles.col4}>Marks</th>
+							<th style={styles.col5}>Visibility</th>
 							<th style={styles.col5}>N/A</th>
 						</tr>
 					</thead>

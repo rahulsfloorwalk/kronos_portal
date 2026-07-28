@@ -4,8 +4,9 @@ import io
 from django.db.models import Sum
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
+from questionnaire.models import Question
 from questionnaire.service.question import find_by_audit_cycle
-from answer.service.answer import find_answers_by_question_id
+from answer.service.answer import find_answers_by_question_id,find_answers_by_question_id_for_client
 from kronos.utils import get_color_code, get_color_hex_from_code
 from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
 
@@ -13,7 +14,8 @@ from client.service.client_user import find_non_client_admin_user_store_by_clien
 def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user):
     improvable_questions_list = []
     audit_cycle_obj = AuditCycle.objects.get(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)
-    questions_list = find_by_audit_cycle(audit_cycle_obj.id).prefetch_related('section')\
+    questions_list = find_by_audit_cycle(audit_cycle_obj.id).filter(visibility=Question.VISIBLE_TO_ALL,hide_question=False
+        ).prefetch_related('section')\
         .values('id', 'max_marks', 'section__id', 'section__name', 'question_txt')
 
     client_admin = client_user.is_client_admin()
@@ -23,23 +25,27 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_i
     for question in questions_list:
         section_id = question['section__id']
         if question['max_marks'] > 0:
-            answer_obj = find_answers_by_question_id(question['id'])
+            answer_obj = find_answers_by_question_id_for_client(question['id'])
             if client_admin:
                 answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
                                                not_applicable=False,
                                                audit_store__report_sections__section_id=section_id,
-                                               audit_store__report_sections__not_applicable=False)
+                                               audit_store__report_sections__not_applicable=False,
+                                               question__visibility=Question.VISIBLE_TO_ALL,
+                                               question__hide_question=False)
             else:
                 answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
                                                audit_store__audit__store__id__in=non_admin_user_store_list,
                                                not_applicable=False,
                                                audit_store__report_sections__section_id=section_id,
-                                               audit_store__report_sections__not_applicable=False)
+                                               audit_store__report_sections__not_applicable=False,question__visibility=Question.VISIBLE_TO_ALL,
+                                               question__hide_question=False)
             if answer_obj.count() > 0:
                 total_question_marks = question['max_marks'] * answer_obj.count()
-                obtained_marks = (answer_obj.aggregate(sum_marks=Sum('marks_obtained')))['sum_marks']
+                # obtained_marks = (answer_obj.aggregate(sum_marks=Sum('marks_obtained')))['sum_marks']
+                obtained_marks = answer_obj.aggregate(sum_marks=Sum('marks_obtained'))['sum_marks'] or 0
                 percentage = round((obtained_marks / total_question_marks) * 100, 2)
-                if obtained_marks is not None and percentage < 75:
+                if percentage < 75:
                     # if percentage < 75:
                     improvable_questions_dict = {}
                     improvable_questions_dict['question_id'] = question['id']
@@ -52,6 +58,51 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_i
                     improvable_questions_list.append(improvable_questions_dict)
 
     return sorted(improvable_questions_list, key=lambda qd: qd['lost_marks'], reverse=True)
+
+def get_improvable_questions_list(question_id,user):
+    # question = Question.objects.get(id=question_id)
+    question = Question.objects.get(id=question_id,visibility=Question.VISIBLE_TO_ALL,hide_question=False)
+    # answer_obj = find_answers_by_question_id(question_id).filter(audit_store__status__in=[AuditStore.COMPLETED,AuditStore.ACCEPTED],
+    #     not_applicable=False)
+
+    answer_obj = find_answers_by_question_id(question_id).filter(
+        audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+        not_applicable=False,
+        question__visibility=Question.VISIBLE_TO_ALL,
+        question__hide_question=False
+    )
+
+    total_marks = question.max_marks * answer_obj.count()
+    obtained_marks = answer_obj.aggregate(sum_marks=Sum('marks_obtained'))['sum_marks'] or 0
+
+    percentage = 0
+    if total_marks > 0:
+        percentage = round((obtained_marks / total_marks) * 100,2)
+
+    reports = {}
+    for ans in answer_obj.select_related('audit_store','audit_store__audit','audit_store__audit__store'):
+        lost_marks = (question.max_marks - ans.marks_obtained)
+        if lost_marks > 0:
+            audit_store_id = ans.audit_store.id
+            reports[audit_store_id] = {
+                "audit_store_id": audit_store_id,
+                "store_id": ans.audit_store.audit.store.id,
+                "store_name": ans.audit_store.audit.store.name,
+                "marks_obtained": ans.marks_obtained,
+                "max_marks": question.max_marks,
+                "lost_marks": lost_marks,
+                "status": ans.audit_store.status
+            }
+    return {
+        "question_id": question.id,
+        "question_txt": question.question_txt,
+        "question_section": question.section.name,
+        "total_marks": total_marks,
+        "obtained_marks": obtained_marks,
+        "lost_marks": total_marks - obtained_marks,
+        "percentage": percentage,
+        "reports": reports
+    }
 
 
 def get_improvable_questions_xlsx_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user):

@@ -9,9 +9,17 @@ from registration.models import GROUP_NAME_CLIENT
 from django.utils import timezone
 from manager.models import ManagerProfileInfo
 
+# def find_client_user_by_audit_store_id(audit_store_id):
+#     audit_store=AuditStore.objects.get(id=audit_store_id)
+#     client_users= NonClientAdminUserStore.objects.filter(stores__store_list__contains=audit_store.audit.store_id)
+#     result=[]
+#     for i in client_users:
+#         result.append({'email':i.client_user.user.email,'full_name':i.client_user.full_name})
+#     return result
+
 def find_client_user_by_audit_store_id(audit_store_id):
-    audit_store=AuditStore.objects.get(id=audit_store_id)
-    client_users= NonClientAdminUserStore.objects.filter(stores__store_list__contains=audit_store.audit.store_id)
+    audit_store = AuditStore.objects.select_related('audit__store').get(id=audit_store_id)
+    client_users = NonClientAdminUserStore.objects.filter( stores__store_list__contains=audit_store.audit.store_id).select_related( 'client_user__user')
     result=[]
     for i in client_users:
         result.append({'email':i.client_user.user.email,'full_name':i.client_user.full_name})

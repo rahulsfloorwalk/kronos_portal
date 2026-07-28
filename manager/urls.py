@@ -336,7 +336,7 @@ urlpatterns = ([
 
     url(r'moderator/(?P<user_id>[0-9]+)$', moderator_views.ModeratorIdView.as_view(), name='moderator_id_view'),
     url(r'moderator/summary$', moderator_views.ModeratorSummaryView.as_view(), name='moderator_summary_view'),
-    # url(r'trainer/summary$', trainer_views.TrainerSummaryView.as_view(), name='trainer_summary_view'),
+    url(r'trainer/summary$', trainer_views.TrainerSummaryView.as_view(), name='trainer_summary_view'),
     url(r'moderator/(?P<user_id>[0-9]+)/reportlist$', moderator_views.ModeratorReportList.as_view(), name='moderator_report_list'),
     url(r'moderator$', moderator_views.ModeratorView.as_view(), name='moderator_view'),
     url(r'manager/(?P<user_id>[0-9]+)$', manager_views.ManagerIdView.as_view(), name='manager_id_view'),

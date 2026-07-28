@@ -273,7 +273,7 @@ def get_report_completion_percentage(audit_store_id):
     section_ids = list(Section.objects.filter(audit_cycle=audit_cycle,hide_comment=False).values_list('id',flat=True))
     total_count += len(section_ids)
 
-    questions = list(Question.objects.filter(section__audit_cycle=audit_cycle,hide_question=False).only('id','question_type','optional_comment_required'))
+    questions = list(Question.objects.filter(section__audit_cycle=audit_cycle,hide_question=False, visibility__in=[Question.VISIBLE_TO_ALL,Question.HIDE_FROM_CLIENT,]).only('id','question_type','optional_comment_required'))
 
     question_ids = [q.id for q in questions]
     total_count += len(question_ids)

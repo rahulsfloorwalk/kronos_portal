@@ -21,6 +21,9 @@ from django.contrib.contenttypes.models import ContentType
 from guardian.models import UserObjectPermission
 from guardian.shortcuts import get_objects_for_user
 from django.contrib.auth import get_user_model
+from django.db.models import Prefetch
+from questionnaire.models import Question
+from answer.models import Answer
 
 def find_by_id(audit_store_id):
     try:
@@ -515,8 +518,22 @@ def find_by_store_for_client(store_id, client_id):
     ).prefetch_related(
         'report_sections',
         'report_sections__section',
-        'report_sections__section__questions',
-        'report_sections__section__questions__answers',
+        Prefetch(
+            'report_sections__section__questions',
+            queryset=Question.objects.filter(
+                visibility=Question.VISIBLE_TO_ALL,
+                hide_question=False
+            ).prefetch_related(
+                Prefetch(
+                    'answers',
+                    queryset=Answer.objects.filter(
+                        question__visibility=Question.VISIBLE_TO_ALL,
+                        question__hide_question=False
+                    )
+                )
+            )
+        ),
+
         'audit',
         'audit__store',
         'audit__store__city',

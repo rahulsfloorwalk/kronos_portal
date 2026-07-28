@@ -229,7 +229,7 @@ class QuestionsBySection(APIView):
         'POST': [GROUP_NAME_CLIENT]
     }
     def get(self, request, section_id):
-        questions = section_service.get_questions_by_section(section_id, request.user.id)
+        questions = section_service.get_questions_by_section_for_client(section_id, request.user.id)
         formatted_questions = [{"id": question["id"], "name": question["question_txt"]} for question in questions]
         
         return Response(formatted_questions) 
@@ -258,7 +258,7 @@ class QuestionById(APIView):
         except (json.JSONDecodeError, ValueError, TypeError):
             return Response({"error": "Invalid store_ids format"}, status=400)
 
-        answers = section_service.get_question_by_id(question_ids, request.user.id, store_ids)
+        answers = section_service.get_question_by_id_for_client(question_ids, request.user.id, store_ids)
         return Response(QuestionsAnswerSerializer(answers, many=True).data)
 
 
@@ -325,7 +325,7 @@ class SectionByAuditStore(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_store_id, format=None):
-        sections = section_service.find_by_audit_store_for_clientuser(audit_store_id, request.user)
+        sections = section_service.find_by_audit_store_for_client_clientuser(audit_store_id, request.user)
         return Response(SectionSerializer(sections, many=True).data)
 
 class AnswerByAuditStore(APIView):
@@ -334,7 +334,7 @@ class AnswerByAuditStore(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_store_id, format=None):
-        answers = answer_service.find_by_audit_store_for_clientuser(audit_store_id, request.user)
+        answers = answer_service.find_by_audit_store_for_client_clientuser(audit_store_id, request.user)
         return Response(AnswerSerializer(answers, many=True).data)
 
 class ReportSectionByAuditStore(APIView):
@@ -343,7 +343,7 @@ class ReportSectionByAuditStore(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_store_id, format=None):
-        report_sections = report_section_service.find_by_audit_store_for_clientuser(audit_store_id, request.user)
+        report_sections = report_section_service.find_by_audit_store_for_client_clientuser(audit_store_id, request.user)
         return Response(ReportSectionSerializer(report_sections, many=True).data)
 
 class AttachmentByAuditStore(APIView):
@@ -443,7 +443,7 @@ class QuiestionsFilteredXlsxReport(APIView):
         if not store_ids:
             store_ids = []
 
-        questions, answers,store_ids = report_browser_xlsx_service.get_aggregate_questions_data_with_filters(question_ids)
+        questions, answers,store_ids = report_browser_xlsx_service.get_aggregate_questions_data_with_filters_for_client(question_ids,store_ids)
         # excel_data = report_browser_xlsx_service.create_questions_text_structure(questions, audit_stores)
         output = report_browser_xlsx_service.write_questions_data(questions, answers, store_ids)
 
@@ -519,7 +519,7 @@ class AuditCycleByTypeView(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_type, format=None):
-        audit_cycles = audit_cycle_service.find_by_audit_type_for_clientuser(audit_type, request.user.id)
+        audit_cycles = audit_cycle_service.find_by_audit_type_for_client_clientuser(audit_type, request.user.id)
         return Response(AuditCycleSerializer(audit_cycles, many=True).data)
 
 class CityView(APIView):
@@ -711,6 +711,14 @@ class ImprovableQuestionsByAuditCycleId(APIView):
         audit_cycle_improvable_questions = improvable_questions.get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id, request.user.clientuser)
         return Response(audit_cycle_improvable_questions)
 
+class ImprovableQuestionList(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT]
+    }
+    def get(self, request, question_id):
+        audit_cycle_improvable_questions = improvable_questions.get_improvable_questions_list(question_id, request.user.clientuser)
+        return Response(audit_cycle_improvable_questions)
 
 class ImprovableQuestionsXlsxReport(APIView):
     permission_classes = [HasGroupPermission]

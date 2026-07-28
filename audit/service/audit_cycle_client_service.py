@@ -2,6 +2,7 @@ from kronos.exceptions import ObjectNotFound
 
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
+from questionnaire.models import Question
 
 from client.service.client_user import find_clientuser_by_user_id, find_non_client_admin_user_store_by_client_user_id
 
@@ -32,6 +33,8 @@ def find_all_for_clientuser(user_id):
         .visible_to(user) \
         .filter(
             audit__audit_cycle__client__id=user.clientuser.client_id,
+            answers__question__visibility=Question.VISIBLE_TO_ALL,
+            answers__question__hide_question=False,
         ) \
         .distinct('audit__audit_cycle_id') \
         .order_by('-audit__audit_cycle_id') \
@@ -95,6 +98,8 @@ def find_all_for_dashboard_clientuser(user_id):
             .presentable() \
             .filter(
                 audit__audit_cycle__client__id=user.clientuser.client_id,
+                answers__question__visibility=Question.VISIBLE_TO_ALL,
+                answers__question__hide_question=False,
                 # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES
             ) \
             .distinct('audit__audit_cycle_id') \
@@ -116,7 +121,9 @@ def find_all_for_dashboard_clientuser(user_id):
             .presentable() \
             .filter(
                 audit__audit_cycle__client__id=user.clientuser.client_id,
-                audit__store__id__in=non_client_admin_store_list
+                audit__store__id__in=non_client_admin_store_list,
+                answers__question__visibility=Question.VISIBLE_TO_ALL,
+                answers__question__hide_question=False,
             ) \
             .distinct('audit__audit_cycle_id') \
             .order_by('-audit__audit_cycle_id') \
@@ -180,6 +187,8 @@ def find_all_for_nps_clientuser(user_id):
             .presentable() \
             .filter(
                 audit__audit_cycle__client__id=user.clientuser.client_id,
+                audit__audit_cycle__sections__questions__visibility=Question.VISIBLE_TO_ALL,
+                audit__audit_cycle__sections__questions__hide_question=False,
                 # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES
             ) \
             .distinct('audit__audit_cycle_id') \
@@ -201,7 +210,9 @@ def find_all_for_nps_clientuser(user_id):
             .presentable() \
             .filter(
                 audit__audit_cycle__client__id=user.clientuser.client_id,
-                audit__store__id__in=non_client_admin_store_list
+                audit__store__id__in=non_client_admin_store_list,
+                audit__audit_cycle__sections__questions__visibility=Question.VISIBLE_TO_ALL,
+                audit__audit_cycle__sections__questions__hide_question=False,
             ) \
             .distinct('audit__audit_cycle_id') \
             .order_by('-audit__audit_cycle_id') \
@@ -215,10 +226,15 @@ def find_all_for_nps_clientuser(user_id):
                 'audit__audit_cycle__questionnaire_type__name',
                 'audit__audit_cycle__questionnaire_type__is_default',
             )
+    # audit_cycles_with_null_nps_section = AuditStore.objects \
+    #     .filter(nps_section__isnull=True) \
+    #     .values('audit__audit_cycle__id') \
+    #     .distinct('audit__audit_cycle__id')
+
     audit_cycles_with_null_nps_section = AuditStore.objects \
-        .filter(nps_section__isnull=True) \
-        .values('audit__audit_cycle__id') \
-        .distinct('audit__audit_cycle__id')
+        .filter(audit__audit_cycle__client_id=user.clientuser.client_id,nps_section__isnull=True,) \
+        .values_list('audit__audit_cycle__id', flat=True) \
+        .distinct()
     
     invalid_audit_cycle_ids = [
         audit_cycle['audit__audit_cycle__id']
@@ -272,8 +288,12 @@ def get_audit_cycle_score(questionnaire_type_id, user_id):
     user = find_clientuser_by_user_id(user_id)
     rows = AuditStore.objects \
         .presentable() \
-        .filter(audit__audit_cycle__questionnaire_type_id=questionnaire_type_id,
-                audit__audit_cycle__client__id=user.clientuser.client_id) \
+        .filter(
+            audit__audit_cycle__questionnaire_type_id=questionnaire_type_id,
+            audit__audit_cycle__client__id=user.clientuser.client_id,
+            answers__question__visibility=Question.VISIBLE_TO_ALL,
+            answers__question__hide_question=False,
+        ) \
         .distinct('audit__audit_cycle_id') \
         .order_by('-audit__audit_cycle_id') \
         .prefetch_related('audit__audit_cycle_id')\

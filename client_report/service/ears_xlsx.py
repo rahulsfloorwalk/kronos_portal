@@ -11,6 +11,9 @@ import audit_store.service_client as audit_store_client_service
 from io import BytesIO
 from urllib.request import urlopen
 from urllib.error import HTTPError
+from django.db.models import Prefetch
+from answer.models import Answer
+from questionnaire.models import Question
 
 not_applicable_text = "N/A"
 
@@ -224,15 +227,35 @@ def get_report_data_for_client_user(audit_store_id, user):
     if not audit_store.is_presentable():
         raise AppLogicError("report is not presentable")
 
+    # audit_store = AuditStore.objects.prefetch_related(
+    #     'answers',
+    #     'report_sections',
+    #     'report_sections__section',
+    #     'report_sections__section__questions',
+    #     'report_sections__section__questions__answers',
+    #     # 'audit__audit_cycle__sections',
+    #     # 'audit__audit_cycle__sections__questions',
+    #     # 'audit__audit_cycle__sections__questions__answers',
+    # ).filter(pk=audit_store_id).first()
     audit_store = AuditStore.objects.prefetch_related(
-        'answers',
+        Prefetch(
+            'answers',
+            queryset=Answer.objects.filter(
+                question__visibility=Question.VISIBLE_TO_ALL,question__hide_question=False
+            )
+        ),
         'report_sections',
         'report_sections__section',
-        'report_sections__section__questions',
-        'report_sections__section__questions__answers',
-        # 'audit__audit_cycle__sections',
-        # 'audit__audit_cycle__sections__questions',
-        # 'audit__audit_cycle__sections__questions__answers',
+        Prefetch(
+            'report_sections__section__questions',
+            queryset=Question.objects.filter(visibility=Question.VISIBLE_TO_ALL,hide_question=False
+            ).prefetch_related(
+                Prefetch(
+                    'answers',
+                    queryset=Answer.objects.filter(question__visibility=Question.VISIBLE_TO_ALL,question__hide_question=False)
+                )
+            )
+        ),
     ).filter(pk=audit_store_id).first()
 
     report_data = {

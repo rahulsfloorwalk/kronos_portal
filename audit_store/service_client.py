@@ -31,13 +31,14 @@ def _get_total_marks_for_questions(questions):
 
 
 def _get_total_marks_for_answers(answers):
-    return sum(answer.marks_obtained for answer in answers)
+    # return sum(answer.marks_obtained for answer in answers)
+    return sum(answer.marks_obtained or 0 for answer in answers)
 
 
 def find_impact_factors_by_id_for_clientuser(audit_store_id, user):
     impact_factors_arr = []
     audit_store = find_by_id_for_clientuser(audit_store_id, user)
-    impact_factors = question_service.find_impact_factors_by_audit_cycle(audit_store.audit.audit_cycle_id)
+    impact_factors = question_service.find_impact_factors_by_audit_cycle_for_client(audit_store.audit.audit_cycle_id)
     for impact_factor in impact_factors:
         questions = question_service.find_by_audit_cycle_id_and_impact_factor(audit_store.audit.audit_cycle_id, impact_factor)
         answers = answer_service.find_by_audit_store_id_and_questions(audit_store.id, questions)

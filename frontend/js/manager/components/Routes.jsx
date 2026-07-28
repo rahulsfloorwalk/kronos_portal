@@ -153,6 +153,9 @@ import ManagerAddCountry from "./manager/ManagerAddCountry.jsx";
 import ClientQaList from "./client_qa_listing/ClientQaList.jsx";
 import ClientQaForm from "./client_qa_listing/ClientQaForm.jsx";
 import SectionPreview from "./questionnaire/SectionPreview.jsx";
+import TrainerIndex from "./trainer/TrainerIndex.jsx";
+import TrainerReportList from "./trainer/TrainerReportList.jsx";
+import TrainerSummary from "./trainer/TrainerSummary.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -324,9 +327,18 @@ const Routes = () => (
 				<Route path="add" component={ManagerForm} />
 				<Route path=":userId/edit" component={ManagerForm} />
 			</Route>
-			<Route path="trainer" component={TrainerList}>
+			{/* <Route path="trainer" component={TrainerList}>
 				<Route path="add" component={TrainerForm} />
 				<Route path=":userId/edit" component={TrainerForm} />
+			</Route> */}
+			<Route path="trainer" component={TrainerIndex}>
+				<Route path="summary" component={TrainerSummary}>
+					<Route path=":userId/reportlist" component={TrainerReportList} />
+				</Route>
+				<Route path="list" component={TrainerList}>
+					<Route path="add" component={TrainerForm} />
+					<Route path=":userId/edit" component={TrainerForm} />
+				</Route>
 			</Route>
 			<Route path="reports" component={ReportList}>
 				<Route path="profitablity" component={ProfitablityReport}></Route>

@@ -11,7 +11,7 @@ def find_by_audit_store_and_question_for_auditor(audit_store_id, question_id, us
 def add_multiselect_answer_questions(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
     multi_select_question = Question.objects.filter(section__audit_cycle__id=audit_store.audit.audit_cycle.id,
-                                                    question_type=Question.MULTISELECT)
+                                                    question_type=Question.MULTISELECT,visibility__in=[Question.VISIBLE_TO_ALL, Question.HIDE_FROM_CLIENT])
     for question in multi_select_question:
         if not Answer.objects.filter(audit_store__id=audit_store_id, question__id=question.id).exists():
             answer = Answer()

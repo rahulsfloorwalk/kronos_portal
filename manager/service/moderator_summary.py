@@ -29,15 +29,14 @@ def moderator_summary_for_audit_cycle(audit_cycle_id):
     return data
 
 def moderator_summary_global():
-    reports = AuditStore.objects.filter(
-        status__in=(
-            AuditStore.ASSIGNED,
-            AuditStore.ACKNOWLEDGED,
-            AuditStore.SUBMITTED,
-            AuditStore.PM_REVIEW,
-            AuditStore.COMPLETED,
-        )
-    ).values("id", "status")
+    statuses = (
+        AuditStore.ASSIGNED,
+        AuditStore.ACKNOWLEDGED,
+        AuditStore.SUBMITTED,
+        AuditStore.PM_REVIEW,
+        AuditStore.COMPLETED,
+    )
+    reports = AuditStore.objects.filter(status__in=statuses).values("id", "status")
 
     report_map = {str(r["id"]): r["status"] for r in reports}
 
@@ -54,7 +53,6 @@ def moderator_summary_global():
         user__is_active=True
     ).values("user_id", "object_pk")
 
-    data = defaultdict(lambda: defaultdict(int))
     # data = {}
 
     # for r in reports:
@@ -64,9 +62,20 @@ def moderator_summary_global():
     #                 data[p.user_id] = {}
     #             data[p.user_id][r["status"]] = data[p.user_id].get(r["status"], 0) + 1
     # return data
+
+    moderator_ids = UserObjectPermission.objects.filter(
+        content_type=content_type,
+        permission=permission,
+        user__is_active=True
+    ).values_list("user_id", flat=True).distinct()
+
+    data = {}
+    for user_id in moderator_ids:
+        data[user_id] = {status: 0 for status in statuses}
+
     for perm in perms:
         status = report_map.get(perm["object_pk"])
         if status:
             data[perm["user_id"]][status] += 1
 
-    return dict(data)
+    return data

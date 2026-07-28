@@ -17,6 +17,8 @@ from questionnaire.models import QuestionnaireType
 from client.models import Client, ClientUser
 from audit_store.models import AuditStore
 from client.models import Store
+from questionnaire.models import Question,Section
+from answer.models import Answer
 
 fake = Faker()
 
@@ -61,9 +63,18 @@ class AuditCycleClientServiceTestCase(TestCase):
         ac2 = audit_cycle_recipe.make(status=AuditCycle.REPORT)
         ac3 = audit_cycle_recipe.make(status=AuditCycle.ARCHIVED)
 
-        audit_store_recipe.make(audit__audit_cycle=ac1)
-        audit_store_recipe.make(audit__audit_cycle=ac2)
-        audit_store_recipe.make(audit__audit_cycle=ac3)
+        # audit_store_recipe.make(audit__audit_cycle=ac1)
+        # audit_store_recipe.make(audit__audit_cycle=ac2)
+        # audit_store_recipe.make(audit__audit_cycle=ac3)
+
+        as1 = audit_store_recipe.make(audit__audit_cycle=ac1)
+        as2 = audit_store_recipe.make(audit__audit_cycle=ac2)
+        as3 = audit_store_recipe.make(audit__audit_cycle=ac3)
+
+        for audit_store in [as1, as2, as3]:
+            section = mommy.make(Section, audit_cycle=audit_store.audit.audit_cycle)
+            question = mommy.make(Question,section=section,question_txt="Dummy Question",max_marks=10,sequence=1,visibility=Question.VISIBLE_TO_ALL,hide_question=False,)
+            mommy.make(Answer,audit_store=audit_store,question=question,)
 
         audit_cycles = audit_cycle_client_service.find_all_for_clientuser(self.client_admin.id)
         expect(audit_cycles).to(have_length(3))
@@ -78,9 +89,18 @@ class AuditCycleClientServiceTestCase(TestCase):
         ac2 = audit_cycle_recipe.make(status=AuditCycle.REPORT)
         ac3 = audit_cycle_recipe.make(status=AuditCycle.ARCHIVED)
 
+        # as1 = audit_store_recipe.make(audit__audit_cycle=ac1)
+        # audit_store_recipe.make(audit__audit_cycle=ac2, audit__store=store)
+        # audit_store_recipe.make(audit__audit_cycle=ac3)
+
         as1 = audit_store_recipe.make(audit__audit_cycle=ac1)
-        audit_store_recipe.make(audit__audit_cycle=ac2, audit__store=store)
-        audit_store_recipe.make(audit__audit_cycle=ac3)
+        as2 = audit_store_recipe.make(audit__audit_cycle=ac2, audit__store=store)
+        as3 = audit_store_recipe.make(audit__audit_cycle=ac3)
+
+        for audit_store in [as1, as2, as3]:
+            section = mommy.make(Section, audit_cycle=audit_store.audit.audit_cycle)
+            question = mommy.make(Question,section=section,question_txt="Dummy Question",max_marks=10,sequence=1,visibility=Question.VISIBLE_TO_ALL,hide_question=False,)
+            mommy.make(Answer,audit_store=audit_store,question=question,)
 
         audit_cycles = audit_cycle_client_service.find_all_for_clientuser(self.client_user.id)
         expect(audit_cycles).to(be_empty)

@@ -31,6 +31,7 @@ urlpatterns = ([
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/time_series$', views.AuditCycleTimeSeriesReport.as_view(), name='audit_cycle_time_series'),
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle/(?P<audit_cycle_id>[0-9]+)/time_series$', views.AuditCycleTimeSeriesReportByAuditCycleId.as_view(), name='audit_cycle_time_series_by_audit_cycle_id'),
 
+    url(r'dashboard/question/(?P<question_id>[0-9]+)/improvable_question_list$', views.ImprovableQuestionList.as_view(), name='improvable_question_list'),
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle/(?P<audit_cycle_id>[0-9]+)/improvable_questions$', views.ImprovableQuestionsByAuditCycleId.as_view(), name='improvable_questions_by_audit_cycle_id'),
     url(r'audit_cycle_improvable_questions_xlsx$', views.ImprovableQuestionsXlsxReport.as_view(), name='audit_cycle_improvable_questions_xlsx'),
 

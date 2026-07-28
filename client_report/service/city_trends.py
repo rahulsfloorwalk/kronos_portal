@@ -8,6 +8,7 @@ from audit_store.models import AuditStore
 from kronos.utils import get_color_code_by_percentage
 from audit_store import service_client as client_service
 from client.service import client_user as client_user_service
+from questionnaire.models import Question
 
 
 def get_performing_cities(audit_cycle, user_id):
@@ -23,6 +24,13 @@ def get_performing_cities(audit_cycle, user_id):
                 'report_sections__section',
                 # 'report_sections__section__questions',
                 # 'report_sections__section__questions__answers'
+                Prefetch(
+                    'report_sections__section__questions',
+                    queryset=Question.objects.filter(
+                        visibility=Question.VISIBLE_TO_ALL,
+                        hide_question=False
+                    ).prefetch_related('answers')
+                ),
         )
     else:
         non_admin_user_store = client_user_service.find_non_client_admin_user_store_by_client_user_id(client_user.id)
@@ -36,6 +44,13 @@ def get_performing_cities(audit_cycle, user_id):
                 'report_sections__section',
                 # 'report_sections__section__questions',
                 # 'report_sections__section__questions__answers'
+                Prefetch(
+                    'report_sections__section__questions',
+                    queryset=Question.objects.filter(
+                        visibility=Question.VISIBLE_TO_ALL,
+                        hide_question=False
+                    ).prefetch_related('answers')
+                ),
         )
     for k, g in itertools.groupby(visible_audit_stores_in_cycle, lambda x: x.audit.store):
         obtained = 0
@@ -88,8 +103,13 @@ def get_performing_cities_by_type_for_clientuser(questionnaire_type_id, user_id)
         Prefetch('audits__audit_stores', queryset=AuditStore.objects.presentable()),
         'audits__audit_stores__report_sections',
         'audits__audit_stores__report_sections__section',
-        'audits__audit_stores__report_sections__section__questions',
-        'audits__audit_stores__report_sections__section__questions__answers',
+        Prefetch(
+            'audits__audit_stores__report_sections__section__questions',
+            queryset=Question.objects.filter(
+                visibility=Question.VISIBLE_TO_ALL,
+                hide_question=False
+            ).prefetch_related('answers')
+        ),
     )
 
     audit_cycle_count = qs.count()
@@ -164,6 +184,12 @@ def get_performing_cities_by_type_by_audit_cycle_id_for_clientuser(questionnaire
         'audits__audit_stores__report_sections__section',
         # 'audits__audit_stores__report_sections__section__questions',
         # 'audits__audit_stores__report_sections__section__questions__answers',
+        Prefetch('audits__audit_stores__report_sections__section__questions',
+            queryset=Question.objects.filter(
+                visibility=Question.VISIBLE_TO_ALL,
+                hide_question=False
+            ).prefetch_related('answers')
+        ),
     )
 
     audit_cycle_count = qs.count()

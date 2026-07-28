@@ -74,14 +74,74 @@ def update(user_id, email, password="", is_active=True, name=None,mobile=None,fi
 
 
 def trainer_summary_global():
-    audits = Audit.objects.filter(trainer__isnull=False).values("trainer__user_id","audit_cycle__status")
-    data = defaultdict(lambda: {"total": 0})
+    audits = Audit.objects.filter(client_trainer__isnull=False
+                ).values(
+                    "id",
+                    "client_trainer__user_id",
+                    "client_trainer__user__email",
+                    "client_trainer__user__trainerprofileinfo__name",
+                    "audit_stores__id",
+                    "audit_stores__status"
+                )
+
+    data = defaultdict(lambda: {
+        "trainer_id": None,
+        "email": None,
+        "name": None,
+
+        "total_audit_count": 0,
+        "total_report_count": 0,
+
+        "reports": {
+            "assigned": 0,
+            "acknowledged": 0,
+            "submitted": 0,
+            "pm_review": 0,
+            "completed": 0,
+            "accepted": 0
+        }
+    })
+
+    counted_audits = set()
+    counted_reports = set()
 
     for audit in audits:
-        user_id = audit["trainer__user_id"]
-        status = audit["audit_cycle__status"]
+        trainer_id = audit["client_trainer__user_id"]
+        data[trainer_id]["trainer_id"] = trainer_id
+        data[trainer_id]["email"] = audit["client_trainer__user__email"]
+        data[trainer_id]["name"] = audit["client_trainer__user__trainerprofileinfo__name"]
 
-        data[user_id]["total"] += 1
-        data[user_id][status] = data[user_id].get(status, 0) + 1
+        audit_key = (trainer_id, audit["id"])
 
-    return dict(data)
+        if audit_key not in counted_audits:
+            data[trainer_id]["total_audit_count"] += 1
+            counted_audits.add(audit_key)
+
+        audit_store_id = audit["audit_stores__id"]
+        report_key = (trainer_id, audit_store_id)
+
+        if audit_store_id and report_key not in counted_reports:
+            data[trainer_id]["total_report_count"] += 1
+            counted_reports.add(report_key)
+
+            status = audit["audit_stores__status"]
+
+            if status == "ASSIGNED":
+                data[trainer_id]["reports"]["assigned"] += 1
+
+            elif status == "ACKNOWLEDGED":
+                data[trainer_id]["reports"]["acknowledged"] += 1
+
+            elif status == "SUBMITTED":
+                data[trainer_id]["reports"]["submitted"] += 1
+
+            elif status == "PM_REVIEW":
+                data[trainer_id]["reports"]["pm_review"] += 1
+
+            elif status == "COMPLETED":
+                data[trainer_id]["reports"]["completed"] += 1
+
+            elif status == "ACCEPTED":
+                data[trainer_id]["reports"]["accepted"] += 1
+
+    return list(data.values())

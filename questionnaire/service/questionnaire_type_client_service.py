@@ -3,6 +3,7 @@ from audit.models import AuditCycle, Audit, AuditCycleProofTagList
 from questionnaire.models import QuestionnaireType
 from client.models import Store
 from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
+from questionnaire.models import Question
 
 
 def find_questionnaire_types_for_client_by_user(user):
@@ -11,7 +12,7 @@ def find_questionnaire_types_for_client_by_user(user):
         rows = AuditStore.objects \
             .presentable() \
             .visible_to(user) \
-            .filter(audit__audit_cycle__client__id=user.clientuser.client_id) \
+            .filter(audit__audit_cycle__client__id=user.clientuser.client_id,answers__question__visibility=Question.VISIBLE_TO_ALL,answers__question__hide_question=False) \
             .distinct('audit__audit_cycle__questionnaire_type_id') \
             .order_by('audit__audit_cycle__questionnaire_type__id') \
             .values(
@@ -21,7 +22,7 @@ def find_questionnaire_types_for_client_by_user(user):
                 'audit__audit_cycle__questionnaire_type__client_id',
             )
     else:
-        non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id,answers__question__visibility=Question.VISIBLE_TO_ALL,answers__question__hide_question=False)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
         rows = AuditStore.objects \
             .presentable() \
@@ -77,7 +78,9 @@ def find_questionnaire_types_for_client_dashboard_by_user(user):
         rows = AuditStore.objects \
             .presentable() \
             .filter(
-                audit__audit_cycle__client__id=user.clientuser.client_id
+                audit__audit_cycle__client__id=user.clientuser.client_id,
+                answers__question__visibility=Question.VISIBLE_TO_ALL,
+                answers__question__hide_question=False
                 # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES
             ) \
             .distinct('audit__audit_cycle__questionnaire_type_id') \
@@ -95,7 +98,9 @@ def find_questionnaire_types_for_client_dashboard_by_user(user):
             .presentable() \
             .filter(
                 audit__audit_cycle__client__id=user.clientuser.client_id,
-                audit__store__id__in=non_admin_user_store_list
+                audit__store__id__in=non_admin_user_store_list,
+                answers__question__visibility=Question.VISIBLE_TO_ALL,
+                answers__question__hide_question=False
             ) \
             .distinct('audit__audit_cycle__questionnaire_type_id') \
             .order_by('audit__audit_cycle__questionnaire_type__id') \
@@ -123,7 +128,9 @@ def find_questionnaire_types_for_client_store_by_user(user, store_id):
         .visible_to(user) \
         .filter(
             audit__audit_cycle__client__id=user.clientuser.client_id,
-            audit__store__id=store_id
+            audit__store__id=store_id,
+            answers__question__visibility=Question.VISIBLE_TO_ALL,
+            answers__question__hide_question=False
         ) \
         .distinct('audit__audit_cycle__questionnaire_type_id') \
         .order_by('audit__audit_cycle__questionnaire_type__id') \

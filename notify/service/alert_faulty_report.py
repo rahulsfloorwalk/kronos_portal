@@ -121,7 +121,8 @@ def find_faulty_report():
             continue  # Skip if already linked
 
         img_hash = hex_to_hash(att.image_hash)
-        app_label, model = att.content_type.app_label, att.content_type.model
+        app_label = att.content_type.app_label
+        model = att.content_type.model
         object_id = att.object_id
 
         if app_label == "answer" and model == "reportsection":
@@ -148,15 +149,12 @@ def find_faulty_report():
 
         seen = set()
         last_cycles = []
-        for c in last_cycles_qs:
-            if c not in seen:
-                seen.add(c)
-                last_cycles.append(c)
+        for cycle_id in last_cycles_qs:
+            if cycle_id not in seen:
+                seen.add(cycle_id)
+                last_cycles.append(cycle_id)
             if len(last_cycles) >= 3:
                 break
-
-        # exclude current audit store (self report)
-        last_audit_ids_qs = [aid for aid in last_audit_ids_qs if aid != audit_store_id]
 
         if not last_cycles:
             continue
@@ -164,20 +162,20 @@ def find_faulty_report():
         # Step 2: Get all AuditStore IDs in these last 3 cycles
         last_audit_ids_qs = AuditStore.objects.filter(
             audit__store_id=store_id, user_id=auditor_id, audit__audit_cycle_id__in=last_cycles
-        ).values_list('id', flat=True)
-        
+        ).exclude(id=audit_store_id).values_list("id",flat=True)
 
+        report_section_ids = ReportSection.objects.filter( audit_store_id__in=last_audit_ids_qs).values_list("id",flat=True)
         # Step 3: Fetch all attachments under these audit stores and their report sections
         attachments_to_compare = Attachment.objects.filter(
             Q(content_type_id=audit_store_content_type_id, object_id__in=last_audit_ids_qs, mime_type__contains="image", status="ATTACHED") |
             Q(content_type_id=report_section_content_type_id,
-              object_id__in=ReportSection.objects.filter(audit_store_id__in=last_audit_ids_qs).exclude(audit_store_id=audit_store_id).values_list('id', flat=True),
-              mime_type__contains="image", status="ATTACHED")
-        ).exclude(image_hash__isnull=True).exclude(image_hash="").only('id', 'image_hash', 'attachment_id')
-
-        # Step 4: Compare hashes
+                object_id__in=report_section_ids,
+                mime_type__contains="image", status="ATTACHED")
+        ).exclude(image_hash__isnull=True).exclude(image_hash="").only("id","image_hash","attachment_id")
         for att_cmp in attachments_to_compare.iterator():
-            if att_cmp.id == att.id or att_cmp.attachment_id:
+            if att_cmp.id == att.id:
+                continue
+            if att_cmp.attachment_id:
                 continue
 
             distance = img_hash - hex_to_hash(att_cmp.image_hash)

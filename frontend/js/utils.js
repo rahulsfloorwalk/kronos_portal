@@ -376,6 +376,22 @@ export function getQuestionType(value){
 	}
 }
 
+export function getQuestionVisibility(value){
+	switch(value){
+	case "VISIBLE_TO_ALL":
+		return "Visible to all";
+	case "HIDE_FROM_SHOPPER_AND_CLIENT":
+		return "Hide from shopper and client";
+	case "HIDE_FROM_CLIENT":
+		return "Hide from client";
+	case "":
+	case null:
+	case undefined:
+	default:
+		return "";
+	}
+}
+
 export function getReferralType(value){
 	switch(value){
 	case "SIGNUP":

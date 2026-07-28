@@ -13,11 +13,17 @@ from registration.models import GROUP_NAME_MANAGER
 
 from kronos.exceptions import ObjectNotFound
 
+# def find_by_audit_cycle(audit_cycle_id):
+#     try:
+#         return Attachment.objects.get(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED)
+#     except Attachment.DoesNotExist as e:
+#         return None
+
 def find_by_audit_cycle(audit_cycle_id):
-    try:
-        return Attachment.objects.get(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED)
-    except Attachment.DoesNotExist as e:
-        return None
+    attachment = Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED,attachment_category=Attachment.GUIDELINE,mime_type='application/pdf').first()
+    if attachment:
+        return attachment
+    return Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED,attachment_category__isnull=True,mime_type='application/pdf').first()
         
     
 @receiver(audit_store_status_change, dispatch_uid="status_change_notification_callback")

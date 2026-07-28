@@ -12,7 +12,7 @@ from questionnaire.service import section as section_service
 
 from manager.viewss.question import QuestionSerializer
 
-from questionnaire.models import Section
+from questionnaire.models import Section,Question
 from questionnaire.service.section_proof_tag import get_section_proof_tag_for_preview
 
 class SectionSerializer(ModelSerializer):
@@ -30,6 +30,12 @@ class SectionSerializer(ModelSerializer):
             'hide_comment',
         )
         read_only_fields = fields
+
+    # def get_questions(self, obj):
+    #     questions = obj.questions.filter(
+    #         visibility__in=[Question.VISIBLE_TO_ALL, Question.HIDE_FROM_CLIENT]
+    #     )
+    #     return QuestionSerializer(questions, many=True).data
 
 
 class QuestionnaireSectionPreviewSerializer(ModelSerializer):

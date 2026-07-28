@@ -215,6 +215,12 @@ class SectionSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+    def get_questions(self, obj):
+        questions = obj.questions.filter(
+            visibility__in=[Question.VISIBLE_TO_ALL]
+        )
+        return QuestionSerializer(questions, many=True).data
+
 class AnswerSerializer(ModelSerializer):
     class Meta:
         model = Answer
