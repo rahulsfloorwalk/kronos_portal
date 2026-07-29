@@ -173,8 +173,7 @@ def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, fi
 
     return auditStores, len(auditStores)
 
-
-def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id,audit_date):
+def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id, start_date, end_date):
     # TODO: move this in to the AuditStoreQuerySet
     count = 0
     user = find_moderator_by_user_id(user_id)
@@ -192,8 +191,12 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
 
         if client_id:
             query_set = query_set.filter(audit__audit_cycle__client=client_id)
-        if audit_date:
-            query_set = query_set.filter(audit_date=audit_date)
+        if start_date and end_date:
+            query_set = query_set.filter(audit_date__range=[start_date, end_date])
+        elif start_date:
+            query_set = query_set.filter(audit_date__gte=start_date)
+        elif end_date:
+            query_set = query_set.filter(audit_date__lte=end_date)
 
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
         count = data.count()
@@ -210,8 +213,12 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
 
         if client_id:
             query_set = query_set.filter(audit__audit_cycle__client=client_id)
-        if audit_date:
-            query_set = query_set.filter(audit_date=audit_date)
+        if start_date and end_date:
+            query_set = query_set.filter(audit_date__range=[start_date, end_date])
+        elif start_date:
+            query_set = query_set.filter(audit_date__gte=start_date)
+        elif end_date:
+            query_set = query_set.filter(audit_date__lte=end_date)
 
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
         count = data.count()
@@ -223,10 +230,16 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
                            'audit__store__city').order_by('audit_date')
         if client_id:
             query_set = query_set.filter(audit__audit_cycle__client = client_id)
-        if audit_date:
-            query_set = query_set.filter(audit_date=audit_date)
+        if start_date and end_date:
+            query_set = query_set.filter(audit_date__range=[start_date, end_date])
+        elif start_date:
+            query_set = query_set.filter(audit_date__gte=start_date)
+        elif end_date:
+            query_set = query_set.filter(audit_date__lte=end_date)
 
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+        count = data.count()
+
     elif filterStatus != "":
         query_set = AuditStore.objects.filter(
             audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
@@ -235,8 +248,12 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
                            'audit__store__city').order_by('audit_date')
         if client_id:
             query_set = query_set.filter(audit__audit_cycle__client = client_id)
-        if audit_date:
-            query_set = query_set.filter(audit_date=audit_date)
+        if start_date and end_date:
+            query_set = query_set.filter(audit_date__range=[start_date, end_date])
+        elif start_date:
+            query_set = query_set.filter(audit_date__gte=start_date)
+        elif end_date:
+            query_set = query_set.filter(audit_date__lte=end_date)
 
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
         count = data.count()
@@ -248,11 +265,16 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
         ).prefetch_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
                            'audit__store__city').order_by('audit_date')
         if client_id:
-            query_set = query_set.filter(audit__audit_cycle__client = client_id)
-        if audit_date:
-            query_set = query_set.filter(audit_date=audit_date)
-            
+            query_set = query_set.filter(audit__audit_cycle__client=client_id)
+        if start_date and end_date:
+            query_set = query_set.filter(audit_date__range=[start_date, end_date])
+        elif start_date:
+            query_set = query_set.filter(audit_date__gte=start_date)
+        elif end_date:
+            query_set = query_set.filter(audit_date__lte=end_date)
+
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
+        count = data.count()
     else:
         query_set = AuditStore.objects.filter(
             audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
@@ -261,8 +283,12 @@ def find_qa_pending_audit_stores_for_moderator(user_id, lastAuditStoreDate, filt
                            'audit__store__city').order_by('audit_date')
         if client_id:
             query_set = query_set.filter(audit__audit_cycle__client = client_id)
-        if audit_date:
-            query_set = query_set.filter(audit_date=audit_date)
+        if start_date and end_date:
+            query_set = query_set.filter(audit_date__range=[start_date, end_date])
+        elif start_date:
+            query_set = query_set.filter(audit_date__gte=start_date)
+        elif end_date:
+            query_set = query_set.filter(audit_date__lte=end_date)
 
         data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
         count = data.count()

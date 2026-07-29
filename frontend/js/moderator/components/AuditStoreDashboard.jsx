@@ -172,7 +172,9 @@ export default class AuditStoreDashboard extends Component {
 			filterStatus: "",
 			month: currentMonth,
 			year: currentYear,
-			auditDate: ""
+			auditDate: "",
+			startDate: "",
+			endDate: "",
 		};
 	}
 
@@ -187,7 +189,7 @@ export default class AuditStoreDashboard extends Component {
 		if(this.props.location.query.type === "qa_done"){
 			findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client, this.state.month, this.state.year,  this.state.auditDate).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		} else {
-			findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client,  this.state.auditDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client,  this.state.startDate, this.state.endDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 	}
 
@@ -199,6 +201,8 @@ export default class AuditStoreDashboard extends Component {
 				filterStatus: "",
 				client: "",
 				auditDate: "",
+				startDate: "",
+				endDate: "",
 				month: currentMonth,
 				year: currentYear
 			});
@@ -222,7 +226,7 @@ export default class AuditStoreDashboard extends Component {
 			findCompleted(lastAuditStoreDate, e.target.value, this.state.client, this.state.month, this.state.year, this.state.auditDate).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 		else{
-			findPending(lastAuditStoreDate, e.target.value, this.state.client, this.state.auditDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findPending(lastAuditStoreDate, e.target.value, this.state.client, this.state.startDate, this.state.endDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 	}
 
@@ -244,7 +248,7 @@ export default class AuditStoreDashboard extends Component {
 			findCompleted(lastAuditStoreDate, this.state.filterStatus, e.target.value, this.state.month, this.state.year, this.state.auditDate).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 		else{
-			findPending(lastAuditStoreDate, this.state.filterStatus, e.target.value, this.state.auditDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findPending(lastAuditStoreDate, this.state.filterStatus, e.target.value, this.state.startDate, this.state.endDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 	};
 
@@ -263,9 +267,9 @@ export default class AuditStoreDashboard extends Component {
 		if(qa_type === "qa_done"){
 			findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client, newMonth, newYear, formattedDate).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
-		else{
-			findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client, formattedDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
-		}
+		// else{
+		// 	findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client, formattedDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+		// }
 	};
 
 	clearAuditDate = (qa_type) => {
@@ -281,9 +285,61 @@ export default class AuditStoreDashboard extends Component {
 		if(qa_type === "qa_done"){
 			findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client, currentMonth, currentYear, "").then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
-		else{
-			findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client, "").then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+		// else{
+		// 	findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client, "").then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+		// }
+	};
+
+	startDateChanged = (date) => {
+		const formattedDate =
+			date && typeof date !== "string"
+				? date.format("YYYY-MM-DD")
+				: "";
+
+		this.setState({
+			startDate: formattedDate
+		});
+	};
+
+	endDateChanged = (date) => {
+		const formattedDate =
+			date && typeof date !== "string"
+				? date.format("YYYY-MM-DD")
+				: "";
+
+		this.setState({
+			endDate: formattedDate
+		});
+	};
+
+	findFilter = () => {
+		const {
+			filterStatus,
+			client,
+			startDate,
+			endDate
+		} = this.state;
+
+		if (!startDate || !endDate) {
+			alert("Please select both Start Date and End Date");
+			return;
 		}
+
+		this.setLoading(true);
+
+		let lastAuditStoreDate = "";
+
+		findPending(lastAuditStoreDate, filterStatus, client, startDate, endDate).then(auditStores =>this.setState({qa_pending: auditStores.auditStores,totalAuditStoreCount: auditStores.count})).always(() => this.setLoading(false));
+	};
+
+	findClearFilter = () => {
+		this.setState({
+			filterStatus: "",
+			client: "",
+			startDate: "",
+			endDate: ""
+		});
+		findPending("","","","","").then(auditStores =>this.setState({qa_pending: auditStores.auditStores,totalAuditStoreCount: auditStores.count})).always(() => this.setLoading(false));
 	};
 
 	fetchData = (qa_type) => {
@@ -310,9 +366,8 @@ export default class AuditStoreDashboard extends Component {
 				lastAuditStoreDate,
 				this.state.filterStatus,
 				this.state.client,
-				this.state.month,
-				this.state.year,
-				this.state.auditDate
+				this.state.startDate,
+				this.state.endDate
 			).then(auditStores =>
 				this.setState({
 					qa_pending: auditStores["auditStores"],
@@ -354,7 +409,7 @@ export default class AuditStoreDashboard extends Component {
 		}
 		else{
 			let lastAuditStoreDate = this.state.qa_pending[this.state.qa_pending.length-1].audit_date;
-			findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client, this.state.month, this.state.year, this.state.auditDate).then((auditStores) => {
+			findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client, this.state.startDate, this.state.endDate).then((auditStores) => {
 				let newAuditStores = this.state.qa_pending;
 				for(let reports of auditStores.auditStores){
 					let check_report = this.state.qa_pending.filter(function(report){ return (report.id === reports.id); });
@@ -549,8 +604,53 @@ export default class AuditStoreDashboard extends Component {
 						{statusFilter} &nbsp;
 						<label>Client Filter : </label> &nbsp;
 						{clientFilter}  &nbsp;
-						<label>Audit Date : </label> &nbsp;
-						<span style={{display:"inline-block", width:"200px"}}>{dateFilter}</span>
+						<label>Start Date :</label>&nbsp;
+						<span style={{display:"inline-block", width:"200px"}}>
+							<Datetime
+								dateFormat="YYYY-MM-DD"
+								timeFormat={false}
+								closeOnSelect
+								value={this.state.startDate}
+								onChange={this.startDateChanged}
+								inputProps={{
+									placeholder:"Start Date",
+									className:"form-control"
+								}}
+							/>
+						</span>
+
+						&nbsp;&nbsp;
+
+						<label>End Date :</label>&nbsp;
+						<span style={{display:"inline-block", width:"200px"}}>
+							<Datetime
+								dateFormat="YYYY-MM-DD"
+								timeFormat={false}
+								closeOnSelect
+								value={this.state.endDate}
+								onChange={this.endDateChanged}
+								inputProps={{
+									placeholder:"End Date",
+									className:"form-control"
+								}}
+							/>
+						</span>
+
+						&nbsp;&nbsp;
+
+						<button
+							className="btn btn-primary"
+							onClick={this.findFilter}
+						>
+							Find
+						</button>
+						&nbsp;&nbsp;
+						<button
+							className="btn btn-primary"
+							onClick={this.findClearFilter}
+						>
+							Clear
+						</button>
 					</div>
 					<AuditStoreTables auditStores={this.state.qa_pending} qaType="qa_pending"/>
 					{loadMoreButton}
