@@ -2,7 +2,7 @@ from django.db.models import Prefetch
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
 from questionnaire.models import Question
-from answer.models import Answer
+from answer.models import Answer,ReportSection
 from kronos.utils import get_color_code
 from collections import defaultdict
 from audit.models import Audit
@@ -190,7 +190,15 @@ def get_average_score_for_question_in_audit_cycle(question, store_id):
     average = None
 
     for answer in question.answers.all():
-        if answer.marks_obtained is not None and not answer.not_applicable:
+        report_section = answer.audit_store.report_sections.filter(section=question.section).first()
+
+        # If section is NA, ignore all questions of that section
+        if report_section and report_section.not_applicable:
+            continue
+        # If question is NA, ignore only this question
+        if answer.not_applicable:
+            continue
+        if answer.marks_obtained is not None:
             total += answer.marks_obtained
             count += 1
     if count > 0:

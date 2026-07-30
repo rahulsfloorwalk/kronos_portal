@@ -440,12 +440,26 @@ def __get_mean_for_report_browser(sections, audit_stores):
             else:
                 avg_percentage = int(total_percentage / count)
 
-        color = get_color_code_by_percentage(avg_percentage)
+        # color = get_color_code_by_percentage(avg_percentage)
 
-        mean.append({
-            'sequence': section.sequence,
-            'section': section.name,
-            'percentage': avg_percentage,
-            'color': color
-        })
+        # mean.append({
+        #     'sequence': section.sequence,
+        #     'section': section.name,
+        #     'percentage': avg_percentage,
+        #     'color': color
+        # })
+        if avg_percentage is None:
+            mean.append({
+                'sequence': section.sequence,
+                'section': section.name,
+                'percentage': "NA",
+                'color': 0
+            })
+        else:
+                mean.append({
+                    'sequence': section.sequence,
+                    'section': section.name,
+                    'percentage': avg_percentage,
+                    'color': get_color_code_by_percentage(avg_percentage)
+                })
     return mean

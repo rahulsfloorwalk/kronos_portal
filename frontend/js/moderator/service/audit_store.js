@@ -1,7 +1,7 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 
-export function findPending(lastAuditStoreDate, filterStatus, client,audit_date){
+export function findPending(lastAuditStoreDate, filterStatus, client, start_date, end_date){
 	// return $.get(url.api_base_path + "moderator/audit_store/pending");
 	return $.ajax({
 		url: url.api_base_path + "moderator/audit_store/pending",
@@ -10,7 +10,8 @@ export function findPending(lastAuditStoreDate, filterStatus, client,audit_date)
 			lastAuditStoreDate: lastAuditStoreDate,
 			filterStatus: filterStatus,
 			client_id: client,
-			audit_date: audit_date
+			start_date: start_date,
+			end_date: end_date
 		}),
 		contentType: "application/json"
 	});

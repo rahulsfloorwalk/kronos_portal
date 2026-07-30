@@ -25,7 +25,9 @@ class Payment(Model):
 
     def get_audit_details(self):
         return {'audit_date': self.audit_store.audit_date,
-                'client_name': self.audit_store.audit.audit_cycle.client.brand_name}
+                'client_name': self.audit_store.audit.audit_cycle.client.brand_name,
+                'audit_type': self.audit_store.audit.audit_cycle.type,
+                'client_logo_url': self.audit_store.audit.audit_cycle.client.logo_url}
 
 
 class Beneficiary(Model):

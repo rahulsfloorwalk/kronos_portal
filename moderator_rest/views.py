@@ -108,7 +108,8 @@ class AuditStorePendingView(APIView):
     def post(self, request):
         audit_stores, count = audit_store_service\
             .find_qa_pending_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'],
-                                                        request.data['filterStatus'], request.data.get('client_id'),request.data.get('audit_date'))
+                                                        request.data['filterStatus'], request.data.get('client_id'),
+                                                        request.data.get('start_date'),request.data.get('end_date'),)
         # return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
         return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True,context={"filter_status": request.data['filterStatus']}).data, "count": count})
 
@@ -269,7 +270,7 @@ class AuditStoreIdRewriteReportSummaryView(APIView):
                 verify=False
             )
             rewritten = api_response.json().get("result", "").strip()
-            print(rewritten)
+
             if not rewritten:
                 return Response({"error": "Empty response from rewrite API"}, status=500)
 
