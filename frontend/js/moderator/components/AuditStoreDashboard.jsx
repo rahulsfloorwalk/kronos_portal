@@ -525,7 +525,7 @@ export default class AuditStoreDashboard extends Component {
 			);
 			return (
 				<div>
-					<div className="container">
+					<div style={{display:"flex",justifyContent:"center",alignItems:"center",flexWrap:"wrap"}}>
 						<label>Status Filter : </label> &nbsp;
 						{statusFilter} &nbsp;
 						<label>Client Filter : </label> &nbsp;
@@ -599,7 +599,7 @@ export default class AuditStoreDashboard extends Component {
 			);
 			return (
 				<div>
-					<div className="container">
+					<div style={{display:"flex",justifyContent:"center",alignItems:"center",flexWrap:"wrap"}}>
 						<label>Status Filter : </label> &nbsp;
 						{statusFilter} &nbsp;
 						<label>Client Filter : </label> &nbsp;

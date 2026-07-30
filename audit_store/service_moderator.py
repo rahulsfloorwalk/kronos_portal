@@ -90,14 +90,10 @@ def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, fi
     elif lastAuditStoreDate != "":
         query_set = AuditStore.objects.filter(
             status__in=(AuditStore.FAILED,AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.REJECTED,AuditStore.PM_REVIEW),
-            audit_date__gte=lastAuditStoreDate).exclude(
-            failed_by=AuditStore.SYSTEM
-        )
+            audit_date__gte=lastAuditStoreDate)
     else:
         query_set = AuditStore.objects.filter(
-            status__in=(AuditStore.FAILED,AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.REJECTED,AuditStore.PM_REVIEW)).exclude(
-            failed_by=AuditStore.SYSTEM
-        )
+            status__in=(AuditStore.FAILED,AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.REJECTED,AuditStore.PM_REVIEW))
 
     now = datetime.now()
 

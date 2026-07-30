@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer,SerializerMethodField
 from django.contrib.auth.models import User
 
 from audit.models import Audit, AuditCycle, ReportAttribute, AuditCycleProofTagList
@@ -197,12 +197,14 @@ class QuestionSerializer(ModelSerializer):
             'question_data',
             'max_marks',
             'section',
+            'is_required',
+            'visibility',
             'hide_question'
         )
         read_only_fields = fields
 
 class SectionSerializer(ModelSerializer):
-    questions = QuestionSerializer(many=True)
+    questions = SerializerMethodField()
     class Meta:
         model = Section
         fields = (
@@ -217,8 +219,7 @@ class SectionSerializer(ModelSerializer):
 
     def get_questions(self, obj):
         questions = obj.questions.filter(
-            visibility__in=[Question.VISIBLE_TO_ALL]
-        )
+            visibility=Question.VISIBLE_TO_ALL,hide_question=False).order_by('sequence')
         return QuestionSerializer(questions, many=True).data
 
 class AnswerSerializer(ModelSerializer):

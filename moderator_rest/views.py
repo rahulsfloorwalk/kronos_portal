@@ -270,7 +270,7 @@ class AuditStoreIdRewriteReportSummaryView(APIView):
                 verify=False
             )
             rewritten = api_response.json().get("result", "").strip()
-            print(rewritten)
+
             if not rewritten:
                 return Response({"error": "Empty response from rewrite API"}, status=500)
 

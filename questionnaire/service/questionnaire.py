@@ -32,7 +32,7 @@ def create_text_structure(sections, questions):
     rows = []
     row = {
         'type': 'header',
-        'text_arr': ['Sequence', 'Question/Section', 'Max Marks', 'Question Type', 'Question Options']
+        'text_arr': ['Sequence', 'Question/Section', 'Max Marks', 'Question Type', 'Question Options', 'Impact Factors','Hide Question','Optional comment required?','Question Note','Is Required','Visibility']
     }
     rows.append(row)
     for section in sections:
@@ -44,18 +44,30 @@ def create_text_structure(sections, questions):
         }
         rows.append(row)
         for question in questions:
-            if question.section == section:
+            if question.section_id == section.id:
                 question_option = ""
                 if question.question_type in [Question.MUTEX, Question.MULTISELECT]:
-                    for qo in question.question_data['options']:
-                        question_option = question_option + "sequnce: " + str(qo['sequence']) + ", option: " + str(qo['value']) + ", marks: " + str(qo['marks']) + "\n"
+                    # for qo in question.question_data['options']:
+                    for qo in question.question_data.get('options', []):
+                        # question_option = question_option + "sequnce: " + str(qo['sequence']) + ", option: " + str(qo['value']) + ", marks: " + str(qo['marks']) + "\n"
+                        question_option += "sequence: {}, value: {}, marks: {}\n".format(
+                            qo.get('sequence', ''),
+                            qo.get('value', ''),
+                            qo.get('marks', '')
+                        )
                 row = {
                     'type': 'question',
                     'text': question.question_txt,
                     'max_marks': question.max_marks,
                     'sequence': question.sequence,
                     'question_type': question.question_type,
-                    'question_option': question_option
+                    'question_option': question_option.strip(),
+                    'impact_factors': ", ".join(str(x) for x in question.question_data.get("impact_factors", [])),
+                    'hide_question': "TRUE" if question.hide_question else "FALSE",
+                    'optional_comment_required': "TRUE" if question.optional_comment_required else "FALSE",
+                    'question_note': question.question_note or "",
+                    'is_required': "TRUE" if question.is_required else "FALSE",
+                    'visibility': question.visibility,
                 }
                 rows.append(row)
 
@@ -66,16 +78,18 @@ def write_data(data, audit_cycle_name=""):
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
     worksheet = workbook.add_worksheet()
 
-    worksheet.set_column(0, 0, 20)
-    worksheet.set_column(1, 1, 50)
-    worksheet.set_column(2, 2, 20)
-    worksheet.set_column(3, 3, 20)
-    worksheet.set_column(4, 4, 40)
+    worksheet.set_column(0, 0, 12)
+    worksheet.set_column(1, 1, 40)
+    worksheet.set_column(2, 2, 12)
+    worksheet.set_column(3, 3, 18)
+    worksheet.set_column(4, 4, 45)
+    worksheet.set_column(5, 5, 30)
+    worksheet.set_column(6, 10, 22)
 
     worksheet.set_row(0, 70)
     worksheet.set_row(1, 30)
 
-    worksheet.merge_range(0, 0, 0, 4, '')
+    worksheet.merge_range(0, 0, 0, 10, '')
 
     logo_path = finders.find('registration/logo_500x300.png') 
 
@@ -84,9 +98,9 @@ def write_data(data, audit_cycle_name=""):
 
     worksheet.insert_image('A1', 'logo.png', {
         'image_data': logo_image,
-        'x_offset': 480,   # tweak this to center horizontally
+        'x_offset': 930,
         'y_offset': 5,
-        'x_scale': 0.27,   # adjust size to fit nicely
+        'x_scale': 0.27,
         'y_scale': 0.27,
         'positioning': 1
     })
@@ -97,7 +111,7 @@ def write_data(data, audit_cycle_name=""):
         'align': 'center',
         'valign': 'vcenter'
     })
-    worksheet.merge_range(1, 0, 1, 4, 'Audit - Questionnaire (' + audit_cycle_name + ')', title_format)
+    worksheet.merge_range(1, 0, 1, 10, 'Audit - Questionnaire (' + audit_cycle_name + ')', title_format)
 
     worksheet.set_default_row(40)
 
@@ -116,7 +130,7 @@ def write_data(data, audit_cycle_name=""):
         'bg_color': header_color,
         'font_color': 'black',
         'valign': 'vcenter',
-        'align': 'left'
+        'align': 'center'
     })
 
     section_left = workbook.add_format({
@@ -172,25 +186,35 @@ def write_data(data, audit_cycle_name=""):
         elif line_data.get('type') == 'section':
             # row += 1
             # Section sequence and max marks centered
-            worksheet.write(row, col, line_data.get('sequence'), section_center)
-            worksheet.write(row, col + 1, line_data.get('text'), section_left)
-            worksheet.write(row, col + 2, line_data.get('max_marks'), section_center)
+            worksheet.write(row, 0, line_data.get('sequence'), section_center)
+            worksheet.write(row, 1, line_data.get('text'), section_left)
+            worksheet.write(row, 2, line_data.get('max_marks'), section_center)
+
+            for c in range(3, 11):
+                worksheet.write(row, c, "", section_center)
             worksheet.set_row(row, 30)  # section row height fixed
         elif line_data.get('type') == 'question':
+
             q_options = line_data.get('question_option') or ''
-            line_count = q_options.count('\n') + 1
-            height = max(30, line_count * 18)  # approx height
+            line_count = max(1, q_options.count('\n') + 1)
+            height = max(30, line_count * 18)
 
             is_even = (line_counter % 2 == 0)
 
             left_format = even_line_left if is_even else odd_line_left
             center_format = even_line_center if is_even else odd_line_center
 
-            worksheet.write(row, col, line_data.get('sequence'), center_format)        # sequence centered
-            worksheet.write(row, col + 1, line_data.get('text'), left_format)          # question text left aligned
-            worksheet.write(row, col + 2, line_data.get('max_marks'), center_format)   # max marks centered
-            worksheet.write(row, col + 3, line_data.get('question_type'), center_format) # question type centered
-            worksheet.write(row, col + 4, q_options, left_format)                      # question options left aligned
+            worksheet.write(row, 0, line_data.get('sequence'), center_format)
+            worksheet.write(row, 1, line_data.get('text'), left_format)
+            worksheet.write(row, 2, line_data.get('max_marks'), center_format)
+            worksheet.write(row, 3, line_data.get('question_type'), center_format)
+            worksheet.write(row, 4, q_options, left_format)
+            worksheet.write(row, 5, line_data.get('impact_factors'), left_format)
+            worksheet.write(row, 6, line_data.get('hide_question'), center_format)
+            worksheet.write(row, 7, line_data.get('optional_comment_required'), center_format)
+            worksheet.write(row, 8, line_data.get('question_note'), left_format)
+            worksheet.write(row, 9, line_data.get('is_required'), center_format)
+            worksheet.write(row, 10, line_data.get('visibility'), center_format)
 
             worksheet.set_row(row, height)
             line_counter += 1
