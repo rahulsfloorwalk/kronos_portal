@@ -24,8 +24,17 @@ def find_by_audit_cycle(audit_cycle_id):
     if attachment:
         return attachment
     return Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED,attachment_category__isnull=True,mime_type='application/pdf').first()
-        
-    
+
+def find_guideline_attachments(audit_cycle_id):
+    pdf = find_by_audit_cycle(audit_cycle_id)
+    audio = Attachment.objects.filter(
+        audit_cycles__id=audit_cycle_id,
+        status=Attachment.ATTACHED,
+        attachment_category=Attachment.GUIDELINE,
+        mime_type__startswith="audio/"
+    ).first()
+    return {"pdf": pdf,"audio": audio,}
+
 @receiver(audit_store_status_change, dispatch_uid="status_change_notification_callback")
 def status_change_notification_callback(sender, **kwargs):
     user_actor = kwargs['user_actor']
@@ -35,15 +44,27 @@ def status_change_notification_callback(sender, **kwargs):
     message = kwargs['message'] if 'message' in kwargs else ''
 
     if status == AuditStore.ASSIGNED:
-        pdf=  find_by_audit_cycle(audit_store.audit.audit_cycle.id)
-        if pdf:
-            if pdf.generate_presigned_url():
-                send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_ASSIGNED_PDF, audit_store, audit_store.audit)
-                send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_ASSIGNED_PDF, audit_store, audit_store.audit)
+        pdf = find_by_audit_cycle(audit_store.audit.audit_cycle.id) is not None
+        audio = Attachment.objects.filter(
+            audit_cycles__id=audit_store.audit.audit_cycle.id,
+            status=Attachment.ATTACHED,
+            attachment_category=Attachment.GUIDELINE,
+            mime_type__startswith="audio/"
+        ).exists()
+
+        if pdf and audio:
+            verb = verbs.AUDIT_STORE_ASSIGNED_PDF_AUDIO
+        elif pdf:
+            verb = verbs.AUDIT_STORE_ASSIGNED_PDF
+        elif audio:
+            verb = verbs.AUDIT_STORE_ASSIGNED_PDF_AUDIO
         else:
-            send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_ASSIGNED, audit_store, audit_store.audit)
-            send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_ASSIGNED, audit_store, audit_store.audit)
-    if status == AuditStore.ACKNOWLEDGED and old_status == AuditStore.ASSIGNED:
+            verb = verbs.AUDIT_STORE_ASSIGNED
+
+        send_notification(user_actor, audit_store.user, verb,audit_store, audit_store.audit)
+        send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verb,audit_store,audit_store.audit)
+
+    elif status == AuditStore.ACKNOWLEDGED and old_status == AuditStore.ASSIGNED:
         send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_ACKNOWLEDGED, audit_store, audit_store.audit)
         send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_ACKNOWLEDGED, audit_store, audit_store.audit)
 

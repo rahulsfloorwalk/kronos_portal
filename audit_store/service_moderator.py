@@ -23,6 +23,9 @@ from answer.models import Answer
 from attachment.models import Attachment
 from answer.service import answer as answer_service
 from .models import ReportStatusLog
+from datetime import datetime
+from django.db.models import Prefetch
+
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -71,13 +74,41 @@ _logger = logging.getLogger(__name__)
 #         count = data.count()
 #     return data[0:200], count
 
-from datetime import datetime
-
 def find_audit_store_status_logs(audit_store_id):
     logs = ReportStatusLog.objects.filter(audit_store_id=audit_store_id).select_related('user_actor').order_by('-created_at')
     if not logs.exists():
         raise ObjectNotFound
     return logs
+
+def get_report_count_date(audit_store):
+    if audit_store.moderator_submission_date:
+        return audit_store.moderator_submission_date
+    logs = audit_store.audit_store_status_log.all()
+    submitted = False
+    failed_date = None
+
+    for log in logs:
+        if log.status == AuditStore.SUBMITTED:
+            submitted = True
+            failed_date = None
+            continue
+        if not submitted:
+            continue
+        if log.status in (AuditStore.PM_REVIEW,AuditStore.COMPLETED,AuditStore.ACCEPTED,):
+            return log.created_at
+
+        if log.status == AuditStore.FAILED:
+            failed_date = log.created_at
+            continue
+        if log.status == AuditStore.ACKNOWLEDGED:
+            if failed_date:
+                return failed_date
+            submitted = False
+            failed_date = None
+
+    if failed_date:
+        return failed_date
+    return None
 
 def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, filterStatus, client_id, month, year,audit_date):
     user = find_moderator_by_user_id(user_id)
@@ -111,60 +142,35 @@ def find_qa_completed_audit_stores_for_moderator(user_id, lastAuditStoreDate, fi
         except (ValueError, TypeError):
             year = now.year
 
-    # query_set = query_set.filter(
-    #     moderator_submission_date__year=year,
-    #     moderator_submission_date__month=month,
-    #     moderator_submission_date__isnull=False
-    # )
-
     if client_id not in [None, ""]:
         query_set = query_set.filter(audit__audit_cycle__client=client_id)
 
     if audit_date not in [None, ""]:
-        audit_date = str(audit_date)
-        audit_date = datetime.strptime(audit_date,"%Y-%m-%d").date()
-
+        audit_date = datetime.strptime(str(audit_date), "%Y-%m-%d").date()
         query_set = query_set.filter(audit_date=audit_date)
+
     query_set = query_set.select_related(
         'audit',
         'audit__audit_cycle',
         'audit__audit_cycle__client',
         'audit__store',
         'audit__store__city'
+    ).prefetch_related(
+        Prefetch(
+            "audit_store_status_log",queryset=ReportStatusLog.objects.order_by("created_at")
+        )
     ).order_by('moderator_submission_date')
 
     data = get_objects_for_user(user, 'moderator_manage', klass=query_set)
-    # count = data.count()
-
-    # return data, count
     auditStores = []
-
     for audit_store in data:
-
-        if audit_store.status == AuditStore.FAILED:
-            if audit_store.failed_by != AuditStore.MANUAL:
-                continue
-
-            if audit_store.moderator_submission_date:
-                if (
-                    audit_store.moderator_submission_date.year == year
-                    and audit_store.moderator_submission_date.month == month
-                ):
-                    auditStores.append(audit_store)
-
-            elif (
-                audit_store.modified_at
-                and audit_store.modified_at.year == year
-                and audit_store.modified_at.month == month
-            ):
-                auditStores.append(audit_store)
-
+        report_date = get_report_count_date(audit_store)
+        if not report_date:
+            continue
+        if audit_date:
+            auditStores.append(audit_store)
         else:
-            if (
-                audit_store.moderator_submission_date
-                and audit_store.moderator_submission_date.year == year
-                and audit_store.moderator_submission_date.month == month
-            ):
+            if (report_date.year == year and report_date.month == month ):
                 auditStores.append(audit_store)
 
     return auditStores, len(auditStores)

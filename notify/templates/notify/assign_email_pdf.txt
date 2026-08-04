@@ -9,9 +9,21 @@ Click Here to Read Audit Guidelines
 
 {% comment %} {{ kronos_base_url }}/auth/login?next=/static/auditor/index.html%23/audit_store&ref=email_cta&utm_source=email_footer {% endcomment %}
 https://auditor.floorwalk.in/auditor/report?ref=email_cta&utm_source=email_footer
+
+{% if pdf_url %}
+Audit Guidelines PDF
+{{ pdf_url }}
+
+{% endif %}
+
+{% if audio_url %}
+Audit Guidelines Audio
+{{ audio_url }}
+
+{% endif %}
+
 Note: It is mandatory to view the questionnaire and agree to it before conducting the audit.
 
-{{pdf_url}}
 --
 Thanks and regards,
 FloorWalk Team

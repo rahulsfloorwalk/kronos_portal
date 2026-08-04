@@ -86,6 +86,28 @@ class Attachment(Model):
         return "https://s3-{}.amazonaws.com/{}/{}".format(s3["REGION"],s3["BUCKET"],self.file_slug)
 
 
+    def generate_presigned_url_for_audio_pdf(self):
+        AWS = settings.AWS
+
+        s3 = boto3.client(
+            "s3",
+            aws_access_key_id=AWS["S3_ATTACHMENTS"]["AWS_ACCESS_KEY_ID"],
+            aws_secret_access_key=AWS["S3_ATTACHMENTS"]["AWS_SECRET_ACCESS_KEY"],
+            region_name=AWS["S3_ATTACHMENTS"]["REGION"],
+            config=Config(signature_version="s3v4"),
+        )
+
+        return s3.generate_presigned_url(
+            "get_object",
+            Params={
+                "Bucket": AWS["S3_ATTACHMENTS"]["BUCKET"],
+                "Key": self.file_slug,
+                "ResponseContentType": self.mime_type,
+                "ResponseContentDisposition": "inline",
+            },
+            ExpiresIn=172800,
+        )
+
     def generate_presigned_url(self):
         AWS = settings.AWS
         s3 = boto3.client(

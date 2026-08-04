@@ -10,7 +10,7 @@ from registration.models import GROUP_NAME_AUDITOR
 
 from celery import shared_task
 
-from .message import send_whatsapp_message
+from .message import send_whatsapp_message,send_whatsapp_message_pdf_audio
 from .. import verbs
 from auditor.service.profile_info_service import find_profile_info_by_user_id
 from attachment.models import Attachment
@@ -64,33 +64,75 @@ def notification_whatsapp_task(notif_id, message=""):
 
         if notif.verb == verbs.AUDIT_STORE_ASSIGNED:
             params, template_name = get_params_from_audit_store(notif, message)
-            send_whatsapp_message(whatsapp_number, dial_code, template_name, params)
+            send_whatsapp_message_pdf_audio(whatsapp_number, dial_code, template_name, params)
             return True
 
         elif notif.verb == verbs.AUDIT_STORE_ASSIGNED_PDF:
             params, template_name = get_params_from_audit_store_pdf(notif, message)
-            send_whatsapp_message(whatsapp_number, dial_code, template_name, params)
+            send_whatsapp_message_pdf_audio(whatsapp_number, dial_code, template_name, params)
+            return True
+
+        elif notif.verb == verbs.AUDIT_STORE_ASSIGNED_PDF_AUDIO:
+            params, template_name = get_params_from_audit_store_pdf_audio(notif, message)
+            send_whatsapp_message_pdf_audio(whatsapp_number,dial_code,template_name,params)
             return True
         elif notif.verb == verbs.AUDIT_STORE_UNSUBMITTED:
             params, template_name = get_params_from_audit_store(notif, message)
             if params and template_name:
-                send_whatsapp_message(whatsapp_number, dial_code, template_name, params)
+                send_whatsapp_message_pdf_audio(whatsapp_number, dial_code, template_name, params)
                 return True
 
     return False
 
-def get_params_from_audit_store_pdf(notif_id, message):
+def get_params_from_audit_store_pdf_audio(notif_id, message):
+    from notify.handlers import find_guideline_attachments
+
     audit_store = notif_id.action_object
     first_name = audit_store.user.profileinfo.first_name
     client = audit_store.audit.audit_cycle.client.auditor_display_name()
     audit_date = audit_store.audit_date.strftime('%m/%d/%Y')
-    pdf=Attachment.objects.get(audit_cycles__id=audit_store.audit.audit_cycle.id,status=Attachment.ATTACHED)
-    if notif_id.verb == verbs.AUDIT_STORE_ASSIGNED_PDF:
-        template_name = settings.WHATSAPP_TEMPLATE['AUDIT_ASSIGNED_PDF']
+
+    files = find_guideline_attachments(audit_store.audit.audit_cycle.id)
+    pdf = files["pdf"]
+    audio = files["audio"]
+    if not audio:
+        return False, False
+
+    template_name = settings.WHATSAPP_TEMPLATE['AUDIT_ASSIGNED_PDF_AUDIO']
+    params = [
+        {"default": first_name},
+        {"default": client},
+        {"default": audit_date},
+        {"pdf_url": pdf.generate_presigned_url_for_audio_pdf()},
+        {
+            "audio_path": (
+                audio.generate_presigned_url_for_audio_pdf().replace(
+                    "https://s3.ap-south-1.amazonaws.com/",
+                    ""
+                ) if audio else ""
+            )
+        }]
+    return params, template_name
+
+def get_params_from_audit_store_pdf(notif_id, message):
+    from notify.handlers import find_guideline_attachments
+
+    audit_store = notif_id.action_object
+    first_name = audit_store.user.profileinfo.first_name
+    client = audit_store.audit.audit_cycle.client.auditor_display_name()
+    audit_date = audit_store.audit_date.strftime('%m/%d/%Y')
+    # pdf=Attachment.objects.get(audit_cycles__id=audit_store.audit.audit_cycle.id,status=Attachment.ATTACHED)
+
+    files = find_guideline_attachments(audit_store.audit.audit_cycle.id)
+    pdf = files["pdf"]
+    if not pdf :
+        return False, False
+
+    template_name = settings.WHATSAPP_TEMPLATE['AUDIT_ASSIGNED_PDF']
 
         # Make field sequence as per api documentation/message template
-        params = [{"default":first_name}, {"default":client}, {"default":audit_date},{'pdf_url':pdf.generate_presigned_url()}]
-        return params, template_name
+    params = [{"default":first_name}, {"default":client}, {"default":audit_date},{"pdf_url":pdf.generate_presigned_url() if pdf else ""}]
+    return params, template_name
 
 def get_params_from_audit_store(notif_id, message):
     audit_store = notif_id.action_object
