@@ -391,18 +391,14 @@ class AuditStoreIdQAOKView(APIView):
     }
     def post(self, request, audit_store_id):
         audit_store = get_object_or_404(AuditStore.objects.for_moderator(request.user), pk=audit_store_id)
-        # audit_store.moderator_submission_date = timezone.now()
-        # audit_store.save(update_fields=["moderator_submission_date"])
-        if not audit_store.moderator_submission_date:
-            audit_store.moderator_submission_date = timezone.now()
-            audit_store.save(update_fields=["moderator_submission_date"])
+        audit_store.moderator_submission_date = timezone.now()
 
         moderator_submission_time = request.data.get("moderator_submission_time")
-        # if moderator_submission_time and not audit_store.moderator_submission_time:
         if moderator_submission_time:
             audit_store.moderator_submission_time = moderator_submission_time
-            audit_store.save(update_fields=["moderator_submission_time"])
-        set_attachment_by_proof_tag(audit_store_id)
+            audit_store.save(update_fields=["moderator_submission_date", "moderator_submission_time"])
+        else:
+            audit_store.save(update_fields=["moderator_submission_date"])
         set_not_applicable_for_hide_questions(audit_store)
         report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
         for report in report_obj:

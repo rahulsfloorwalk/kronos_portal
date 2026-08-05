@@ -60,6 +60,8 @@ def get_params_from_payment(payment, params):
 
 @shared_task(ignore_result=True)
 def notification_email_task(notif_id, message):
+    from notify.handlers import find_guideline_attachments
+
     '''generates and sends a notificaiton email based on given notification id and configured rules'''
     notif = Notification.objects.get(pk=notif_id)
     if notif.emailed:
@@ -106,14 +108,39 @@ def notification_email_task(notif_id, message):
             params['audit_post_approval_description'] = notif.target.post_approval_description
 
         elif notif.verb == verbs.AUDIT_STORE_ASSIGNED_PDF:
-            pdf=Attachment.objects.get(audit_cycles__id=notif.target.audit_cycle.id,status=Attachment.ATTACHED)
+            # pdf=Attachment.objects.get(audit_cycles__id=notif.target.audit_cycle.id,status=Attachment.ATTACHED)
+            files = find_guideline_attachments(notif.target.audit_cycle.id)
+            pdf = files["pdf"]
+            if not pdf :
+                return False
             get_params_from_audit_store(notif.action_object, params)
             subject = "Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/assign_email_pdf.html'
             params['txt_template'] = 'notify/assign_email_pdf.txt'
             params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
             params['audit_post_approval_description'] = notif.target.post_approval_description
-            params['pdf_url'] = pdf.generate_presigned_url()
+            # params['pdf_url'] = pdf.generate_presigned_url()
+            if pdf:
+                params["pdf_url"] = pdf.generate_presigned_url_for_audio_pdf()
+
+        elif notif.verb == verbs.AUDIT_STORE_ASSIGNED_PDF_AUDIO:
+            # pdf=Attachment.objects.get(audit_cycles__id=notif.target.audit_cycle.id,status=Attachment.ATTACHED)
+            files = find_guideline_attachments(notif.target.audit_cycle.id)
+            pdf = files["pdf"]
+            audio = files["audio"]
+            if not pdf and not audio:
+                return False
+            get_params_from_audit_store(notif.action_object, params)
+            subject = "Audit Assigned for {}".format(params['client'])
+            params['html_template'] = 'notify/assign_email_pdf.html'
+            params['txt_template'] = 'notify/assign_email_pdf.txt'
+            params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
+            params['audit_post_approval_description'] = notif.target.post_approval_description
+            # params['pdf_url'] = pdf.generate_presigned_url()
+            if pdf:
+                params["pdf_url"] = pdf.generate_presigned_url_for_audio_pdf()
+            if audio:
+                params["audio_url"] = audio.generate_presigned_url_for_audio_pdf()
 
         elif notif.verb == verbs.AUDIT_STORE_ASSIGNED:
             get_params_from_audit_store(notif.action_object, params)
