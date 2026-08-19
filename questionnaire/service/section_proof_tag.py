@@ -78,8 +78,8 @@ def save_section_proof_tag(section_id, audit_cycle_id, proof_tag_list):
         proof_id = proof['id']
         is_required = proof['is_required']
         max_attachment_count = proof['max_attachment_count']
-        hide_from_client = proof.get('hide_from_client')
-        is_comment_required = proof.get('is_comment_required', False)
+        hide_from_client = proof.get('hide_from_client') or False
+        is_comment_required = proof.get('is_comment_required') or False
 
         if AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, proof_tag_id=proof_id).exists():
             AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, proof_tag_id=proof_id).update(is_active=True, max_attachment_count=max_attachment_count)
