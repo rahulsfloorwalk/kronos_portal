@@ -72,6 +72,57 @@ def find_by_audit_cycle_distinct_user(audit_cycle_id):
         .order_by('user__email').prefetch_related('user')
 
 
+def get_filtered_audit_stores_for_report_filters(audit_cycle_id,user_id='',city='',status='',qa_id=''):
+    from guardian.shortcuts import get_objects_for_user
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    audit_stores = AuditStore.objects.filter(audit__audit_cycle_id=audit_cycle_id)
+    if user_id:
+        audit_stores = audit_stores.filter(user_id=user_id)
+    if city:
+        audit_stores = audit_stores.filter(audit__store__city__name=city)
+    if status:
+        audit_stores = audit_stores.filter(status=status)
+
+    audit_stores = audit_stores.distinct()
+    if qa_id:
+        try:
+            qa_user = User.objects.get(id=qa_id)
+        except User.DoesNotExist:
+            return AuditStore.objects.none()
+        audit_stores = get_objects_for_user(qa_user,'moderator_manage',klass=audit_stores)
+    return audit_stores.distinct()
+
+def find_by_audit_cycle_distinct_user_wise(audit_cycle_id,user_id='',city='',status='',qa_id=''):
+    audit_stores = get_filtered_audit_stores_for_report_filters(audit_cycle_id=audit_cycle_id,user_id=user_id,city=city,status=status,qa_id=qa_id)
+    return (
+        audit_stores.select_related('user').distinct('user__email').order_by('user__email'))
+
+def find_audit_store_city_by_audit_cycle_id_wise(audit_cycle_id,user_id='',status='',qa_id='',city=''):
+    audit_stores = AuditStore.objects.filter( audit__audit_cycle_id=audit_cycle_id)
+    if user_id:
+        audit_stores = audit_stores.filter(user_id=user_id)
+    if status:
+        if status == 'QA_Not_Assign':
+            audit_stores = audit_stores.filter( status=AuditStore.SUBMITTED)
+            audit_store_ids = qa_not_assign(audit_cycle_id, AuditStore.SUBMITTED)
+            audit_stores = audit_stores.filter(id__in=audit_store_ids)
+        else:
+            audit_stores = audit_stores.filter(status=status)
+    if qa_id:
+        User = get_user_model()
+        moderator = User.objects.get(id=int(qa_id))
+        assigned_store_ids = get_objects_for_user(moderator,'audit_store.moderator_manage',klass=AuditStore).values_list('id',flat=True)
+        audit_stores = audit_stores.filter(id__in=assigned_store_ids )
+
+    if city:
+        audit_stores = audit_stores.filter(audit__store__city__name=city)
+    city_list = (
+        audit_stores.values_list('audit__store__city__name',flat=True).exclude(audit__store__city__name__isnull=True
+                            ).exclude(audit__store__city__name='').distinct().order_by('audit__store__city__name'))
+    return {'city_list': list(city_list)}
+
 def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, start_date, end_date,is_load_more,last_total_count):
     total_audit_count = 0
     audit_store_list_obj_slice = []

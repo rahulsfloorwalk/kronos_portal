@@ -81,7 +81,7 @@ def valid_file_type(mime_type: str, file_extension: str) -> str:
     if mime_type is None or file_extension == '':
         raise AppLogicError("unknown file type")
 
-def upload_for_object(proof_type: str, mime_type: str, file_name: str, file_size: int, file_slug: str, content_object,attachment_category=None) -> Attachment:
+def upload_for_object(proof_type: str, mime_type: str, file_name: str, file_size: int, file_slug: str, content_object,attachment_category=None,original_attachment=None,is_edited=False,attachment_comment="") -> Attachment:
     return Attachment.objects.create(
         status = Attachment.UPLOADING,
         proof_type = proof_type,
@@ -92,6 +92,10 @@ def upload_for_object(proof_type: str, mime_type: str, file_name: str, file_size
         content_object = content_object,
         attachment_category = attachment_category,
         old_file_name = file_name,
+
+        original_attachment=original_attachment,
+        is_edited=is_edited,
+        attachment_comment=attachment_comment,
     )
 
 def upload_link_for_object(link_url,content_object,attachment_category=None):
@@ -174,6 +178,18 @@ def generate_attachment_slug(file_extension):
     file_name = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(settings.AWS["S3_ATTACHMENTS"]["FILE_SLUG_SIZE"]))
     return "ATTACHMENTS/{}/{}{}".format(date.today().strftime("%Y/%m/%d"), file_name, file_extension)
 
+def generate_edited_attachment_slug(original_file_slug):
+    basename, extension = os.path.splitext(original_file_slug)
+
+    if len(basename) > 7 and basename[-7] == "_":
+        basename = basename[:-7]
+
+    while True:
+        suffix = ''.join( random.SystemRandom().choice( string.ascii_letters + string.digits) for _ in range(6))
+        new_file_slug = "{}_{}{}".format( basename, suffix, extension)
+
+        if not Attachment.objects.filter( file_slug=new_file_slug).exists():
+            return new_file_slug
 
 def get_signed_post(file_extension):
     AWS = settings.AWS
@@ -207,6 +223,45 @@ def get_signed_post(file_extension):
     )
     return post
 
+def delete_attachment_from_s3(file_slug):
+    if not file_slug:
+        return
+
+    AWS = settings.AWS
+
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=AWS["S3_ATTACHMENTS"]["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=AWS["S3_ATTACHMENTS"]["AWS_SECRET_ACCESS_KEY"],
+        region_name=AWS["S3_ATTACHMENTS"]["REGION"],
+        config=Config(signature_version='s3v4')
+    )
+
+    s3.delete_object(
+        Bucket=AWS["S3_ATTACHMENTS"]["BUCKET"],
+        Key=file_slug
+    )
+
+
+def get_signed_post_for_file_slug(file_slug):
+    AWS = settings.AWS
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=AWS["S3_ATTACHMENTS"]["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=AWS["S3_ATTACHMENTS"]["AWS_SECRET_ACCESS_KEY"],
+        region_name=AWS["S3_ATTACHMENTS"]["REGION"],
+        config=Config(signature_version='s3v4')
+    )
+
+    fields = {"acl": "public-read"}
+    conditions = [
+        {"acl": "public-read"},
+        [ "content-length-range", AWS["S3_ATTACHMENTS"]["MIN_SIZE"], AWS["S3_ATTACHMENTS"]["MAX_SIZE"]],
+        {"bucket": AWS["S3_ATTACHMENTS"]["BUCKET"]},
+        {"success_action_status": "201"},
+    ]
+    return s3.generate_presigned_post(Bucket=AWS["S3_ATTACHMENTS"]["BUCKET"], Key=file_slug, Fields=fields, Conditions=conditions)
+
 def save_image_hash(attachment):
     mime_type = attachment.mime_type
     try:
@@ -222,16 +277,29 @@ def save_image_hash(attachment):
     except RuntimeError:
         return False
 
+# def complete(attachment_id):
+#     attachment = find_by_id(attachment_id)
+#     attachment.status = Attachment.ATTACHED
+#     attachment.completed_at = timezone.now()
+#     attachment.save()
+#     save_image_hash(attachment)
+#     return attachment
+
 def complete(attachment_id):
     attachment = find_by_id(attachment_id)
+    old_file_slug = attachment.old_file_name
     attachment.status = Attachment.ATTACHED
     attachment.completed_at = timezone.now()
+    attachment.old_file_name = ""
     attachment.save()
     save_image_hash(attachment)
+    if old_file_slug:
+        delete_attachment_from_s3(old_file_slug)
+
     return attachment
 
 
-def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
+def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type,attachment_comment=""):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     check_file_size(file_size)
     duplicate_exists = Attachment.objects.filter(
@@ -249,8 +317,165 @@ def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
     valid_file_type(mime_type, file_extension)
     proof_type = get_proof_type(mime_type)
     post_data = get_signed_post(file_extension)
-    attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], audit_store)
+    attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], audit_store,attachment_comment=attachment_comment)
     return (post_data, attachment)
+
+def upload_for_audit_store_highlighted(audit_store_id,file_name,file_size,mime_type,attachment_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    check_file_size(file_size)
+    content_type = ContentType.objects.get_for_model(AuditStore)
+    try:
+        attachment = (Attachment.objects.exclude(status__in=[Attachment.DELETED,Attachment.UPLOADING])
+            .get(id=attachment_id,content_type=content_type,object_id=audit_store.id))
+    except Attachment.DoesNotExist:
+        raise ObjectNotFound
+
+    if attachment.is_edited:
+        original_attachment = attachment.original_attachment
+    else:
+        original_attachment = attachment
+
+    if not original_attachment:
+        raise ObjectNotFound
+
+    if original_attachment.proof_type != Attachment.PHOTO:
+        raise ValidationError({"detail": "Only photo attachments can be highlighted."})
+
+    attachment_comment = attachment.attachment_comment
+    if attachment_comment in (None, ""):
+        attachment_comment = original_attachment.attachment_comment
+
+    basename, file_extension = parse_file_name(file_name)
+    valid_file_type(mime_type,file_extension)
+    proof_type = get_proof_type(mime_type)
+
+    edited_attachment = (Attachment.objects.filter(original_attachment=original_attachment,is_edited=True).exclude(status=Attachment.DELETED).first())
+    if not edited_attachment:
+        post_data = get_signed_post(file_extension )
+        edited_attachment = upload_for_object(proof_type,mime_type,file_name,file_size,post_data["fields"]["key"]
+                            ,audit_store,original_attachment=original_attachment,is_edited=True,attachment_comment=attachment_comment)
+
+        edited_attachment.old_file_name = ""
+        edited_attachment.save()
+
+    else:
+        old_file_slug = edited_attachment.file_slug
+        new_file_slug = generate_edited_attachment_slug(original_attachment.file_slug)
+
+        edited_attachment.file_name = file_name
+        edited_attachment.file_size = file_size
+        edited_attachment.mime_type = mime_type
+        edited_attachment.proof_type = proof_type
+        # edited_attachment.file_slug = new_file_slug
+
+        edited_attachment.old_file_name = old_file_slug
+        edited_attachment.file_slug = new_file_slug
+
+        edited_attachment.status = Attachment.UPLOADING
+        if edited_attachment.attachment_comment in (None, ""):
+            edited_attachment.attachment_comment = attachment_comment
+        edited_attachment.save()
+        post_data = get_signed_post_for_file_slug(new_file_slug)
+    return edited_attachment, post_data
+
+def upload_for_report_section_highlighted(audit_store_id, section_id, file_name, file_size, mime_type, attachment_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
+
+    check_file_size(file_size)
+
+    content_type = ContentType.objects.get_for_model(ReportSection)
+
+    try:
+        attachment = Attachment.objects.exclude(
+            status__in=[Attachment.DELETED, Attachment.UPLOADING]
+        ).get(
+            id=attachment_id,
+            content_type=content_type,
+            object_id=report_section.id
+        )
+    except Attachment.DoesNotExist:
+        raise ObjectNotFound
+
+    if attachment.is_edited:
+        original_attachment = attachment.original_attachment
+    else:
+        original_attachment = attachment
+
+    if not original_attachment:
+        raise ObjectNotFound
+
+    if original_attachment.proof_type != Attachment.PHOTO:
+        raise ValidationError({
+            "detail": "Only photo attachments can be highlighted."
+        })
+
+    basename, file_extension = parse_file_name(file_name)
+    valid_file_type(mime_type, file_extension)
+    proof_type = get_proof_type(mime_type)
+
+    attachment_comment = attachment.attachment_comment
+    if attachment_comment in (None, ""):
+        attachment_comment = original_attachment.attachment_comment
+
+    edited_attachment = Attachment.objects.filter(
+        original_attachment=original_attachment,
+        is_edited=True
+    ).exclude(
+        status=Attachment.DELETED
+    ).first()
+
+    if not edited_attachment:
+        post_data = get_signed_post(file_extension)
+
+        edited_attachment = upload_for_object(
+            proof_type,
+            mime_type,
+            file_name,
+            file_size,
+            post_data["fields"]["key"],
+            report_section,
+            original_attachment=original_attachment,
+            is_edited=True,
+            attachment_comment=attachment_comment
+        )
+
+        # Make sure edited attachment belongs to the same section
+        edited_attachment.content_type = content_type
+        edited_attachment.object_id = report_section.id
+
+        # Preserve proof tag from original attachment
+        edited_attachment.proof_tag = original_attachment.proof_tag
+
+        edited_attachment.old_file_name = ""
+        edited_attachment.save()
+
+    else:
+        old_file_slug = edited_attachment.file_slug
+        new_file_slug = generate_edited_attachment_slug(
+            original_attachment.file_slug
+        )
+
+        edited_attachment.content_type = content_type
+        edited_attachment.object_id = report_section.id
+
+        # Preserve proof tag
+        edited_attachment.proof_tag = original_attachment.proof_tag
+
+        edited_attachment.file_name = file_name
+        edited_attachment.file_size = file_size
+        edited_attachment.mime_type = mime_type
+        edited_attachment.proof_type = proof_type
+        edited_attachment.old_file_name = old_file_slug
+        edited_attachment.file_slug = new_file_slug
+        edited_attachment.status = Attachment.UPLOADING
+        edited_attachment.attachment_comment = attachment_comment
+
+        edited_attachment.save()
+
+        post_data = get_signed_post_for_file_slug(new_file_slug)
+
+    return edited_attachment, post_data
 
 def upload_for_audit_store_with_proof_tag(audit_store_id, file_name, file_size, mime_type,proof_tag):
     audit_store = audit_store_service.find_by_id(audit_store_id)
@@ -448,7 +673,7 @@ def find_by_audit_cycle(audit_cycle_id):
     return Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED).order_by('id')
 
 def find_by_audit_cycle_for_guideline(audit_cycle_id):
-    attachment = Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED,attachment_category=Attachment.GUIDELINE)
+    attachment = Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED,attachment_category__in=[Attachment.GUIDELINE,Attachment.REFERENCE_ATTACHMENT])
     if attachment:
         return attachment
     return Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED,attachment_category__isnull=True)
@@ -464,7 +689,7 @@ def find_by_audit_cycle_id(audit_cycle_id):
     
 def find_by_audit_store_and_section(audit_store_id, section_id):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
-    return Attachment.objects.filter(report_sections__id=report_section.id, status=Attachment.ATTACHED).order_by('id')
+    return Attachment.objects.filter(report_sections__id=report_section.id, status=Attachment.ATTACHED,proof_tag__section_proof_tag__hide_from_client=False).order_by('id')
 
 # def find_by_audit_store_mandatory_proof(audit_store_id):
 #     report_sections = report_section_service.find_by_audit_cycle_sections_mandatory_proof(audit_store_id)

@@ -46,6 +46,34 @@ class UserListForReportsFilter(APIView):
         user_list = audit_store_service.find_by_audit_cycle_distinct_user(audit_cycle_id)
         return Response(AuditStoreSerializerWithUser(user_list, many=True).data)
 
+class UserListForReportsFilterwise(APIView):
+    permission_classes = [HasGroupPermission]
+
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, audit_cycle_id, format=None):
+
+        user_id = request.GET.get('user_id', '')
+        city = request.GET.get('city', '')
+        status = request.GET.get('status', '')
+        qa_id = request.GET.get('qa_id', '')
+
+        user_list = audit_store_service.find_by_audit_cycle_distinct_user_wise(
+            audit_cycle_id=audit_cycle_id,
+            user_id=user_id,
+            city=city,
+            status=status,
+            qa_id=qa_id
+        )
+
+        return Response(
+            AuditStoreSerializerWithUser(
+                user_list,
+                many=True
+            ).data
+        )
 
 class AuditStoreByAuditCycleNew(APIView):
     permission_classes = [HasGroupPermission]
@@ -83,6 +111,19 @@ class AuditStoreListByAuditCycle(APIView):
                                                                    request.GET.get('last_total_count'))
         return Response(audit_stores)
 
+class AuditStoreCityListByAuditCyclewise(APIView):
+    permission_classes = [AllowAny]
+    # required_groups = {
+    #     'GET': [GROUP_NAME_MANAGER],
+    # }
+    def get(self, request, audit_cycle_id, format=None):
+        user_id = request.GET.get('user_id', '')
+        status = request.GET.get('status', '')
+        qa_id = request.GET.get('qa_id', '')
+        city = request.GET.get('city', '')
+        result = (audit_store_service.find_audit_store_city_by_audit_cycle_id_wise(audit_cycle_id=audit_cycle_id,user_id=user_id,status=status,qa_id=qa_id,city=city))
+        return Response(result)
+    
 class AuditStoreCityListByAuditCycle(APIView):
     permission_classes = [AllowAny]
     # required_groups = {
@@ -571,3 +612,22 @@ class AcceptAllCompletedForAuditCycle(APIView):
         end_date = request.POST.get('end_date', '')
         count = audit_store_service.accept_all_audit_stores(audit_cycle_id, request.user, start_date, end_date)
         return Response(count)
+
+class AuditorExecutionReportView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        audit_data  = service_manager.find_auditor_execution_report(audit_cycle_id)
+        return Response(audit_data)
+
+class AuditorExecutionReportDetailView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id, user_id, format=None):
+        status = request.GET.get('status', '')
+        audit_stores = (service_manager.find_auditor_execution_report_details(audit_cycle_id,user_id,status))
+        return Response(audit_stores)

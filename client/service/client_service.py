@@ -1,6 +1,6 @@
 from kronos.exceptions import ObjectNotFound
 
-from ..models import BankInfo, Client, ClientUser,NonClientAdminUserStore,ClientRequirements
+from ..models import BankInfo, Client, ClientUser,NonClientAdminUserStore,ClientRequirements,ClientModerator
 from audit.models.audit_cycle import AuditCycle
 from audit.models import Audit
 from audit_store.models import AuditStore,ReportActionPlan
@@ -8,6 +8,9 @@ from django.contrib.auth.models import Group,User
 from registration.models import GROUP_NAME_CLIENT
 from django.utils import timezone
 from manager.models import ManagerProfileInfo
+# from audit_store.service import qa_not_assign
+from guardian.shortcuts import get_objects_for_user
+from django.contrib.auth import get_user_model
 
 # def find_client_user_by_audit_store_id(audit_store_id):
 #     audit_store=AuditStore.objects.get(id=audit_store_id)
@@ -54,6 +57,77 @@ def find_client_by_id(client_id):
         return Client.objects.get(id=client_id)
     except Client.DoesNotExist as e:
         raise ObjectNotFound from e
+
+def find_client_moderators_with_filters(client_id, audit_cycle_id=None,
+                                        user_id='', city='', status='', qa_id=''):
+    from audit_store.service import qa_not_assign
+    from guardian.shortcuts import get_users_with_perms, get_objects_for_user
+
+    client_moderators = ClientModerator.objects.filter(
+        client_id=client_id,
+        is_active=True,
+        user__is_active=True
+    ).select_related('user')
+
+    if not audit_cycle_id:
+        return client_moderators
+
+    audit_stores = AuditStore.objects.filter(
+        audit__audit_cycle_id=audit_cycle_id
+    )
+
+    if user_id:
+        audit_stores = audit_stores.filter(user_id=user_id)
+
+    if city:
+        audit_stores = audit_stores.filter(
+            audit__store__city__name=city
+        )
+
+    if status:
+        audit_stores = audit_stores.filter(
+            status=status
+        )
+
+    # If QA is selected, keep only AuditStores assigned to that QA.
+    if qa_id:
+        try:
+            qa_user = User.objects.get(id=qa_id)
+        except User.DoesNotExist:
+            return client_moderators.none()
+
+        audit_stores = get_objects_for_user(
+            qa_user,
+            'moderator_manage',
+            klass=audit_stores
+        )
+
+    # Get users who have AuditStores matching the selected filters.
+    filtered_user_ids = audit_stores.values_list(
+        'user_id',
+        flat=True
+    ).distinct()
+
+    # IMPORTANT:
+    # ClientModerator.user is the QA user.
+    #
+    # We need to find which QA users are actually assigned
+    # to the filtered AuditStores.
+    qa_user_ids = set()
+
+    for audit_store in audit_stores:
+        users_with_perms = get_users_with_perms(
+            audit_store,
+            attach_perms=True
+        )
+
+        for user, perms in users_with_perms.items():
+            if 'moderator_manage' in perms:
+                qa_user_ids.add(user.id)
+
+    return client_moderators.filter(
+        user_id__in=qa_user_ids
+    )
 
 def find_client_requirements_by_client_id(client_id):
     try:

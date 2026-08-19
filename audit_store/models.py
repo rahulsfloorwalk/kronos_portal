@@ -424,19 +424,21 @@ class AuditStore(Model):
                     raise AppLogicError("Section : %s, Question : %s : Answer not given." % (section_seq, q_seq))
 
                 answer = next((a for a in answers if a.question_id == question.id), None)
-                if not question.is_required:
-                    continue
                 if not answer:
                     raise AppLogicError("Section : %s, Question : %s : Answer not given." % (section_seq, q_seq))
-                if answer.not_applicable:
-                    raise AppLogicError( "Section : %s, Question : %s : Required question cannot be marked as Not Applicable." % (section_seq, q_seq) )
+                if question.is_required:
+                    if answer.not_applicable:
+                        raise AppLogicError( "Section : %s, Question : %s : Required question cannot be marked as Not Applicable." % (section_seq, q_seq) )
 
-                if not answer.answer_text or answer.answer_text.strip() == "":
-                    raise AppLogicError("Section : %s, Question : %s : Answer not given." % (section_seq, q_seq))
+                    if not answer.answer_text or answer.answer_text.strip() == "":
+                        raise AppLogicError("Section : %s, Question : %s : Answer not given." % (section_seq, q_seq))
 
                 if question.optional_comment_required and not answer.not_applicable:
                     if not answer.answer_comment or answer.answer_comment.strip() == '':
                         raise AppLogicError("Section : %s, Question : %s : Required answer comment is missing" % (section_seq, q_seq))
+
+                if not question.is_required:
+                    continue
                     
                 # if (question.max_marks > 0 and question.question_type == Question.MUTEX and answer.marks_obtained == 0):
                 #     if not answer.answer_comment or answer.answer_comment.strip() == "":

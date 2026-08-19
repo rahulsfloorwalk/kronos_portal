@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group
 from django.db.transaction import atomic
-from django.db.models import Count, F
+from django.db.models import Count, F, Sum
 from notifications.models import Notification
 from notifications.signals import notify
 
@@ -289,10 +289,38 @@ def reject_all_applications_for_audit_cycle(audit_cycle_id, user_actor):
         applications.extend(reject_all_applications_for_audit(audit.id, user_actor))
     return applications
 
+# def get_application_stats(audit_cycle_id):
+#     return AuditApplication.objects.filter(audit__audit_cycle__id=audit_cycle_id).values('status').annotate(count=Count('status'))
 
 def get_application_stats(audit_cycle_id):
-    return AuditApplication.objects.filter(audit__audit_cycle__id=audit_cycle_id).values('status').annotate(count=Count('status'))
+    applications = AuditApplication.objects.filter(audit__audit_cycle_id=audit_cycle_id)
+    application_status_counts = dict(applications.filter(status__in=[AuditApplication.APPLIED,AuditApplication.WAITLISTED]).values('status').annotate(count=Count('id')).values_list('status', 'count'))
 
+    audit_stores = AuditStore.objects.filter(audit__audit_cycle_id=audit_cycle_id)
+    approved_statuses = (AuditStore.ASSIGNED,AuditStore.ACKNOWLEDGED,AuditStore.SUBMITTED,AuditStore.PM_REVIEW,AuditStore.COMPLETED,)
+    approved_count = audit_stores.filter(status__in=approved_statuses).count()
+    withdrawn_count = audit_stores.filter(status__in=[AuditStore.WITHDRAWN,AuditStore.AUDITOR_WITHDRAWN]).count()
+    rejected_count = audit_stores.filter(status__in=[AuditStore.REJECTED,AuditStore.FAILED]).count()
+
+    system_assigned_count = audit_stores.filter(status__in=approved_statuses,auto_assigned=True).count()
+    instant_assigned_count = audit_stores.filter(status__in=approved_statuses,instant_assigned=True).count()
+    manual_assigned_count = audit_stores.filter(status__in=approved_statuses,auto_assigned=False,instant_assigned=False).count()
+    planned_count = Audit.objects.filter(audit_cycle_id=audit_cycle_id).aggregate(total=Sum('count'))['total'] or 0
+    assigned_count = audit_stores.filter(status__in=approved_statuses).count()
+    open_count = max(planned_count - assigned_count,0)
+
+    return [
+        {'status': AuditApplication.NOT_APPLIED,'count': 0},
+        {'status': AuditApplication.APPLIED,'count': application_status_counts.get(AuditApplication.APPLIED,0)},
+        {'status': AuditApplication.REJECTED,'count': rejected_count},
+        {'status': AuditApplication.WITHDRAWN,'count': withdrawn_count},
+        {'status': AuditApplication.WAITLISTED,'count': application_status_counts.get(AuditApplication.WAITLISTED,0)},
+        {'status': AuditApplication.APPROVED,'count': approved_count},
+        {'status': 'SYSTEM_ASSIGNED','count': system_assigned_count},
+        {'status': 'MANUAL_ASSIGNED','count': manual_assigned_count},
+        {'status': 'INSTANT_ASSIGNED','count': instant_assigned_count},
+        {'status': 'OPEN','count': open_count}
+    ]
 
 def previous_report_exists(profile_info, audit, audit_date):
     start_date = audit_date - timedelta(days = 180)

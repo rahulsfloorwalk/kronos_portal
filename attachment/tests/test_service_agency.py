@@ -7,7 +7,9 @@ from model_mommy import mommy
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from attachment.models import Attachment
-from questionnaire.models import Section, Question
+from questionnaire.models import Section, Question,SectionProofTag
+from manager.models import ProofTag
+from questionnaire.models.proof_tag import AuditCycleProofTagList
 from answer.models import ReportSection, Answer
 from attachment import service_agency as attachment_agency_service
 from audit_store.models import AuditStore
@@ -121,26 +123,42 @@ class AttachmentAgencyServiceTestCase(TestCase):
         self.assertEqual(self.test_mime_type, attachments[0].mime_type)
         self.assertEqual(Attachment.ATTACHED, attachments[0].status)
 
+    # def test_find_by_audit_store_and_section_for_agency_returns_attachment(self):
+    #     audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+    #     audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
+    #                              audit__audit_cycle=audit_cycle)
+    #     section = mommy.make(Section, audit_cycle=audit_cycle)
+    #     report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
+    #     mommy.make(
+    #         Attachment,
+    #         status=Attachment.ATTACHED,
+    #         file_name=self.test_file,
+    #         file_size=self.test_size,
+    #         mime_type=self.test_mime_type,
+    #         content_type=ContentType.objects.get_for_model(ReportSection),
+    #         object_id=report_section.id,
+    #     )
+    #     attachments = attachment_agency_service.find_by_audit_store_and_section_for_agency(
+    #         audit_store.id,
+    #         section.id,
+    #         self.agency_user.id,
+    #     )
+    #     self.assertEqual(1, len(attachments))
+    #     self.assertEqual(self.test_file, attachments[0].file_name)
+    #     self.assertEqual(self.test_size, attachments[0].file_size)
+    #     self.assertEqual(self.test_mime_type, attachments[0].mime_type)
+    #     self.assertEqual(Attachment.ATTACHED, attachments[0].status)
+
     def test_find_by_audit_store_and_section_for_agency_returns_attachment(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
-        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                                 audit__audit_cycle=audit_cycle)
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user, audit__audit_cycle=audit_cycle)
         section = mommy.make(Section, audit_cycle=audit_cycle)
         report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
-        mommy.make(
-            Attachment,
-            status=Attachment.ATTACHED,
-            file_name=self.test_file,
-            file_size=self.test_size,
-            mime_type=self.test_mime_type,
-            content_type=ContentType.objects.get_for_model(ReportSection),
-            object_id=report_section.id,
-        )
-        attachments = attachment_agency_service.find_by_audit_store_and_section_for_agency(
-            audit_store.id,
-            section.id,
-            self.agency_user.id,
-        )
+        proof_tag = mommy.make(ProofTag)
+        audit_cycle_proof_tag = mommy.make(AuditCycleProofTagList, audit_cycle=audit_cycle, proof_tag=proof_tag)
+        mommy.make(SectionProofTag, audit_cycle_proof_tag=audit_cycle_proof_tag, section=section, hide_from_client=False)
+        mommy.make(Attachment, status=Attachment.ATTACHED, file_name=self.test_file, file_size=self.test_size, mime_type=self.test_mime_type, content_type=ContentType.objects.get_for_model(ReportSection), object_id=report_section.id, proof_tag=audit_cycle_proof_tag)
+        attachments = attachment_agency_service.find_by_audit_store_and_section_for_agency(audit_store.id, section.id, self.agency_user.id)
         self.assertEqual(1, len(attachments))
         self.assertEqual(self.test_file, attachments[0].file_name)
         self.assertEqual(self.test_size, attachments[0].file_size)

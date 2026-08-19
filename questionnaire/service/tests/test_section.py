@@ -10,7 +10,7 @@ from questionnaire.service.section_proof_tag import save_section_proof_tag
 from registration.models import GROUP_NAME_AGENCY
 from registration.models import GROUP_NAME_MANAGER
 from questionnaire.service import section as section_service
-from questionnaire.models import Section
+from questionnaire.models import Section,SectionProofTag
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
 
@@ -60,16 +60,33 @@ class SectionTestCase(TestCase):
         with self.assertRaisesRegex(AppLogicError, "audit cycle already has sections"):
             section_service.copy_sections_from_to(audit_cycle.id, another_audit_cycle.id)
 
+    # def test_copy_sections_from_to_check_proof_tag_count(self):
+    #     audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+    #     sections = mommy.make(Section, audit_cycle=audit_cycle, _quantity=4)
+    #     proof_tag_obj = mommy.make(ProofTag, _quantity=4)
+
+    #     for index, tag in enumerate(proof_tag_obj):
+    #         save_section_proof_tag(sections[index].id, audit_cycle.id, [{"id":tag.id, "max_attachment_count": 2, "is_required": True}])
+    #         sections[index].refresh_from_db()
+
+    #     another_audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+
+    #     copied_sections = section_service.copy_sections_from_to(audit_cycle.id, another_audit_cycle.id)
+    #     expect(list(map(lambda s: s.minimum_attachment_count, copied_sections))).to(contain_only(*map(lambda s: s.minimum_attachment_count, sections)))
+
     def test_copy_sections_from_to_check_proof_tag_count(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         sections = mommy.make(Section, audit_cycle=audit_cycle, _quantity=4)
         proof_tag_obj = mommy.make(ProofTag, _quantity=4)
-
         for index, tag in enumerate(proof_tag_obj):
-            save_section_proof_tag(sections[index].id, audit_cycle.id, [{"id":tag.id, "max_attachment_count": 2, "is_required": True}])
+            save_section_proof_tag(sections[index].id, audit_cycle.id, [{"id": tag.id, "max_attachment_count": 2, "is_required": True, "hide_from_client": True, "is_comment_required": True}])
             sections[index].refresh_from_db()
-
         another_audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
-
-        copied_sections = section_service.copy_sections_from_to(audit_cycle.id, another_audit_cycle.id)
+        copied_sections = list(section_service.copy_sections_from_to(audit_cycle.id, another_audit_cycle.id))
         expect(list(map(lambda s: s.minimum_attachment_count, copied_sections))).to(contain_only(*map(lambda s: s.minimum_attachment_count, sections)))
+        for section in copied_sections:
+            copied_proof_tags = SectionProofTag.objects.filter(section=section)
+            self.assertEqual(1, copied_proof_tags.count())
+            copied_proof_tag = copied_proof_tags.first()
+            self.assertTrue(copied_proof_tag.hide_from_client)
+            self.assertTrue(copied_proof_tag.is_comment_required)

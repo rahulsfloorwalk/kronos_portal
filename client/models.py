@@ -47,6 +47,11 @@ class Client(Model):
     state = CharField(db_column='state', max_length=300, blank=True)
     pincode = CharField(db_column='pincode', max_length=300, blank=True)
     gst_in = CharField(db_column='gst_in', max_length=300, blank=True)
+
+    background_image_url = CharField(db_column='background_image_url',max_length=2512,blank=True)
+    primary_color = CharField(db_column='primary_color',max_length=50,blank=True)
+    secondary_color = CharField(db_column='secondary_color',max_length=50,blank=True)
+    score_scale = JSONField(db_column='score_scale',default=dict,blank=True)
     
     def auditor_logo_url(self):
         return self.brand_logo_url or self.logo_url
@@ -576,3 +581,22 @@ class StateCityMapping(Model):
   
     def __str__(self):
         return "Client: " + self.client.name + " - Order ID: " + self.mp_order.id
+
+class DashboardWidgetvisibilityAccess(Model):
+    client = OneToOneField(Client,on_delete=CASCADE,related_name="dashboard_widget_access")
+    latest_audit_cycle_score = BooleanField(db_column='latest_audit_cycle_score',default=True)
+    upcoming_audits = BooleanField(db_column='upcoming_audits',default=True)
+    net_promoter_score = BooleanField(db_column='net_promoter_score',default=True)
+    section_summary = BooleanField(db_column='section_summary',default=True)
+    improvement_areas_based_on_observation = BooleanField(db_column='improvement_areas_based_on_observation',default=True)
+    overall_high_performance_store = BooleanField(db_column='overall_high_performance_store',default=True)
+    branch_performance = BooleanField(db_column='branch_performance',default=True)
+    overall_high_performance_city = BooleanField(db_column='overall_high_performance_city',default=True)
+    overall_low_performance_store = BooleanField(db_column='overall_low_performance_store',default=True)
+    overall_low_performance_city = BooleanField(db_column='overall_low_performance_city',default=True)
+    questionnaire_summary = BooleanField(db_column='questionnaire_summary',default=True)
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.client.name

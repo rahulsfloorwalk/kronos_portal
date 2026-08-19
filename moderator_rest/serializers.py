@@ -593,6 +593,7 @@ class AttachmentSerializer(ModelSerializer):
             'audio_to_text_clean',
             'attachment_category',
             'link_url',
+            'attachment_comment',
         )
         read_only_fields = fields
 

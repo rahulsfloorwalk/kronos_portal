@@ -12,6 +12,9 @@ from manager.serializers import AuditSerializer
 from client.models import MPOrder
 import requests
 import json
+from collections import OrderedDict
+from auditor.models import ProfileInfo
+
 
 def set_report_attribute_value(audit_store_id, json_id, option_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
@@ -322,6 +325,15 @@ def find_qa_pending_audit_stores_of_moderator_for_manager(user_id):
 
     return get_objects_for_user(user, 'moderator_manage', klass=query_set)
 
+def find_qa_repoprt_list_by_audit_cycle(audit_cycle_id,user_id):
+    user = find_moderator_by_user_id(user_id)
+
+    query_set = (
+        AuditStore.objects.filter(audit__audit_cycle_id=audit_cycle_id,
+            status__in=[AuditStore.ASSIGNED,AuditStore.ACKNOWLEDGED,AuditStore.SUBMITTED,]
+        )
+        .select_related('audit','audit__audit_cycle',).order_by('audit_date'))
+    return get_objects_for_user( user,'moderator_manage', klass=query_set, accept_global_perms=False)
 
 def revert_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
@@ -338,3 +350,193 @@ def revert_report(audit_store_id, user_id):
     else:
         audit_store.revert_report(by=user, status=AuditStore.COMPLETED)
     return audit_store
+ 
+def _resolve_comment(done_audits, pending_execution):
+    if done_audits == 0 and pending_execution > 1:
+        return 'High Risky'
+    if done_audits == 0 and pending_execution == 1:
+        return 'Low Risk'
+    if pending_execution > 3 and done_audits != 0:
+        return 'Contact Once'
+    return 'No Interference Needed'
+
+PRIORITY = {
+    'High Risky': 1,
+    'Low Risk': 2,
+    'Contact Once': 3,
+    'No Interference Needed': 4,
+}
+
+def find_auditor_execution_report(audit_cycle_id):
+    audit_stores = (AuditStore.objects
+        .filter(audit__audit_cycle_id=audit_cycle_id)
+        .select_related('user','user__profileinfo','audit','audit__store','audit__store__city',)
+        .order_by('user_id','audit_date')
+    )
+
+    auditor_data = OrderedDict()
+    for audit_store in audit_stores:
+        user = audit_store.user
+        if user.id not in auditor_data:
+            try:
+                profile_info = user.profileinfo
+            except ProfileInfo.DoesNotExist:
+                profile_info 
+            if profile_info:
+                auditor_name = '{} {}'.format(profile_info.first_name or '',profile_info.last_name or '').strip()
+                auditor_mobile_number = profile_info.mobile_number
+            else:
+                auditor_name = user.email
+                auditor_mobile_number = None
+
+            auditor_data[user.id] = {
+                'id': user.id,
+                'auditor_name': auditor_name,
+                'auditor_mobile_number': auditor_mobile_number,
+                'cities': [],
+                'audit_dates': [],
+                'report_status': [],
+                'grand_total': 0,
+                'pending_execution': 0,
+                'done_audits': 0,
+                'failed_reports': 0,
+            }
+
+        data = auditor_data[user.id]
+        data['grand_total'] += 1
+        status = audit_store.status
+        city = audit_store.audit.store.city
+
+        if city and city.name not in data['cities']:
+            data['cities'].append(city.name)
+        if audit_store.audit_date:
+
+            audit_date = audit_store.audit_date.strftime('%d %b')
+
+            if audit_date not in data['audit_dates']:
+                data['audit_dates'].append(audit_date)
+
+        if status not in data['report_status']:
+            data['report_status'].append(status)
+
+        if status in (AuditStore.ACKNOWLEDGED,AuditStore.ASSIGNED):
+            data['pending_execution'] += 1
+
+        elif status in (AuditStore.COMPLETED,AuditStore.PM_REVIEW,AuditStore.SUBMITTED):
+            data['done_audits'] += 1
+
+        elif status in (AuditStore.AUDITOR_WITHDRAWN,AuditStore.WITHDRAWN,AuditStore.FAILED):
+            data['failed_reports'] += 1
+
+    result = []
+
+    for data in auditor_data.values():
+        pending_execution = data['pending_execution']
+        done_audits = data['done_audits']
+        if pending_execution <= 0:
+            continue
+
+        comment = _resolve_comment(done_audits,pending_execution)
+        result.append({
+            'id': data['id'],
+            'auditor_name': data['auditor_name'],
+            'auditor_mobile_number': data['auditor_mobile_number'],
+            'cities': ', '.join(data['cities']),
+            'audit_dates': ', '.join(data['audit_dates']),
+            'report_status': ', '.join(data['report_status']),
+            'grand_total': data['grand_total'],
+            'pending_execution': pending_execution,
+            'done_audits': done_audits,
+            'failed_reports': data['failed_reports'],
+            'comment': comment,
+        })
+
+    result.sort(key=lambda x: (PRIORITY[x['comment']],-x['grand_total']))
+    return result
+
+def find_auditor_execution_report_details(audit_cycle_id, user_id, status=''):
+    audit_stores = (
+        AuditStore.objects
+        .filter(
+            audit__audit_cycle_id=audit_cycle_id,
+            user_id=user_id
+        )
+        .select_related(
+            'user',
+            'user__profileinfo',
+            'audit',
+            'audit__store',
+            'audit__store__city',
+            'audit__audit_cycle',
+        )
+        .order_by('audit_date', 'id')
+    )
+
+    if status == 'pending':
+        audit_stores = audit_stores.filter(
+            status__in=[
+                AuditStore.ACKNOWLEDGED,
+                AuditStore.ASSIGNED,
+            ]
+        )
+
+    elif status == 'completed':
+        audit_stores = audit_stores.filter(
+            status__in=[
+                AuditStore.COMPLETED,
+                AuditStore.PM_REVIEW,
+                AuditStore.SUBMITTED,
+            ]
+        )
+
+    elif status == 'failed':
+        audit_stores = audit_stores.filter(
+            status__in=[
+                AuditStore.AUDITOR_WITHDRAWN,
+                AuditStore.WITHDRAWN,
+                AuditStore.FAILED,
+            ]
+        )
+
+    result = []
+
+    for audit_store in audit_stores:
+        city = None
+
+        if audit_store.audit.store.city:
+            city = audit_store.audit.store.city.name
+
+        result.append({
+            'audit_store_id': audit_store.id,
+            'audit_date': audit_store.audit_date,
+            'status': audit_store.status,
+            'city': city,
+            'store_name': audit_store.audit.store.name,
+
+            'auditor_name': (
+                '{} {}'.format(
+                    audit_store.user.profileinfo.first_name or '',
+                    audit_store.user.profileinfo.last_name or ''
+                ).strip()
+                if hasattr(audit_store.user, 'profileinfo')
+                else audit_store.user.email
+            ),
+
+            'auditor_mobile_number': (
+                audit_store.user.profileinfo.mobile_number
+                if hasattr(audit_store.user, 'profileinfo')
+                else None
+            ),
+
+            'earnings_per_audit': audit_store.earnings_per_audit,
+            'reimbursement': audit_store.reimbursement,
+            'auto_assigned': audit_store.auto_assigned,
+            'instant_assigned': audit_store.instant_assigned,
+
+            'assigned_by': audit_store.assigned_by,
+
+            'submit_at': audit_store.submit_at,
+            'audit_store_percentage': audit_store.report_completion_percentage,
+        })
+
+    return result

@@ -1,7 +1,7 @@
 from audit_store.models import AuditStore
 from audit.models import AuditCycle, Audit, AuditCycleProofTagList
 from questionnaire.models import QuestionnaireType
-from client.models import Store
+from client.models import Store, DashboardWidgetvisibilityAccess
 from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
 from questionnaire.models import Question
 
@@ -171,3 +171,12 @@ def find_questionnaire_types_for_proof_comparison(store_id):
             qt_dict['name'] = qt.name
             qt_list.append(qt_dict)
     return qt_list
+
+def find_dashboard_widget_access_by_user(user):
+    client = user.clientuser.client
+    widget_access= DashboardWidgetvisibilityAccess.objects.get(client=client)
+    return {
+        field.name: getattr(widget_access, field.name)
+        for field in DashboardWidgetvisibilityAccess._meta.fields
+    }
+   

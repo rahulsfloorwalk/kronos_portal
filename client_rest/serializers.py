@@ -33,7 +33,11 @@ class ClientSerializer(ModelSerializer):
             'email',
             'phone',
             'logo_url',
-            'receive_email_notification'
+            'receive_email_notification',
+            'background_image_url',
+            'primary_color',
+            'secondary_color',
+            'score_scale',
         )
         read_only_fields = fields
 

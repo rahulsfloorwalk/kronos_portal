@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer, IntegerField
 from rest_framework.serializers import EmailField, CharField, BooleanField
+from rest_framework.permissions import AllowAny
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -114,6 +115,14 @@ class ModeratorSummaryByAuditCycle(APIView):
 
     def get(self, request, audit_cycle_id):
         return Response(moderator_summary.moderator_summary_for_audit_cycle(audit_cycle_id))
+
+class ModeratorSummaryByAuditCyclewise(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id,user_id):
+        return Response(audit_store_service.find_qa_repoprt_list_by_audit_cycle(audit_cycle_id,user_id))
 
 class ModeratorSummaryView(APIView):
     permission_classes = [HasGroupPermission]

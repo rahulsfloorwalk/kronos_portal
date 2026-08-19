@@ -2,7 +2,7 @@ from django.conf.urls import url
 from .views import AuditCycleView, AuditCycleIdView, AuditStoreByAuditCycle, AuditStoreIdView,AudioToTextView,TranscriptToCompareAnswersView
 from .views import AuditStoreIdAuditDateView, AuditStoreIdQAOKView, AuditStoreIdFailView, AuditStoreIdSubmitView, AuditStoreIdUnSubmitView, AuditStoreIdQARatingView
 from .views import AuditStoreAttachmentView, ReportSectionAttachmentView, AttachmentIdView, AttachmentIdRenameView, AttachmentIdCompleteView, MoveAttachmentToSection,AuditStoreMandatoryProofTagView
-from .views import AuditStorePendingView, AuditStoreCompletedView
+from .views import AuditStorePendingView, AuditStoreCompletedView,AuditStoreAttachmentHighlightView,AuditStoreSectionAttachmentHighlightView,ReportSectionAttachmentCommentView
 from .views import SectionView, ReportSectionView, AnswerView
 from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtainedView, NotApplicableView, AnswerNotApplicableView, AnswerCommentView, AnswerRevertMessageView, SectionRevertMessageView
 from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditView, AuditStoreIdReportSummaryView
@@ -30,6 +30,8 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/section_revert_message$', SectionRevertMessageView.as_view(), name='section_revert_message_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/pm_comment$', PMCommentView.as_view(), name='pm_comment_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment$', ReportSectionAttachmentView.as_view(), name='report_section_attachment_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment_comments$', ReportSectionAttachmentCommentView.as_view(), name='report_section_attachment_comments_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment/(?P<attachment_id>[0-9]+)/highlight$', AuditStoreSectionAttachmentHighlightView.as_view(), name='audit_store_attachment_highlight_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/marks_obtained$', MarksObtainedView.as_view(), name='marks_obtained_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/answer_text$', AnswerTextView.as_view(), name='answer_text_view'),
@@ -41,6 +43,8 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_section$', ReportSectionView.as_view(), name='report_section_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', AnswerView.as_view(), name='answer_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', AuditStoreAttachmentView.as_view(), name='audit_store_attachment_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment/(?P<attachment_id>[0-9]+)/highlight$', AuditStoreAttachmentHighlightView.as_view(), name='audit_store_attachment_highlight_view'),
+
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_summary$', AuditStoreIdReportSummaryView.as_view(), name='audit_store_id_report_summary_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/rewrite_report_summary$', AuditStoreIdRewriteReportSummaryView.as_view(), name='audit_store_id_rewrite_report_summary_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/back_to_original_report_summary$', AuditStoreIdBackToOriginalReportSummaryView.as_view(), name='audit_store_id_back_to_original_report_summary_view'),

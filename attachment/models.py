@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.conf import settings
-from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, IntegerField, PROTECT, DateTimeField
+from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, IntegerField, PROTECT, DateTimeField, BooleanField, TextField
 from django.contrib.postgres.fields import JSONField
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -73,6 +73,10 @@ class Attachment(Model):
     audio_transcript_data = JSONField(db_column='audio_transcript_data', default=dict)
     audio_to_text_row = JSONField(db_column='audio_to_text_row', default=dict,blank=True, null=True)
     audio_to_text_clean = JSONField(db_column='audio_to_text_clean', default=dict,blank=True, null=True)
+
+    original_attachment = ForeignKey('self',db_column='original_attachment_id',null=True,blank=True,on_delete=PROTECT,related_name='edited_attachments')
+    is_edited = BooleanField(db_column='is_edited',default=False)
+    attachment_comment = TextField(db_column='attachment_comment',null=True,blank=True)
 
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''

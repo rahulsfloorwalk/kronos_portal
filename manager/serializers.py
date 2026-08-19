@@ -18,6 +18,8 @@ from manager.models import AuditProoftagNotAvailable
 from auditor.service.auditor_api import get_report_completion_percentage
 from manager.models import City
 import json
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -35,7 +37,11 @@ class ClientSerializer(ModelSerializer):
             'city',
             'state',
             'pincode',
-            'gst_in'
+            'gst_in',
+            'background_image_url',
+            'primary_color',
+            'secondary_color',
+            'score_scale'
         )
         read_only_fields = ('id',)
 
@@ -56,6 +62,10 @@ class ClientSerializer(ModelSerializer):
         client.state = self.validated_data.get('state',client.state)
         client.pincode = self.validated_data.get('pincode',client.pincode)
         client.gst_in = self.validated_data.get('gst_in',client.gst_in)
+        client.background_image_url = self.validated_data.get('background_image_url',client.background_image_url)
+        client.primary_color = self.validated_data.get('primary_color',client.primary_color)
+        client.secondary_color = self.validated_data.get('secondary_color',client.secondary_color)
+        client.score_scale = self.validated_data.get('score_scale',client.score_scale)
         
         return client
 
@@ -754,7 +764,7 @@ class AuditStoreSerializerWithUser(ModelSerializer):
     user = UserSerializerWithUserDetails()
     class Meta:
         model = AuditStore
-        fields = ['user']
+        fields = ['id','user']
         read_only_fields = fields
 
 
@@ -944,4 +954,3 @@ class AttachmentSerializer(ModelSerializer):
             'link_url',
         )
         read_only_fields = fields
-    

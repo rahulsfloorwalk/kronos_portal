@@ -59,6 +59,74 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_i
 
     return sorted(improvable_questions_list, key=lambda qd: qd['lost_marks'], reverse=True)
 
+from django.db.models import Sum, Count
+def get_improvable_questions_by_audit_cycles(audit_cycle_ids,questionnaire_type_id,client_user):
+
+    audit_cycle_ids = list(set(audit_cycle_ids))
+    valid_audit_cycle_ids = list( AuditCycle.objects.filter(id__in=audit_cycle_ids,questionnaire_type_id=questionnaire_type_id).values_list('id', flat=True))
+
+    if not valid_audit_cycle_ids:
+        return []
+
+    questions_list = (
+        Question.objects.filter(section__audit_cycle_id__in=valid_audit_cycle_ids,visibility=Question.VISIBLE_TO_ALL,hide_question=False,max_marks__gt=0)
+        .values('id','max_marks','section__id','section__name','question_txt')
+        .order_by('section__sequence', 'id')
+        .distinct()
+    )
+    client_admin = client_user.is_client_admin()
+    if not client_admin:
+        non_admin_user_store = (
+            find_non_client_admin_user_store_by_client_user_id(client_user.id))
+
+        non_admin_user_store_list = (non_admin_user_store.get_store_list())
+
+    improvable_questions_list = []
+
+    for question in questions_list:
+        section_id = question['section__id']
+        answer_filters = {
+            'question_id': question['id'],
+            'audit_store__status__in': [AuditStore.COMPLETED,AuditStore.ACCEPTED],
+            'not_applicable': False,
+            'audit_store__report_sections__section_id': section_id,
+            'audit_store__report_sections__not_applicable': False,
+            'question__visibility': Question.VISIBLE_TO_ALL,
+            'question__hide_question': False,
+            'audit_store__audit__audit_cycle_id__in': ( valid_audit_cycle_ids),
+        }
+
+        if not client_admin:
+            answer_filters['audit_store__audit__store_id__in'] = non_admin_user_store_list
+
+        answer_data = (
+            find_answers_by_question_id_for_client(question['id'])
+            .filter(**answer_filters)
+            .aggregate(answer_count=Count('id'),obtained_marks=Sum('marks_obtained')))
+
+        answer_count = answer_data['answer_count'] or 0
+        obtained_marks = answer_data['obtained_marks'] or 0
+        if answer_count == 0:
+            continue
+
+        total_question_marks = (question['max_marks'] * answer_count)
+        if total_question_marks <= 0:
+            continue
+
+        percentage = round((float(obtained_marks) / total_question_marks) * 100,2)
+        if percentage < 75:
+            improvable_questions_list.append({
+                'question_id': question['id'],
+                'question_txt': question['question_txt'],
+                'question_section': question['section__name'],
+                'total_marks': total_question_marks,
+                'obtained_marks': obtained_marks,
+                'lost_marks': ( total_question_marks - obtained_marks),
+                'percentage': percentage,
+            })
+
+    return sorted(improvable_questions_list,key=lambda qd: qd['lost_marks'],reverse=True)
+
 def get_improvable_questions_list(question_id,user):
     # question = Question.objects.get(id=question_id)
     question = Question.objects.get(id=question_id,visibility=Question.VISIBLE_TO_ALL,hide_question=False)

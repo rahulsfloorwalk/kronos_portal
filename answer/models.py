@@ -18,12 +18,12 @@ class Answer(Model):
     question = ForeignKey(Question, related_name='answers', db_column='question_id', on_delete=PROTECT)
     audit_store = ForeignKey('audit_store.AuditStore', related_name='answers', db_column='audit_store_id', on_delete=PROTECT)
 
-    answer_text = CharField(db_column='answer_text', max_length=2048, blank=True)
-    answer_text_original = CharField(db_column='answer_text_original', max_length=2048, blank=True)
+    answer_text = CharField(db_column='answer_text', max_length=4000, blank=True)
+    answer_text_original = CharField(db_column='answer_text_original', max_length=4000, blank=True)
     marks_obtained = IntegerField(db_column='marks_obtained', blank=True, null=True)
     not_applicable = BooleanField(db_column='not_applicable', default=False, blank=False, null=False)
-    answer_comment = CharField(db_column='answer_comment', max_length=2048, blank=True)
-    revert_message = CharField(db_column='revert_message', max_length=2048, blank=True)
+    answer_comment = CharField(db_column='answer_comment', max_length=4000, blank=True)
+    revert_message = CharField(db_column='revert_message', max_length=4000, blank=True)
     attachments = GenericRelation('attachment.Attachment', related_query_name='answers')
 
     ai_answer_text = CharField(db_column='ai_answer_text', max_length=20048, blank=True, null=True)

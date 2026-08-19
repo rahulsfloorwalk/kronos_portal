@@ -10,8 +10,10 @@ from registration.mixins import HasGroupPermission
 from manager.serializers import PlainUserSerializer,PlainmoderatorUserSerializer
 from client.service import client_service
 from client.service import client_manager as client_manager_service
-from client.models import ClientManager, Client, ClientModerator
+from client.models import ClientManager, Client, ClientModerator,DashboardWidgetvisibilityAccess
 from ..service import moderator as moderator_service
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 
 
 class ClientManagerSerializer(ModelSerializer):
@@ -24,6 +26,16 @@ class ClientManagerSerializer(ModelSerializer):
             'user',
             'receive_email_notification',
             'is_active'
+        )
+        read_only_fields = fields
+class QAUserSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'is_active',
         )
         read_only_fields = fields
 
@@ -40,6 +52,54 @@ class ClientModeratorSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class PlainClientSerializer(ModelSerializer):
+    class Meta:
+        model = Client
+        fields = ('id','name','email',)
+        read_only_fields = fields
+
+class DashboardWidgetAccessSerializer(ModelSerializer):
+    client = PlainClientSerializer(read_only=True)
+    class Meta:
+        model = DashboardWidgetvisibilityAccess
+        fields = (
+            'id',
+            'client',
+            'latest_audit_cycle_score',
+            'upcoming_audits',
+            'net_promoter_score',
+            'section_summary',
+            'improvement_areas_based_on_observation',
+            'overall_high_performance_store',
+            'branch_performance',
+            'overall_high_performance_city',
+            'overall_low_performance_store',
+            'overall_low_performance_city',
+            'questionnaire_summary',
+            'created_at',
+            'updated_at',
+        )
+        read_only_fields = ('id','client','created_at','updated_at',)
+
+    def deserialize(self):
+        if self.context.get('id') is not None:
+            widget_access = DashboardWidgetvisibilityAccess.objects.get(id=self.context.get('id'))
+        else:
+            widget_access = DashboardWidgetvisibilityAccess(client=self.context.get('client'))
+
+        widget_access.latest_audit_cycle_score = self.validated_data.get('latest_audit_cycle_score',widget_access.latest_audit_cycle_score)
+        widget_access.upcoming_audits = self.validated_data.get('upcoming_audits',widget_access.upcoming_audits)
+        widget_access.net_promoter_score = self.validated_data.get('net_promoter_score',widget_access.net_promoter_score)
+        widget_access.section_summary = self.validated_data.get('section_summary',widget_access.section_summary)
+        widget_access.improvement_areas_based_on_observation = self.validated_data.get('improvement_areas_based_on_observation',widget_access.improvement_areas_based_on_observation)
+        widget_access.overall_high_performance_store = self.validated_data.get('overall_high_performance_store',widget_access.overall_high_performance_store)
+        widget_access.branch_performance = self.validated_data.get('branch_performance',widget_access.branch_performance)
+        widget_access.overall_high_performance_city = self.validated_data.get('overall_high_performance_city',widget_access.overall_high_performance_city)
+        widget_access.overall_low_performance_store = self.validated_data.get('overall_low_performance_store',widget_access.overall_low_performance_store)
+        widget_access.overall_low_performance_city = self.validated_data.get('overall_low_performance_city',widget_access.overall_low_performance_city)
+        widget_access.questionnaire_summary = self.validated_data.get('questionnaire_summary',widget_access.questionnaire_summary)
+
+        return widget_access
 
 class ClientModeratorDeSerializer(Serializer):
     client = PrimaryKeyRelatedField(queryset=Client.objects.all())
@@ -76,7 +136,41 @@ class ClientModeratorByClientView(APIView):
         # client_moderators = client_moderators.filter(is_active=True).select_related('user')
 
         return Response(ClientModeratorSerializer(client_moderators, many=True).data)
+    
+class ClientModeratorByClientwiseView(APIView):
+    permission_classes = [AllowAny]
 
+    # required_groups = {
+    #     'GET': [GROUP_NAME_MANAGER]
+    # }
+
+    def get(self, request, client_id):
+
+        audit_cycle_id = request.GET.get('audit_cycle_id', '')
+        user_id = request.GET.get('user_id', '')
+        city = request.GET.get('city', '')
+        status = request.GET.get('status', '')
+        qa_id = request.GET.get('qa_id', '')
+
+        client_moderators = (
+            client_service
+            .find_client_moderators_with_filters(
+                client_id=client_id,
+                audit_cycle_id=audit_cycle_id,
+                user_id=user_id,
+                city=city,
+                status=status,
+                qa_id=qa_id
+            )
+        )
+
+        return Response(
+            ClientModeratorSerializer(
+                client_moderators,
+                many=True
+            ).data
+        )
+    
 class ClientModeratorAssignView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -92,6 +186,29 @@ class ClientModeratorAssignView(APIView):
             # if user.id not in assigned_ids:
             response_data.append({"id": user.id,"email": user.email,"assigned": user.id in assigned_ids})
         return Response(response_data)
+
+class ClientDashboardWidgetVisibilityAccessView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, client_id):
+        client = get_object_or_404(Client, pk=client_id)
+        widget_access, created = (DashboardWidgetvisibilityAccess.objects.get_or_create(client=client))
+        serializer = DashboardWidgetAccessSerializer(widget_access)
+        return Response(serializer.data)
+
+    def post(self, request, client_id):
+        client = get_object_or_404(Client, pk=client_id)
+        widget_access, created = (DashboardWidgetvisibilityAccess.objects.get_or_create(client=client))
+        serializer = DashboardWidgetAccessSerializer(widget_access,data=request.data,partial=True,context={'id': widget_access.id,'client': client})
+
+        serializer.is_valid(raise_exception=True)
+        widget_access = serializer.deserialize()
+        widget_access.save()
+        return Response(DashboardWidgetAccessSerializer(widget_access).data)
 
 class ClientModeratorView(APIView):
     permission_classes = [HasGroupPermission]
