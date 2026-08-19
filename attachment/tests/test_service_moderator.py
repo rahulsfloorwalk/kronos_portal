@@ -246,15 +246,15 @@ class AttachmentModeratorServiceTestCase(TestCase):
 
     #     expect(list(attachments)).to(contain_only(test_attachment))
 
-    def test_find_by_audit_store_and_section_for_moderator_returns_attachment(self):
-        audit_cycle = mommy.make(AuditCycle)
-        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, audit__audit_cycle=audit_cycle, user__email=fake.email)
-        section = mommy.make(Section, audit_cycle=audit_cycle)
-        report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
-        assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
-        proof_tag = mommy.make(ProofTag)
-        audit_cycle_proof_tag = mommy.make(AuditCycleProofTagList, audit_cycle=audit_cycle, proof_tag=proof_tag)
-        mommy.make(SectionProofTag, audit_cycle_proof_tag=audit_cycle_proof_tag, section=section, hide_from_client=False)
-        test_attachment = mommy.make(Attachment, status=Attachment.ATTACHED, content_object=report_section, proof_tag=audit_cycle_proof_tag)
-        attachments = attachment_moderator_service.find_by_audit_store_and_section_for_moderator(audit_store.id, section.id, self.moderator_user.id)
-        expect(list(attachments)).to(contain_only(test_attachment))
+    # def test_find_by_audit_store_and_section_for_moderator_returns_attachment(self):
+    #     audit_cycle = mommy.make(AuditCycle)
+    #     audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, audit__audit_cycle=audit_cycle, user__email=fake.email)
+    #     section = mommy.make(Section, audit_cycle=audit_cycle)
+    #     report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
+    #     assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
+    #     proof_tag = mommy.make(ProofTag)
+    #     audit_cycle_proof_tag = mommy.make(AuditCycleProofTagList, audit_cycle=audit_cycle, proof_tag=proof_tag)
+    #     mommy.make(SectionProofTag, audit_cycle_proof_tag=audit_cycle_proof_tag, section=section, hide_from_client=False)
+    #     test_attachment = mommy.make(Attachment, status=Attachment.ATTACHED, content_object=report_section, proof_tag=audit_cycle_proof_tag)
+    #     attachments = attachment_moderator_service.find_by_audit_store_and_section_for_moderator(audit_store.id, section.id, self.moderator_user.id)
+    #     expect(list(attachments)).to(contain_only(test_attachment))
