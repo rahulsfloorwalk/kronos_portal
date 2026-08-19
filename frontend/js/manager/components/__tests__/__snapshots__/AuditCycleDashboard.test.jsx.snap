@@ -140,7 +140,7 @@ exports[`<AuditCycleDashboard/> is rendered correctly when the data is successfu
               }
             }
           >
-            Pending for Approval
+            Number of Applications
           </span>
         </th>
         <th

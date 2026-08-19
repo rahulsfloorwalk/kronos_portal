@@ -12,7 +12,7 @@ import Loading from "../../components/Loading.jsx";
 
 // import { ClientID } from "../../constants.js";
 
-import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, renameAttachment, moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
+import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, renameAttachment, moveAttachmentToSection, rotateImageAngle, uploadHighlightedImageForReportSection } from "../service/attachment.js";
 import { affectInputEventToComponent, orderKeys } from "../../react_utils.js";
 import { fetchSections } from "../actions/section.js";
 import { fetchAnswers, setMarks, setAnswerNotApplicable } from "../actions/answer.js";
@@ -32,6 +32,7 @@ import moment from "moment";
 import "rc-time-picker/assets/index.css";
 import "../../../css/bs_overrides.scss";
 import { getQuestionVisibility } from "../../utils.js";
+import AttachmentCommentModal from "./AttachmentCommentModal.jsx";
 
 class AnswerComment extends Component {
 	static propTypes = {
@@ -552,6 +553,9 @@ class SectionAttachmentBox extends React.Component {
 			submitStatus: "",
 			showErrors: false,
 			disableRotateButton: false,
+			commentModalVisible: false,
+			commentModalTag: null,
+			commentModalAttachments: [],
 		};
 	}
 
@@ -659,6 +663,23 @@ class SectionAttachmentBox extends React.Component {
 		});
 	};
 
+	openCommentModal = (tag, tagAttachments) => {
+		this.setState({
+			commentModalVisible: true,
+			commentModalTag: tag,
+			commentModalAttachments: tagAttachments,
+		});
+	};
+
+	closeCommentModal = () => {
+		this.setState({ commentModalVisible: false });
+	};
+
+	handleCommentsSaved = () => {
+		this.setState({ commentModalVisible: false });
+		this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+	};
+
 	selectAttachment = (attachmentId) => {
 		if (this.state.selectedAttachmentId === attachmentId) {
 			this.setState({
@@ -703,6 +724,36 @@ class SectionAttachmentBox extends React.Component {
 		});
 	};
 
+	// saveHighlightedImage = (blob, attachment) => {
+	// 	const originalName = attachment.file_name || "attachment";
+	// 	const dotIndex = originalName.lastIndexOf(".");
+	// 	const baseName = dotIndex > -1 ? originalName.slice(0, dotIndex) : originalName;
+	// 	const fileName = `${baseName}-highlighted-${Date.now()}.jpg`;
+	// 	const file = new File([blob], fileName, { type: "image/jpeg" });
+
+	// 	return uploadFileForReportSection(this.props.auditStoreId, this.props.sectionId, file).then(() => {
+	// 		Alert.success("HIGHLIGHTED IMAGE SAVED");
+	// 		this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+	// 	}, () => {
+	// 		Alert.error("FAILED TO SAVE HIGHLIGHTED IMAGE");
+	// 	});
+	// };
+
+	saveHighlightedImage = (blob, attachment) => {
+		const originalName = attachment.file_name || "attachment";
+		const dotIndex = originalName.lastIndexOf(".");
+		const baseName = dotIndex > -1 ? originalName.slice(0, dotIndex) : originalName;
+		const fileName = `${baseName}-highlighted-${Date.now()}.jpg`;
+		const file = new File([blob], fileName, { type: "image/jpeg" });
+
+		return uploadHighlightedImageForReportSection(this.props.auditStoreId, this.props.sectionId, attachment.id, file).then(() => {
+			Alert.success("HIGHLIGHTED IMAGE SAVED");
+			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+		}, (err) => {
+			Alert.error("FAILED TO SAVE HIGHLIGHTED IMAGE");
+			throw err;
+		});
+	};
 	render() {
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
@@ -773,18 +824,69 @@ class SectionAttachmentBox extends React.Component {
 		const section_proof_tags = this.props.proof_tags.filter((val) => val.section_id == this.props.sectionId);
 		const attachment_tags = this.state.attachments.map((value) => value.proof_tag);
 
+		// const proof_tag_list = [];
+		// for (let tag of section_proof_tags) {
+		// 	const attach = attachment_tags.includes(tag.id);
+		// 	proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={tag.is_required} />);
+		// }
+
 		const proof_tag_list = [];
 		for (let tag of section_proof_tags) {
 			const attach = attachment_tags.includes(tag.id);
-			proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={tag.is_required} />);
+			const tagAttachments = this.state.attachments.filter((a) => a.proof_tag === tag.id);
+			const hasAnyComment = tagAttachments.some(
+				(a) => a.attachment_comment && a.attachment_comment.trim().length > 0
+			);
+			const showCommentColor = hasAnyComment ? "#007DC1" : "#d4380d";
+			proof_tag_list.push(
+				<span key={tag.id} style={{ display: "inline-block", marginRight: "1.5rem", marginBottom: "8px", verticalAlign: "top" }}>
+					<div>
+						<ProofTagLabel proof_tag={tag} attached={attach} is_required={tag.is_required} />
+					</div>
+					{tag.is_comment_required && tagAttachments.length > 0 ? (
+						<a
+							href="#"
+							style={{
+								display: "inline-flex",
+								alignItems: "center",
+								marginTop: "4px",
+								color: showCommentColor,
+								fontSize: "10px",
+								textDecoration: "underline",
+							}}
+							onClick={(e) => {
+								e.preventDefault();
+								this.openCommentModal(tag, tagAttachments);
+							}}
+						>
+							(<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="10"
+								height="10"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								style={{ marginRight: "2px" }}
+							>
+								<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+								<circle cx="12" cy="12" r="3" />
+							</svg>
+							Show Comment )
+						</a>
+					) : null}
+				</span>
+			);
 		}
-
 		return (
 			<div>
 				<div className="panel-body">
 					<div className="col-md-8">
 						<h4>Attachments {uploadButton}</h4>
-						<p>{proof_tag_list}</p>
+						{/* <p>{proof_tag_list}</p> */}
+						<div style={{ display: "flex", flexWrap: "wrap" }}>{proof_tag_list}</div>
 						{submitMessageElement}
 					</div>
 					{/* {sectionSelect} */}
@@ -805,11 +907,23 @@ class SectionAttachmentBox extends React.Component {
 								onRename={this.selectedAttachmentRenamed}
 								onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
 								onChange={(e) => this.saveAttachmentTag(selectedAttachment.id, e)}
+								onHighlightSave={this.saveHighlightedImage}
 								rotateImage={this.rotateImage}
 								section_id={this.props.sectionId}
+								onClose={() => this.setState({ selectedAttachmentId: null })}
 								disableRotateButton={this.state.disableRotateButton} />
 						</div>
 					</div>
+					{this.state.commentModalVisible && (
+						<AttachmentCommentModal
+							auditStoreId={this.props.auditStoreId}
+							sectionId={this.props.sectionId}
+							attachments={this.state.commentModalAttachments}
+							proof_tags={this.props.proof_tags}
+							onClose={this.closeCommentModal}
+							onSaved={this.handleCommentsSaved}
+						/>
+					)}
 				</div>
 			</div>
 		);

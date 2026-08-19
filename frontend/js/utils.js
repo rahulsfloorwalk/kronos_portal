@@ -139,7 +139,8 @@ export function getMaritalStatus(value){
 export function getAuditApplicationStatus(value){
 	switch(value){
 	case "APPLIED":
-		return "Pending for Approval";
+		// return "Pending for Approval";
+		return "Number of Applications";
 	case "NOT_APPLIED":
 		return "Not Applied";
 	case "WAITLISTED":
@@ -150,6 +151,14 @@ export function getAuditApplicationStatus(value){
 		return "Denied";
 	case "WITHDRAWN":
 		return "Withdrawn";
+	case "SYSTEM_ASSIGNED":
+		return "System Assigned";
+	case "MANUAL_ASSIGNED":
+		return "Manual Assigned";
+	case "INSTANT_ASSIGNED":
+		return "Instant Assigned";
+	case "OPEN":
+		return "Open";
 	case "":
 	case null:
 	case undefined:

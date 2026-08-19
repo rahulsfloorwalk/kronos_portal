@@ -156,6 +156,9 @@ import SectionPreview from "./questionnaire/SectionPreview.jsx";
 import TrainerIndex from "./trainer/TrainerIndex.jsx";
 import TrainerReportList from "./trainer/TrainerReportList.jsx";
 import TrainerSummary from "./trainer/TrainerSummary.jsx";
+import ClientDashboardVisibilityList from "./client_dashboard_visibility/ClientDashboardVisibilityList.jsx";
+import ClientDashboardVisibilityForm from "./client_dashboard_visibility/ClientDashboardVisibilityForm.jsx";
+import AuditCycleAuditorExecutionsummary from "./AuditCycleAuditorExecutionsummary.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -229,6 +232,10 @@ const Routes = () => (
 					<Route path="add" component={ClientQaForm} />
 					<Route path=":clientQaId/edit" component={ClientQaForm} />
 				</Route>
+				<Route path="client_dashboard_visibility" component={ClientDashboardVisibilityList}>
+					<Route path="add" component={ClientDashboardVisibilityForm} />
+					<Route path="edit" component={ClientDashboardVisibilityForm} />
+				</Route>
 				<Route path="questionnaire_type" component={QuestionnaireTypeList}>
 					<Route path="add" component={QuestionnaireTypeForm} />
 					<Route path=":questionnaireTypeId/edit" component={QuestionnaireTypeEditForm} />
@@ -278,6 +285,7 @@ const Routes = () => (
 				<Route path="opportunity_notification" components={OpportunityRecordList}>
 					<Route path="schedule" component={OpportunityRecordForm} />
 				</Route>
+				<Route path="auditor_execution_summary" components={AuditCycleAuditorExecutionsummary} />
 			</Route>
 
 			<Route path="audit_store/:auditStoreId" components={AuditStoreDetails}>

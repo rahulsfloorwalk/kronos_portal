@@ -18,6 +18,10 @@ export function fetchClientModeratorEdit(clientQaId){
 	return $.get(url.api_base_path + `manager/client_moderator/${clientQaId}`);
 }
 
+export function fetchClientDashboardVisibility(clientId){
+	return $.get(url.api_base_path + `manager/client/${clientId}/dashboard_widget_visibility_access`);
+}
+
 export function addClientManager(clientManager){
 	return $.ajax({
 		type: "POST",
@@ -54,6 +58,15 @@ export function updateClientModerator(clientModerator){
 		type: "POST",
 		url: url.api_base_path+ `manager/client_moderator/${clientModerator.id}`,
 		data: JSON.stringify(clientModerator),
+		contentType: "application/json"
+	});
+}
+
+export function updateClientDashboardVisibility(clientId, payload){
+	return $.ajax({
+		type: "POST",
+		url: url.api_base_path+ `manager/client/${clientId}/dashboard_widget_visibility_access`,
+		data: JSON.stringify(payload),
 		contentType: "application/json"
 	});
 }

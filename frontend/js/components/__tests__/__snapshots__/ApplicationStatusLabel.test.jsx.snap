@@ -9,7 +9,7 @@ exports[`<ApplicationStatusLabel/> renders correctly for status: APPLIED 1`] = `
     }
   }
 >
-  Pending for Approval
+  Number of Applications
 </span>
 `;
 

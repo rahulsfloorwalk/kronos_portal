@@ -32,8 +32,26 @@ export function renameAttachment(attachmentId, fileName){
 	});
 }
 
+export function findAttachmentComments(auditStoreId, sectionId){
+	return $.get( url.api_base_path + `manager/audit_store/${auditStoreId}/section/${sectionId}/attachment_comments`);
+}
+
+export function saveAttachmentComments(auditStoreId, sectionId, attachmentsPayload){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${auditStoreId}/section/${sectionId}/attachment_comments`,
+		type: "POST",
+		data: JSON.stringify({ attachments: attachmentsPayload }),
+		contentType: "application/json"
+	});
+}
+
 export function uploadFileForReportSection(auditStoreId, sectionId, file){
 	var req_url = url.api_base_path + `manager/audit_store/${auditStoreId}/section/${sectionId}/attachment`;
+	return doAttachmentUpload(req_url, file);
+}
+
+export function uploadHighlightedImageForReportSection(auditStoreId, sectionId, attachmentId, file){
+	var req_url = url.api_base_path + `manager/audit_store/${auditStoreId}/section/${sectionId}/attachment/${attachmentId}/highlight`;
 	return doAttachmentUpload(req_url, file);
 }
 
@@ -41,6 +59,12 @@ export function uploadFileForAuditStore(auditStoreId, file){
 	var req_url = url.api_base_path + `manager/audit_store/${auditStoreId}/attachment`;
 	return doAttachmentUpload(req_url, file);
 }
+
+export function uploadHighlightedImage(auditStoreId, attachmentId, file){
+	var req_url = url.api_base_path + `manager/audit_store/${auditStoreId}/attachment/${attachmentId}/highlight`;
+	return doAttachmentUpload(req_url, file);
+}
+
 // export function uploadFileForClientRequirements(clientId,file){
 // 	var req_url = url.api_base_path+ `manager/client/${clientId}/client_requirements/attachment`;
 // 	return doAttachmentUpload(req_url,file);
@@ -108,9 +132,23 @@ export function doAttachmentUpload(url, file){
 		});
 	});
 
+	// req.fail(function(err){
+	// 	if( err.responseJSON && err.responseJSON.non_field_errors){
+	// 		mainPromise.reject(err.responseJSON.non_field_errors[0]);
+	// 	} else {
+	// 		mainPromise.reject();
+	// 	}
+	// });
+
 	req.fail(function(err){
-		if( err.responseJSON && err.responseJSON.non_field_errors){
-			mainPromise.reject(err.responseJSON.non_field_errors[0]);
+		if (err.responseJSON) {
+			const data = err.responseJSON;
+			const message =
+				(data.non_field_errors && data.non_field_errors[0]) ||
+				data.file ||
+				data.detail ||
+				null;
+			mainPromise.reject(message);
 		} else {
 			mainPromise.reject();
 		}
