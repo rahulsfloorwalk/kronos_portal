@@ -120,7 +120,7 @@ export class AuditCycleAuditorExecutionSummary extends React.Component {
 							const status = col.key === "pending_execution" ? "pending" : "completed";
 							return (
 								<td key={col.key} style={rightAlign}>
-									<a href="#" onClick={(e) => { e.preventDefault(); this.openModal(row, status); }}>
+									<a href="#" style={{ textDecoration: "underline" }} onClick={(e) => { e.preventDefault(); this.openModal(row, status); }}>
 										{row[col.key]}
 									</a>
 								</td>
@@ -148,9 +148,11 @@ export class AuditCycleAuditorExecutionSummary extends React.Component {
 					</tbody>
 				</table>
 				{this.state.visibleCount < sortedData.length &&
-					<button className="btn btn-default" onClick={this.handleLoadMore} style={{ marginTop: "10px" }}>
-						Load more
-					</button>
+					<div style={{ textAlign: "center" }}>
+						<button className="btn btn-default" onClick={this.handleLoadMore} style={{ marginTop: "10px" }}>
+							Load more
+						</button>
+					</div>
 				}
 				{this.state.activeModal &&
 					<AuditorExecutionReportModal
