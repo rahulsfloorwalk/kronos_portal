@@ -381,7 +381,7 @@ def find_auditor_execution_report(audit_cycle_id):
             try:
                 profile_info = user.profileinfo
             except ProfileInfo.DoesNotExist:
-                profile_info 
+                profile_info = None
             if profile_info:
                 auditor_name = '{} {}'.format(profile_info.first_name or '',profile_info.last_name or '').strip()
                 auditor_mobile_number = profile_info.mobile_number
@@ -433,8 +433,8 @@ def find_auditor_execution_report(audit_cycle_id):
     for data in auditor_data.values():
         pending_execution = data['pending_execution']
         done_audits = data['done_audits']
-        if pending_execution <= 0:
-            continue
+        # if pending_execution <= 0:
+        #     continue
 
         comment = _resolve_comment(done_audits,pending_execution)
         result.append({

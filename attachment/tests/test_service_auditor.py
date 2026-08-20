@@ -161,17 +161,17 @@ class AttachmentAuditorServiceTestCase(TestCase):
     #     expect(attachments).to(have_length(1))
     #     expect(attachments[0]).to(equal(test_attachment))
 
-    # def test_find_by_audit_store_and_section_for_auditor_returns_attachment(self):
-    #     audit_store = self.audit_store_recipe.make()
-    #     section = mommy.make(Section, audit_cycle=self.audit_cycle)
-    #     report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
-    #     proof_tag = mommy.make(ProofTag)
-    #     audit_cycle_proof_tag = mommy.make(AuditCycleProofTagList, audit_cycle=self.audit_cycle, proof_tag=proof_tag)
-    #     mommy.make(SectionProofTag, audit_cycle_proof_tag=audit_cycle_proof_tag, section=section, hide_from_client=False)
-    #     test_attachment = self.attachment_recipe.make(status=Attachment.ATTACHED, content_object=report_section, proof_tag=audit_cycle_proof_tag)
-    #     attachments = service_auditor.find_by_audit_store_and_section_for_auditor(audit_store.id, section.id, self.auditor_user.id)
-    #     expect(attachments).to(have_length(1))
-    #     expect(attachments[0]).to(equal(test_attachment))
+    def test_find_by_audit_store_and_section_for_auditor_returns_attachment(self):
+        audit_store = self.audit_store_recipe.make()
+        section = mommy.make(Section, audit_cycle=self.audit_cycle)
+        report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
+        proof_tag = mommy.make(ProofTag)
+        audit_cycle_proof_tag = mommy.make(AuditCycleProofTagList, audit_cycle=self.audit_cycle, proof_tag=proof_tag)
+        mommy.make(SectionProofTag, audit_cycle_proof_tag=audit_cycle_proof_tag, section=section, hide_from_client=False)
+        test_attachment = self.attachment_recipe.make(status=Attachment.ATTACHED, content_object=report_section, proof_tag=audit_cycle_proof_tag)
+        attachments = service_auditor.find_by_audit_store_and_section_for_auditor(audit_store.id, section.id, self.auditor_user.id)
+        expect(attachments).to(have_length(1))
+        expect(attachments[0]).to(equal(test_attachment))
 
     def test_complete_for_auditor_changes_status_to_attached(self):
         audit_store = self.audit_store_recipe.make()
