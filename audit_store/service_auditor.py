@@ -18,6 +18,8 @@ from answer.service.answer_auditor import add_multiselect_answer_questions, remo
 from answer.models import Answer, ReportSection
 from questionnaire.models.question import Question
 from django.contrib.auth.models import User
+from attachment.models import Attachment
+from manager.models import AuditProoftagNotAvailable
 
 # def add_hide_section_in_report_section(audit_store_id):
 #     audit=AuditStore.objects.get(id=audit_store_id)
@@ -87,8 +89,33 @@ def set_report_submission_time(audit_store_id, user_id, report_submission_time):
     else:
         raise AppLogicError("Cannot set set report submission time of current audit store")
 
+def check_required_proof_tag_comments(audit_store):
+    required_proof_tags = (
+        audit_store.audit.audit_cycle.proof_tags_list.filter(section_proof_tag__is_comment_required=True
+        ).select_related('section_proof_tag','proof_tag'))
+
+    for proof_tag_list in required_proof_tags:
+        actual_proof_tag = proof_tag_list.proof_tag
+        is_na = AuditProoftagNotAvailable.objects.filter(audit_store_id=audit_store.id,proof_tag=proof_tag_list.id).exists()
+
+        if is_na:
+            continue
+
+        audit_store_attachments = Attachment.objects.filter(audit_stores__id=audit_store.id,proof_tag=proof_tag_list,status=Attachment.ATTACHED)
+        report_section_attachments = Attachment.objects.filter(report_sections__audit_store_id=audit_store.id,proof_tag=proof_tag_list,status=Attachment.ATTACHED)
+        attachments = audit_store_attachments | report_section_attachments
+
+        if not attachments.exists():
+            raise AppLogicError("Please attach proof tag: {}".format(actual_proof_tag.name) )
+        
+        comment_exists = (attachments.filter(attachment_comment__isnull=False).exclude(attachment_comment='').exists())
+        if not comment_exists:
+            raise AppLogicError("Please add comment to at least one attachment for proof tag: {}".format(actual_proof_tag.name))
+    return True
+
+
 @atomic
-def submit_report(audit_store_id, user_id):
+def submit_report(audit_store_id, user_id,submission_source=None):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
     audit_cycle_proof_tag = get_status_of_audit_cycle_proof_tag_by_audit_cycle_id(audit_store.audit.audit_cycle.id)
     audit_cycle_audit_report_summary = get_status_of_audit_cycle_audit_report_summary_by_audit_cycle_id(audit_store.audit.audit_cycle.id)
@@ -117,6 +144,10 @@ def submit_report(audit_store_id, user_id):
     #     if audit_store.is_proof_tag_not_given_for_attachments():
     #         raise AppLogicError("Please select a tag for all attachments. You can select a tag by clicking on the "
     #                             "drop-down present below the attachment.")
+    if submission_source not in ('android', 'ios'):
+        check_required_proof_tag_comments(audit_store)
+    # check_required_proof_tag_comments(audit_store)
+
     if not isinstance(audit_store.nps_section, int):
         raise AppLogicError("Please complete Overall Experience Section before submitting")
     if audit_store.nps_section not in range(1, 11):

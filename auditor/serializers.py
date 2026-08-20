@@ -786,6 +786,7 @@ class AttachmentSerializer(ModelSerializer):
             'proof_tag',
             'audio_to_text_row',
             'audio_to_text_clean',
+            'attachment_comment',
         )
         read_only_fields = fields
 

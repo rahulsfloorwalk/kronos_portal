@@ -82,6 +82,7 @@ urlpatterns = ([
     url(r'attachment/(?P<audit_store_id>[0-9]+)/movetosection_auditor$', views.MoveAttachmentToSection.as_view(), name='move_attachment_to_section_auditor'),
     url(r'attachment/(?P<audit_store_id>[0-9]+)/arrange_attachment$', views.AuditStoreIdArrangeAttachment.as_view(), name='arrange_attachment_by_proof_tags'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag$', views.AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment_comments$', views.ReportSectionAttachmentCommentView.as_view(), name='report_section_attachment_comments_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/proof_not_available$', views.AuditStoreProofTagNotAvailableView.as_view(), name="audit_store_upload_proof_tag_not_available_view"),
     url(r'proof_not_available/(?P<proof_not_available_id>[0-9]+)$', views.ProofTagNotAvailableView.as_view(), name="proof_tag_not_available_view"),

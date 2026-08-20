@@ -13,6 +13,7 @@ urlpatterns = ([
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/store/(?P<store_id>[0-9]+)/audit_store$', views.AuditCycleAuditStoreSectionReport.as_view(), name='audit_cycle_audit_store_section'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/city/(?P<city_id>[0-9]+)$', views.AuditCycleCitySectionAverageReport.as_view(), name='audit_cycle_city_section_average'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store$', views.AuditStoreView.as_view(), name='audit_store_view'),
+    url(r'report/audit_cycle/audit_store/sections$', views.AuditCycleAuditStoreSectionView.as_view(), name='audit_store_section_view'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)$', views.AuditCycleCityAverageReport.as_view(), name='audit_cycle_city_average'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/performance/city$', views.AuditCycleCityPerformance.as_view(), name='audit_cycle_city_performance'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/performance/store$', views.AuditCycleStorePerformance.as_view(), name='audit_cycle_store_performance'),
@@ -33,6 +34,7 @@ urlpatterns = ([
 
     url(r'dashboard/question/(?P<question_id>[0-9]+)/improvable_question_list$', views.ImprovableQuestionList.as_view(), name='improvable_question_list'),
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle/(?P<audit_cycle_id>[0-9]+)/improvable_questions$', views.ImprovableQuestionsByAuditCycleId.as_view(), name='improvable_questions_by_audit_cycle_id'),
+    url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle/improvable_questions$', views.AudiCycleImprovableQuestion.as_view(), name='improvable_questions_by_audit_cycle_ids'),
     url(r'audit_cycle_improvable_questions_xlsx$', views.ImprovableQuestionsXlsxReport.as_view(), name='audit_cycle_improvable_questions_xlsx'),
 
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle/(?P<audit_cycle_id>[0-9]+)/questionnaire_survey$', views.QuestionnaireSurveyByAuditCycleId.as_view(), name='questionnaire_survey_by_audit_cycle_id'),
@@ -92,6 +94,7 @@ urlpatterns = ([
     url(r'store/(?P<store_id>[0-9]+)/questionnaire_types_list$', views.StoreQuestionnaireTypesList.as_view(), name='store_questionnaire_types_list'),
     url(r'store/(?P<store_id>[0-9]+)/questionnaire_types_list_for_comparison$', views.QuestionnaireTypesListForProofComparison.as_view(), name='questionnaire_types_list_for_proof_comparison'),
     url(r'questionnaire_types_for_dashboard$', views.QuestionnaireTypesForDashboardByClient.as_view(), name='questionnaire_types_for_dashboard_by_client_view'),
+    url(r'dashboard_widget_access$', views.DashboardWidgetAccessView.as_view(), name='dashboard_widget_access_view'),
     url(r'store_performance$', views.StorePerformanceView.as_view(), name='store_performance_view'),
     url(r'store_performance_store_list_by_percentage$', views.StorePerformanceStoreListByPercentageView.as_view(), name='store_performance_store_list_by_percentage'),
     url(r'email_notification$', views.EmailNotification.as_view(), name='email_notification'),
@@ -105,6 +108,7 @@ urlpatterns = ([
     url(r'summary/audit_report/(?P<audit_cycle_id>[0-9]+)$', views.SummaryAuditCycle.as_view(), name="summary_audit_by_cycle"),
     url(r'over_all_summary/audit_cycle/(?P<audit_cycle_id>[0-9]+)$', views.GetAllSummaryAuditCycle.as_view(), name="get_all_summary_audit_by_cycle"),
     url(r'over_all_nps_score/audit_cycle/(?P<audit_cycle_id>[0-9]+)$', views.GetNPSScore.as_view(), name="get_overview_api"),
+    url(r'over_all_nps_score$', views.GetNPSScores.as_view(), name="get_overall_nps_score"),
     url(r'sentiment_data/(?P<audit_store_id>[0-9]+)',views.SentimentDataView.as_view(),name='sentiment_data_view'),
 
     url(r'update_sentiment_data$', views.SentimentData.as_view(), name="update_sentiment_data"),

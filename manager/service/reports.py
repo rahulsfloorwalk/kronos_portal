@@ -673,56 +673,71 @@ def get_client_wise_profitability_report(client, year, last_client_id):
 
 def get_qa_wise_report(month, year, qa):
     response = []
-    if month:
-        month_list = [month]
-    else:
-        month_list = ["01","02","03","04","05","06","07","08","09","10","11","12"]
-
-    audit_stores = AuditStore.objects.filter(
-        status__in=[AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.PM_REVIEW,AuditStore.FAILED,AuditStore.REJECTED,]
-    ).prefetch_related(
-        Prefetch(
-            "audit_store_status_log",queryset=ReportStatusLog.objects.order_by("created_at")
-        )
+    month_list = (
+        [month]
+        if month
+        else ["01", "02", "03", "04", "05", "06","07", "08", "09", "10", "11", "12"]
     )
-    reports_by_month = {}
+    year = int(year)
+
+    audit_stores = (
+        AuditStore.objects.filter(
+            status__in=[AuditStore.COMPLETED,AuditStore.ACCEPTED,AuditStore.PM_REVIEW,AuditStore.FAILED,AuditStore.REJECTED,]
+        )
+        .only("id","status","moderator_submission_date",
+        )
+        .prefetch_related(
+            Prefetch(
+                "audit_store_status_log",queryset=ReportStatusLog.objects.only(
+                    "audit_store_id", "status","created_at",).order_by("created_at"),
+            ))
+    )
+    reports_by_month = defaultdict(list)
+    audit_month = {}
     for audit in audit_stores:
         report_date = get_report_count_date(audit)
-        if report_date and report_date.year == int(year):
+        if report_date and report_date.year == year:
             month_key = str(report_date.month).zfill(2)
-            reports_by_month.setdefault(month_key, []).append(str(audit.id))
+            audit_id = str(audit.id)
+            reports_by_month[month_key].append(audit_id)
+            audit_month[audit_id] = month_key
+
+    if not audit_month:
+        return []
 
     content_type = ContentType.objects.get_for_model(AuditStore)
-    permission = Permission.objects.get(content_type=content_type,codename="moderator_manage")
-    if qa:
-        perms = UserObjectPermission.objects.filter(content_type=content_type,permission=permission,user__is_active=True,user_id=qa)
-    else:
-        perms = UserObjectPermission.objects.filter(content_type=content_type,permission=permission,user__is_active=True)
+    permission = Permission.objects.get(content_type=content_type,codename="moderator_manage",)
 
-    user_list = perms.order_by("user_id").distinct("user_id").values("user_id","user__email")
+    perms = UserObjectPermission.objects.filter(content_type=content_type,permission=permission,user__is_active=True,object_pk__in=audit_month.keys(),)
+
+    if qa:
+        perms = perms.filter(user_id=qa)
+
+    user_list = list(perms.values("user_id", "user__email").distinct().order_by("user_id"))
+    qa_month_count = defaultdict(int)
+    for row in perms.values("user_id", "object_pk").distinct():
+        month_key = audit_month.get(row["object_pk"])
+        if month_key:
+            qa_month_count[(month_key, row["user_id"])] += 1
 
     for month in month_list:
-        report_ids = reports_by_month.get(month, [])
-        if not report_ids:
+        total_reports = len(reports_by_month.get(month, []))
+        if total_reports == 0:
             continue
 
-        filtered_perms = perms.filter(object_pk__in=report_ids)
-        
-        monthly_count = len(report_ids)
+        days = monthrange(year, int(month))[1]
         for user in user_list:
-            audit_count = filtered_perms.filter( user_id=user["user_id"]).values("object_pk").distinct().count()
-            report_per = (
-                round((audit_count / monthly_count) * 100, 1) if monthly_count else 0
+            audit_count = qa_month_count.get((month, user["user_id"]),0,)
+            response.append(
+                {
+                    "month": month,
+                    "qa_email": user["user__email"],
+                    "year": str(year),
+                    "audit_count": audit_count,
+                    "report_per": round((audit_count / total_reports) * 100,1,),
+                    "report_per_day": round(audit_count / days,1,),
+                }
             )
-            report_per_day = round(audit_count / monthrange(int(year), int(month))[1], 1)
-            response.append({
-                "month": month,
-                "qa_email": user["user__email"],
-                "year": year,
-                "audit_count": audit_count,
-                "report_per": report_per,
-                "report_per_day": report_per_day,
-            })
 
     return response
 

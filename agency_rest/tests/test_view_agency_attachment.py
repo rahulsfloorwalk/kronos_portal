@@ -16,7 +16,9 @@ from attachment.models import Attachment
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from answer.models import ReportSection
-from questionnaire.models import Section
+from questionnaire.models import Section,SectionProofTag
+from manager.models import ProofTag
+from questionnaire.models.proof_tag import AuditCycleProofTagList
 
 fake = Faker()
 
@@ -149,22 +151,16 @@ class ReportSectionAttachmentViewTestCase(APITestCase):
 
     def setup_attachment(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
-        self.audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                                      audit__audit_cycle=audit_cycle)
+        self.audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user, audit__audit_cycle=audit_cycle)
         self.section = mommy.make(Section, audit_cycle=audit_cycle)
         report_section = mommy.make(ReportSection, audit_store=self.audit_store, section=self.section)
+        proof_tag = mommy.make(ProofTag)
+        audit_cycle_proof_tag = mommy.make(AuditCycleProofTagList, audit_cycle=audit_cycle, proof_tag=proof_tag)
+        mommy.make(SectionProofTag, audit_cycle_proof_tag=audit_cycle_proof_tag, section=self.section, hide_from_client=False)
         test_file = "hello_world.jpg"
         test_mime_type = "image/jpeg"
         test_size = 2048
-        self.attachment = mommy.make(
-            Attachment,
-            status=Attachment.ATTACHED,
-            file_name=test_file,
-            file_size=test_size,
-            mime_type=test_mime_type,
-            content_type=ContentType.objects.get_for_model(ReportSection),
-            object_id=report_section.id,
-        )
+        self.attachment = mommy.make(Attachment, status=Attachment.ATTACHED, file_name=test_file, file_size=test_size, mime_type=test_mime_type, content_type=ContentType.objects.get_for_model(ReportSection), object_id=report_section.id, proof_tag=audit_cycle_proof_tag)
 
     def login(self):
         # login first

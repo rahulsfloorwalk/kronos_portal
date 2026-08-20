@@ -686,7 +686,9 @@ class AuditStoreIdSubmitReportView(APIView):
         'POST': [GROUP_NAME_AUDITOR],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_auditor_service.submit_report(audit_store_id, request.user.id)
+        submission_source = request.data.get('submission_source')
+
+        audit_store = audit_store_auditor_service.submit_report(audit_store_id, request.user.id,submission_source)
         # audit_store = audit_store_auditor_service.submit_report_api(audit_store_id, request.user.id)
         if 'report_submission_time' in request.data:
             audit_store.report_submission_time = request.data['report_submission_time']
@@ -926,6 +928,7 @@ class AuditStoreAttachmentView(APIView):
             file_name = request.data.get("file_name")
             file_type = request.data.get("file_type")
             file_size = request.data.get("file_size")
+            attachment_comment = request.data.get("attachment_comment", "")
             if file_name.lower().endswith(".heic"):
                 file_type = '' 
             post_data, attachment = attachment_auditor_service.upload_for_audit_store_by_auditor(
@@ -933,7 +936,8 @@ class AuditStoreAttachmentView(APIView):
                 request.user.id,
                 file_name,
                 file_size,
-                file_type)
+                file_type,
+                attachment_comment)
             post_data["attachment"] = AttachmentSerializer(attachment).data
             return Response(post_data)
         except KeyError as e:
@@ -1302,7 +1306,27 @@ class AttachmentIdProofTagView(APIView):
         attachment = attachment_auditor_service.save_attachment_proof_tag(attachment_id, request.data['proof_tag_id'])
         return Response(AttachmentSerializer(attachment).data)
     
-    
+class ReportSectionAttachmentCommentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR],
+    }
+
+    def get(self, request, audit_store_id, section_id):
+        attachments = (
+            attachment_auditor_service
+            .find_by_audit_store_section_for_auditor_attachments_comment(audit_store_id,section_id,request.user.id)
+        )
+        return Response(AttachmentSerializer(attachments,many=True).data)
+
+    def post(self, request, audit_store_id, section_id):
+        attachments = request.data.get("attachments",[])
+        if not attachments:
+            raise ValidationError({"attachments": "Attachments are required"})
+
+        attachment_auditor_service.update_attachment_comments_for_section(audit_store_id,section_id,attachments,request.user.id)
+        return Response({"detail": "Attachment comments updated successfully."})
 
 class ProfileInfoPronounsView(APIView):
     permission_classes = [HasGroupPermission]

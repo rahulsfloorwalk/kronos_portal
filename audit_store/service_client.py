@@ -25,6 +25,22 @@ def find_upcoming_for_client(client_id):
         audit_date__gte=today_ist(),
     ).order_by('audit_date')
 
+# def find_upcoming_for_client(client_id, audit_cycle_ids=None):
+#     filters = {
+#         'audit__audit_cycle__client_id': client_id,
+#         'status__in': (AuditStore.ASSIGNED,AuditStore.ACKNOWLEDGED,),
+#         'audit_date__gte': today_ist(),
+#     }
+#     if audit_cycle_ids:
+#         filters['audit__audit_cycle_id__in'] = audit_cycle_ids
+
+#     return AuditStore.objects.filter(
+#         **filters
+#     ).select_related(
+#         'audit','audit__audit_cycle',
+#         'audit__store','audit__store__city','audit__store__client',
+#     ).order_by('audit_date')
+
 
 def _get_total_marks_for_questions(questions):
     return sum(question.max_marks for question in questions)

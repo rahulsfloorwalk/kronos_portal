@@ -17,7 +17,7 @@ exports[`<ApplicationStatusSummary/> renders the application status summary corr
             }
           }
         >
-          Pending for Approval
+          Number of Applications
         </span>
       </td>
       <td

@@ -9,7 +9,9 @@ from faker import Faker
 
 from kronos.exceptions import AppLogicError
 from attachment.models import Attachment
-from questionnaire.models import Section, Question
+from questionnaire.models import Section, Question, SectionProofTag
+from manager.models import ProofTag
+from questionnaire.models.proof_tag import AuditCycleProofTagList
 from attachment import service_manager as attachment_manager_service
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
@@ -215,17 +217,29 @@ class AttachmentManagerServiceTestCase(TestCase):
         attachments = attachment_manager_service.find_by_audit_store_for_manager(audit_store.id)
         expect(list(attachments)).to(contain_only(attachment))
 
+    # def test_find_by_audit_store_and_section_for_manager_returns_attachment(self):
+    #     audit_cycle = mommy.make(AuditCycle)
+    #     audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, audit__audit_cycle=audit_cycle, user__email=fake.email)
+    #     section = mommy.make(Section, audit_cycle=audit_cycle)
+    #     report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
+
+    #     test_attachment = mommy.make(Attachment, status=Attachment.ATTACHED, content_object=report_section)
+    #     attachments = attachment_manager_service.find_by_audit_store_and_section_for_manager(
+    #         audit_store.id,
+    #         section.id,
+    #         self.manager_user.id,
+    #     )
+
+    #     expect(list(attachments)).to(contain_only(test_attachment))
+
     def test_find_by_audit_store_and_section_for_manager_returns_attachment(self):
         audit_cycle = mommy.make(AuditCycle)
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, audit__audit_cycle=audit_cycle, user__email=fake.email)
         section = mommy.make(Section, audit_cycle=audit_cycle)
         report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
-
-        test_attachment = mommy.make(Attachment, status=Attachment.ATTACHED, content_object=report_section)
-        attachments = attachment_manager_service.find_by_audit_store_and_section_for_manager(
-            audit_store.id,
-            section.id,
-            self.manager_user.id,
-        )
-
+        proof_tag = mommy.make(ProofTag)
+        audit_cycle_proof_tag = mommy.make(AuditCycleProofTagList, audit_cycle=audit_cycle, proof_tag=proof_tag)
+        mommy.make(SectionProofTag, audit_cycle_proof_tag=audit_cycle_proof_tag, section=section, hide_from_client=False)
+        test_attachment = mommy.make(Attachment, status=Attachment.ATTACHED, content_object=report_section, proof_tag=audit_cycle_proof_tag)
+        attachments = attachment_manager_service.find_by_audit_store_and_section_for_manager(audit_store.id, section.id, self.manager_user.id)
         expect(list(attachments)).to(contain_only(test_attachment))

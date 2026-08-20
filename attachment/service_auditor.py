@@ -10,12 +10,17 @@ from answer.service import answer_auditor as answer_auditor_service
 import answer.service.report_section as report_section_service
 from . import service as attachment_service
 from manager.models import AuditProoftagNotAvailable
+from rest_framework.exceptions import ValidationError
+from attachment.models import Attachment
+from django.contrib.contenttypes.models import ContentType
+import questionnaire.service.section as section_service
+from django.db.models import Prefetch
+from questionnaire.models.proof_tag import SectionProofTag
 
 
-
-def upload_for_audit_store_by_auditor(audit_store_id: int, user_id: int, file_name: str, file_size: str, mime_type: str):
+def upload_for_audit_store_by_auditor(audit_store_id: int, user_id: int, file_name: str, file_size: str, mime_type: str,attachment_comment=""):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
-    return attachment_service.upload_for_audit_store(audit_store.id, file_name, file_size, mime_type)
+    return attachment_service.upload_for_audit_store(audit_store.id, file_name, file_size, mime_type,attachment_comment)
 
 def upload_prooftag_not_available_for_audit_store_by_auditor(audit_store_id: int, user_id: int, proof_tag, description):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
@@ -137,3 +142,58 @@ def move_to_section(audit_store_id,section_id,attachment_list):
 
 def save_attachment_proof_tag(attachment_id, proof_tag_id):
     return attachment_service.save_attachment_proof_tag(attachment_id, proof_tag_id)
+
+def update_attachment_comments_for_section(audit_store_id,section_id,attachments,user_id):
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id,user_id)
+    for attachment_data in attachments:
+        attachment_id = attachment_data.get("attachment_id")
+        attachment_comment = attachment_data.get("attachment_comment","")
+
+        if not attachment_id:
+            raise ValidationError({"attachment_id": "Attachment id is required"})
+
+        attachment = (
+            find_by_audit_store_section_for_auditor_attachment_comment(audit_store_id,section_id,attachment_id,user_id)
+        )
+
+        if attachment.status != Attachment.ATTACHED:
+            raise ValidationError({"attachment_id": "Attachment is not attached"})
+
+        attachment.attachment_comment = attachment_comment
+        attachment.save(update_fields=["attachment_comment"])
+
+    return True
+
+def find_by_audit_store_section_for_auditor_attachments_comment(audit_store_id,section_id,user_id):
+
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id,user_id)
+    content_type = ContentType.objects.get_for_model(AuditStore)
+
+    # Get only proof tags configured for this section
+    section_proof_tag_ids = (
+        SectionProofTag.objects.filter(section_id=section_id,
+            audit_cycle_proof_tag__audit_cycle_id=audit_store.audit.audit_cycle_id
+        )
+        .values_list('audit_cycle_proof_tag_id',flat=True)
+    )
+
+    # Get only attachments having those proof tags
+    attachments = (
+        Attachment.objects.filter(content_type=content_type,object_id=audit_store.id,proof_tag_id__in=section_proof_tag_ids
+        ).exclude(status=Attachment.DELETED))
+
+    return attachments
+
+def find_by_audit_store_section_for_auditor_attachment_comment(audit_store_id,section_id,attachment_id,user_id):
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id,user_id)
+    content_type = ContentType.objects.get_for_model(AuditStore)
+
+    attachment = (
+        Attachment.objects.filter(id=attachment_id,content_type=content_type,
+            object_id=audit_store.id,proof_tag__section_proof_tag__section_id=section_id
+        ).exclude(status=Attachment.DELETED).first())
+
+    if not attachment:
+        raise Attachment.DoesNotExist
+
+    return attachment

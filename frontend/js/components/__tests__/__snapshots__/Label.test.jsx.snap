@@ -88,6 +88,17 @@ exports[`<Label/> renders Label with the success2 style 1`] = `
 />
 `;
 
+exports[`<Label/> renders Label with the success3 style 1`] = `
+<span
+  className="label label-success3"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;
+
 exports[`<Label/> renders Label with the warning style 1`] = `
 <span
   className="label label-warning"

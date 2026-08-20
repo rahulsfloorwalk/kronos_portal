@@ -308,6 +308,22 @@ class AuditStoreView(APIView):
         audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
         return Response(audit_stores)
 
+class AuditCycleAuditStoreSectionView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        audit_cycle_ids = request.GET.get("audit_cycle_ids")
+        if not audit_cycle_ids:
+            return Response({"error": "audit_cycle_ids is required."},status=400)
+        try:
+            audit_cycle_ids = [ int(x.strip()) for x in audit_cycle_ids.split(",") if x.strip()]
+        except ValueError:
+            return Response({"error": "Invalid audit_cycle_ids."},status=400)
+
+        data = audit_section.get_audit_stores_sections_aggregation_for_client( audit_cycle_ids,request.user.id)
+        return Response(data)
 
 class ImpactFactorByAuditStore(APIView):
     permission_classes = [HasGroupPermission]
@@ -682,7 +698,30 @@ class AuditStoreUpcoming(APIView):
     def get(self, request, format=None):
         audit_stores = audit_store_client_service.find_upcoming_for_client(request.user.clientuser.client_id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data) 
-
+    
+# class AuditStoreUpcoming(APIView):
+#     permission_classes = [HasGroupPermission]
+#     required_groups = {
+#         'GET': [GROUP_NAME_CLIENT],
+#     }
+#     def get(self, request, format=None):
+#         client_id = request.user.clientuser.client_id
+#            # /audit_store/upcoming?audit_cycle_ids=101,102,103
+#         audit_cycle_ids = request.GET.get('audit_cycle_ids')
+#         if audit_cycle_ids:
+#             try:
+#                 audit_cycle_ids = [
+#                     int(cycle_id)
+#                     for cycle_id in audit_cycle_ids.split(',')
+#                     if cycle_id.strip()
+#                 ]
+#             except ValueError:
+#                 return Response({'detail': 'Invalid audit_cycle_ids.'}, status=400)
+#         else:
+#             audit_cycle_ids = None
+#         audit_stores = audit_store_client_service.find_upcoming_for_client(client_id=client_id,audit_cycle_ids=audit_cycle_ids)
+#         return Response( AuditStoreSerializer(audit_stores, many=True).data)
+    
 class AuditCycleTimeSeriesReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -711,6 +750,30 @@ class ImprovableQuestionsByAuditCycleId(APIView):
         audit_cycle_improvable_questions = improvable_questions.get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id, request.user.clientuser)
         return Response(audit_cycle_improvable_questions)
 
+class AudiCycleImprovableQuestion(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT]
+    }
+    def get(self, request,questionnaire_type_id):
+        audit_cycle_ids = request.GET.get('audit_cycle_ids')
+        if not audit_cycle_ids:
+            return Response({'error': 'audit_cycle_ids is required.'},status=400)
+        try:
+            audit_cycle_ids = [
+                int(x.strip())
+                for x in audit_cycle_ids.split(',')
+                if x.strip()
+            ]
+        except ValueError:
+            return Response({'error': 'Invalid audit_cycle_ids or questionnaire_type_id.'}, status=400)
+
+        if not audit_cycle_ids:
+            return Response({'error': 'audit_cycle_ids cannot be empty.'}, status=400)
+
+        audit_cycle_improvable_questions = ( improvable_questions.get_improvable_questions_by_audit_cycles(audit_cycle_ids, questionnaire_type_id, request.user.clientuser ))
+        return Response(audit_cycle_improvable_questions)
+    
 class ImprovableQuestionList(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -839,6 +902,24 @@ class GetNPSScore(APIView):
         client_id = request.user.clientuser.client_id
         nps_score_data = twitter_client.get_over_all_nps_score(client_id, audit_cycle_id)
         return Response(nps_score_data)
+
+class GetNPSScores(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        client_id = request.user.clientuser.client_id
+        audit_cycle_ids = request.GET.get("audit_cycle_ids")
+        if not audit_cycle_ids:
+            return Response({"message": "audit_cycle_ids is required."},status=400)
+        try:
+            audit_cycle_ids = [int(i.strip()) for i in audit_cycle_ids.split(",") if i.strip()]
+        except ValueError:
+            return Response({"message": "Invalid audit_cycle_ids."},status=400)
+        data = twitter_client.get_all_over_all_nps_score(client_id,audit_cycle_ids)
+        return Response(data)
+    
 # class SentimentDataView(APIView):
 #     permission_classes = [HasGroupPermission]
 #     required_groups = {
@@ -973,6 +1054,15 @@ class QuestionnaireTypesForDashboardByClient(APIView):
     }
     def get(self, request):
         types = questionnaire_type_client_service.find_questionnaire_types_for_client_dashboard_by_user(request.user)
+        return Response(types)
+
+class DashboardWidgetAccessView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request):
+        types = questionnaire_type_client_service.find_dashboard_widget_access_by_user(request.user)
         return Response(types)
 
 

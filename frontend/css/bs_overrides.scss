@@ -1175,3 +1175,23 @@ p.new{
   padding: 0.4rem 0.75rem;
   text-align: center;
 }
+
+
+.store-scale-section {
+    margin: 20px 0;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fafafa;
+}
+
+.store-scale-section h4 {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+
+.store-scale-section .help-text {
+    margin-bottom: 16px;
+    color: #666;
+    font-size: 13px;
+}

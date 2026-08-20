@@ -20,6 +20,8 @@ def set_answer_text_for_moderator(audit_store_id, question_id, answer_text, user
     answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
     if answer_text == "":
         raise AppLogicError("answer text cannot be blank")
+    if len(answer_text) > 4000:
+        raise AppLogicError("answer text cannot exceed 4000 characters")
     if answer.audit_store.is_editable_by_moderator():
         answer.set_answer_text(answer_text, status)
         return answer

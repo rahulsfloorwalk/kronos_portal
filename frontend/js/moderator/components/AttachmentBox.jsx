@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 // import $ from "jquery";
 
 // import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment ,moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
-import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, rotateImageAngle } from "../service/attachment.js";
+import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, rotateImageAngle, uploadHighlightedImage } from "../service/attachment.js";
 // import { fetchSections } from "../service/section.js";
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
@@ -244,6 +244,22 @@ export default class AttachmentBox extends React.Component {
 		});
 	};
 
+	saveHighlightedImage = (blob, attachment) => {
+		const originalName = attachment.file_name || "attachment";
+		const dotIndex = originalName.lastIndexOf(".");
+		const baseName = dotIndex > -1 ? originalName.slice(0, dotIndex) : originalName;
+		const fileName = `${baseName}-highlighted-${Date.now()}.jpg`;
+		const file = new File([blob], fileName, { type: "image/jpeg" });
+
+		return uploadHighlightedImage(this.props.auditStoreId, attachment.id, file).then(() => {
+			this.reloadState();
+			if (this.props.onReload) {
+				this.props.onReload();
+			}
+		}, () => {
+			alert("Failed to save highlighted image");
+		});
+	};
 	render() {
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
@@ -279,8 +295,10 @@ export default class AttachmentBox extends React.Component {
 			onRename={this.attachmentRenamed}
 			onDelete={this.deleteButtonClicked}
 			onChange={(e) => this.saveAttachmentTag(this.state.selectedAttachment.id, e)}
+			onHighlightSave={this.saveHighlightedImage}
 			rotateImage={this.rotateImage}
 			section_id={0}
+			onClose={() => this.setState({ selectedAttachment: undefined })}
 			disableRotateButton={this.state.disableRotateButton} />;
 
 		let uploadButton;

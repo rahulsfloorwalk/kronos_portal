@@ -15,6 +15,8 @@ def get_section_proof_tag(section_id):
     for tag in proof_tags:
         section_proof_tag_dict = {}
         is_required = False
+        hide_from_client = False
+        is_comment_required = False
         if not SectionProofTag.objects\
                 .filter(audit_cycle_proof_tag__proof_tag_id=tag.id, audit_cycle_proof_tag__audit_cycle=audit_cycle_obj)\
                 .exclude(section_id=section_id)\
@@ -25,6 +27,8 @@ def get_section_proof_tag(section_id):
                 is_present_in_section = True
                 if SectionProofTag.objects.filter(audit_cycle_proof_tag__proof_tag_id=tag.id, section_id=section_id, is_required = True).exists():
                     is_required = True
+                hide_from_client = section_proof_tag.hide_from_client
+                is_comment_required = section_proof_tag.is_comment_required
             else:
                 max_attachment_count = ""
                 is_present_in_section = False
@@ -33,6 +37,8 @@ def get_section_proof_tag(section_id):
             section_proof_tag_dict['is_present_in_section'] = is_present_in_section
             section_proof_tag_dict['is_required'] = is_required
             section_proof_tag_dict['max_attachment_count'] = max_attachment_count
+            section_proof_tag_dict['hide_from_client'] = hide_from_client
+            section_proof_tag_dict['is_comment_required'] = is_comment_required
             section_proof_tag_list.append(section_proof_tag_dict)
     section_proof_tag_list = sorted(section_proof_tag_list, key=lambda j: j['name'])
     return sorted(section_proof_tag_list, key=lambda j: j['is_present_in_section'], reverse=True)
@@ -72,6 +78,8 @@ def save_section_proof_tag(section_id, audit_cycle_id, proof_tag_list):
         proof_id = proof['id']
         is_required = proof['is_required']
         max_attachment_count = proof['max_attachment_count']
+        hide_from_client = proof.get('hide_from_client') or False
+        is_comment_required = proof.get('is_comment_required') or False
 
         if AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, proof_tag_id=proof_id).exists():
             AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, proof_tag_id=proof_id).update(is_active=True, max_attachment_count=max_attachment_count)
@@ -89,9 +97,12 @@ def save_section_proof_tag(section_id, audit_cycle_id, proof_tag_list):
             section_proof_tag_obj.section = section_obj
             section_proof_tag_obj.is_required = is_required
             section_proof_tag_obj.max_attachment_count = max_attachment_count
+            section_proof_tag_obj.hide_from_client = hide_from_client
+            section_proof_tag_obj.is_comment_required = is_comment_required
             section_proof_tag_obj.save()
         else:
-            SectionProofTag.objects.filter(audit_cycle_proof_tag_id=audit_cycle_proof_tag_obj.id, section_id=section_id).update(is_required = is_required, max_attachment_count = max_attachment_count)
+            SectionProofTag.objects.filter(audit_cycle_proof_tag_id=audit_cycle_proof_tag_obj.id, section_id=section_id
+                ).update(is_required = is_required, max_attachment_count = max_attachment_count,hide_from_client=hide_from_client,is_comment_required=is_comment_required)
     # Update minimum attachment count for section
     section_obj.minimum_attachment_count = proof_count
     section_obj.save()
@@ -125,6 +136,8 @@ def copy_proof_tag_from_to(from_section_id, to_section_id, audit_cycle_id):
             new_section_proof_tag.audit_cycle_proof_tag = audit_cycle_proof_tag_obj
             new_section_proof_tag.section = to_section
             new_section_proof_tag.is_required = section_proof_tag.is_required
+            new_section_proof_tag.hide_from_client = section_proof_tag.hide_from_client
+            new_section_proof_tag.is_comment_required = section_proof_tag.is_comment_required
             new_section_proof_tag.save()
 
         return to_section.section_proof_tag.all()

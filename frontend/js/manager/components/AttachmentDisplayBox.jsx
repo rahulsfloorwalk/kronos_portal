@@ -8,7 +8,7 @@ import Alert from "react-s-alert";
 // import { orderKeys } from "../../react_utils.js";
 
 // import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
-import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, rotateImageAngle } from "../service/attachment.js";
+import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, rotateImageAngle, uploadHighlightedImage } from "../service/attachment.js";
 import { Paperclip, Plus } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
@@ -53,6 +53,15 @@ export class AttachmentDisplayBox extends Component{
 			});
 		});
 	};
+
+	// reloadState = () => {
+	// 	const requestId = (this._reloadRequestId = (this._reloadRequestId || 0) + 1);
+	// 	return findAttachmentsByAuditStore(this.props.auditStoreId).then((attachments) => {
+	// 		if (requestId !== this._reloadRequestId) return; // a newer request superseded this one
+	// 		this.setState({ attachments });
+	// 	});
+	// };
+
 	componentDidMount(){
 		this.reloadState();
 		// this.props.dispatch(fetchSections(this.props.auditStoreId));
@@ -174,6 +183,7 @@ export class AttachmentDisplayBox extends Component{
 				});
 				this.reloadState();
 			}, (errorMessage) => {
+				Alert.error(errorMessage || "UPLOAD FAILED");
 				this.setProgressState(tempId, {
 					uploadMessage: errorMessage,
 					error:true,
@@ -230,6 +240,22 @@ export class AttachmentDisplayBox extends Component{
 		});
 	};
 
+	saveHighlightedImage = (blob, attachment) => {
+		const originalName = attachment.file_name || "attachment";
+		const dotIndex = originalName.lastIndexOf(".");
+		const baseName = dotIndex > -1 ? originalName.slice(0, dotIndex) : originalName;
+		const fileName = `${baseName}-highlighted-${Date.now()}.jpg`;
+		const file = new File([blob], fileName, { type: "image/jpeg" });
+
+		return uploadHighlightedImage(this.props.auditStoreId, attachment.id, file).then(() => {
+			Alert.success("HIGHLIGHTED IMAGE SAVED");
+			this.reloadState();
+			// return this.reloadState();
+		}, (err) => {
+			Alert.error("FAILED TO SAVE HIGHLIGHTED IMAGE");
+			throw err;
+		});
+	};
 	render(){
 		if(! this.props.auditStore){
 			return <Loading/>;
@@ -265,6 +291,7 @@ export class AttachmentDisplayBox extends Component{
 			onRename={this.attachmentRenamed}
 			onDelete={this.deleteButtonClicked}
 			onChange={(e)=>this.saveAttachmentTag(this.state.selectedAttachment.id, e)}
+			onHighlightSave={this.saveHighlightedImage}
 			rotateImage={this.rotateImage}
 			section_id={0}
 			onClose={() => this.setState({ selectedAttachment: undefined })}

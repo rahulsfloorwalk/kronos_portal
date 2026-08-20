@@ -459,7 +459,8 @@ class AuditStoreAttachmentView(APIView):
     }
 
     def get(self, request, audit_store_id, format=None):
-        attachments = attachment_service.find_by_audit_store_for_moderator(audit_store_id, request.user.id)
+        # attachments = attachment_service.find_by_audit_store_for_moderator(audit_store_id, request.user.id)
+        attachments = attachment_service.find_by_audit_store_for_moderator_attachments(audit_store_id)
         return Response(AttachmentSerializer(attachments, many=True).data)
 
     def post(self, request, audit_store_id):
@@ -477,6 +478,60 @@ class AuditStoreAttachmentView(APIView):
                 'file_name': "file name is required"
             })
 
+class AuditStoreAttachmentHighlightView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MODERATOR],
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+    def get(self, request, audit_store_id, attachment_id, format=None):
+        attachment = (attachment_service.find_by_audit_store_for_moderator_attachments(audit_store_id=audit_store_id,attachment_id=attachment_id))
+        return Response(AttachmentSerializer(attachment).data)
+
+    def post(self, request, audit_store_id, attachment_id):
+        try:
+            file_name = request.data["file_name"]
+            file_size = request.data["file_size"]
+            file_type = request.data["file_type"]
+        except KeyError:
+            raise ValidationError({"file_name": "file name is required"})
+
+        edited_attachment, post_data = (
+            attachment_service
+            .create_or_update_highlighted_attachment(audit_store_id=audit_store_id, attachment_id=attachment_id,
+                file_name=file_name,file_size=file_size,mime_type=file_type)
+        )
+        post_data["attachment"] = (AttachmentSerializer(edited_attachment).data)
+        return Response(post_data)
+
+class AuditStoreSectionAttachmentHighlightView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MODERATOR],
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+    def get(self,request,audit_store_id,section_id,attachment_id,format=None):
+        attachments = attachment_service.find_by_audit_store_section_for_moderator_attachment(audit_store_id, section_id, request.user.id)
+        return Response(AttachmentSerializer(attachments).data)
+
+    def post(self,request,audit_store_id,section_id,attachment_id):
+        try:
+            file_name = request.data["file_name"]
+            file_size = request.data["file_size"]
+            file_type = request.data["file_type"]
+        except KeyError:
+            raise ValidationError({
+                "file_name": "file name is required"
+            })
+
+        edited_attachment, post_data = (
+            attachment_service
+            .create_or_update_section_highlighted_attachment(audit_store_id=audit_store_id,
+                section_id=section_id,attachment_id=attachment_id,file_name=file_name,
+                file_size=file_size,mime_type=file_type)
+        )
+        post_data["attachment"] = (AttachmentSerializer(edited_attachment).data)
+        return Response(post_data)
 
 class ReportSectionAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
@@ -486,7 +541,8 @@ class ReportSectionAttachmentView(APIView):
     }
 
     def get(self, request, audit_store_id, section_id, format=None):
-        attachments = attachment_service.find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, request.user.id)
+        # attachments = attachment_service.find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, request.user.id)
+        attachments = attachment_service.find_by_audit_store_section_for_moderator_attachments(audit_store_id, section_id, request.user.id)
         return Response(AttachmentSerializer(attachments, many=True).data)
 
     def post(self, request, audit_store_id, section_id):
@@ -505,6 +561,25 @@ class ReportSectionAttachmentView(APIView):
                 'file_name': "file name is required"
             })
 
+class ReportSectionAttachmentCommentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MODERATOR],
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+
+    def get(self, request, audit_store_id, section_id):
+        attachments = (attachment_service.find_by_audit_store_section_for_moderator_attachments_comment(audit_store_id,section_id,request.user.id))
+        return Response(AttachmentSerializer(attachments,many=True ).data)
+
+    def post(self, request, audit_store_id, section_id):
+        attachments = request.data.get( "attachments", [])
+        if not attachments:
+            raise ValidationError({"attachments": "Attachments are required"})
+
+        attachment_service.update_attachment_comments_for_section_comment(audit_store_id,section_id,attachments,request.user.id)
+        return Response({"detail": "Attachment comments updated successfully."})
+    
 class AuditStoreMandatoryProofTagView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

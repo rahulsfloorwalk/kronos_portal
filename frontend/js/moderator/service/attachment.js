@@ -9,6 +9,19 @@ export function findAttachmentsByAuditStoreAndSection(auditStoreId, sectionId){
 	return $.get( url.api_base_path + `moderator/audit_store/${auditStoreId}/section/${sectionId}/attachment`);
 }
 
+export function findAttachmentComments(auditStoreId, sectionId){
+	return $.get( url.api_base_path + `moderator/audit_store/${auditStoreId}/section/${sectionId}/attachment_comments`);
+}
+
+export function saveAttachmentComments(auditStoreId, sectionId, attachmentsPayload){
+	return $.ajax({
+		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/section/${sectionId}/attachment_comments`,
+		type: "POST",
+		data: JSON.stringify({ attachments: attachmentsPayload }),
+		contentType: "application/json"
+	});
+}
+
 export function deleteAttachment(attachmentId){
 	return $.ajax({
 		url: url.api_base_path + `moderator/attachment/${attachmentId}`,
@@ -37,8 +50,18 @@ export function uploadFileForReportSection(auditStoreId, sectionId, file){
 	return doAttachmentUpload(req_url, file);
 }
 
+export function uploadHighlightedImageForReportSection(auditStoreId, sectionId, attachmentId, file){
+	var req_url = url.api_base_path + `moderator/audit_store/${auditStoreId}/section/${sectionId}/attachment/${attachmentId}/highlight`;
+	return doAttachmentUpload(req_url, file);
+}
+
 export function uploadFileForAuditStore(auditStoreId, file){
 	var req_url = url.api_base_path + `moderator/audit_store/${auditStoreId}/attachment`;
+	return doAttachmentUpload(req_url, file);
+}
+
+export function uploadHighlightedImage(auditStoreId, attachmentId, file){
+	var req_url = url.api_base_path + `moderator/audit_store/${auditStoreId}/attachment/${attachmentId}/highlight`;
 	return doAttachmentUpload(req_url, file);
 }
 

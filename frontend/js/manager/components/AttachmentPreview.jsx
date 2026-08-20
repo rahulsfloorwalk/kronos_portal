@@ -21,6 +21,9 @@ import libheif from "libheif-js";
 class AttachmentRenderer extends React.Component {
 	static propTypes = {
 		attachment: attachmentPropType,
+		editable: PropTypes.bool,
+		onHighlightSave: PropTypes.func,
+		onClose: PropTypes.func,
 	};
 
 	constructor(props) {
@@ -29,6 +32,9 @@ class AttachmentRenderer extends React.Component {
 			loading: true,
 			error: false,
 			convertedUrl: null,
+			annotationsByAttachmentId: {},
+			highlightMode: false,
+			savingHighlight: false
 		};
 	}
 
@@ -58,6 +64,11 @@ class AttachmentRenderer extends React.Component {
 		if (this.props.attachment.proof_type === "OTHER" && Ext === "heic") {
 			this.convertHeicToJpeg(this.props.attachment.direct_url);
 		}
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener("mousemove", this.onDragMove);
+		document.removeEventListener("mouseup", this.stopDrag);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -213,6 +224,305 @@ class AttachmentRenderer extends React.Component {
 		}
 	};
 
+	getAnnotations = () => {
+		return this.state.annotationsByAttachmentId[this.props.attachment.id] || [];
+	};
+
+	// toggleHighlightMode = () => {
+	// 	this.setState((oldState) => ({ highlightMode: !oldState.highlightMode }));
+	// };
+
+	// toggleHighlightMode = () => {
+	// 	this.setState((oldState) => ({ highlightMode: !oldState.highlightMode }), () => {
+	// 		if (!this.state.highlightMode) {
+	// 			this.saveHighlightedImage();
+	// 		}
+	// 	});
+	// };
+
+	toggleHighlightMode = () => {
+		if (this.state.highlightMode) {
+			// "Done Highlighting" clicked — try to save; only exit highlight mode on success
+			this.saveHighlightedImage();
+		} else {
+			this.setState({ highlightMode: true }, () => {
+				this.addDefaultAnnotation();
+			});
+		}
+	};
+
+	addDefaultAnnotation = () => {
+		const attachmentId = this.props.attachment.id;
+		if (this.getAnnotations().length > 0) {
+			return; // don't stack a default circle on top of existing annotations
+		}
+		const id = Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+		this.setState((oldState) => ({
+			annotationsByAttachmentId: {
+				...oldState.annotationsByAttachmentId,
+				[attachmentId]: [{ id, xPct: 50, yPct: 50, diameter: 40 }],
+			},
+		}));
+	};
+
+	generateHighlightedImageBlob = () => {
+		const annotations = this.getAnnotations();
+		if (annotations.length === 0) {
+			return Promise.resolve(null);
+		}
+		const displayedWidth = this.zoomImg ? this.zoomImg.clientWidth : null;
+		const sourceUrl = this.props.attachment.extra.preview_url;
+
+		return fetch(sourceUrl)
+			.then((response) => response.blob())
+			.then((blob) => {
+				const objectUrl = URL.createObjectURL(blob);
+				return new Promise((resolve, reject) => {
+					const img = new Image();
+					img.onload = () => {
+						const canvas = document.createElement("canvas");
+						canvas.width = img.naturalWidth;
+						canvas.height = img.naturalHeight;
+						const ctx = canvas.getContext("2d");
+						ctx.drawImage(img, 0, 0);
+
+						const scaleFactor = displayedWidth ? (img.naturalWidth / displayedWidth) : 1;
+
+						annotations.forEach((a) => {
+							const cx = (a.xPct / 100) * img.naturalWidth;
+							const cy = (a.yPct / 100) * img.naturalHeight;
+							const radius = (a.diameter / 2) * scaleFactor;
+
+							ctx.beginPath();
+							ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+							ctx.strokeStyle = "#ff3b30";
+							ctx.lineWidth = Math.max(2, 3 * scaleFactor);
+							ctx.stroke();
+						});
+
+						canvas.toBlob((outBlob) => {
+							URL.revokeObjectURL(objectUrl);
+							if (outBlob) {
+								resolve(outBlob);
+							} else {
+								reject(new Error("Canvas toBlob failed"));
+							}
+						}, "image/jpeg", 0.92);
+					};
+					img.onerror = (err) => {
+						URL.revokeObjectURL(objectUrl);
+						reject(err);
+					};
+					img.src = objectUrl;
+				});
+			});
+	};
+
+	saveHighlightedImage = () => {
+		if (!this.props.onHighlightSave) {
+			this.setState({ highlightMode: false });
+			return;
+		}
+		this.setState({ savingHighlight: true });
+		this.generateHighlightedImageBlob()
+			.then((blob) => {
+				if (!blob) {
+					this.setState({ savingHighlight: false, highlightMode: false });
+					return null;
+				}
+				return Promise.resolve(this.props.onHighlightSave(blob, this.props.attachment))
+					.then(() => {
+						this.setState({ savingHighlight: false, highlightMode: false });
+						this.props.onClose();
+					});
+			})
+			.catch((err) => {
+				console.error("Failed to save highlighted image:", err);
+				this.setState({ savingHighlight: false });
+			});
+	};
+
+	addAnnotation = (e) => {
+		if (!this.props.editable || !this.state.highlightMode) {
+			return;
+		}
+		const rect = e.currentTarget.getBoundingClientRect();
+		const xPct = ((e.clientX - rect.left) / rect.width) * 100;
+		const yPct = ((e.clientY - rect.top) / rect.height) * 100;
+		const id = Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+		const attachmentId = this.props.attachment.id;
+
+		this.setState((oldState) => {
+			const existing = oldState.annotationsByAttachmentId[attachmentId] || [];
+			return {
+				annotationsByAttachmentId: {
+					...oldState.annotationsByAttachmentId,
+					[attachmentId]: [...existing, { id, xPct, yPct, diameter: 40 }],
+				},
+			};
+		});
+	};
+
+	startMove = (annotationId, e) => {
+		e.stopPropagation();
+		e.preventDefault();
+		const containerRect = e.currentTarget.closest(".zoom-div").getBoundingClientRect();
+		const annotation = this.getAnnotations().find((a) => a.id === annotationId);
+		if (!annotation) return;
+
+		this.dragInfo = {
+			mode: "move",
+			id: annotationId,
+			containerRect,
+			startClientX: e.clientX,
+			startClientY: e.clientY,
+			startXPct: annotation.xPct,
+			startYPct: annotation.yPct,
+		};
+		document.addEventListener("mousemove", this.onDragMove);
+		document.addEventListener("mouseup", this.stopDrag);
+	};
+
+	startResize = (annotationId, e) => {
+		e.stopPropagation();
+		e.preventDefault();
+		const annotation = this.getAnnotations().find((a) => a.id === annotationId);
+		if (!annotation) return;
+
+		this.dragInfo = {
+			mode: "resize",
+			id: annotationId,
+			startClientX: e.clientX,
+			startClientY: e.clientY,
+			startDiameter: annotation.diameter,
+		};
+		document.addEventListener("mousemove", this.onDragMove);
+		document.addEventListener("mouseup", this.stopDrag);
+	};
+
+	onDragMove = (e) => {
+		if (!this.dragInfo) return;
+		const attachmentId = this.props.attachment.id;
+		const { mode, id } = this.dragInfo;
+
+		if (mode === "move") {
+			const { containerRect, startClientX, startClientY, startXPct, startYPct } = this.dragInfo;
+			const dxPct = ((e.clientX - startClientX) / containerRect.width) * 100;
+			const dyPct = ((e.clientY - startClientY) / containerRect.height) * 100;
+			const newXPct = Math.max(0, Math.min(100, startXPct + dxPct));
+			const newYPct = Math.max(0, Math.min(100, startYPct + dyPct));
+
+			this.setState((oldState) => {
+				const existing = oldState.annotationsByAttachmentId[attachmentId] || [];
+				return {
+					annotationsByAttachmentId: {
+						...oldState.annotationsByAttachmentId,
+						[attachmentId]: existing.map((a) =>
+							a.id === id ? { ...a, xPct: newXPct, yPct: newYPct } : a
+						),
+					},
+				};
+			});
+		}
+		else if (mode === "resize") {
+			const { startClientX, startClientY, startDiameter } = this.dragInfo;
+			const delta = Math.max(e.clientX - startClientX, e.clientY - startClientY);
+			const newDiameter = Math.max(16, Math.min(400, startDiameter + delta));
+
+			this.setState((oldState) => {
+				const existing = oldState.annotationsByAttachmentId[attachmentId] || [];
+				return {
+					annotationsByAttachmentId: {
+						...oldState.annotationsByAttachmentId,
+						[attachmentId]: existing.map((a) =>
+							a.id === id ? { ...a, diameter: newDiameter } : a
+						),
+					},
+				};
+			});
+		}
+	};
+
+	stopDrag = () => {
+		this.dragInfo = null;
+		document.removeEventListener("mousemove", this.onDragMove);
+		document.removeEventListener("mouseup", this.stopDrag);
+	};
+
+	removeAnnotation = (id) => {
+		const attachmentId = this.props.attachment.id;
+		this.setState((oldState) => {
+			const existing = oldState.annotationsByAttachmentId[attachmentId] || [];
+			return {
+				annotationsByAttachmentId: {
+					...oldState.annotationsByAttachmentId,
+					[attachmentId]: existing.filter((a) => a.id !== id),
+				},
+			};
+		});
+	};
+
+	renderAnnotations = () => {
+		return this.getAnnotations().map((a) => (
+			<div
+				key={a.id}
+				onMouseDown={(e) => this.startMove(a.id, e)}
+				style={{
+					position: "absolute",
+					left: a.xPct + "%",
+					top: a.yPct + "%",
+					width: a.diameter + "px",
+					height: a.diameter + "px",
+					marginLeft: -(a.diameter / 2) + "px",
+					marginTop: -(a.diameter / 2) + "px",
+					border: "3px solid #ff3b30",
+					borderRadius: "50%",
+					boxShadow: "0 0 4px rgba(0,0,0,0.5)",
+					cursor: "move",
+				}}
+			>
+				<button
+					type="button"
+					onMouseDown={(e) => e.stopPropagation()}
+					onClick={(e) => {
+						e.stopPropagation();
+						this.removeAnnotation(a.id);
+					}}
+					style={{
+						position: "absolute",
+						top: "-10px",
+						right: "-10px",
+						width: "18px",
+						height: "18px",
+						lineHeight: "16px",
+						padding: 0,
+						borderRadius: "50%",
+						border: "1px solid #ff3b30",
+						backgroundColor: "#fff",
+						color: "#ff3b30",
+						fontSize: "12px",
+						cursor: "pointer",
+					}}
+				>
+					×
+				</button>
+				<div
+					onMouseDown={(e) => this.startResize(a.id, e)}
+					style={{
+						position: "absolute",
+						bottom: "-6px",
+						right: "-6px",
+						width: "12px",
+						height: "12px",
+						borderRadius: "50%",
+						backgroundColor: "#ff3b30",
+						border: "2px solid #fff",
+						cursor: "nwse-resize",
+					}}
+				/>
+			</div>
+		));
+	};
 	render() {
 		const file_slug = this.props.attachment.file_slug || "";
 		const { mime_type} = this.props.attachment;
@@ -400,6 +710,59 @@ class AttachmentRenderer extends React.Component {
 				</div>
 			);
 		}
+		// case "PHOTO": {
+		// 	let loading, error;
+		// 	if (this.state.loading) {
+		// 		loading = <Loading />;
+		// 	}
+		// 	if (this.state.error) {
+		// 		error = (<div className="text-center">
+		// 			<img src={attachmentErrorImageUrl} />
+		// 			<p>cannot load image</p>
+		// 		</div>);
+		// 	}
+
+		// 	let imageStyle = {
+		// 		"display": this.state.loading ? "none" : "block",
+		// 		"margin": "auto",
+		// 	};
+		// 	return (<div>
+		// 		{loading}
+		// 		{error}
+		// 		<button type="button" className="btn btn-sm btn-default" onClick={this.zoomIn}><Plus /> Zoom In</button>
+		// 		&nbsp;&nbsp;&nbsp;
+		// 		<button type="button" className="btn btn-sm btn-default" onClick={this.zoomOut}><Minus /> Zoom Out</button>
+		// 		{/* <div className="zoom-div">
+		// 			<img ref={node => this.zoomImg = node} style={imageStyle} className="zoom-img" src={this.props.attachment.extra.preview_url} onLoad={this.onLoad} onError={this.onError} />
+		// 		</div> */}
+		// 		<button type="button" className="btn btn-sm btn-default" onClick={this.zoomIn}><Plus /> Zoom In</button>
+		// 	&nbsp;&nbsp;&nbsp;
+		// 	<button type="button" className="btn btn-sm btn-default" onClick={this.zoomOut}><Minus /> Zoom Out</button>
+		// 	&nbsp;&nbsp;&nbsp;
+		// 	{this.props.editable && (
+		// 		<button
+		// 			type="button"
+		// 			className={"btn btn-sm " + (this.state.highlightMode ? "btn-primary" : "btn-default")}
+		// 			onClick={this.toggleHighlightMode}
+		// 		>
+		// 			{this.state.highlightMode ? "Done Highlighting" : "Add Highlight"}
+		// 		</button>
+		// 	)}
+		// 	<div className="zoom-div" style={{ position: "relative", display: "inline-block" }}>
+		// 		<img
+		// 			ref={node => this.zoomImg = node}
+		// 			style={{ ...imageStyle, cursor: this.state.highlightMode ? "crosshair" : "default" }}
+		// 			className="zoom-img"
+		// 			src={this.props.attachment.extra.preview_url}
+		// 			onLoad={this.onLoad}
+		// 			onError={this.onError}
+		// 			onClick={this.addAnnotation}
+		// 		/>
+		// 		{this.renderAnnotations()}
+		// 	</div>
+		// 	</div>
+		// 	);
+		// }
 		case "PHOTO": {
 			let loading, error;
 			if (this.state.loading) {
@@ -422,8 +785,31 @@ class AttachmentRenderer extends React.Component {
 				<button type="button" className="btn btn-sm btn-default" onClick={this.zoomIn}><Plus /> Zoom In</button>
 				&nbsp;&nbsp;&nbsp;
 				<button type="button" className="btn btn-sm btn-default" onClick={this.zoomOut}><Minus /> Zoom Out</button>
-				<div className="zoom-div">
-					<img ref={node => this.zoomImg = node} style={imageStyle} className="zoom-img" src={this.props.attachment.extra.preview_url} onLoad={this.onLoad} onError={this.onError} />
+				&nbsp;&nbsp;&nbsp;
+				{this.props.editable && (
+					<button
+						type="button"
+						className={"btn btn-sm " + (this.state.highlightMode ? "btn-primary" : "btn-default")}
+						onClick={this.toggleHighlightMode}
+						disabled={this.state.savingHighlight}
+					>
+						{this.state.savingHighlight
+							? "Saving..."
+							: (this.state.highlightMode ? "Done Highlighting" : "Add Highlight")}
+					</button>
+				)}
+				{/* <div className="zoom-div" style={{ position: "relative", display: "inline-block" }}> */}
+				<div className="zoom-div" style={{ position: "relative" }}>
+					<img
+						ref={node => this.zoomImg = node}
+						style={{ ...imageStyle, cursor: this.state.highlightMode ? "crosshair" : "default" }}
+						className="zoom-img"
+						src={this.props.attachment.extra.preview_url}
+						onLoad={this.onLoad}
+						onError={this.onError}
+						onClick={this.addAnnotation}
+					/>
+					{this.renderAnnotations()}
 				</div>
 			</div>
 			);
@@ -686,7 +1072,8 @@ export default class AttachmentPreview extends React.Component {
 		onChange: PropTypes.func,
 		rotateImage: PropTypes.func,
 		disableRotateButton: PropTypes.bool,
-		onClose: PropTypes.func
+		onClose: PropTypes.func,
+		onHighlightSave: PropTypes.func
 	};
 
 	state = {
@@ -818,7 +1205,7 @@ export default class AttachmentPreview extends React.Component {
 					{headingText}
 				</h4>
 				<div className="text-center">
-					<AttachmentRenderer attachment={this.props.attachment} />
+					<AttachmentRenderer attachment={this.props.attachment} editable={this.props.editable} onHighlightSave={this.props.onHighlightSave} onClose={this.props.onClose}/>
 					<br />
 					{rotateLeftButton}
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

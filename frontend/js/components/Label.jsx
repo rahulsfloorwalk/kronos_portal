@@ -8,6 +8,7 @@ export const labelStyles = [
 	"primary1",
 	"success",
 	"success2",
+	"success3",
 	"warning",
 	"warning2",
 	"danger",
@@ -17,6 +18,7 @@ export const labelStyles = [
 export default class Label extends React.Component {
 	static propTypes = {
 		type: PropTypes.oneOf(labelStyles).isRequired,
+		color: PropTypes.string,
 		children: PropTypes.node,
 	};
 
@@ -24,9 +26,21 @@ export default class Label extends React.Component {
 		type: "default",
 	};
 
+	// render() {
+	// 	var labelStyle = {
+	// 		fontSize: "100%"
+	// 	};
+	// 	return (
+	// 		<span className={`label label-${this.props.type}`} style={labelStyle}>
+	// 			{this.props.children}
+	// 		</span>
+	// 	);
+	// }
+
 	render() {
 		var labelStyle = {
-			fontSize: "100%"
+			fontSize: "100%",
+			...(this.props.color ? { backgroundColor: this.props.color, borderColor: this.props.color } : {}),
 		};
 		return (
 			<span className={`label label-${this.props.type}`} style={labelStyle}>

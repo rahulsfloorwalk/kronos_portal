@@ -362,6 +362,20 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
          Notification
       </a>
     </li>
+    <li
+      className=""
+      role="presentation"
+    >
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="glyphicon glyphicon-tasks"
+        />
+         Auditor Execution Summary
+      </a>
+    </li>
   </ul>
 </div>
 `;
