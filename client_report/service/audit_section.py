@@ -166,18 +166,12 @@ def get_audit_store_section_list_for_client(audit_cycle_id, store_id, client_id)
     mean_values = sorted(mean_values, key = lambda date: date.get('audit_date'))
     return mean_values
 
-def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
-
+def get_audit_store_aggregation_for_client(audit_cycle_ids, user_id):
     user = find_clientuser_by_user_id(user_id)
     client_user = user.clientuser
-    audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
 
-    # sections = Section.objects.filter(audit_cycle=audit_cycle).order_by('sequence')
-    sections = Section.objects.filter(audit_cycle=audit_cycle,questions__visibility=Question.VISIBLE_TO_ALL,questions__hide_question=False).distinct().order_by('sequence')
-    section_id_list = (s.id for s in sections if s.max_marks() >= 0)
-
-    # prefetch questions once and then later again with audit_stores so that query count does not blow up
-    # sections = sections.filter(id__in = section_id_list).prefetch_related('questions')
+    sections = Section.objects.filter(audit_cycle_id__in=audit_cycle_ids, questions__visibility=Question.VISIBLE_TO_ALL, questions__hide_question=False).distinct().order_by('sequence')
+    section_id_list = [s.id for s in sections if s.max_marks() >= 0]
     sections = sections.filter(id__in=section_id_list).prefetch_related(
         Prefetch(
             'questions',
@@ -187,38 +181,12 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
             )
         )
     )
+
     audit_stores = []
-    """
-        Normal client user can't access dashboard and report browser that's why need to
-        remove visible_to(user) function
-    """
-    """
-    qs = AuditStore.objects \
-        .filter(audit__audit_cycle=audit_cycle) \
-        .presentable() \
-        .visible_to(user) \
-        .order_by(
-            'audit__store__city__name',
-            'audit__store__name',
-            '-audit_date',
-        ) \
-        .select_related(
-            # join in related audit, store and city to avoid redundant queries
-            'audit',
-            'audit__store',
-            'audit__store__city',
-        ) \
-        .prefetch_related(
-            # prefetch report_sections, questions and answers for the given sections
-            'report_sections',
-            'report_sections__section',
-            'report_sections__section__questions',
-            'report_sections__section__questions__answers',
-        )
-    """
+
     if client_user.is_client_admin():
         qs = AuditStore.objects \
-            .filter(audit__audit_cycle=audit_cycle) \
+            .filter(audit__audit_cycle_id__in=audit_cycle_ids) \
             .presentable() \
             .order_by(
                 'audit__store__city__name',
@@ -226,7 +194,6 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
                 '-audit_date',
             ) \
             .select_related(
-                # join in related audit, store and city to avoid redundant queries
                 'audit',
                 'audit__store',
                 'audit__store__city',
@@ -242,20 +209,15 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
                     ).prefetch_related('answers')
                 ),
             )
-            # .prefetch_related(
-            #     # prefetch report_sections, questions and answers for the given sections
-            #     'report_sections',
-            #     'report_sections__section',
-            #     # 'report_sections__section__questions',
-            #     # 'report_sections__section__questions__answers',
-            # )
     else:
         non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
+
         qs = AuditStore.objects \
-            .filter(audit__audit_cycle=audit_cycle,
-                    audit__store__id__in=non_admin_user_store_list
-                    ) \
+            .filter(
+                audit__audit_cycle_id__in=audit_cycle_ids,
+                audit__store__id__in=non_admin_user_store_list
+            ) \
             .presentable() \
             .order_by(
                 'audit__store__city__name',
@@ -263,7 +225,6 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
                 '-audit_date',
             ) \
             .select_related(
-                # join in related audit, store and city to avoid redundant queries
                 'audit',
                 'audit__store',
                 'audit__store__city',
@@ -279,18 +240,11 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
                     ).prefetch_related('answers')
                 ),
             )
-            # .prefetch_related(
-            #     # prefetch report_sections, questions and answers for the given sections
-            #     'report_sections',
-            #     'report_sections__section',
-            #     # 'report_sections__section__questions',
-            #     # 'report_sections__section__questions__answers',
-            # )
 
     for audit_store in qs:
-        # total_pct = audit_store.percentage()
         total_pct = audit_store.audit_store_percentage
         audit_stores.append({
+            'audit_cycle_id': audit_store.audit.audit_cycle_id,
             'audit_store_id': audit_store.id,
             'audit_date': audit_store.audit_date,
             'country': country.get_country_dict(audit_store.audit.store.city.country),
@@ -309,7 +263,6 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
                 'percentage': total_pct,
                 'color': get_color_code_by_percentage(total_pct),
             },
-            
         })
 
     audit_stores.sort(key=lambda a_s: (a_s['city_name'], a_s['store_id'], a_s['audit_date']))

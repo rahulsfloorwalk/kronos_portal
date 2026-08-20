@@ -583,7 +583,11 @@ class StateCityMapping(Model):
         return "Client: " + self.client.name + " - Order ID: " + self.mp_order.id
 
 class DashboardWidgetvisibilityAccess(Model):
-    client = OneToOneField(Client,on_delete=CASCADE,related_name="dashboard_widget_access")
+    client = OneToOneField(
+        Client,
+        on_delete=CASCADE,
+        related_name="dashboard_widget_access"
+    )
     latest_audit_cycle_score = BooleanField(db_column='latest_audit_cycle_score',default=True)
     upcoming_audits = BooleanField(db_column='upcoming_audits',default=True)
     net_promoter_score = BooleanField(db_column='net_promoter_score',default=True)

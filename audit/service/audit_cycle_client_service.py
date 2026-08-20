@@ -305,8 +305,8 @@ def get_audit_cycle_score(questionnaire_type_id, user_id):
     if len(rows) is 0:
         return []
 
-    if len(rows) > 4:
-        rows = rows[:4]
+    # if len(rows) > 4:
+    #     rows = rows[:4]
 
     audit_cycle_list = AuditCycle.objects.filter(id__in=rows).order_by('-id')
     return audit_cycle_list
