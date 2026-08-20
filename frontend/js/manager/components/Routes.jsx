@@ -158,7 +158,7 @@ import TrainerReportList from "./trainer/TrainerReportList.jsx";
 import TrainerSummary from "./trainer/TrainerSummary.jsx";
 import ClientDashboardVisibilityList from "./client_dashboard_visibility/ClientDashboardVisibilityList.jsx";
 import ClientDashboardVisibilityForm from "./client_dashboard_visibility/ClientDashboardVisibilityForm.jsx";
-import AuditCycleAuditorExecutionsummary from "./AuditCycleAuditorExecutionsummary.jsx";
+import AuditCycleAuditorExecutionSummary from "./AuditCycleAuditorExecutionSummary.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -285,7 +285,7 @@ const Routes = () => (
 				<Route path="opportunity_notification" components={OpportunityRecordList}>
 					<Route path="schedule" component={OpportunityRecordForm} />
 				</Route>
-				<Route path="auditor_execution_summary" components={AuditCycleAuditorExecutionsummary} />
+				<Route path="auditor_execution_summary" components={AuditCycleAuditorExecutionSummary} />
 			</Route>
 
 			<Route path="audit_store/:auditStoreId" components={AuditStoreDetails}>
