@@ -173,6 +173,26 @@ def get_performing_cities_by_type_for_clientuser(questionnaire_type_id, user_id)
         'data': data_1
     }
 
+def get_city_performance_range_wise_for_clientuser(questionnaire_type_id,audit_cycle_ids,user_id):
+    audit_cycles=AuditCycle.objects.filter(id__in=audit_cycle_ids,questionnaire_type_id=questionnaire_type_id,status__in=AuditCycle.TRENDABLE_STATUSES).order_by('end_date')
+    if not audit_cycles.exists():
+        return {'type':questionnaire_type_id,'questionnaire_type':questionnaire_type_id,'columns':[],'data':[]}
+    ranges=[('0 - 20',0,20),('21 - 40',21,40),('41 - 60',41,60),('61 - 80',61,80),('81 - 100',81,100)]
+    audit_cycle_names=[audit_cycle.name for audit_cycle in audit_cycles]
+    data=[]
+    for range_name,minimum,maximum in ranges:
+        range_data=[]
+        for audit_cycle in audit_cycles:
+            cities=get_performing_cities(audit_cycle,user_id)
+            range_cities=[]
+            for city,score in cities:
+                value=score.get('value',0)
+                if minimum<=value<=maximum:
+                    range_cities.append({'city':city,'score':score})
+            range_data.append({'audit_cycle_id':audit_cycle.id,'audit_cycle_name':audit_cycle.name,'city_count':len(range_cities),'cities':range_cities})
+        data.append({'range':range_name,'cycles':range_data})
+    return {'type':questionnaire_type_id,'questionnaire_type':questionnaire_type_id,'columns':audit_cycle_names,'data':data}
+
 def get_performing_cities_by_type_by_audit_cycle_id_for_clientuser(questionnaire_type_id, audit_cycle_id, user_id):
     qs = AuditCycle.objects.filter(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)
     qs = qs.prefetch_related(

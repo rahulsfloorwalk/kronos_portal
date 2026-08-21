@@ -182,6 +182,7 @@ def get_all_over_all_nps_score(client_id, audit_cycle_ids):
         detractors_count = 0
         passives_count = 0
         promoters_count = 0
+        audit_cycle_name = stores[0].audit.audit_cycle.name if stores else None
 
         for audit_store in stores:
             if audit_store.status not in ("COMPLETED", "ACCEPTED"):
@@ -210,6 +211,7 @@ def get_all_over_all_nps_score(client_id, audit_cycle_ids):
 
         response.append({
             "audit_cycle_id": audit_cycle_id,
+            "audit_cycle_name": audit_cycle_name,
             "average_nps_percentage": average_nps_percentage,
             "total_replies": total_replies,
             "total_audit_store": total_audit_store,

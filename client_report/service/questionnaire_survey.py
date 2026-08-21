@@ -8,73 +8,42 @@ from client.service.client_user import find_non_client_admin_user_store_by_clien
 from questionnaire.models import Question
 
 
-def get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user):
-    audit_cycle_obj = AuditCycle.objects.get(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)
-    sections = audit_cycle_obj.sections.order_by('sequence')
+def get_questionnaire_survey_by_audit_cycles(audit_cycle_ids, questionnaire_type_id, client_user):
+    audit_cycles = AuditCycle.objects.filter(id__in=audit_cycle_ids, questionnaire_type_id=questionnaire_type_id).prefetch_related('sections')
     client_admin = client_user.is_client_admin()
     if not client_admin:
         non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
     questionnaire_survey_list = []
-    for section in sections:
-        if section.questions.filter(question_type__in=['MUTEX', 'MULTISELECT'],visibility=Question.VISIBLE_TO_ALL,hide_question=False).exists():
-            row = {
-                'type': 'section',
-                'section_id': section.id,
-                'section_name': section.name
-            }
-            questionnaire_survey_list.append(row)
-            # for question in section.questions.filter(question_type__in=['MUTEX', 'MULTISELECT']).order_by('sequence'):
-            for question in section.questions.filter(question_type__in=['MUTEX', 'MULTISELECT'],visibility=Question.VISIBLE_TO_ALL,hide_question=False).order_by('sequence'):
-                if question.section == section:
-                    if question.max_marks >= 0:
-                        # answer_obj = find_answers_by_question_id(question.id)
-                        answer_obj = find_answers_by_question_id_for_client(question.id)
-                        if client_admin:
-                            answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                                           not_applicable=False)
-                        else:
-                            answer_obj = answer_obj.filter(
-                                audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                audit_store__audit__store__id__in=non_admin_user_store_list,
-                                not_applicable=False)
-                        total_answer_count = answer_obj.count()
-                        if total_answer_count > 0:
-                            options_list = []
-                            for option in question.question_data['options']:
-                                if client_admin:
-                                    if question.question_type == 'MULTISELECT':
-                                        option_answer_obj = answer_obj.filter(
-                                            audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                            not_applicable=False, answer_text__contains=option['value'])
-                                    else:
-                                        option_answer_obj = answer_obj.filter(
-                                            audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                            not_applicable=False, answer_text=option['value'])
-                                else:
-                                    if question.question_type == 'MULTISELECT':
-                                        option_answer_obj = answer_obj.filter(
-                                            audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                            audit_store__audit__store__id__in=non_admin_user_store_list,
-                                            not_applicable=False, answer_text__contains=option['value'])
-                                    else:
-                                        option_answer_obj = answer_obj.filter(
-                                            audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                            audit_store__audit__store__id__in=non_admin_user_store_list,
-                                            not_applicable=False, answer_text=option['value'])
-                                option_count = option_answer_obj.count()
-                                if option_count > 0:
-                                    percentage = round((option_count / total_answer_count) * 100, 2)
-                                    options_list.append({'option_name': option['value'], 'percentage': percentage})
-                                else:
-                                    options_list.append({'option_name': option['value'], 'percentage': 0})
-                            row = {
-                                'type': 'question',
-                                'question_id': question.id,
-                                'question_txt': question.question_txt,
-                                'options_list': options_list
-                            }
-                            questionnaire_survey_list.append(row)
+    for audit_cycle_obj in audit_cycles:
+        cycle_data = {'audit_cycle_id': audit_cycle_obj.id, 'sections': []}
+        sections = audit_cycle_obj.sections.order_by('sequence')
+        for section in sections:
+            questions = section.questions.filter(question_type__in=['MUTEX', 'MULTISELECT'], visibility=Question.VISIBLE_TO_ALL, hide_question=False).order_by('sequence')
+            if not questions.exists():
+                continue
+            section_data = {'section_id': section.id, 'section_name': section.name, 'questions': []}
+            for question in questions:
+                if question.max_marks < 0:
+                    continue
+                answer_obj = find_answers_by_question_id_for_client(question.id).filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED], not_applicable=False, audit_store__audit__audit_cycle_id=audit_cycle_obj.id)
+                if not client_admin:
+                    answer_obj = answer_obj.filter(audit_store__audit__store__id__in=non_admin_user_store_list)
+                total_answer_count = answer_obj.count()
+                if total_answer_count == 0:
+                    continue
+                options_list = []
+                for option in question.question_data['options']:
+                    if question.question_type == 'MULTISELECT':
+                        option_count = answer_obj.filter(answer_text__contains=option['value']).count()
+                    else:
+                        option_count = answer_obj.filter(answer_text=option['value']).count()
+                    percentage = round((float(option_count) / total_answer_count) * 100, 2)
+                    options_list.append({'option_name': option['value'], 'percentage': percentage})
+                section_data['questions'].append({'question_id': question.id, 'question_txt': question.question_txt, 'options_list': options_list})
+            if section_data['questions']:
+                cycle_data['sections'].append(section_data)
+        questionnaire_survey_list.append(cycle_data)
     return questionnaire_survey_list
 
 

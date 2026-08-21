@@ -298,6 +298,15 @@ class ActionReportChangeStatus(APIView):
         report_action = audit_store_client_service.change_status_report_action(action_plan_id)
         return Response(ReportActionPlanSerializer(report_action).data)
 
+class AuditStoreIDView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
+        return Response(audit_stores)
+    
 class AuditStoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -314,7 +323,7 @@ class AuditStoreView(APIView):
             return Response({"message": "Invalid audit_cycle_ids."}, status=400)
         if not audit_cycle_ids:
             return Response({"message": "audit_cycle_ids is required."}, status=400)
-        audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_ids, request.user.id)
+        audit_stores = audit_section.get_audit_store_aggregation_for_clients(audit_cycle_ids, request.user.id)
         return Response(audit_stores)
 
 class AuditCycleAuditStoreSectionView(APIView):
@@ -620,13 +629,29 @@ class AuditCycleStorePerformance(APIView):
         return Response(data)
 
 
-class DashboardStoreTrends(APIView):
+class DashboardStoresTrends(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, questionnaire_type_id, format=None):
         data = store_trends.get_performing_stores_by_type_for_clientuser(questionnaire_type_id, request.user.id)
+        return Response(data)
+
+class DashboardStoreTrends(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {'GET': [GROUP_NAME_CLIENT]}
+    def get(self, request, questionnaire_type_id, format=None):
+        audit_cycle_ids = request.GET.get('audit_cycle_ids')
+        if not audit_cycle_ids:
+            return Response({"message": "audit_cycle_ids is required."}, status=400)
+        try:
+            audit_cycle_ids = [int(i.strip()) for i in audit_cycle_ids.split(',') if i.strip()]
+        except ValueError:
+            return Response({"message": "Invalid audit_cycle_ids."}, status=400)
+        if not audit_cycle_ids:
+            return Response({"message": "audit_cycle_ids is required."}, status=400)
+        data = store_trends.get_store_performance_range_wise_for_clientuser(questionnaire_type_id, audit_cycle_ids, request.user.id)
         return Response(data)
 
 class DashboardStoreTrendsByAuditCycleId(APIView):
@@ -638,15 +663,31 @@ class DashboardStoreTrendsByAuditCycleId(APIView):
         data = store_trends.get_performing_stores_by_type_by_audit_cycle_id_for_clientuser(questionnaire_type_id, audit_cycle_id, request.user.id)
         return Response(data)
 
+# class DashboardCityWiseTrends(APIView):
+#     permission_classes = [HasGroupPermission]
+#     required_groups = {
+#         'GET': [GROUP_NAME_CLIENT],
+#     }
+#     def get(self, request, questionnaire_type_id, format=None):
+#         data = city_trends.get_performing_cities_by_type_for_clientuser(questionnaire_type_id, request.user.id)
+#         return Response(data)
+
 class DashboardCityWiseTrends(APIView):
     permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_CLIENT],
-    }
+    required_groups = {'GET': [GROUP_NAME_CLIENT]}
     def get(self, request, questionnaire_type_id, format=None):
-        data = city_trends.get_performing_cities_by_type_for_clientuser(questionnaire_type_id, request.user.id)
+        audit_cycle_ids = request.GET.get('audit_cycle_ids')
+        if not audit_cycle_ids:
+            return Response({"message": "audit_cycle_ids is required."}, status=400)
+        try:
+            audit_cycle_ids = [int(i.strip()) for i in audit_cycle_ids.split(',') if i.strip()]
+        except ValueError:
+            return Response({"message": "Invalid audit_cycle_ids."}, status=400)
+        if not audit_cycle_ids:
+            return Response({"message": "audit_cycle_ids is required."}, status=400)
+        data = city_trends.get_city_performance_range_wise_for_clientuser(questionnaire_type_id,audit_cycle_ids,request.user.id)
         return Response(data)
-
+    
 
 class DashboardCityWiseTrendsByAuditCycleId(APIView):
     permission_classes = [HasGroupPermission]
@@ -656,7 +697,6 @@ class DashboardCityWiseTrendsByAuditCycleId(APIView):
     def get(self, request, questionnaire_type_id, audit_cycle_id, format=None):
         data = city_trends.get_performing_cities_by_type_by_audit_cycle_id_for_clientuser(questionnaire_type_id, audit_cycle_id, request.user.id)
         return Response(data)
-
 
 class DashboardRegionWiseTrendsByAuditCycleId(APIView):
     permission_classes = [HasGroupPermission]
@@ -827,15 +867,37 @@ class ImprovableQuestionsXlsxReport(APIView):
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response
 
-
 class QuestionnaireSurveyByAuditCycleId(APIView):
     permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_CLIENT]
-    }
-    def get(self, request, questionnaire_type_id, audit_cycle_id):
-        audit_cycle_questionnaire_survey = questionnaire_survey.get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_id, request.user.clientuser)
-        return Response(audit_cycle_questionnaire_survey)
+    required_groups = {'GET': [GROUP_NAME_CLIENT]}
+    def get(self, request, questionnaire_type_id):
+        audit_cycle_ids = request.GET.get('audit_cycle_ids')
+        if not audit_cycle_ids:
+            return Response({"message": "audit_cycle_ids is required."}, status=400)
+        try:
+            audit_cycle_ids = [int(i.strip()) for i in audit_cycle_ids.split(',') if i.strip()]
+        except ValueError:
+            return Response({"message": "Invalid audit_cycle_ids."}, status=400)
+        if not audit_cycle_ids:
+            return Response({"message": "audit_cycle_ids is required."}, status=400)
+        data = questionnaire_survey.get_questionnaire_survey_by_audit_cycles(audit_cycle_ids, questionnaire_type_id, request.user.clientuser)
+        return Response(data)
+
+class QuestionnaireSurveyByAuditCycleIds(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {'GET': [GROUP_NAME_CLIENT]}
+    def get(self, request, questionnaire_type_id):
+        audit_cycle_ids = request.GET.get('audit_cycle_ids')
+        if not audit_cycle_ids:
+            return Response({"message": "audit_cycle_ids is required."}, status=400)
+        try:
+            audit_cycle_ids = [int(i.strip()) for i in audit_cycle_ids.split(',') if i.strip()]
+        except ValueError:
+            return Response({"message": "Invalid audit_cycle_ids."}, status=400)
+        if not audit_cycle_ids:
+            return Response({"message": "audit_cycle_ids is required."}, status=400)
+        data = questionnaire_survey.get_questionnaire_survey_by_audit_cycles(audit_cycle_ids, questionnaire_type_id, request.user.clientuser)
+        return Response(data)
 
 
 class QuestionnaireSurveyXlsxReport(APIView):
