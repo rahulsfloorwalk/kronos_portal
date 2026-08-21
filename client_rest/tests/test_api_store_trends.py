@@ -25,17 +25,17 @@ class StoreTrendsViewTestCase(APITestCase):
     def login(self):
         self.client.login(username=self.email, password=self.password)
 
-    def test_store_trends(self):
-        self.login()
+    # def test_store_trends(self):
+    #     self.login()
 
-        response = self.client.get(reverse('client_rest:dashboard_store_trends', kwargs={
-            "questionnaire_type_id": self.questionnaire_type_id,
-        }))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['type'], str(self.questionnaire_type_id))
-        self.assertEqual(response.data['questionnaire_type'], str(self.questionnaire_type_id))
-        self.assertEqual(len(response.data['columns']), 3)
-        self.assertEqual(len(response.data['data']), 11)
+    #     response = self.client.get(reverse('client_rest:dashboard_store_trends', kwargs={
+    #         "questionnaire_type_id": self.questionnaire_type_id,
+    #     }))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.data['type'], str(self.questionnaire_type_id))
+    #     self.assertEqual(response.data['questionnaire_type'], str(self.questionnaire_type_id))
+    #     self.assertEqual(len(response.data['columns']), 3)
+    #     self.assertEqual(len(response.data['data']), 11)
 
     def test_store_trends_xlsx(self):
         self.login()

@@ -1,7 +1,7 @@
 import xlsxwriter
 import io
 
-from django.db.models import Sum
+from django.db.models import Sum,Count
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from questionnaire.models import Question
@@ -11,55 +11,209 @@ from kronos.utils import get_color_code, get_color_hex_from_code
 from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
 
 
-def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user):
-    improvable_questions_list = []
-    audit_cycle_obj = AuditCycle.objects.get(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)
-    questions_list = find_by_audit_cycle(audit_cycle_obj.id).filter(visibility=Question.VISIBLE_TO_ALL,hide_question=False
-        ).prefetch_related('section')\
-        .values('id', 'max_marks', 'section__id', 'section__name', 'question_txt')
+
+def find_by_audit_cycle_ids(audit_cycle_ids):
+    return Question.objects.filter(section__audit_cycle_id__in=audit_cycle_ids)
+
+def get_improvable_questions_by_audit_cycle(audit_cycle_ids, questionnaire_type_id, client_user):
+    audit_cycle_ids = list(dict.fromkeys(audit_cycle_ids))
+    valid_cycle_ids = list(
+        AuditCycle.objects.filter(
+            id__in=audit_cycle_ids,
+            questionnaire_type_id=questionnaire_type_id
+        ).values_list('id', flat=True)
+    )
+    if not valid_cycle_ids:
+        return {
+            'summary': {
+                'total_questions': 0,
+                'total_max_marks': 0,
+                'total_obtained_marks': 0,
+                'percentage': 0
+            },
+            'cycle_summary': [],
+            'question_comparison': []
+        }
+
+    questions = find_by_audit_cycle_ids(valid_cycle_ids).filter(
+        section__audit_cycle__questionnaire_type_id=questionnaire_type_id,
+        visibility=Question.VISIBLE_TO_ALL,
+        hide_question=False
+    ).values(
+        'id',
+        'max_marks',
+        'section__id',
+        'section__name',
+        'question_txt',
+        'section__audit_cycle_id'
+    ).order_by(
+        'section__sequence',
+        'id'
+    )
 
     client_admin = client_user.is_client_admin()
+
     if not client_admin:
         non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
-    for question in questions_list:
+
+    question_comparison = {}
+
+    for question in questions:
+        question_id = question['id']
         section_id = question['section__id']
-        if question['max_marks'] > 0:
-            answer_obj = find_answers_by_question_id_for_client(question['id'])
-            if client_admin:
-                answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                               not_applicable=False,
-                                               audit_store__report_sections__section_id=section_id,
-                                               audit_store__report_sections__not_applicable=False,
-                                               question__visibility=Question.VISIBLE_TO_ALL,
-                                               question__hide_question=False)
-            else:
-                answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                               audit_store__audit__store__id__in=non_admin_user_store_list,
-                                               not_applicable=False,
-                                               audit_store__report_sections__section_id=section_id,
-                                               audit_store__report_sections__not_applicable=False,question__visibility=Question.VISIBLE_TO_ALL,
-                                               question__hide_question=False)
-            if answer_obj.count() > 0:
-                total_question_marks = question['max_marks'] * answer_obj.count()
-                # obtained_marks = (answer_obj.aggregate(sum_marks=Sum('marks_obtained')))['sum_marks']
-                obtained_marks = answer_obj.aggregate(sum_marks=Sum('marks_obtained'))['sum_marks'] or 0
-                percentage = round((obtained_marks / total_question_marks) * 100, 2)
-                if percentage < 75:
-                    # if percentage < 75:
-                    improvable_questions_dict = {}
-                    improvable_questions_dict['question_id'] = question['id']
-                    improvable_questions_dict['question_txt'] = question['question_txt']
-                    improvable_questions_dict['question_section'] = question['section__name']
-                    improvable_questions_dict['total_marks'] = total_question_marks
-                    improvable_questions_dict['obtained_marks'] = obtained_marks
-                    improvable_questions_dict['lost_marks'] = total_question_marks - obtained_marks
-                    improvable_questions_dict['percentage'] = percentage
-                    improvable_questions_list.append(improvable_questions_dict)
+        section_name = question['section__name']
+        question_txt = question['question_txt']
+        cycle_id = question['section__audit_cycle_id']
+        max_marks = question['max_marks']
 
-    return sorted(improvable_questions_list, key=lambda qd: qd['lost_marks'], reverse=True)
+        if max_marks <= 0:
+            continue
 
-from django.db.models import Sum, Count
+        answer_obj = find_answers_by_question_id_for_client(question_id).filter(
+            audit_store__status__in=[
+                AuditStore.COMPLETED,
+                AuditStore.ACCEPTED
+            ],
+            audit_store__audit__audit_cycle_id=cycle_id,
+            audit_store__report_sections__section_id=section_id,
+            audit_store__report_sections__not_applicable=False,
+            question__visibility=Question.VISIBLE_TO_ALL,
+            question__hide_question=False
+        )
+
+        if not client_admin:
+            answer_obj = answer_obj.filter(
+                audit_store__audit__store__id__in=non_admin_user_store_list
+            )
+
+        na_count = answer_obj.filter(
+            not_applicable=True
+        ).count()
+
+        applicable_answers = answer_obj.filter(
+            not_applicable=False
+        )
+
+        answer_count = applicable_answers.count()
+
+        key = question_txt.strip() if question_txt else ''
+
+        if not key:
+            continue
+
+        if key not in question_comparison:
+            question_comparison[key] = {
+                'section_id': section_id,
+                'section_name': section_name,
+                'question_txt': question_txt,
+                'cycles': {}
+            }
+
+        if answer_count == 0:
+            if na_count > 0:
+                question_comparison[key]['cycles'][cycle_id] = {
+                    'audit_cycle_id': cycle_id,
+                    'question_id': question_id,
+                    'max_marks': 'NA',
+                    'obtained_marks': 'NA',
+                    'lost_marks': 'NA',
+                    'percentage': 'NA'
+                }
+            continue
+
+        total_max_marks = max_marks * answer_count
+
+        obtained_marks = applicable_answers.aggregate(
+            sum_marks=Sum('marks_obtained')
+        )['sum_marks'] or 0
+
+        lost_marks = total_max_marks - obtained_marks
+
+        percentage = round(
+            (float(obtained_marks) / total_max_marks) * 100,
+            2
+        ) if total_max_marks else 0
+
+        question_comparison[key]['cycles'][cycle_id] = {
+            'audit_cycle_id': cycle_id,
+            'question_id': question_id,
+            'max_marks': total_max_marks,
+            'obtained_marks': obtained_marks,
+            'lost_marks': lost_marks,
+            'percentage': percentage
+        }
+
+    common_questions = []
+
+    for question_data in question_comparison.values():
+        cycles = question_data['cycles']
+
+        if all(cycle_id in cycles for cycle_id in valid_cycle_ids):
+            ordered_cycles = []
+
+            for cycle_id in valid_cycle_ids:
+                ordered_cycles.append(cycles[cycle_id])
+
+            question_data['cycles'] = ordered_cycles
+            common_questions.append(question_data)
+
+    summary = {
+        'total_questions': 0,
+        'total_max_marks': 0,
+        'total_obtained_marks': 0
+    }
+
+    cycle_summary = {}
+
+    for question_data in common_questions:
+        for cycle in question_data['cycles']:
+            if cycle['percentage'] == 'NA':
+                continue
+
+            cycle_id = cycle['audit_cycle_id']
+
+            summary['total_questions'] += 1
+            summary['total_max_marks'] += cycle['max_marks']
+            summary['total_obtained_marks'] += cycle['obtained_marks']
+
+            if cycle_id not in cycle_summary:
+                cycle_summary[cycle_id] = {
+                    'audit_cycle_id': cycle_id,
+                    'total_questions': 0,
+                    'total_max_marks': 0,
+                    'total_obtained_marks': 0
+                }
+
+            cycle_summary[cycle_id]['total_questions'] += 1
+            cycle_summary[cycle_id]['total_max_marks'] += cycle['max_marks']
+            cycle_summary[cycle_id]['total_obtained_marks'] += cycle['obtained_marks']
+
+    summary['percentage'] = round(
+        (float(summary['total_obtained_marks']) / summary['total_max_marks']) * 100,
+        2
+    ) if summary['total_max_marks'] else 0
+
+    common_questions = sorted(
+        common_questions,
+        key=lambda question: sum(
+            cycle['lost_marks']
+            for cycle in question['cycles']
+            if cycle['lost_marks'] != 'NA'
+        ),
+        reverse=True
+    )
+
+    return {
+        'summary': summary,
+        'cycle_summary': [
+            cycle_summary[cycle_id]
+            for cycle_id in valid_cycle_ids
+            if cycle_id in cycle_summary
+        ],
+        'question_comparison': common_questions
+    }
+
 def get_improvable_questions_by_audit_cycles(audit_cycle_ids,questionnaire_type_id,client_user):
 
     audit_cycle_ids = list(set(audit_cycle_ids))

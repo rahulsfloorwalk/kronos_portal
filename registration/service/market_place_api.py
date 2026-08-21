@@ -216,6 +216,10 @@ def web_login_api(request):
     password = request.data.get("password")
 
     user = authenticate(username=username, password=password)
+
+    if not user:
+        return {'detail': 'Invalid username or password'}, 400
+    
     if not user.is_active:
         return {'detail': 'User account is inactive or deleted.'}, 400
     if user:

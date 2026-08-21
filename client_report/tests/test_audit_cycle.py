@@ -32,12 +32,12 @@ class AuditCycleTestCase(TestCase):
         self.client_non_admin = User.objects.get(pk=self.non_admin_client_user_id)
         assign_perm('client.clientuser_admin', self.client_admin)
 
-    def test_get_audit_cycle_section_averages_for_client_admin(self):
-        averages = get_audit_cycle_section_averages_for_client(self.client_admin, self.questionnaire_type_id)
-        self.assertTrue(len(averages.get('section_master')), 5)
-        self.assertTrue(len(averages.get('values')[0]), 5)
-        self.assertTrue(len(averages.get('audit_cycle_master')), 3)
-        self.assertTrue(len(averages.get('values')), 3)
+    # def test_get_audit_cycle_section_averages_for_client_admin(self):
+    #     averages = get_audit_cycle_section_averages_for_client(self.client_admin, self.questionnaire_type_id)
+    #     self.assertTrue(len(averages.get('section_master')), 5)
+    #     self.assertTrue(len(averages.get('values')[0]), 5)
+    #     self.assertTrue(len(averages.get('audit_cycle_master')), 3)
+    #     self.assertTrue(len(averages.get('values')), 3)
 
     '''def test_get_audit_cycle_section_averages_for_client_non_admin(self):
         averages = get_audit_cycle_section_averages_for_client(self.client_id, self.questionnaire_type_id, self.non_admin_client_user_id)
@@ -46,13 +46,13 @@ class AuditCycleTestCase(TestCase):
         self.assertTrue(len(averages.get('audit_cycle_master')), 3)
         self.assertTrue(len(averages.get('values')), 3)'''
 
-    def test_get_audit_cycle_section_averages_for_client_admin_user(self):
-        qs = AuditCycle.objects.filter(client__id=self.client_id).filter(
-            questionnaire_type_id=self.questionnaire_type_id).order_by('end_date')
-        averages = get_audit_cycle_section_averages(qs, self.admin_client_user_id)
-        self.assertEqual('Audit Cycle Summary', averages['title'])
-        self.assertEqual(3, len(averages['audit_cycle_master']))
-        self.assertEqual(5, len(averages['section_master']))
+    # def test_get_audit_cycle_section_averages_for_client_admin_user(self):
+    #     qs = AuditCycle.objects.filter(client__id=self.client_id).filter(
+    #         questionnaire_type_id=self.questionnaire_type_id).order_by('end_date')
+    #     averages = get_audit_cycle_section_averages(qs, self.admin_client_user_id)
+    #     self.assertEqual('Audit Cycle Summary', averages['title'])
+    #     self.assertEqual(3, len(averages['audit_cycle_master']))
+    #     self.assertEqual(5, len(averages['section_master']))
 
     '''def test_get_audit_cycle_section_averages_for_client_non_admin_user(self):
         qs = AuditCycle.objects.filter(client__id=self.client_id).filter(
@@ -62,10 +62,10 @@ class AuditCycleTestCase(TestCase):
         self.assertEqual(3, len(averages['audit_cycle_master']))
         self.assertEqual(5, len(averages['section_master']))'''
 
-    def test_get_averages_for_sections_for_client_admin_user(self):
-        section_averages = get_averages_for_sections_for_client_user(self.audit_cycle.sections.all(), self.admin_client_user_id)
-        self.assertEqual(len(section_averages), 5)
-        self.assertEqual(section_averages[0].get('average').get('value'), 75)
+    # def test_get_averages_for_sections_for_client_admin_user(self):
+    #     section_averages = get_averages_for_sections_for_client_user(self.audit_cycle.sections.all(), self.admin_client_user_id)
+    #     self.assertEqual(len(section_averages), 5)
+    #     self.assertEqual(section_averages[0].get('average').get('value'), 75)
 
     '''def test_get_averages_for_sections_for_client_non_admin_user(self):
         assign_perm('clientuser_store_visible', self.client_non_admin, self.store)

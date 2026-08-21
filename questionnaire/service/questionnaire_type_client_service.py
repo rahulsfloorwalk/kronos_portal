@@ -173,10 +173,38 @@ def find_questionnaire_types_for_proof_comparison(store_id):
     return qt_list
 
 def find_dashboard_widget_access_by_user(user):
+
     client = user.clientuser.client
-    widget_access= DashboardWidgetvisibilityAccess.objects.get(client=client)
+
+    widget_access, created = DashboardWidgetvisibilityAccess.objects.get_or_create(
+        client=client
+    )
+
     return {
-        field.name: getattr(widget_access, field.name)
-        for field in DashboardWidgetvisibilityAccess._meta.fields
+        'id': widget_access.id,
+        'client': widget_access.client.id,
+        'latest_audit_cycle_score': widget_access.latest_audit_cycle_score,
+        'upcoming_audits': widget_access.upcoming_audits,
+        'net_promoter_score': widget_access.net_promoter_score,
+        'section_summary': widget_access.section_summary,
+        'improvement_areas_based_on_observation': (
+            widget_access.improvement_areas_based_on_observation
+        ),
+        'overall_high_performance_store': (
+            widget_access.overall_high_performance_store
+        ),
+        'branch_performance': widget_access.branch_performance,
+        'overall_high_performance_city': (
+            widget_access.overall_high_performance_city
+        ),
+        'overall_low_performance_store': (
+            widget_access.overall_low_performance_store
+        ),
+        'overall_low_performance_city': (
+            widget_access.overall_low_performance_city
+        ),
+        'questionnaire_summary': widget_access.questionnaire_summary,
+        'created_at': widget_access.created_at,
+        'updated_at': widget_access.updated_at,
     }
    

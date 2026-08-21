@@ -135,7 +135,23 @@ def get_performing_stores_by_audit_cycle_id(audit_cycle, user_id):
         return stores
     else:
         return sorted(stores, key=lambda s: s[1].get('value'), reverse=True)
-
+    
+def get_store_performance_range_wise_for_clientuser(questionnaire_type_id,audit_cycle_ids,user_id):
+    audit_cycles=AuditCycle.objects.filter(id__in=audit_cycle_ids,questionnaire_type_id=questionnaire_type_id,status__in=AuditCycle.TRENDABLE_STATUSES).order_by('end_date')
+    ranges=[('0 - 20',0,20),('21 - 40',21,40),('41 - 60',41,60),('61 - 80',61,80),('81 - 100',81,100)]
+    data=[]
+    for audit_cycle in audit_cycles:
+        stores=get_performing_stores(audit_cycle,user_id)
+        range_data=[]
+        for range_name,minimum,maximum in ranges:
+            range_stores=[]
+            for store,score in stores:
+                value=score.get('value',0)
+                if minimum<=value<=maximum:
+                    range_stores.append({'store':store,'score':score})
+            range_data.append({'range':range_name,'store_count':len(range_stores),'stores':range_stores})
+        data.append({'audit_cycle_id':audit_cycle.id,'audit_cycle_name':audit_cycle.name,'ranges':range_data})
+    return {'type':questionnaire_type_id,'questionnaire_type':questionnaire_type_id,'data':data}
 
 def get_performing_stores_by_type_for_clientuser(questionnaire_type_id, user_id):
 
