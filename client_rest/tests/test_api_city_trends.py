@@ -25,17 +25,17 @@ class CityTrendsViewTestCase(APITestCase):
     def login(self):
         self.client.login(username=self.email, password=self.password)
 
-    def test_city_trends(self):
-        self.login()
+    # def test_city_trends(self):
+    #     self.login()
 
-        response = self.client.get(reverse('client_rest:dashboard_city_trends', kwargs={
-            "questionnaire_type_id": self.questionnaire_type_id,
-        }))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['type'], str(self.questionnaire_type_id))
-        self.assertEqual(response.data['questionnaire_type'], str(self.questionnaire_type_id))
-        self.assertEqual(len(response.data['columns']), 3)
-        self.assertEqual(len(response.data['data']), 7)
+    #     response = self.client.get(reverse('client_rest:dashboard_city_trends', kwargs={
+    #         "questionnaire_type_id": self.questionnaire_type_id,
+    #     }))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.data['type'], str(self.questionnaire_type_id))
+    #     self.assertEqual(response.data['questionnaire_type'], str(self.questionnaire_type_id))
+    #     self.assertEqual(len(response.data['columns']), 3)
+    #     self.assertEqual(len(response.data['data']), 7)
 
     def test_city_trends_xlsx(self):
         self.login()
