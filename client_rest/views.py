@@ -776,9 +776,23 @@ class AuditCycleTimeSeriesReport(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
+
     def get(self, request, questionnaire_type_id, format=None):
-        audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client(request.user, questionnaire_type_id)
-        return Response(audit_cycle_time_series)
+        audit_cycle_ids = request.GET.get('audit_cycle_ids')
+        if not audit_cycle_ids:
+            return Response({"message": "audit_cycle_ids is required."}, status=400)
+        try:
+            audit_cycle_ids = [int(i.strip()) for i in audit_cycle_ids.split(',') if i.strip()]
+        except ValueError:
+            return Response({"message": "Invalid audit_cycle_ids."}, status=400)
+        if not audit_cycle_ids:
+            return Response({"message": "audit_cycle_ids is required."}, status=400)
+        data = audit_cycle.get_audit_cycle_section_averages_for_client(
+            request.user,
+            questionnaire_type_id,
+            audit_cycle_ids
+        )
+        return Response(data)
 
 class AuditCycleTimeSeriesReportByAuditCycleId(APIView):
     permission_classes = [HasGroupPermission]
