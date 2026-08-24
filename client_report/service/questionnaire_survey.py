@@ -80,7 +80,8 @@ def get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_i
 def get_questionnaire_survey_by_audit_cycles(audit_cycle_ids, questionnaire_type_id, client_user):
     audit_cycles = AuditCycle.objects.filter(
         id__in=audit_cycle_ids,
-        questionnaire_type_id=questionnaire_type_id
+        questionnaire_type_id=questionnaire_type_id,
+        status__in=AuditCycle.LIVE_REPORTING_STATUSES
     ).order_by('end_date')
     client_admin = client_user.is_client_admin()
     non_admin_user_store_list = []
@@ -103,8 +104,9 @@ def get_questionnaire_survey_by_audit_cycles(audit_cycle_ids, questionnaire_type
                     continue
                 answer_obj = find_answers_by_question_id_for_client(question.id).filter(
                     audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                    not_applicable=False,
-                    audit_store__audit__audit_cycle_id=audit_cycle.id
+                    audit_store__audit__audit_cycle_id=audit_cycle.id,
+                    audit_store__audit__audit_cycle__status__in=AuditCycle.LIVE_REPORTING_STATUSES,
+                    not_applicable=False
                 )
                 if not client_admin:
                     answer_obj = answer_obj.filter(

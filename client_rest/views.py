@@ -780,10 +780,10 @@ class AuditCycleTimeSeriesReport(APIView):
             try:
                 audit_cycle_ids = [int(i.strip()) for i in audit_cycle_ids.split(',') if i.strip()]
             except ValueError:
-                return Response({"message":"Invalid audit_cycle_ids."},status=400)
+                return Response({"message":"Invalid audit_cycle_ids."}, status=400)
         else:
             audit_cycle_ids = None
-        data = audit_cycle.get_audit_cycle_section_averages_for_client(request.user,questionnaire_type_id,audit_cycle_ids)
+        data = audit_cycle.get_audit_cycle_section_averages_for_client(request.user, questionnaire_type_id, audit_cycle_ids)
         return Response(data)
 
 class AuditCycleTimeSeriesReportByAuditCycleId(APIView):

@@ -36,9 +36,16 @@ def find_content_id_by_object_name(app_label,model):
 
 
 class AuditStoreQuerySet(QuerySet):
+    # def presentable(self):
+    #     presentable_status = (AuditStore.COMPLETED, AuditStore.ACCEPTED)
+    #     presentable_audit_cycle_status = (AuditCycle.ACTIVE, AuditCycle.REPORT, AuditCycle.CLEARING, AuditCycle.ARCHIVED)
+    #     return self.filter(
+    #         audit__audit_cycle__status__in=presentable_audit_cycle_status,
+    #         status__in=presentable_status,
+    #     )
     def presentable(self):
         presentable_status = (AuditStore.COMPLETED, AuditStore.ACCEPTED)
-        presentable_audit_cycle_status = (AuditCycle.ACTIVE, AuditCycle.REPORT, AuditCycle.CLEARING, AuditCycle.ARCHIVED)
+        presentable_audit_cycle_status = AuditCycle.LIVE_REPORTING_STATUSES
         return self.filter(
             audit__audit_cycle__status__in=presentable_audit_cycle_status,
             status__in=presentable_status,

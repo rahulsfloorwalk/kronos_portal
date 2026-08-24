@@ -17,10 +17,9 @@ def find_by_audit_cycle_ids(audit_cycle_ids):
 
 def get_improvable_questions_by_audit_cycle(audit_cycle_ids, questionnaire_type_id, client_user):
     audit_cycle_ids = list(dict.fromkeys(audit_cycle_ids))
-    valid_cycle_ids = list(
-        AuditCycle.objects.filter(
-            id__in=audit_cycle_ids,
-            questionnaire_type_id=questionnaire_type_id
+    valid_cycle_ids = list(AuditCycle.objects.filter(
+            id__in=audit_cycle_ids,questionnaire_type_id=questionnaire_type_id,
+            status__in=AuditCycle.LIVE_REPORTING_STATUSES
         ).values_list('id', flat=True)
     )
     if not valid_cycle_ids:
@@ -37,28 +36,15 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_ids, questionnaire_type_
 
     questions = find_by_audit_cycle_ids(valid_cycle_ids).filter(
         section__audit_cycle__questionnaire_type_id=questionnaire_type_id,
-        visibility=Question.VISIBLE_TO_ALL,
-        hide_question=False
-    ).values(
-        'id',
-        'max_marks',
-        'section__id',
-        'section__name',
-        'question_txt',
-        'section__audit_cycle_id'
-    ).order_by(
-        'section__sequence',
-        'id'
-    )
-
+        section__audit_cycle__status__in=AuditCycle.LIVE_REPORTING_STATUSES,
+        visibility=Question.VISIBLE_TO_ALL,hide_question=False
+    ).values('id','max_marks','section__id','section__name','question_txt','section__audit_cycle_id'
+    ).order_by('section__sequence','id')
     client_admin = client_user.is_client_admin()
-
     if not client_admin:
         non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
-
     question_comparison = {}
-
     for question in questions:
         question_id = question['id']
         section_id = question['section__id']
@@ -66,16 +52,12 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_ids, questionnaire_type_
         question_txt = question['question_txt']
         cycle_id = question['section__audit_cycle_id']
         max_marks = question['max_marks']
-
         if max_marks <= 0:
             continue
-
         answer_obj = find_answers_by_question_id_for_client(question_id).filter(
-            audit_store__status__in=[
-                AuditStore.COMPLETED,
-                AuditStore.ACCEPTED
-            ],
+            audit_store__status__in=[AuditStore.COMPLETED,AuditStore.ACCEPTED],
             audit_store__audit__audit_cycle_id=cycle_id,
+            audit_store__audit__audit_cycle__status__in=AuditCycle.LIVE_REPORTING_STATUSES,
             audit_store__report_sections__section_id=section_id,
             audit_store__report_sections__not_applicable=False,
             question__visibility=Question.VISIBLE_TO_ALL,
@@ -83,25 +65,13 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_ids, questionnaire_type_
         )
 
         if not client_admin:
-            answer_obj = answer_obj.filter(
-                audit_store__audit__store__id__in=non_admin_user_store_list
-            )
-
-        na_count = answer_obj.filter(
-            not_applicable=True
-        ).count()
-
-        applicable_answers = answer_obj.filter(
-            not_applicable=False
-        )
-
+            answer_obj = answer_obj.filter(audit_store__audit__store__id__in=non_admin_user_store_list)
+        na_count = answer_obj.filter(not_applicable=True).count()
+        applicable_answers = answer_obj.filter(not_applicable=False)
         answer_count = applicable_answers.count()
-
         key = question_txt.strip() if question_txt else ''
-
         if not key:
             continue
-
         if key not in question_comparison:
             question_comparison[key] = {
                 'section_id': section_id,
@@ -109,7 +79,6 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_ids, questionnaire_type_
                 'question_txt': question_txt,
                 'cycles': {}
             }
-
         if answer_count == 0:
             if na_count > 0:
                 question_comparison[key]['cycles'][cycle_id] = {
@@ -121,20 +90,10 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_ids, questionnaire_type_
                     'percentage': 'NA'
                 }
             continue
-
         total_max_marks = max_marks * answer_count
-
-        obtained_marks = applicable_answers.aggregate(
-            sum_marks=Sum('marks_obtained')
-        )['sum_marks'] or 0
-
+        obtained_marks = applicable_answers.aggregate(sum_marks=Sum('marks_obtained'))['sum_marks'] or 0
         lost_marks = total_max_marks - obtained_marks
-
-        percentage = round(
-            (float(obtained_marks) / total_max_marks) * 100,
-            2
-        ) if total_max_marks else 0
-
+        percentage = round((float(obtained_marks) / total_max_marks) * 100, 2) if total_max_marks else 0
         question_comparison[key]['cycles'][cycle_id] = {
             'audit_cycle_id': cycle_id,
             'question_id': question_id,
@@ -143,40 +102,25 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_ids, questionnaire_type_
             'lost_marks': lost_marks,
             'percentage': percentage
         }
-
     common_questions = []
-
     for question_data in question_comparison.values():
         cycles = question_data['cycles']
-
         if all(cycle_id in cycles for cycle_id in valid_cycle_ids):
             ordered_cycles = []
-
             for cycle_id in valid_cycle_ids:
                 ordered_cycles.append(cycles[cycle_id])
-
             question_data['cycles'] = ordered_cycles
             common_questions.append(question_data)
-
-    summary = {
-        'total_questions': 0,
-        'total_max_marks': 0,
-        'total_obtained_marks': 0
-    }
-
+    summary = {'total_questions': 0,'total_max_marks': 0,'total_obtained_marks': 0}
     cycle_summary = {}
-
     for question_data in common_questions:
         for cycle in question_data['cycles']:
             if cycle['percentage'] == 'NA':
                 continue
-
             cycle_id = cycle['audit_cycle_id']
-
             summary['total_questions'] += 1
             summary['total_max_marks'] += cycle['max_marks']
             summary['total_obtained_marks'] += cycle['obtained_marks']
-
             if cycle_id not in cycle_summary:
                 cycle_summary[cycle_id] = {
                     'audit_cycle_id': cycle_id,
@@ -184,35 +128,19 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_ids, questionnaire_type_
                     'total_max_marks': 0,
                     'total_obtained_marks': 0
                 }
-
             cycle_summary[cycle_id]['total_questions'] += 1
             cycle_summary[cycle_id]['total_max_marks'] += cycle['max_marks']
             cycle_summary[cycle_id]['total_obtained_marks'] += cycle['obtained_marks']
-
-    summary['percentage'] = round(
-        (float(summary['total_obtained_marks']) / summary['total_max_marks']) * 100,
-        2
-    ) if summary['total_max_marks'] else 0
-
+    summary['percentage'] = round( (float(summary['total_obtained_marks']) / summary['total_max_marks']) * 100, ) if summary['total_max_marks'] else 0
     common_questions = sorted(
         common_questions,
-        key=lambda question: sum(
-            cycle['lost_marks']
-            for cycle in question['cycles']
-            if cycle['lost_marks'] != 'NA'
-        ),
+        key=lambda question: sum( cycle['lost_marks'] for cycle in question['cycles'] if cycle['lost_marks'] != 'NA'),
         reverse=True
     )
-
     return {
         'summary': summary,
-        'cycle_summary': [
-            cycle_summary[cycle_id]
-            for cycle_id in valid_cycle_ids
-            if cycle_id in cycle_summary
-        ],
-        'question_comparison': common_questions
-    }
+        'cycle_summary': [ cycle_summary[cycle_id] for cycle_id in valid_cycle_ids if cycle_id in cycle_summary],
+        'question_comparison': common_questions}
 
 def get_improvable_questions_by_audit_cycles(audit_cycle_ids,questionnaire_type_id,client_user):
 

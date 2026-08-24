@@ -14,6 +14,7 @@ import requests
 import json
 from collections import OrderedDict
 from auditor.models import ProfileInfo
+from datetime import datetime
 
 
 def set_report_attribute_value(audit_store_id, json_id, option_id, user_id):
@@ -367,12 +368,26 @@ PRIORITY = {
     'No Interference Needed': 4,
 }
 
-def find_auditor_execution_report(audit_cycle_id):
-    audit_stores = (AuditStore.objects
-        .filter(audit__audit_cycle_id=audit_cycle_id)
+def find_auditor_execution_report(audit_cycle_id, status='', audit_date='', city_id='', comment=''):
+    audit_stores = (AuditStore.objects.filter(audit__audit_cycle_id=audit_cycle_id)
         .select_related('user','user__profileinfo','audit','audit__store','audit__store__city',)
-        .order_by('user_id','audit_date')
-    )
+        .order_by('user_id', 'audit_date'))
+
+    if status:
+        status_list = [s.strip() for s in status.split(',') if s.strip()]
+        audit_stores = audit_stores.filter(status__in=status_list)
+
+    if audit_date:
+        try:
+            audit_date = datetime.strptime(audit_date,'%d-%m-%Y').date()
+        except ValueError:
+            raise AppLogicError('Invalid audit date. Use DD-MM-YYYY.')
+
+        audit_stores = audit_stores.filter(audit_date=audit_date)
+
+    if city_id:
+        city_id_list = [ i.strip() for i in city_id.split(',') if i.strip()]
+        audit_stores = audit_stores.filter( audit__store__city_id__in=city_id_list)
 
     auditor_data = OrderedDict()
     for audit_store in audit_stores:
@@ -404,28 +419,27 @@ def find_auditor_execution_report(audit_cycle_id):
 
         data = auditor_data[user.id]
         data['grand_total'] += 1
-        status = audit_store.status
+        status_value = audit_store.status
         city = audit_store.audit.store.city
 
         if city and city.name not in data['cities']:
             data['cities'].append(city.name)
         if audit_store.audit_date:
+            audit_date_value = audit_store.audit_date.strftime('%d-%m-%Y')
 
-            audit_date = audit_store.audit_date.strftime('%d %b')
+            if audit_date_value not in data['audit_dates']:
+                data['audit_dates'].append(audit_date_value)
 
-            if audit_date not in data['audit_dates']:
-                data['audit_dates'].append(audit_date)
+        if status_value not in data['report_status']:
+            data['report_status'].append(status_value)
 
-        if status not in data['report_status']:
-            data['report_status'].append(status)
-
-        if status in (AuditStore.ACKNOWLEDGED,AuditStore.ASSIGNED):
+        if status_value in (AuditStore.ACKNOWLEDGED,AuditStore.ASSIGNED):
             data['pending_execution'] += 1
 
-        elif status in (AuditStore.COMPLETED,AuditStore.PM_REVIEW,AuditStore.SUBMITTED):
+        elif status_value in (AuditStore.COMPLETED,AuditStore.PM_REVIEW,AuditStore.SUBMITTED):
             data['done_audits'] += 1
 
-        elif status in (AuditStore.AUDITOR_WITHDRAWN,AuditStore.WITHDRAWN,AuditStore.FAILED):
+        elif status_value in (AuditStore.AUDITOR_WITHDRAWN,AuditStore.WITHDRAWN,AuditStore.FAILED):
             data['failed_reports'] += 1
 
     result = []
@@ -433,10 +447,14 @@ def find_auditor_execution_report(audit_cycle_id):
     for data in auditor_data.values():
         pending_execution = data['pending_execution']
         done_audits = data['done_audits']
-        # if pending_execution <= 0:
-        #     continue
 
-        comment = _resolve_comment(done_audits,pending_execution)
+        if pending_execution <= 0:
+            continue
+
+        calculated_comment = _resolve_comment(done_audits,pending_execution)
+        if comment and calculated_comment != comment:
+            continue
+
         result.append({
             'id': data['id'],
             'auditor_name': data['auditor_name'],
@@ -448,7 +466,7 @@ def find_auditor_execution_report(audit_cycle_id):
             'pending_execution': pending_execution,
             'done_audits': done_audits,
             'failed_reports': data['failed_reports'],
-            'comment': comment,
+            'comment': calculated_comment,
         })
 
     result.sort(key=lambda x: (PRIORITY[x['comment']],-x['grand_total']))
@@ -457,46 +475,18 @@ def find_auditor_execution_report(audit_cycle_id):
 def find_auditor_execution_report_details(audit_cycle_id, user_id, status=''):
     audit_stores = (
         AuditStore.objects
-        .filter(
-            audit__audit_cycle_id=audit_cycle_id,
-            user_id=user_id
-        )
-        .select_related(
-            'user',
-            'user__profileinfo',
-            'audit',
-            'audit__store',
-            'audit__store__city',
-            'audit__audit_cycle',
-        )
-        .order_by('audit_date', 'id')
-    )
+        .filter(audit__audit_cycle_id=audit_cycle_id,user_id=user_id)
+        .select_related('user','user__profileinfo','audit','audit__store','audit__store__city','audit__audit_cycle',)
+        .order_by('audit_date', 'id'))
 
     if status == 'pending':
-        audit_stores = audit_stores.filter(
-            status__in=[
-                AuditStore.ACKNOWLEDGED,
-                AuditStore.ASSIGNED,
-            ]
-        )
+        audit_stores = audit_stores.filter(status__in=[AuditStore.ACKNOWLEDGED,AuditStore.ASSIGNED,])
 
     elif status == 'completed':
-        audit_stores = audit_stores.filter(
-            status__in=[
-                AuditStore.COMPLETED,
-                AuditStore.PM_REVIEW,
-                AuditStore.SUBMITTED,
-            ]
-        )
+        audit_stores = audit_stores.filter(status__in=[AuditStore.COMPLETED,AuditStore.PM_REVIEW,AuditStore.SUBMITTED,])
 
     elif status == 'failed':
-        audit_stores = audit_stores.filter(
-            status__in=[
-                AuditStore.AUDITOR_WITHDRAWN,
-                AuditStore.WITHDRAWN,
-                AuditStore.FAILED,
-            ]
-        )
+        audit_stores = audit_stores.filter(status__in=[AuditStore.AUDITOR_WITHDRAWN,AuditStore.WITHDRAWN,AuditStore.FAILED,])
 
     result = []
 
@@ -512,31 +502,74 @@ def find_auditor_execution_report_details(audit_cycle_id, user_id, status=''):
             'status': audit_store.status,
             'city': city,
             'store_name': audit_store.audit.store.name,
-
             'auditor_name': (
-                '{} {}'.format(
-                    audit_store.user.profileinfo.first_name or '',
-                    audit_store.user.profileinfo.last_name or ''
-                ).strip()
+                '{} {}'.format( audit_store.user.profileinfo.first_name or '', audit_store.user.profileinfo.last_name or '').strip()
                 if hasattr(audit_store.user, 'profileinfo')
-                else audit_store.user.email
-            ),
-
-            'auditor_mobile_number': (
-                audit_store.user.profileinfo.mobile_number
-                if hasattr(audit_store.user, 'profileinfo')
-                else None
-            ),
-
+                else audit_store.user.email),
+            'auditor_mobile_number': (audit_store.user.profileinfo.mobile_number if hasattr(audit_store.user, 'profileinfo') else None),
             'earnings_per_audit': audit_store.earnings_per_audit,
             'reimbursement': audit_store.reimbursement,
             'auto_assigned': audit_store.auto_assigned,
             'instant_assigned': audit_store.instant_assigned,
-
             'assigned_by': audit_store.assigned_by,
-
             'submit_at': audit_store.submit_at,
             'audit_store_percentage': audit_store.report_completion_percentage,
         })
 
     return result
+
+def find_auditor_execution_report_filters(audit_cycle_id):
+    audit_stores = (AuditStore.objects.filter(audit__audit_cycle_id=audit_cycle_id).select_related('audit__store__city'))
+
+    statuses = []
+    cities = []
+    audit_dates = []
+    comments = []
+
+    status_values = audit_stores.values_list('status',flat=True).distinct()
+    for status in status_values:
+        if status and status not in statuses:
+            statuses.append(status)
+
+    city_values = audit_stores.filter(audit__store__city__isnull=False).values('audit__store__city__id','audit__store__city__name').distinct().order_by('audit__store__city__name')
+
+    for city in city_values:
+        cities.append({
+            'id': city['audit__store__city__id'],
+            'name': city['audit__store__city__name']
+        })
+
+    audit_date_values = audit_stores.filter(audit_date__isnull=False).values_list('audit_date',flat=True).distinct().order_by('audit_date')
+    for audit_date in audit_date_values:
+        audit_date_value = audit_date.strftime('%d-%m-%Y')
+        if audit_date_value not in audit_dates:
+            audit_dates.append(audit_date_value)
+
+    auditor_data = OrderedDict()
+
+    for audit_store in audit_stores.order_by('user_id', 'audit_date'):
+        user_id = audit_store.user_id
+        if user_id not in auditor_data:
+            auditor_data[user_id] = {'pending_execution': 0,'done_audits': 0}
+
+        if audit_store.status in (AuditStore.ACKNOWLEDGED,AuditStore.ASSIGNED):
+            auditor_data[user_id]['pending_execution'] += 1
+
+        elif audit_store.status in (AuditStore.COMPLETED,AuditStore.PM_REVIEW,AuditStore.SUBMITTED):
+            auditor_data[user_id]['done_audits'] += 1
+
+    for data in auditor_data.values():
+        if data['pending_execution'] <= 0:
+            continue
+
+        calculated_comment = _resolve_comment(data['done_audits'],data['pending_execution'] )
+        if calculated_comment not in comments:
+            comments.append(calculated_comment)
+
+    comments.sort( key=lambda value: PRIORITY[value])
+    return {
+        'status': statuses,
+        'city': cities,
+        'audit_date': audit_dates,
+        'comment': comments
+    }

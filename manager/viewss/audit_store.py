@@ -616,10 +616,20 @@ class AcceptAllCompletedForAuditCycle(APIView):
 class AuditorExecutionReportView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'POST': [GROUP_NAME_MANAGER],
+        'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
-        audit_data  = service_manager.find_auditor_execution_report(audit_cycle_id)
+        status = request.GET.get('status', '')
+        audit_date = request.GET.get('audit_date', '')
+        city_id = request.GET.get('city_id', '')
+        comment = request.GET.get('comment', '')
+        audit_data = service_manager.find_auditor_execution_report(
+            audit_cycle_id,
+            status=status,
+            audit_date=audit_date,
+            city_id=city_id,
+            comment=comment
+        )
         return Response(audit_data)
 
 class AuditorExecutionReportDetailView(APIView):
@@ -631,3 +641,13 @@ class AuditorExecutionReportDetailView(APIView):
         status = request.GET.get('status', '')
         audit_stores = (service_manager.find_auditor_execution_report_details(audit_cycle_id,user_id,status))
         return Response(audit_stores)
+
+class AuditorExecutionReportFiltersView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, audit_cycle_id, format=None):
+        data = service_manager.find_auditor_execution_report_filters(audit_cycle_id)
+        return Response(data)
