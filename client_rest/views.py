@@ -1155,18 +1155,12 @@ class QuestionnaireTypesForDashboardByClient(APIView):
         return Response(types)
 
 class DashboardWidgetAccessView(APIView):
-
     permission_classes = [HasGroupPermission]
-
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-
     def get(self, request):
-        widget_access = questionnaire_type_client_service.find_dashboard_widget_access_by_user(
-            request.user
-        )
-
+        widget_access = questionnaire_type_client_service.find_dashboard_widget_access_by_user(request.user)
         return Response(widget_access)
 
 
