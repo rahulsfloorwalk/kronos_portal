@@ -187,16 +187,10 @@ def find_dashboard_widget_access_by_user(user):
         'upcoming_audits': widget_access.upcoming_audits,
         'net_promoter_score': widget_access.net_promoter_score,
         'section_summary': widget_access.section_summary,
-        'improvement_areas_based_on_observation': (
-            widget_access.improvement_areas_based_on_observation
-        ),
+        'improvement_areas_based_on_observation': (widget_access.improvement_areas_based_on_observation),
         'branch_performance': widget_access.branch_performance,
-        'city_wise_performance': (
-            widget_access.city_wise_performance
-        ),
-        'store_wise_performance': (
-            widget_access.store_wise_performance
-        ),
+        'city_wise_performance': (widget_access.city_wise_performance),
+        'store_wise_performance': ( widget_access.store_wise_performance),
         'questionnaire_summary': widget_access.questionnaire_summary,
         'created_at': widget_access.created_at,
         'updated_at': widget_access.updated_at,

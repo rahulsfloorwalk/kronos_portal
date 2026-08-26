@@ -865,9 +865,22 @@ class ImprovableQuestionsXlsxReport(APIView):
         'GET': [GROUP_NAME_CLIENT]
     }
     def get(self, request):
-        audit_cycle_id = request.GET.get('auditCycleId')
-        questionnaire_type_id = request.GET.get('questionnaireTypeId')
-        report, name = improvable_questions.get_improvable_questions_xlsx_by_audit_cycle(audit_cycle_id, questionnaire_type_id, request.user.clientuser)
+        audit_cycle_ids = request.GET.get('audit_cycle_ids') or request.GET.get('auditCycleIds') or request.GET.get('auditCycleId')
+        questionnaire_type_id = request.GET.get('questionnaire_type_id') or request.GET.get('questionnaireTypeId')
+
+        if not audit_cycle_ids:
+            return Response({'message': 'audit_cycle_ids is required.'}, status=400)
+
+        try:
+            audit_cycle_ids = [int(i.strip()) for i in audit_cycle_ids.split(',') if i.strip()]
+        except ValueError:
+            return Response({'message': 'Invalid audit_cycle_ids.'}, status=400)
+
+        if not audit_cycle_ids:
+            return Response({'message': 'audit_cycle_ids is required.'}, status=400)
+
+        report, name = improvable_questions.get_improvable_questions_xlsx_by_audit_cycles(audit_cycle_ids, questionnaire_type_id, request.user.clientuser)
+
         response = HttpResponse(report.read(),
                                 content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
@@ -898,21 +911,23 @@ class QuestionnaireSurveyByAuditCycleIds(APIView):
         data = questionnaire_survey.get_questionnaire_survey_by_audit_cycles(audit_cycle_ids, questionnaire_type_id, request.user.clientuser)
         return Response(data)
 
-
 class QuestionnaireSurveyXlsxReport(APIView):
     permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_CLIENT]
-    }
-    def get(self, request):
-        audit_cycle_id = request.GET.get('auditCycleId')
-        questionnaire_type_id = request.GET.get('questionnaireTypeId')
-        report, name = questionnaire_survey.get_questionnaire_survey_xlsx_by_audit_cycle(audit_cycle_id,
-                                                                                         questionnaire_type_id,
-                                                                                         request.user.clientuser)
-        response = HttpResponse(report.read(),
-                                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+    required_groups = {'GET': [GROUP_NAME_CLIENT]}
+    def get(self,request):
+        audit_cycle_ids = request.GET.get('auditCycleIds') or request.GET.get('auditCycleId') or request.GET.get('audit_cycle_ids')
+        questionnaire_type_id = request.GET.get('questionnaireTypeId') or request.GET.get('questionnaire_type_id')
+        if not audit_cycle_ids:
+            return Response({"message":"auditCycleIds is required."},status=400)
+        try:
+            audit_cycle_ids = [int(i.strip()) for i in audit_cycle_ids.split(',') if i.strip()]
+        except ValueError:
+            return Response({"message":"Invalid auditCycleIds."},status=400)
+        if not audit_cycle_ids:
+            return Response({"message":"auditCycleIds is required."},status=400)
+        report,name = questionnaire_survey.get_questionnaire_survey_xlsx_by_audit_cycles(audit_cycle_ids,questionnaire_type_id,request.user.clientuser)
+        response = HttpResponse(report.read(),content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(name)
         return response
 
 

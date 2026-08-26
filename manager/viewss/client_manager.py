@@ -65,16 +65,16 @@ class DashboardWidgetAccessSerializer(ModelSerializer):
         fields = (
             'id',
             'client',
-            'latest_audit_cycle_score',
+            'overall_audit_cycle_score',
             'upcoming_audits',
             'net_promoter_score',
             'section_summary',
             'improvement_areas_based_on_observation',
-            'overall_high_performance_store',
             'branch_performance',
-            'overall_high_performance_city',
-            'overall_low_performance_store',
-            'overall_low_performance_city',
+            'city_wise_performance',
+            'city_wise_performance',
+            # 'overall_low_performance_store',
+            # 'overall_low_performance_city',
             'questionnaire_summary',
             'created_at',
             'updated_at',
@@ -87,15 +87,15 @@ class DashboardWidgetAccessSerializer(ModelSerializer):
         else:
             widget_access = DashboardWidgetvisibilityAccess(client=self.context.get('client'))
 
-        widget_access.overall_audit_cycle_score = self.validated_data.get('latest_audit_cycle_score',widget_access.latest_audit_cycle_score)
+        widget_access.overall_audit_cycle_score = self.validated_data.get('latest_audit_cycle_score',widget_access.overall_audit_cycle_score)
         widget_access.upcoming_audits = self.validated_data.get('upcoming_audits',widget_access.upcoming_audits)
         widget_access.net_promoter_score = self.validated_data.get('net_promoter_score',widget_access.net_promoter_score)
         widget_access.section_summary = self.validated_data.get('section_summary',widget_access.section_summary)
         widget_access.improvement_areas_based_on_observation = self.validated_data.get('improvement_areas_based_on_observation',widget_access.improvement_areas_based_on_observation)
         # widget_access.overall_high_performance_store = self.validated_data.get('overall_high_performance_store',widget_access.overall_high_performance_store)
         widget_access.branch_performance = self.validated_data.get('branch_performance',widget_access.branch_performance)
-        widget_access.city_wise_performance = self.validated_data.get('overall_high_performance_city',widget_access.overall_high_performance_city)
-        widget_access.store_wise_performance = self.validated_data.get('overall_low_performance_store',widget_access.overall_low_performance_store)
+        widget_access.city_wise_performance = self.validated_data.get('overall_high_performance_city',widget_access.city_wise_performance)
+        widget_access.store_wise_performance = self.validated_data.get('overall_low_performance_store',widget_access.store_wise_performance)
         # widget_access.overall_low_performance_city = self.validated_data.get('overall_low_performance_city',widget_access.overall_low_performance_city)
         widget_access.questionnaire_summary = self.validated_data.get('questionnaire_summary',widget_access.questionnaire_summary)
 

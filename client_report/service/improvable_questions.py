@@ -255,132 +255,255 @@ def get_improvable_questions_list(question_id,user):
     }
 
 
-def get_improvable_questions_xlsx_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user):
-    audit_cycle_obj = AuditCycle.objects.get(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)
-    improvable_questions_data = get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user)
-    data = create_text_structure(audit_cycle_obj.name, improvable_questions_data)
-    name = (str(audit_cycle_obj.name) + " Improvable Questions List" + ".xlsx").replace("-", "")
-    return write_data(data), name
+def get_improvable_questions_xlsx_by_audit_cycles(audit_cycle_ids, questionnaire_type_id, client_user):
+    audit_cycles = list(
+        AuditCycle.objects.filter(
+            id__in=audit_cycle_ids,
+            questionnaire_type_id=questionnaire_type_id,
+            status__in=AuditCycle.LIVE_REPORTING_STATUSES
+        )
+    )
+    cycle_map = {cycle.id: cycle for cycle in audit_cycles}
+    audit_cycles = [cycle_map[cycle_id] for cycle_id in audit_cycle_ids if cycle_id in cycle_map]
+    if not audit_cycles:
+        return write_data([], []), 'Improvable Questions.xlsx'
+    valid_cycle_ids = [cycle.id for cycle in audit_cycles]
+    improvable_questions_data = get_improvable_questions_by_audit_cycle(
+        valid_cycle_ids,
+        questionnaire_type_id,
+        client_user
+    )
+    data = create_text_structure(
+        audit_cycles,
+        improvable_questions_data
+    )
+    if len(audit_cycles) == 1:
+        name = str(audit_cycles[0].name) + " Improvable Questions.xlsx"
+    else:
+        name = "Improvable Questions Summary.xlsx"
+    name = name.replace("-", "")
+    return write_data(data, audit_cycles), name
 
 
-def create_text_structure(audit_cycle_name, improvable_questions_data):
+def create_text_structure(audit_cycles, improvable_questions_data):
     rows = []
-
-    # generate title row
-    row = {'type': 'title', 'content': [audit_cycle_name + ' Improvable Questions']}
-    rows.append(row)
-
-    # generate header of improvable questions
-    cells = [{'value': "Section"}, {'value': "Question"}, {'value': "Obtained Marks / Total Marks"},
-             {'value': "Marks Lost"}]
-    row = {'type': 'header', 'content': cells}
-    rows.append(row)
-
-    # generate improvable question rows
-    for question in improvable_questions_data:
-        question_section = {
-            'value': question['question_section'],
-            'color_code': get_color_code(0, 0)
-        }
-        question_txt = {
-            'value': question['question_txt'],
-            'color_code': get_color_code(0, 0)
-        }
-        marks = {
-            'value': str(question['obtained_marks']) + " / " + str(question['total_marks']),
-            'color_code': get_color_code(0, 0)
-        }
-        marks_lost = {
-            'value': question['lost_marks'],
-            'color_code': get_color_code(question['percentage'], 100)
-        }
-        content = [question_section, question_txt, marks, marks_lost]
-        row = {
-            'type': 'question_data',
-            'content': content
-        }
-        rows.append(row)
+    rows.append({
+        'type': 'title',
+        'content': 'Improvable Questions Summary'
+    })
+    rows.append({
+        'type': 'header',
+        'cycles': [
+            {
+                'audit_cycle_id': cycle.id,
+                'audit_cycle_name': cycle.name
+            }
+            for cycle in audit_cycles
+        ]
+    })
+    for question in improvable_questions_data.get('question_comparison', []):
+        rows.append({
+            'type': 'question',
+            'section_name': question.get('section_name', ''),
+            'question_txt': question.get('question_txt', ''),
+            'cycles': question.get('cycles', [])
+        })
     return rows
 
-
-def write_data(data):
-    title_color = '#FFFFFF'
-    question_color = '#BEBEBE'
+def write_data(data, audit_cycles):
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
-    worksheet = workbook.add_worksheet()
-    section_format = workbook.add_format({
-        'text_wrap': True,
-        'bold': True,
-        'top': 1,
-        'bottom': 1,
-        'right': 1,
-        'bg_color': question_color,
-        'font_color': 'black',
-        'valign': 'vcenter',
-        'font_size': 14,
-    })
+    worksheet = workbook.add_worksheet('Improvable Questions')
 
     title_format = workbook.add_format({
-        'text_wrap': True,
         'bold': True,
-        'font_size': 16,
-        'bottom': 1,
-        'bg_color': title_color,
-        'font_color': 'black',
+        'font_size': 18,
+        'align': 'center',
         'valign': 'vcenter',
+        'border': 1,
+        'text_wrap': True
     })
 
-    base_answer_style = {
-        'text_wrap': True,
-        'bottom': 1,
-        'right': 1,
+    section_format = workbook.add_format({
+        'bold': True,
+        'font_size': 13,
+        'bg_color': '#BEBEBE',
+        'border': 1,
+        'align': 'center',
         'valign': 'vcenter',
-    }
+        'text_wrap': True
+    })
 
+    cycle_format = workbook.add_format({
+        'bold': True,
+        'font_size': 13,
+        'bg_color': '#D9EAF7',
+        'border': 1,
+        'align': 'center',
+        'valign': 'vcenter',
+        'text_wrap': True
+    })
 
-    def get_format_for_color_code(wb, base_style_dict, color_code):
-        colored_style = base_style_dict.copy()
-        colored_style['bg_color'] = get_color_hex_from_code(color_code)
-        return wb.add_format(colored_style)
+    question_format = workbook.add_format({
+        'font_size': 12,
+        'border': 1,
+        'text_wrap': True,
+        'valign': 'top'
+    })
 
-    start_row = 0
-    start_col = 0
-    # worksheet.set_column(0, 512, 15)
-    worksheet.set_column(0, 0, 30)
-    worksheet.set_column(1, 1, 50)
-    worksheet.set_column(2, 2, 20)
-    worksheet.set_default_row(40)
-    row = start_row
-    col = start_col
+    answer_format = workbook.add_format({
+        'font_size': 12,
+        'border': 1,
+        'text_wrap': True,
+        'valign': 'top',
+        'align': 'center'
+    })
 
-    line_counter = 0
+    na_format = workbook.add_format({
+        'font_size': 12,
+        'border': 1,
+        'text_wrap': True,
+        'valign': 'top',
+        'align': 'center'
+    })
+
+    cycle_count = len(audit_cycles)
+
+    worksheet.set_column(0, 0, 35)
+    worksheet.set_column(1, 1, 75)
+
+    if cycle_count:
+        worksheet.set_column(2, cycle_count + 1, 35)
+
+    worksheet.set_default_row(35)
+
+    row = 0
+
+    worksheet.merge_range(
+        row,
+        0,
+        row,
+        cycle_count + 1,
+        'Improvable Questions Summary',
+        title_format
+    )
+
+    worksheet.set_row(row, 40)
+    row += 2
+
+    current_section = None
+
     for line in data:
-        if line.get('type') == 'title':
-            for point in line.get('content'):
-                worksheet.merge_range(row, col, row, col + 3, point, title_format)
-                col += 1
-        elif line.get('type') == 'header':
-            for cell in line.get('content'):
-                if isinstance(cell, dict):
-                    if cell.get('colspan', 1) > 1:
-                        worksheet.merge_range(row, col, row, col + cell.get('colspan') - 1, cell.get('value'),
-                                              section_format)
-                        col += cell.get('colspan', 1)
-                    else:
-                        worksheet.write(row, col, cell.get('value', ""), section_format)
-                        col += 1
-                else:
-                    worksheet.write(row, col, cell, section_format)
-                    col += 1
-        elif line.get('type') == 'question_data':
-            for cell in line.get('content'):
-                worksheet.write(row, col, cell.get('value'),
-                                get_format_for_color_code(workbook, base_answer_style, cell.get('color_code', 0)))
-                col += 1
-            line_counter = ~line_counter
-        col = start_col
+        if line.get('type') == 'header':
+            worksheet.write(row, 0, 'Section', section_format)
+            worksheet.write(row, 1, 'Question', section_format)
+
+            for index, cycle in enumerate(line.get('cycles', [])):
+                cycle_name = cycle.get('audit_cycle_name', '')
+                worksheet.write(
+                    row,
+                    index + 2,
+                    cycle_name,
+                    cycle_format
+                )
+
+            worksheet.set_row(row, 65)
+            row += 1
+            continue
+
+        if line.get('type') != 'question':
+            continue
+
+        section_name = line.get('section_name', '')
+
+        if section_name != current_section:
+            current_section = section_name
+
+            worksheet.merge_range(
+                row,
+                0,
+                row,
+                cycle_count + 1,
+                section_name,
+                section_format
+            )
+
+            worksheet.set_row(row, 35)
+            row += 1
+
+        worksheet.write(
+            row,
+            0,
+            section_name,
+            question_format
+        )
+
+        worksheet.write(
+            row,
+            1,
+            line.get('question_txt', ''),
+            question_format
+        )
+
+        cycle_map = {
+            cycle.get('audit_cycle_id'): cycle
+            for cycle in line.get('cycles', [])
+        }
+
+        for index, audit_cycle in enumerate(audit_cycles):
+            cycle_id = audit_cycle.id
+            column = index + 2
+
+            cycle = cycle_map.get(cycle_id)
+
+            if not cycle:
+                worksheet.write(
+                    row,
+                    column,
+                    'NA',
+                    na_format
+                )
+                continue
+
+            percentage = cycle.get('percentage', 'NA')
+            obtained_marks = cycle.get('obtained_marks', 'NA')
+            max_marks = cycle.get('max_marks', 'NA')
+            lost_marks = cycle.get('lost_marks', 'NA')
+
+            if percentage == 'NA':
+                answer = 'NA'
+            else:
+                answer = (
+                    'Obtained: {}\n'
+                    'Total: {}\n'
+                    'Lost: {}\n'
+                    'Percentage: {}%'
+                ).format(
+                    obtained_marks,
+                    max_marks,
+                    lost_marks,
+                    percentage
+                )
+
+            worksheet.write(
+                row,
+                column,
+                answer,
+                answer_format
+            )
+
+        worksheet.set_row(row, 100)
         row += 1
+
+    worksheet.freeze_panes(3, 2)
+
+    if row > 3:
+        worksheet.autofilter(
+            2,
+            0,
+            row - 1,
+            cycle_count + 1
+        )
 
     workbook.close()
     output.seek(0)
