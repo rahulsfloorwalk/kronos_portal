@@ -12,6 +12,7 @@ import { withdrawAuditStore } from "../actions/audit_store";
 import { Link } from "react-router";
 import moment from "moment";
 import { momentDateFormat } from "../../../config.js";
+import {getAuditStoreStatus } from "../../utils.js";
 
 export class AuditorExecutionReportModal extends React.Component {
 	static propTypes = {
@@ -81,7 +82,7 @@ export class AuditorExecutionReportModal extends React.Component {
 					<td>{row.auditor_name}</td>
 					<td>{moment(row.audit_date).format(momentDateFormat)}</td>
 					<td>{row.store_name}</td>
-					<td>{row.status}</td>
+					<td>{getAuditStoreStatus(row.status)}</td>
 					{/* <td>{showPercentage ? `${row.audit_store_percentage}%` : "-"}</td> */}
 					<td>{this.renderPercentage(row, showPercentage)}</td>
 					<td>

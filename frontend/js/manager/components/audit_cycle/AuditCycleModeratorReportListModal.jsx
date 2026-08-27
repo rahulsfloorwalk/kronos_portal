@@ -17,6 +17,7 @@ const getAssignedModerator = (auditStore, moderatorId) => {
 
 const renderModeratorDisplay = (moderator) => {
 	if(!moderator) return null;
+	if(!moderator.name) return <span>{moderator.email}</span>;
 	return (<span>{moderator.name}<br/>({moderator.email})</span>);
 };
 
