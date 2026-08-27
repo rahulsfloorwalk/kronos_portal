@@ -637,3 +637,42 @@ export const countryDialCodes = [
 	{ id: 25, name: "NP(+977)", dialcode: "+977" },
 	{ id: 26, name: "PK(+92)", dialcode: "+92" }
 ];
+
+export const DASHBOARD_ITEMS = [
+	{
+		key: "overall_audit_cycle_score",
+		label: "Overall Audit Cycle Score",
+	},
+	{
+		key: "upcoming_audits",
+		label: "Upcoming Audits",
+	},
+	{
+		key: "net_promoter_score",
+		label: "Net Promoter Score",
+	},
+	{
+		key: "section_summary",
+		label: "Section Summary",
+	},
+	{
+		key: "improvement_areas_based_on_observation",
+		label: "Improvement areas based on observation",
+	},
+	{
+		key: "branch_performance",
+		label: "Branch performance",
+	},
+	{
+		key: "store_wise_performance",
+		label: "Store Wise Performance",
+	},
+	{
+		key: "city_wise_performance",
+		label: "City Wise Performance",
+	},
+	{
+		key: "questionnaire_summary",
+		label: "Questionnaire Summary",
+	},
+];

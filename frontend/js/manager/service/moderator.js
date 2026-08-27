@@ -10,6 +10,9 @@ export function findById(moderatorId){
 	return $.get( url.api_base_path + `manager/moderator/${moderatorId}`);
 }
 
+export function findModeratorDetailsById(auditCycleId,moderatorId){
+	return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/moderator/${moderatorId}/reportlist`);
+}
 
 export function findByAuditCycle(auditCycleId){
 	return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/moderator`);

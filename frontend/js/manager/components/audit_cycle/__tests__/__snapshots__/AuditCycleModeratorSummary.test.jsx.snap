@@ -41,7 +41,7 @@ exports[`AuditCycleModeratorSummary renders the moderator summary and moderator 
 >
    
   <table
-    className="table table-bordered table-striped"
+    className="table table-bordered table-striped table-hover"
   >
     <thead>
       <tr>
@@ -231,7 +231,15 @@ exports[`AuditCycleModeratorSummary renders the moderator summary and moderator 
       </tr>
     </thead>
     <tbody>
-      <tr>
+      <tr
+        onClick={[Function]}
+        style={
+          Object {
+            "cursor": "pointer",
+          }
+        }
+        title="View report list"
+      >
         <td>
           sentinel@redis.com
         </td>
@@ -310,7 +318,15 @@ exports[`AuditCycleModeratorSummary renders the moderator summary and moderator 
           }
         />
       </tr>
-      <tr>
+      <tr
+        onClick={[Function]}
+        style={
+          Object {
+            "cursor": "pointer",
+          }
+        }
+        title="View report list"
+      >
         <td>
           warthog@pulmonary.com
         </td>

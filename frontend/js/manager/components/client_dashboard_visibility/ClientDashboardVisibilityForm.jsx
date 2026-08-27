@@ -9,53 +9,7 @@ import SaveButton from "../../../components/SaveButton.jsx";
 import FormErrorList from "../../../components/FormErrorList.jsx";
 
 import {fetchClientDashboardVisibility,updateClientDashboardVisibility} from "../../service/client_manager.js";
-
-const DASHBOARD_ITEMS = [
-	{
-		key: "latest_audit_cycle_score",
-		label: "Latest Audit Cycle Score",
-	},
-	{
-		key: "upcoming_audits",
-		label: "Upcoming Audits",
-	},
-	{
-		key: "net_promoter_score",
-		label: "Net Promoter Score",
-	},
-	{
-		key: "section_summary",
-		label: "Section Summary",
-	},
-	{
-		key: "improvement_areas_based_on_observation",
-		label: "Improvement areas based on observation",
-	},
-	{
-		key: "overall_high_performance_store",
-		label: "Overall High Performance Store",
-	},
-	{
-		key: "overall_high_performance_city",
-		label: "Overall High Performance City",
-	},
-	{
-		key: "branch_performance",
-		label: "Branch performance",
-	},
-	{
-		key: "overall_low_performance_store",
-		label: "Overall Low Performance Store",
-	},
-	{
-		key: "overall_low_performance_city",
-		label: "Overall Low Performance City",
-	},
-	{
-		key: "questionnaire_summary",
-		label: "Questionnaire Summary",
-	},
-];
+import { DASHBOARD_ITEMS } from "../../../constants.js";
 
 const DEFAULT_VISIBILITY = DASHBOARD_ITEMS.reduce((acc, item) => {
 	acc[item.key] = true;

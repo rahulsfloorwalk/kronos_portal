@@ -462,66 +462,152 @@ class AttachmentRenderer extends React.Component {
 		});
 	};
 
+	// renderAnnotations = () => {
+	// 	return this.getAnnotations().map((a) => (
+	// 		<div
+	// 			key={a.id}
+	// 			onMouseDown={(e) => this.startMove(a.id, e)}
+	// 			style={{
+	// 				position: "absolute",
+	// 				left: a.xPct + "%",
+	// 				top: a.yPct + "%",
+	// 				width: a.diameter + "px",
+	// 				height: a.diameter + "px",
+	// 				marginLeft: -(a.diameter / 2) + "px",
+	// 				marginTop: -(a.diameter / 2) + "px",
+	// 				border: "3px solid #ff3b30",
+	// 				borderRadius: "50%",
+	// 				boxShadow: "0 0 4px rgba(0,0,0,0.5)",
+	// 				cursor: "move",
+	// 			}}
+	// 		>
+	// 			<button
+	// 				type="button"
+	// 				onMouseDown={(e) => e.stopPropagation()}
+	// 				onClick={(e) => {
+	// 					e.stopPropagation();
+	// 					this.removeAnnotation(a.id);
+	// 				}}
+	// 				style={{
+	// 					position: "absolute",
+	// 					top: "-10px",
+	// 					right: "-10px",
+	// 					width: "18px",
+	// 					height: "18px",
+	// 					lineHeight: "16px",
+	// 					padding: 0,
+	// 					borderRadius: "50%",
+	// 					border: "1px solid #ff3b30",
+	// 					backgroundColor: "#fff",
+	// 					color: "#ff3b30",
+	// 					fontSize: "12px",
+	// 					cursor: "pointer",
+	// 				}}
+	// 			>
+	// 				×
+	// 			</button>
+	// 			<div
+	// 				onMouseDown={(e) => this.startResize(a.id, e)}
+	// 				style={{
+	// 					position: "absolute",
+	// 					bottom: "-6px",
+	// 					right: "-6px",
+	// 					width: "12px",
+	// 					height: "12px",
+	// 					borderRadius: "50%",
+	// 					backgroundColor: "#ff3b30",
+	// 					border: "2px solid #fff",
+	// 					cursor: "nwse-resize",
+	// 				}}
+	// 			/>
+	// 		</div>
+	// 	));
+	// };
 	renderAnnotations = () => {
-		return this.getAnnotations().map((a) => (
-			<div
-				key={a.id}
-				onMouseDown={(e) => this.startMove(a.id, e)}
-				style={{
-					position: "absolute",
-					left: a.xPct + "%",
-					top: a.yPct + "%",
-					width: a.diameter + "px",
-					height: a.diameter + "px",
-					marginLeft: -(a.diameter / 2) + "px",
-					marginTop: -(a.diameter / 2) + "px",
-					border: "3px solid #ff3b30",
-					borderRadius: "50%",
-					boxShadow: "0 0 4px rgba(0,0,0,0.5)",
-					cursor: "move",
-				}}
-			>
-				<button
-					type="button"
-					onMouseDown={(e) => e.stopPropagation()}
-					onClick={(e) => {
-						e.stopPropagation();
-						this.removeAnnotation(a.id);
-					}}
+		const BOX_PADDING = 8;    // gap between circle edge and dashed box
+		const HANDLE_SIZE = 12;
+
+		return this.getAnnotations().map((a) => {
+			const boxSize = a.diameter + BOX_PADDING * 2;
+
+			return (
+				<div
+					key={a.id}
+					onMouseDown={(e) => this.startMove(a.id, e)}
 					style={{
 						position: "absolute",
-						top: "-10px",
-						right: "-10px",
-						width: "18px",
-						height: "18px",
-						lineHeight: "16px",
-						padding: 0,
+						left: a.xPct + "%",
+						top: a.yPct + "%",
+						width: a.diameter + "px",
+						height: a.diameter + "px",
+						marginLeft: -(a.diameter / 2) + "px",
+						marginTop: -(a.diameter / 2) + "px",
+						border: "3px solid #ff3b30",
 						borderRadius: "50%",
-						border: "1px solid #ff3b30",
-						backgroundColor: "#fff",
-						color: "#ff3b30",
-						fontSize: "12px",
-						cursor: "pointer",
+						boxShadow: "0 0 4px rgba(0,0,0,0.5)",
+						cursor: "move",
 					}}
 				>
-					×
-				</button>
-				<div
-					onMouseDown={(e) => this.startResize(a.id, e)}
-					style={{
-						position: "absolute",
-						bottom: "-6px",
-						right: "-6px",
-						width: "12px",
-						height: "12px",
-						borderRadius: "50%",
-						backgroundColor: "#ff3b30",
-						border: "2px solid #fff",
-						cursor: "nwse-resize",
-					}}
-				/>
-			</div>
-		));
+					{/* Dashed bounding box, always visible */}
+					<div
+						style={{
+							position: "absolute",
+							top: -BOX_PADDING + "px",
+							left: -BOX_PADDING + "px",
+							width: boxSize + "px",
+							height: boxSize + "px",
+							border: "1.5px dashed #007dc1",
+							borderRadius: "4px",
+							pointerEvents: "none",
+						}}
+					/>
+
+					{/* Delete button - unchanged position/behavior */}
+					<button
+						type="button"
+						onMouseDown={(e) => e.stopPropagation()}
+						onClick={(e) => {
+							e.stopPropagation();
+							this.removeAnnotation(a.id);
+						}}
+						style={{
+							position: "absolute",
+							top: "-10px",
+							right: "-10px",
+							width: "18px",
+							height: "18px",
+							lineHeight: "16px",
+							padding: 0,
+							borderRadius: "50%",
+							border: "1px solid #ff3b30",
+							backgroundColor: "#fff",
+							color: "#ff3b30",
+							fontSize: "12px",
+							cursor: "pointer",
+						}}
+					>
+						×
+					</button>
+
+					{/* Resize handle - now a square on the dashed box's corner, same drag functionality */}
+					<div
+						onMouseDown={(e) => this.startResize(a.id, e)}
+						title="Drag to resize"
+						style={{
+							position: "absolute",
+							bottom: -(BOX_PADDING + HANDLE_SIZE / 2) + "px",
+							right: -(BOX_PADDING + HANDLE_SIZE / 2) + "px",
+							width: HANDLE_SIZE + "px",
+							height: HANDLE_SIZE + "px",
+							backgroundColor: "#fff",
+							border: "1.5px solid #007dc1",
+							borderRadius: "2px",
+							cursor: "nwse-resize",
+						}}
+					/>
+				</div>
+			);
+		});
 	};
 	render() {
 		const file_slug = this.props.attachment.file_slug || "";

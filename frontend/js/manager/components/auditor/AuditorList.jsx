@@ -68,6 +68,7 @@ export class AuditorRow extends React.Component {
 		return (
 			<tbody>
 				<tr style={trStyle} onClick={this.viewButtonClicked} title={this.state.expanded ? "Click to Collapse" : "Click to Expand"} className={this.state.expanded ? "active" : ""}>
+					<td>{this.props.auditor.id}</td>
 					<td>{prof.first_name} {prof.last_name}</td>
 					<td>{this.props.auditor.email}</td>
 					<td>{occupation == null ? "N/A" : getOccupation(occupation)}</td>
@@ -208,6 +209,7 @@ export class AuditorList extends React.Component {
 					<table className="table table-striped">
 						<thead>
 							<tr>
+								<th>Auditor ID</th>
 								<th>Full Name</th>
 								<th>Email</th>
 								<th>Occupation</th>

@@ -158,6 +158,7 @@ import TrainerReportList from "./trainer/TrainerReportList.jsx";
 import TrainerSummary from "./trainer/TrainerSummary.jsx";
 import ClientDashboardVisibilityList from "./client_dashboard_visibility/ClientDashboardVisibilityList.jsx";
 import ClientDashboardVisibilityForm from "./client_dashboard_visibility/ClientDashboardVisibilityForm.jsx";
+import AuditCycleModeratorReportListModal from "./audit_cycle/AuditCycleModeratorReportListModal.jsx";
 import AuditCycleAuditorExecutionSummary from "./AuditCycleAuditorExecutionSummary.jsx";
 
 const Routes = () => (
@@ -278,7 +279,10 @@ const Routes = () => (
 				</Route>
 				<Route path="audit_store" components={AuditStoreList} />
 				<Route path="payment" components={AuditCyclePaymentList} />
-				<Route path="moderator_summary" components={AuditCycleModeratorSummary} />
+				{/* <Route path="moderator_summary" components={AuditCycleModeratorSummary} /> */}
+				<Route path="moderator_summary" components={AuditCycleModeratorSummary}>
+					<Route path=":moderatorId/reportlist" component={AuditCycleModeratorReportListModal} />
+				</Route>
 				<Route path="moderator" components={AuditCycleModeratorList}>
 					<Route path="assign" component={AuditCycleModeratorAssignForm} />
 				</Route>
