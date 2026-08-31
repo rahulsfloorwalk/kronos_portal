@@ -331,7 +331,7 @@ def find_qa_repoprt_list_by_audit_cycle(audit_cycle_id,user_id):
 
     query_set = (
         AuditStore.objects.filter(audit__audit_cycle_id=audit_cycle_id,
-            status__in=[AuditStore.ASSIGNED,AuditStore.ACKNOWLEDGED,AuditStore.SUBMITTED,]
+            status__in=[AuditStore.ASSIGNED,AuditStore.ACKNOWLEDGED,AuditStore.SUBMITTED,AuditStore.PM_REVIEW,AuditStore.COMPLETED]
         )
         .select_related('audit','audit__audit_cycle',).order_by('audit_date'))
     return get_objects_for_user( user,'moderator_manage', klass=query_set, accept_global_perms=False)

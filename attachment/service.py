@@ -325,8 +325,9 @@ def upload_for_audit_store_highlighted(audit_store_id,file_name,file_size,mime_t
     check_file_size(file_size)
     content_type = ContentType.objects.get_for_model(AuditStore)
     try:
-        attachment = (Attachment.objects.exclude(status__in=[Attachment.DELETED,Attachment.UPLOADING])
-            .get(id=attachment_id,content_type=content_type,object_id=audit_store.id))
+        # attachment = (Attachment.objects.exclude(status__in=[Attachment.DELETED,Attachment.UPLOADING])
+        #     .get(id=attachment_id,content_type=content_type,object_id=audit_store.id))
+        attachment = Attachment.objects.filter(id=attachment_id,content_type=content_type,object_id=audit_store.id,status=Attachment.ATTACHED).get()
     except Attachment.DoesNotExist:
         raise ObjectNotFound
 
@@ -349,7 +350,8 @@ def upload_for_audit_store_highlighted(audit_store_id,file_name,file_size,mime_t
     valid_file_type(mime_type,file_extension)
     proof_type = get_proof_type(mime_type)
 
-    edited_attachment = (Attachment.objects.filter(original_attachment=original_attachment,is_edited=True).exclude(status=Attachment.DELETED).first())
+    # edited_attachment = (Attachment.objects.filter(original_attachment=original_attachment,is_edited=True).exclude(status=Attachment.DELETED).first())
+    edited_attachment = Attachment.objects.filter(original_attachment=original_attachment,is_edited=True,status=Attachment.ATTACHED).order_by('id').first()
     if not edited_attachment:
         post_data = get_signed_post(file_extension )
         edited_attachment = upload_for_object(proof_type,mime_type,file_name,file_size,post_data["fields"]["key"]
@@ -387,15 +389,20 @@ def upload_for_report_section_highlighted(audit_store_id, section_id, file_name,
     content_type = ContentType.objects.get_for_model(ReportSection)
 
     try:
-        attachment = Attachment.objects.exclude(
-            status__in=[Attachment.DELETED, Attachment.UPLOADING]
-        ).get(
-            id=attachment_id,
-            content_type=content_type,
-            object_id=report_section.id
-        )
+        attachment = Attachment.objects.filter(id=attachment_id,content_type=content_type,object_id=report_section.id,status=Attachment.ATTACHED).get()
     except Attachment.DoesNotExist:
         raise ObjectNotFound
+
+    # try:
+    #     attachment = Attachment.objects.exclude(
+    #         status__in=[Attachment.DELETED, Attachment.UPLOADING]
+    #     ).get(
+    #         id=attachment_id,
+    #         content_type=content_type,
+    #         object_id=report_section.id
+    #     )
+    # except Attachment.DoesNotExist:
+    #     raise ObjectNotFound
 
     if attachment.is_edited:
         original_attachment = attachment.original_attachment
@@ -418,12 +425,7 @@ def upload_for_report_section_highlighted(audit_store_id, section_id, file_name,
     if attachment_comment in (None, ""):
         attachment_comment = original_attachment.attachment_comment
 
-    edited_attachment = Attachment.objects.filter(
-        original_attachment=original_attachment,
-        is_edited=True
-    ).exclude(
-        status=Attachment.DELETED
-    ).first()
+    edited_attachment = Attachment.objects.filter(original_attachment=original_attachment,is_edited=True,status=Attachment.ATTACHED).order_by('id').first()
 
     if not edited_attachment:
         post_data = get_signed_post(file_extension)
@@ -452,9 +454,7 @@ def upload_for_report_section_highlighted(audit_store_id, section_id, file_name,
 
     else:
         old_file_slug = edited_attachment.file_slug
-        new_file_slug = generate_edited_attachment_slug(
-            original_attachment.file_slug
-        )
+        new_file_slug = generate_edited_attachment_slug(original_attachment.file_slug)
 
         edited_attachment.content_type = content_type
         edited_attachment.object_id = report_section.id

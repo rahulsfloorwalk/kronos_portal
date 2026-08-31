@@ -66,13 +66,22 @@ def find_by_audit_store_for_manager_attachment(audit_store_id,attachment_id):
 
 def find_by_audit_store_for_manager_attachments(audit_store_id):
     content_type = ContentType.objects.get_for_model(AuditStore)
-    edited_attachments = Attachment.objects.filter(content_type=content_type,object_id=audit_store_id,is_edited=True
-    ).exclude(status=Attachment.DELETED)
+    # edited_attachments = Attachment.objects.filter(content_type=content_type,object_id=audit_store_id,is_edited=True
+    # ).exclude(status=Attachment.DELETED)
+
+    edited_attachments = Attachment.objects.filter(content_type=content_type,object_id=audit_store_id,is_edited=True,status=Attachment.ATTACHED).order_by('id')
+
+    # original_attachments = (
+    #     Attachment.objects.filter(content_type=content_type,object_id=audit_store_id,is_edited=False)
+    #     .exclude(status=Attachment.DELETED)
+    #     .prefetch_related(Prefetch('edited_attachments',queryset=edited_attachments, to_attr='active_edited_attachments')))
 
     original_attachments = (
-        Attachment.objects.filter(content_type=content_type,object_id=audit_store_id,is_edited=False)
-        .exclude(status=Attachment.DELETED)
-        .prefetch_related(Prefetch('edited_attachments',queryset=edited_attachments, to_attr='active_edited_attachments')))
+        Attachment.objects.filter(content_type=content_type,object_id=audit_store_id,is_edited=False,status=Attachment.ATTACHED)
+        .prefetch_related(
+            Prefetch('edited_attachments',queryset=edited_attachments,to_attr='active_edited_attachments')).order_by('id')
+    )
+
     result = []
     for original_attachment in original_attachments:
         edited = getattr( original_attachment, 'active_edited_attachments', [])
@@ -112,13 +121,19 @@ def find_by_audit_store_section_for_manager_attachments(audit_store_id,section_i
         report_section.save()
 
     content_type = ContentType.objects.get_for_model(ReportSection)
-    edited_attachments = Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=True).exclude(status=Attachment.DELETED)
+    # edited_attachments = Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=True).exclude(status=Attachment.DELETED)
+    edited_attachments = Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=True,status=Attachment.ATTACHED).order_by('id')
 
+    # original_attachments = (
+    #     Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=False)
+    #     .exclude( status=Attachment.DELETED)
+    #     .prefetch_related(
+    #         Prefetch('edited_attachments',queryset=edited_attachments,to_attr='active_edited_attachments'))
+    # )
     original_attachments = (
-        Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=False)
-        .exclude( status=Attachment.DELETED)
+        Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=False,status=Attachment.ATTACHED)
         .prefetch_related(
-            Prefetch('edited_attachments',queryset=edited_attachments,to_attr='active_edited_attachments'))
+            Prefetch('edited_attachments',queryset=edited_attachments,to_attr='active_edited_attachments')).order_by('id')
     )
     result = []
 
@@ -147,15 +162,24 @@ def find_by_audit_store_section_for_manager_attachments_comment(audit_store_id,s
         report_section.save()
 
     content_type = ContentType.objects.get_for_model(ReportSection)
-    edited_attachments = (
-        Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=True)
-        .exclude(status=Attachment.DELETED))
+    # edited_attachments = (
+    #     Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=True)
+    #     .exclude(status=Attachment.DELETED))
+
+    # original_attachments = (
+    #     Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=False)
+    #     .exclude(status=Attachment.DELETED)
+    #     .prefetch_related(
+    #         Prefetch('edited_attachments',queryset=edited_attachments,to_attr='active_edited_attachments')))
+
+    edited_attachments = Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=True,status=Attachment.ATTACHED).order_by('id')
 
     original_attachments = (
-        Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=False)
-        .exclude(status=Attachment.DELETED)
+        Attachment.objects.filter(content_type=content_type,object_id=report_section.id,is_edited=False,status=Attachment.ATTACHED)
         .prefetch_related(
-            Prefetch('edited_attachments',queryset=edited_attachments,to_attr='active_edited_attachments')))
+            Prefetch('edited_attachments',queryset=edited_attachments,to_attr='active_edited_attachments')
+        ).order_by('id')
+    )
 
     result = []
 

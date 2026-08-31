@@ -297,7 +297,7 @@ def get_application_stats(audit_cycle_id):
     application_status_counts = dict(applications.filter(status__in=[AuditApplication.APPLIED,AuditApplication.WAITLISTED]).values('status').annotate(count=Count('id')).values_list('status', 'count'))
 
     audit_stores = AuditStore.objects.filter(audit__audit_cycle_id=audit_cycle_id)
-    approved_statuses = (AuditStore.ASSIGNED,AuditStore.ACKNOWLEDGED,AuditStore.SUBMITTED,AuditStore.PM_REVIEW,AuditStore.COMPLETED,)
+    approved_statuses = (AuditStore.ASSIGNED,AuditStore.ACKNOWLEDGED,AuditStore.SUBMITTED,AuditStore.PM_REVIEW,AuditStore.COMPLETED,AuditStore.ACCEPTED)
     approved_count = audit_stores.filter(status__in=approved_statuses).count()
     withdrawn_count = audit_stores.filter(status__in=[AuditStore.WITHDRAWN,AuditStore.AUDITOR_WITHDRAWN]).count()
     rejected_count = audit_stores.filter(status__in=[AuditStore.REJECTED,AuditStore.FAILED]).count()

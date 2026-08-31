@@ -19,6 +19,9 @@ from auditor.service.auditor_api import get_report_completion_percentage
 from manager.models import City
 import json
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Permission
+from guardian.models import UserObjectPermission
 User = get_user_model()
 
 class ClientSerializer(ModelSerializer):
@@ -633,6 +636,65 @@ class AuditStoreSerializer(ModelSerializer):
         if failed_log:
             return ReportStatusLogSerializer(failed_log).data
         return None
+
+class AuditCycleModeratorSerializer(ModelSerializer):
+    client = ClientSerializer()
+    class Meta:
+        model = AuditCycle
+        fields = (
+            'id',
+            'name',
+            'status',
+            'client',
+        )
+        read_only_fields = fields
+
+class AuditModeratorSerializer(ModelSerializer):
+    store = StoreSerializer()
+    audit_cycle = AuditCycleSerializer()
+    class Meta:
+        model = Audit
+        fields = (
+            'id',
+            'count',
+            'audit_date',
+            'store',
+            'audit_cycle',
+        )
+        read_only_fields = fields
+
+class AuditStoreForModeratorSerializer(ModelSerializer):
+    audit = AuditModeratorSerializer()
+    assigned_to_moderator = serializers.SerializerMethodField()
+    class Meta:
+        model = AuditStore
+        fields = (
+            'id',
+            'status',
+            'audit_date',
+            'audit',
+            'assigned_to_moderator',
+        )
+        read_only_fields = fields
+
+    def get_assigned_to_moderator(self, obj):
+        content_type = ContentType.objects.get_for_model(AuditStore)
+        moderator_permission = Permission.objects.get(content_type=content_type,codename='moderator_manage')
+        permissions = UserObjectPermission.objects.filter(content_type=content_type,permission=moderator_permission,object_pk=str(obj.id)).select_related('user')
+        moderators = []
+
+        for permission in permissions:
+            user = permission.user
+            profile = ModeratorProfileInfo.objects.filter(user=user).first()
+            moderators.append({
+                'id': user.id,
+                'email': user.email,
+                'is_active': user.is_active,
+                'name': getattr(profile, 'name', None),
+                'mobile': getattr(profile, 'mobile', None),
+                'firm_name': getattr(profile, 'firm_name', None),
+            })
+        return moderators
 
 class ReportStatusUserSerializer(ModelSerializer):
     name = SerializerMethodField()
