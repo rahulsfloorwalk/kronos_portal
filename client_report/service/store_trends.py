@@ -16,15 +16,13 @@ from questionnaire.models import Question
 def get_performing_stores(audit_cycle, user_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
     visible_audit_stores_in_cycle = client_service.find_visible_to_client_user(user) \
-        .filter(audit__audit_cycle=audit_cycle) \
-        .prefetch_related(
-            'audit__store__city',
-            'report_sections',
-            'report_sections__section',
+        .filter(
+            audit__audit_cycle=audit_cycle,status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]
+        ) \
+        .prefetch_related('audit__store__city','report_sections','report_sections__section',
             Prefetch(
                 'report_sections__section__questions',
-                queryset=Question.objects.filter(
-                    visibility=Question.VISIBLE_TO_ALL,hide_question=False
+                queryset=Question.objects.filter(visibility=Question.VISIBLE_TO_ALL,hide_question=False
                 ).prefetch_related('answers')
             ),
         )
@@ -36,7 +34,6 @@ def get_performing_stores(audit_cycle, user_id):
             obtained += audit_store.percentage()
             count += 1
         if count > 0:
-            # stores[k] = obtained / count
             stores.append(({
                 "id": k.id,
                 "name": k.name,
@@ -44,16 +41,12 @@ def get_performing_stores(audit_cycle, user_id):
                 "type": k.type,
                 "code": k.code,
                 "priority": k.priority,
-                "city": {
-                    "id": k.city.id,
-                    "name": k.city.name,
-                }
-            }, {
+                "city": {"id": k.city.id,"name": k.city.name,}
+            }, 
+            {
                 "color_code": get_color_code_by_percentage(int(obtained / count)),
                 "value": int(obtained / count)
-            }
-            ))
-
+            }))
     if len(stores) is 0:
         return stores
     else:
@@ -137,7 +130,9 @@ def get_performing_stores_by_audit_cycle_id(audit_cycle, user_id):
         return sorted(stores, key=lambda s: s[1].get('value'), reverse=True)
     
 def get_store_performance_range_wise_for_clientuser(questionnaire_type_id,audit_cycle_ids,user_id):
-    audit_cycles=AuditCycle.objects.filter(id__in=audit_cycle_ids,questionnaire_type_id=questionnaire_type_id,status__in=AuditCycle.TRENDABLE_STATUSES).order_by('end_date')
+    audit_cycles=AuditCycle.objects.filter(id__in=audit_cycle_ids,questionnaire_type_id=questionnaire_type_id,status__in=AuditCycle.LIVE_REPORTING_STATUSES).order_by('end_date')
+    if not audit_cycles.exists():
+        return {'type':questionnaire_type_id,'questionnaire_type':questionnaire_type_id,'data':[]}
     ranges=[('0 - 20',0,20),('21 - 40',21,40),('41 - 60',41,60),('61 - 80',61,80),('81 - 100',81,100)]
     data=[]
     for audit_cycle in audit_cycles:

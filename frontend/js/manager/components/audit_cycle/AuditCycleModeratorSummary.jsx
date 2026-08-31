@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { hashHistory } from "react-router";
 
 import Loading from "../../../components/Loading.jsx";
 import Jumbotron from "../../../components/Jumbotron.jsx";
@@ -22,12 +23,17 @@ export class AuditCycleModeratorSummary extends React.Component{
 
 		fetchModeratorSummaryByAuditCycle: PropTypes.func.isRequired,
 		fetchModerators: PropTypes.func.isRequired,
+		children: PropTypes.node,
 	};
 
 	componentDidMount(){
 		this.props.fetchModeratorSummaryByAuditCycle(this.props.auditCycleId);
 		this.props.fetchModerators();
 	}
+
+	handleRowClick = (moderatorId) => {
+		hashHistory.push(`/audit_cycle/${this.props.auditCycleId}/moderator_summary/${moderatorId}/reportlist`);
+	};
 
 	render(){
 		if(!this.props.summary) {
@@ -38,11 +44,14 @@ export class AuditCycleModeratorSummary extends React.Component{
 			textAlign: "right",
 		};
 
+		const rowStyle = {
+			cursor: "pointer",
+		};
 		const rows = [];
 		for(const moderatorId in this.props.summary){
 			const moderator = this.props.moderators.find(m => m.id === parseInt(moderatorId));
 			const cells = AuditStoreStatus.map(s => <td key={s} style={rightAlign}>{this.props.summary[moderatorId][s]}</td>);
-			rows.push(<tr key={moderatorId}>
+			rows.push(<tr key={moderatorId} style={rowStyle} title="View report list" onClick={() => this.handleRowClick(moderatorId)}>
 				<td>{moderator ? moderator.email : ""}</td>
 				{cells}
 			</tr>);
@@ -59,7 +68,7 @@ export class AuditCycleModeratorSummary extends React.Component{
 		const headings = AuditStoreStatus.map(s => <th style={rightAlign} key={s}><AuditStoreStatusLabel status={s}/></th>);
 		return (<div className="table-responsive">
 			&nbsp;
-			<table className="table table-bordered table-striped">
+			<table className="table table-bordered table-striped table-hover">
 				<thead>
 					<tr>
 						<th>Moderator</th>
@@ -70,6 +79,7 @@ export class AuditCycleModeratorSummary extends React.Component{
 					{rows}
 				</tbody>
 			</table>
+			{this.props.children}
 		</div>);
 	}
 }

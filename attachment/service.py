@@ -325,8 +325,9 @@ def upload_for_audit_store_highlighted(audit_store_id,file_name,file_size,mime_t
     check_file_size(file_size)
     content_type = ContentType.objects.get_for_model(AuditStore)
     try:
-        attachment = (Attachment.objects.exclude(status__in=[Attachment.DELETED,Attachment.UPLOADING])
-            .get(id=attachment_id,content_type=content_type,object_id=audit_store.id))
+        # attachment = (Attachment.objects.exclude(status__in=[Attachment.DELETED,Attachment.UPLOADING])
+        #     .get(id=attachment_id,content_type=content_type,object_id=audit_store.id))
+        attachment = Attachment.objects.filter(id=attachment_id,content_type=content_type,object_id=audit_store.id,status=Attachment.ATTACHED).get()
     except Attachment.DoesNotExist:
         raise ObjectNotFound
 
@@ -349,7 +350,8 @@ def upload_for_audit_store_highlighted(audit_store_id,file_name,file_size,mime_t
     valid_file_type(mime_type,file_extension)
     proof_type = get_proof_type(mime_type)
 
-    edited_attachment = (Attachment.objects.filter(original_attachment=original_attachment,is_edited=True).exclude(status=Attachment.DELETED).first())
+    # edited_attachment = (Attachment.objects.filter(original_attachment=original_attachment,is_edited=True).exclude(status=Attachment.DELETED).first())
+    edited_attachment = Attachment.objects.filter(original_attachment=original_attachment,is_edited=True,status=Attachment.ATTACHED).order_by('id').first()
     if not edited_attachment:
         post_data = get_signed_post(file_extension )
         edited_attachment = upload_for_object(proof_type,mime_type,file_name,file_size,post_data["fields"]["key"]
@@ -387,15 +389,20 @@ def upload_for_report_section_highlighted(audit_store_id, section_id, file_name,
     content_type = ContentType.objects.get_for_model(ReportSection)
 
     try:
-        attachment = Attachment.objects.exclude(
-            status__in=[Attachment.DELETED, Attachment.UPLOADING]
-        ).get(
-            id=attachment_id,
-            content_type=content_type,
-            object_id=report_section.id
-        )
+        attachment = Attachment.objects.filter(id=attachment_id,content_type=content_type,object_id=report_section.id,status=Attachment.ATTACHED).get()
     except Attachment.DoesNotExist:
         raise ObjectNotFound
+
+    # try:
+    #     attachment = Attachment.objects.exclude(
+    #         status__in=[Attachment.DELETED, Attachment.UPLOADING]
+    #     ).get(
+    #         id=attachment_id,
+    #         content_type=content_type,
+    #         object_id=report_section.id
+    #     )
+    # except Attachment.DoesNotExist:
+    #     raise ObjectNotFound
 
     if attachment.is_edited:
         original_attachment = attachment.original_attachment
@@ -418,12 +425,7 @@ def upload_for_report_section_highlighted(audit_store_id, section_id, file_name,
     if attachment_comment in (None, ""):
         attachment_comment = original_attachment.attachment_comment
 
-    edited_attachment = Attachment.objects.filter(
-        original_attachment=original_attachment,
-        is_edited=True
-    ).exclude(
-        status=Attachment.DELETED
-    ).first()
+    edited_attachment = Attachment.objects.filter(original_attachment=original_attachment,is_edited=True,status=Attachment.ATTACHED).order_by('id').first()
 
     if not edited_attachment:
         post_data = get_signed_post(file_extension)
@@ -452,9 +454,7 @@ def upload_for_report_section_highlighted(audit_store_id, section_id, file_name,
 
     else:
         old_file_slug = edited_attachment.file_slug
-        new_file_slug = generate_edited_attachment_slug(
-            original_attachment.file_slug
-        )
+        new_file_slug = generate_edited_attachment_slug(original_attachment.file_slug)
 
         edited_attachment.content_type = content_type
         edited_attachment.object_id = report_section.id
@@ -645,8 +645,13 @@ def get_order_for_attachment(attachment_id : int) -> MPOrder:
         return mp_order_service.find_order_by_id(attachment.object_id)
     raise AppLogicError("Invalid Attachment Content Type3")
 
+# def find_by_audit_store(audit_store_id):
+#     return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED).order_by('id')
+
 def find_by_audit_store(audit_store_id):
-    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED).order_by('id')
+    attachments = Attachment.objects.filter(audit_stores__id=audit_store_id,status=Attachment.ATTACHED).select_related('original_attachment').order_by('id')
+    edited_original_ids = set(attachments.filter(is_edited=True,original_attachment__isnull=False).values_list( 'original_attachment_id', flat=True))
+    return attachments.exclude(id__in=edited_original_ids,is_edited=False)
 
 def find_prooftag_not_available_by_audit_store(audit_store_id):
     return AuditProoftagNotAvailable.objects.filter(audit_store_id=audit_store_id).order_by('id')
@@ -669,8 +674,13 @@ def find_by_category(category_id):
 def find_by_clientrequirement(client_requirements_id):
     return Attachment.objects.filter(clientrequirements__id=client_requirements_id,status=Attachment.ATTACHED).order_by('id')
 
+# def find_by_audit_cycle(audit_cycle_id):
+#     return Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED).order_by('id')
+
 def find_by_audit_cycle(audit_cycle_id):
-    return Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED).order_by('id')
+    attachments = Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED).order_by('id')
+    edited_original_ids = set(attachments.filter(is_edited=True,original_attachment__isnull=False).values_list('original_attachment_id',flat=True))
+    return attachments.exclude(id__in=edited_original_ids,is_edited=False)
 
 def find_by_audit_cycle_for_guideline(audit_cycle_id):
     attachment = Attachment.objects.filter(audit_cycles__id=audit_cycle_id,status=Attachment.ATTACHED,attachment_category__in=[Attachment.GUIDELINE,Attachment.REFERENCE_ATTACHMENT])
@@ -687,9 +697,16 @@ def find_by_audit_cycle_id(audit_cycle_id):
         return None
     return attachment.generate_presigned_url()
     
+# def find_by_audit_store_and_section(audit_store_id, section_id):
+#     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
+#     return Attachment.objects.filter(report_sections__id=report_section.id, status=Attachment.ATTACHED,proof_tag__section_proof_tag__hide_from_client=False).order_by('id')
+
 def find_by_audit_store_and_section(audit_store_id, section_id):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
-    return Attachment.objects.filter(report_sections__id=report_section.id, status=Attachment.ATTACHED,proof_tag__section_proof_tag__hide_from_client=False).order_by('id')
+    attachments = Attachment.objects.filter(report_sections__id=report_section.id,status=Attachment.ATTACHED,proof_tag__section_proof_tag__hide_from_client=False).order_by('id')
+    edited_original_ids = set(attachments.filter(is_edited=True,original_attachment__isnull=False).values_list('original_attachment_id',flat=True))
+
+    return attachments.exclude(id__in=edited_original_ids,is_edited=False)
 
 # def find_by_audit_store_mandatory_proof(audit_store_id):
 #     report_sections = report_section_service.find_by_audit_cycle_sections_mandatory_proof(audit_store_id)

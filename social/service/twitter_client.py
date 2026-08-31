@@ -8,7 +8,7 @@ from social.models import TwitterFeed, TwitterHandle
 from tweepy import OAuthHandler, API, TweepError
 from textblob import TextBlob
 from audit_store.models import AuditStore
-
+from audit.models import AuditCycle
 
 _logger = logging.getLogger(__name__)
 
@@ -157,24 +157,22 @@ def get_all_audit_store_for_nps_score_by_audit_cycle_ids(client_id, audit_cycle_
         AuditStore.objects
         .filter(
             audit__audit_cycle__client_id=client_id,
-            audit__audit_cycle_id__in=audit_cycle_ids
+            audit__audit_cycle_id__in=audit_cycle_ids,
+            audit__audit_cycle__status__in=AuditCycle.LIVE_REPORTING_STATUSES,
+            status__in=(AuditStore.COMPLETED, AuditStore.ACCEPTED)
         )
-        .select_related("audit")
-        .only("status", "nps_section", "audit__audit_cycle_id")
+        .select_related("audit", "audit__audit_cycle")
+        .only("status", "nps_section", "audit__audit_cycle_id", "audit__audit_cycle__name")
     )
 
 def get_all_over_all_nps_score(client_id, audit_cycle_ids):
     audit_stores = get_all_audit_store_for_nps_score_by_audit_cycle_ids(
         client_id, audit_cycle_ids
     )
-
     grouped_stores = defaultdict(list)
-
     for audit_store in audit_stores:
         grouped_stores[audit_store.audit.audit_cycle_id].append(audit_store)
-
     response = []
-
     for audit_cycle_id in audit_cycle_ids:
         stores = grouped_stores.get(audit_cycle_id, [])
         total_audit_store = len(stores)
@@ -183,32 +181,22 @@ def get_all_over_all_nps_score(client_id, audit_cycle_ids):
         passives_count = 0
         promoters_count = 0
         audit_cycle_name = stores[0].audit.audit_cycle.name if stores else None
-
         for audit_store in stores:
-            if audit_store.status not in ("COMPLETED", "ACCEPTED"):
-                continue
-
             nps_score = audit_store.nps_section or 0
-
             if nps_score <= 0:
                 continue
-
             total_replies += 1
-
             if nps_score <= 6:
                 detractors_count += 1
             elif nps_score <= 8:
                 passives_count += 1
             else:
                 promoters_count += 1
-
         valid_replies = detractors_count + passives_count + promoters_count
-
         average_nps_percentage = (
             round(((promoters_count - detractors_count) / float(valid_replies)) * 100)
             if valid_replies else None
         )
-
         response.append({
             "audit_cycle_id": audit_cycle_id,
             "audit_cycle_name": audit_cycle_name,
@@ -219,7 +207,6 @@ def get_all_over_all_nps_score(client_id, audit_cycle_ids):
             "passives_count": passives_count,
             "promoters_count": promoters_count
         })
-
     return response
 
 def get_over_all_nps_score(client_id, audit_cycle_id):

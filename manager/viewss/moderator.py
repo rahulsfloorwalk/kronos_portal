@@ -11,7 +11,7 @@ from manager.service import moderator_summary
 from ..serializers import PlainUserSerializer
 from ..service import moderator as moderator_service
 import audit_store.service_manager as audit_store_service
-from manager.serializers import AuditStoreSerializer
+from manager.serializers import AuditStoreSerializer,AuditStoreForModeratorSerializer
 
 class ModeratorDeSerializer(Serializer):
     email = EmailField()
@@ -122,7 +122,8 @@ class ModeratorSummaryByAuditCyclewise(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id,user_id):
-        return Response(audit_store_service.find_qa_repoprt_list_by_audit_cycle(audit_cycle_id,user_id))
+        audit_stores = audit_store_service.find_qa_repoprt_list_by_audit_cycle(audit_cycle_id,user_id)
+        return Response(AuditStoreForModeratorSerializer(audit_stores, many=True).data)
 
 class ModeratorSummaryView(APIView):
     permission_classes = [HasGroupPermission]

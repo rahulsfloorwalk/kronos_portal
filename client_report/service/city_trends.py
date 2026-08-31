@@ -17,46 +17,29 @@ def get_performing_cities(audit_cycle, user_id):
     stores = {}
     if client_user.is_client_admin():
         visible_audit_stores_in_cycle = client_service.find_visible_to_client_user(user) \
-            .filter(audit__audit_cycle=audit_cycle) \
-            .prefetch_related(
-                'audit__store__city',
-                'report_sections',
-                'report_sections__section',
-                # 'report_sections__section__questions',
-                # 'report_sections__section__questions__answers'
-                Prefetch(
-                    'report_sections__section__questions',
-                    queryset=Question.objects.filter(
-                        visibility=Question.VISIBLE_TO_ALL,
-                        hide_question=False
+            .filter(audit__audit_cycle=audit_cycle,status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]
+            ) \
+            .prefetch_related('audit__store__city','report_sections','report_sections__section',
+                Prefetch('report_sections__section__questions',
+                    queryset=Question.objects.filter(visibility=Question.VISIBLE_TO_ALL, hide_question=False
                     ).prefetch_related('answers')
-                ),
-        )
+                ),)
     else:
         non_admin_user_store = client_user_service.find_non_client_admin_user_store_by_client_user_id(client_user.id)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
         visible_audit_stores_in_cycle = client_service.find_visible_to_client_user(user) \
-            .filter(audit__audit_cycle=audit_cycle,
-                    audit__store__id__in=non_admin_user_store_list) \
-            .prefetch_related(
-                'audit__store__city',
-                'report_sections',
-                'report_sections__section',
-                # 'report_sections__section__questions',
-                # 'report_sections__section__questions__answers'
+            .filter(audit__audit_cycle=audit_cycle,audit__store__id__in=non_admin_user_store_list,
+                status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]
+            ) \
+            .prefetch_related('audit__store__city','report_sections','report_sections__section',
                 Prefetch(
                     'report_sections__section__questions',
-                    queryset=Question.objects.filter(
-                        visibility=Question.VISIBLE_TO_ALL,
-                        hide_question=False
-                    ).prefetch_related('answers')
-                ),
-        )
+                    queryset=Question.objects.filter(visibility=Question.VISIBLE_TO_ALL,hide_question=False).prefetch_related('answers')
+                ),)
     for k, g in itertools.groupby(visible_audit_stores_in_cycle, lambda x: x.audit.store):
         obtained = 0
         count = 0
         for audit_store in list(g):
-            # obtained += audit_store.percentage()
             obtained += audit_store.audit_store_percentage
             count += 1
         if count > 0: stores[k] = obtained / count
@@ -66,36 +49,25 @@ def get_performing_cities(audit_cycle, user_id):
             cities[store.city] = (0,0)
         total, count = cities[store.city]
         cities[store.city] = (total + avg, count + 1)
-
     averages = []
     for city, (total, count) in cities.items():
         if count > 0:
             averages.append(
-                ({
-                    "id": city.id,
-                    "name": city.name,
+                ({"id": city.id,"name": city.name,
                 }, {
-                    "color_code": get_color_code_by_percentage(int(total / count)),
-                    "value": int(total / count)
-                })
-            )
+                    "color_code": get_color_code_by_percentage(int(total / count)), "value": int(total / count)
+                }))
         else:
             averages.append(
-                ({
-                    "id": city.id,
-                    "name": city.name,
-                }, None)
-            )
-
+                ({"id": city.id,"name": city.name,}, None))
     if len(averages) is 0:
         return averages
     else:
         return sorted(averages, key=lambda s: s[1].get('value'), reverse=True)
 
-
 def get_performing_cities_by_type_for_clientuser(questionnaire_type_id, user_id):
     qs = audit_cycle_client_service.find_by_questionnaire_type_for_clientuser(questionnaire_type_id, user_id) \
-        .filter(status__in=AuditCycle.TRENDABLE_STATUSES).order_by('end_date')
+        .filter(status__in=AuditCycle.LIVE_REPORTING_STATUSES).order_by('end_date')
     qs = qs.prefetch_related(
         'audits',
         'audits__store',
@@ -174,24 +146,37 @@ def get_performing_cities_by_type_for_clientuser(questionnaire_type_id, user_id)
     }
 
 def get_city_performance_range_wise_for_clientuser(questionnaire_type_id,audit_cycle_ids,user_id):
-    audit_cycles=AuditCycle.objects.filter(id__in=audit_cycle_ids,questionnaire_type_id=questionnaire_type_id,status__in=AuditCycle.TRENDABLE_STATUSES).order_by('end_date')
-    if not audit_cycles.exists():
+    audit_cycles=AuditCycle.objects.filter(id__in=audit_cycle_ids,questionnaire_type_id=questionnaire_type_id,status__in=AuditCycle.LIVE_REPORTING_STATUSES)
+    cycle_map={cycle.id:cycle for cycle in audit_cycles}
+    audit_cycles=[cycle_map[cycle_id] for cycle_id in audit_cycle_ids if cycle_id in cycle_map]
+    if not audit_cycles:
         return {'type':questionnaire_type_id,'questionnaire_type':questionnaire_type_id,'columns':[],'data':[]}
     ranges=[('0 - 20',0,20),('21 - 40',21,40),('41 - 60',41,60),('61 - 80',61,80),('81 - 100',81,100)]
     audit_cycle_names=[audit_cycle.name for audit_cycle in audit_cycles]
+    cycle_city_data={}
+    for audit_cycle in audit_cycles:
+        cities=get_performing_cities(audit_cycle,user_id)
+        cycle_city_data[audit_cycle.id]=[ {'city':city,'score':score} for city,score in cities]
     data=[]
     for range_name,minimum,maximum in ranges:
         range_data=[]
         for audit_cycle in audit_cycles:
-            cities=get_performing_cities(audit_cycle,user_id)
             range_cities=[]
-            for city,score in cities:
-                value=score.get('value',0)
+            for city_data in cycle_city_data[audit_cycle.id]:
+                city=city_data['city']
+                score=city_data['score']
+                value=score.get('value',0) if score else 0
                 if minimum<=value<=maximum:
                     range_cities.append({'city':city,'score':score})
-            range_data.append({'audit_cycle_id':audit_cycle.id,'audit_cycle_name':audit_cycle.name,'city_count':len(range_cities),'cities':range_cities})
+            range_data.append({
+                'audit_cycle_id':audit_cycle.id,'audit_cycle_name':audit_cycle.name,
+                'city_count':len(range_cities),'cities':range_cities
+            })
         data.append({'range':range_name,'cycles':range_data})
-    return {'type':questionnaire_type_id,'questionnaire_type':questionnaire_type_id,'columns':audit_cycle_names,'data':data}
+    return {
+        'type':questionnaire_type_id,'questionnaire_type':questionnaire_type_id,
+        'columns':audit_cycle_names,'data':data
+    }
 
 def get_performing_cities_by_type_by_audit_cycle_id_for_clientuser(questionnaire_type_id, audit_cycle_id, user_id):
     qs = AuditCycle.objects.filter(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)

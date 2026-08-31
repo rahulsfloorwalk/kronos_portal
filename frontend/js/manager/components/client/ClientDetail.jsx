@@ -8,6 +8,8 @@ import { King, Pencil, Retweet, Home, Bishop, Knight, Education,Info } from "../
 import Loading from "../../../components/Loading.jsx";
 import NavLink from "../../../components/NavLink.jsx";
 
+const SCORE_SCALE_ORDER = ["excellent", "good", "average", "poor"];
+
 export default class ClientDetail extends React.Component {
 	static propTypes = {
 		children: PropTypes.node,
@@ -74,7 +76,7 @@ export default class ClientDetail extends React.Component {
 			excellent: "rgb(193, 255, 153)",
 		};
 
-		const entries = Object.keys(scoreScale).map((key) => ({
+		const entries = SCORE_SCALE_ORDER.map((key) => ({
 			key,
 			range: scoreScale[key] ? scoreScale[key] : "---",
 			color: colors[key] || "#95a5a6",

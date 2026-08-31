@@ -42,7 +42,18 @@ export default class ApplicationStatusLabel extends React.Component {
 	};
 
 	getLabelColor = (status) => {
-		return status === "INSTANT_ASSIGNED" ? "#1fe61f" : undefined;
+		switch (status) {
+		case "OPEN":
+			return "#8b0000";
+		case "SYSTEM_ASSIGNED":
+			return "#77acd9";
+		case "INSTANT_ASSIGNED":
+			return "#2a7a2a";
+		case "MANUAL_ASSIGNED":
+			return "#c77c11";
+		default:
+			return undefined;
+		}
 	};
 	render() {
 		return (

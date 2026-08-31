@@ -183,26 +183,14 @@ def find_dashboard_widget_access_by_user(user):
     return {
         'id': widget_access.id,
         'client': widget_access.client.id,
-        'latest_audit_cycle_score': widget_access.latest_audit_cycle_score,
+        'overall_audit_cycle_score': widget_access.overall_audit_cycle_score,
         'upcoming_audits': widget_access.upcoming_audits,
         'net_promoter_score': widget_access.net_promoter_score,
         'section_summary': widget_access.section_summary,
-        'improvement_areas_based_on_observation': (
-            widget_access.improvement_areas_based_on_observation
-        ),
-        'overall_high_performance_store': (
-            widget_access.overall_high_performance_store
-        ),
+        'improvement_areas_based_on_observation': (widget_access.improvement_areas_based_on_observation),
         'branch_performance': widget_access.branch_performance,
-        'overall_high_performance_city': (
-            widget_access.overall_high_performance_city
-        ),
-        'overall_low_performance_store': (
-            widget_access.overall_low_performance_store
-        ),
-        'overall_low_performance_city': (
-            widget_access.overall_low_performance_city
-        ),
+        'city_wise_performance': (widget_access.city_wise_performance),
+        'store_wise_performance': ( widget_access.store_wise_performance),
         'questionnaire_summary': widget_access.questionnaire_summary,
         'created_at': widget_access.created_at,
         'updated_at': widget_access.updated_at,

@@ -185,6 +185,7 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/moderator/(?P<user_id>[0-9]+)/reportlist$', moderator_views.ModeratorSummaryByAuditCyclewise.as_view(), name='moderator_report_list_summary_by_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/auditor_execution_report$',audit_store_views.AuditorExecutionReportView.as_view(),name='auditor_execution_report'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/auditor/(?P<user_id>[0-9]+)/execution_reports/$',audit_store_views.AuditorExecutionReportDetailView.as_view(),name='auditor_execution_report_details'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/filters$',audit_store_views.AuditorExecutionReportFiltersView.as_view(),name='auditor_execution_report_details'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/moderator$', moderator_views.ModeratorByAuditCycle.as_view(), name='moderator_by_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store/accept$', audit_store_views.AcceptAllCompletedForAuditCycle.as_view(), name='accept_all_completed_for_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store$', audit_store_views.AuditStoreByAuditCycle.as_view(), name='audit_store_by_audit_cycle_view'),
